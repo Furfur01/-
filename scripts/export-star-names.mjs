@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {starMap} from '../game/star-map.mjs';
+const root=path.resolve(import.meta.dirname,'..');
+const world=JSON.parse(fs.readFileSync(process.env.EMPIRE_SAVE_FILE||path.join(root,'data/universe.json'),'utf8'));
+const {version,systems,planets}=starMap(world),out=path.join(root,'output/star-map');
+fs.mkdirSync(out,{recursive:true});
+const rows=planets.filter(p=>!p.moon&&p.kind!=='belt').map(p=>({key:p.key,system:p.position[1],slot:p.position[2],biome:p.biome,name:p.catalogName}));
+if(new Set(rows.map(p=>p.name)).size!==rows.length)throw Error('星球名称重复');
+fs.writeFileSync(path.join(out,'names.json'),JSON.stringify({version,systems,planets:rows},null,2));
+fs.writeFileSync(path.join(out,'names.csv'),'\uFEFF编号,恒星系,轨道,类型,目录名称\r\n'+rows.map(p=>[p.key,p.system,p.slot,p.biome,p.name].join(',')).join('\r\n'));
+console.log(`Exported ${systems.length} systems and ${rows.length} unique planet names.`);

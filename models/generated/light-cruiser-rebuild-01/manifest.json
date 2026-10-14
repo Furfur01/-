@@ -1,0 +1,44 @@
+[
+  {
+    "id": "Cruiser",
+    "name": "巡洋舰",
+    "apkId": 3,
+    "file": "Cruiser.glb",
+    "preview": "Cruiser.png",
+    "triangles": 14028,
+    "meshes": 27,
+    "bounds": [
+      9.178414344787598,
+      5.619999885559082,
+      13.84000015258789
+    ],
+    "bytes": 1029804,
+    "revision": "fleet-three-view-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Light_Fighter",
+    "name": "轻型战机",
+    "apkId": 1,
+    "file": "Light_Fighter.glb",
+    "preview": "Light_Fighter.png",
+    "triangles": 19620,
+    "meshes": 48,
+    "bounds": [
+      13.662128448486328,
+      6.06212854385376,
+      13.913559913635254
+    ],
+    "bytes": 1447384,
+    "revision": "fleet-three-view-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  }
+]

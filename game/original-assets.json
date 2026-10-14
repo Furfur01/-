@@ -1,0 +1,1987 @@
+{
+  "source": "yinhediguo.apk",
+  "version": "20260928-apk",
+  "technology": {
+    "Energy_Tech": "original/technology/Energy_Tech.png",
+    "Laser_Tech": "original/technology/Laser_Tech.png",
+    "Ion_Tech": "original/technology/Ion_Tech.png",
+    "Hyperspace_Tech": "original/technology/Hyperspace_Tech.png",
+    "Plasma_Tech": "original/technology/Plasma_Tech.png",
+    "Combustion_Drive": "original/technology/Combustion_Drive.png",
+    "Impulse_Drive": "original/technology/Impulse_Drive.png",
+    "Hyperspace_Drive": "original/technology/Hyperspace_Drive.png",
+    "Espionage_Tech": "original/technology/Espionage_Tech.png",
+    "Computer_Tech": "original/technology/Computer_Tech.png",
+    "Astrophysics_Tech": "original/technology/Astrophysics_Tech.png",
+    "Weapons_Tech": "original/technology/Weapons_Tech.png",
+    "Shielding_Tech": "original/technology/Shielding_Tech.png",
+    "Strength_Tech": "original/technology/Strength_Tech.png"
+  },
+  "units": {
+    "Light_Fighter": "original/units/Light_Fighter.png",
+    "Heavy_Fighter": "original/units/Heavy_Fighter.png",
+    "Cruiser": "original/units/Cruiser.png",
+    "Battleship": "original/units/Battleship.png",
+    "Dreadnought": "original/units/Dreadnought.png",
+    "Bomber": "original/units/Bomber.png",
+    "Destroyer": "original/units/Destroyer.png",
+    "Cargo_Ship": "original/units/Cargo_Ship.png",
+    "Large_Cargo_Ship": "original/units/Large_Cargo_Ship.png",
+    "Colony_Ship": "original/units/Colony_Ship.png",
+    "Recycler": "original/units/Recycler.png",
+    "Probe": "original/units/Probe.png",
+    "Solar_Satellite": "original/units/Solar_Satellite.png",
+    "Rocket_Launcher": "original/units/Rocket_Launcher.png",
+    "Light_Laser": "original/units/Light_Laser.png",
+    "Heavy_Laser": "original/units/Heavy_Laser.png",
+    "MK2_Cannon": "original/units/MK2_Cannon.png",
+    "Ion_Cannon": "original/units/Ion_Cannon.png",
+    "Plasma_Cannon": "original/units/Plasma_Cannon.png",
+    "Small_Shield_Dome": "original/units/Small_Shield_Dome.png",
+    "Large_Shield_Dome": "original/units/Large_Shield_Dome.png",
+    "Proton_Cannon": "original/units/Proton_Cannon.png"
+  },
+  "buildings": {
+    "Metal_Mine": "original/buildings/Metal_Mine.png",
+    "Crystal_Mine": "original/buildings/Crystal_Mine.png",
+    "Gas_Mine": "original/buildings/Gas_Mine.png",
+    "Solar_Plant": "original/buildings/Solar_Plant.png",
+    "Fusion_Reactor": "original/buildings/Fusion_Reactor.png",
+    "Metal_Storage": "original/buildings/Metal_Storage.png",
+    "Crystal_Storage": "original/buildings/Crystal_Storage.png",
+    "Gas_Storage": "original/buildings/Gas_Storage.png",
+    "Robotics_Facility": "original/buildings/Robotics_Facility.png",
+    "Shipyard": "original/buildings/Shipyard.png",
+    "Research_Lab": "original/buildings/Research_Lab.png",
+    "Alliance_Depot": "original/buildings/Alliance_Depot.png",
+    "Radar_Facility": "original/buildings/Radar_Facility.png",
+    "Nanite_Factory": "original/buildings/Nanite_Factory.png",
+    "The_EU_X_Radar": "original/buildings/The_EU_X_Radar.png",
+    "Wormhole_Generator": "original/buildings/Wormhole_Generator.png",
+    "Moon_Base": "original/buildings/Moon_Base.png"
+  },
+  "anchors": {
+    "Metal_Mine": [
+      0.5,
+      0.79987
+    ],
+    "Crystal_Mine": [
+      0.5,
+      0.78469
+    ],
+    "Gas_Mine": [
+      0.5,
+      0.80041
+    ],
+    "Solar_Plant": [
+      0.5,
+      0.7322
+    ],
+    "Fusion_Reactor": [
+      0.5,
+      0.75906
+    ],
+    "Metal_Storage": [
+      0.5,
+      0.72012
+    ],
+    "Crystal_Storage": [
+      0.5,
+      0.74863
+    ],
+    "Gas_Storage": [
+      0.5,
+      0.76483
+    ],
+    "Robotics_Facility": [
+      0.5,
+      0.76091
+    ],
+    "Shipyard": [
+      0.5,
+      0.78426
+    ],
+    "Research_Lab": [
+      0.5,
+      0.73669
+    ],
+    "Alliance_Depot": [
+      0.5,
+      0.736
+    ],
+    "Radar_Facility": [
+      0.5,
+      0.80094
+    ],
+    "Nanite_Factory": [
+      0.5,
+      0.75813
+    ],
+    "The_EU_X_Radar": [
+      0.5,
+      0.82
+    ],
+    "Wormhole_Generator": [
+      0.5,
+      0.82
+    ],
+    "Moon_Base": [
+      0.5,
+      0.76129
+    ]
+  },
+  "archive": [
+    {
+      "category": "technology",
+      "id": 1,
+      "label": "type_1",
+      "file": "technology/technology_01.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        254,
+        377,
+        372,
+        494
+      ],
+      "shape_id": 39,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "能源科技",
+      "gameId": "Energy_Tech",
+      "asset": "original/technology/Energy_Tech.png",
+      "sha256": "bb556eb97453c21777ce428085c15a2866c6744ab9dfeb21d813d0b5e8ab6512"
+    },
+    {
+      "category": "technology",
+      "id": 2,
+      "label": "type_2",
+      "file": "technology/technology_02.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        6,
+        252,
+        124,
+        369
+      ],
+      "shape_id": 46,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "激光科技",
+      "gameId": "Laser_Tech",
+      "asset": "original/technology/Laser_Tech.png",
+      "sha256": "8b30779c9d977792721b9d526461535a2e8353690d177d94e8daf93b54fbfce4"
+    },
+    {
+      "category": "technology",
+      "id": 3,
+      "label": "type_3",
+      "file": "technology/technology_03.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        6,
+        6,
+        124,
+        123
+      ],
+      "shape_id": 44,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "离子科技",
+      "gameId": "Ion_Tech",
+      "asset": "original/technology/Ion_Tech.png",
+      "sha256": "d6043a2103c0a21f0ee3405ea56536f359c8fa0cad9649921f0d4a386c98f574"
+    },
+    {
+      "category": "technology",
+      "id": 4,
+      "label": "type_4",
+      "file": "technology/technology_04.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        902,
+        903,
+        1020,
+        1021
+      ],
+      "shape_id": 42,
+      "size": [
+        118,
+        118
+      ],
+      "animated_overlays": [],
+      "name": "超空间科技",
+      "gameId": "Hyperspace_Tech",
+      "asset": "original/technology/Hyperspace_Tech.png",
+      "sha256": "9d5ac7047ce6526792a5d6da0cc6124bf5282df373af836acfa4efcf6bb82298"
+    },
+    {
+      "category": "technology",
+      "id": 5,
+      "label": "type_5",
+      "file": "technology/technology_05.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        130,
+        6,
+        248,
+        123
+      ],
+      "shape_id": 47,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "等离子科技",
+      "gameId": "Plasma_Tech",
+      "asset": "original/technology/Plasma_Tech.png",
+      "sha256": "9b49872f9a96f97affcfcab71098b7970bb64edd1e678acb3ed38eb4a4832e74"
+    },
+    {
+      "category": "technology",
+      "id": 6,
+      "label": "type_6",
+      "file": "technology/technology_06.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        130,
+        376,
+        248,
+        493
+      ],
+      "shape_id": 36,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "燃烧引擎",
+      "gameId": "Combustion_Drive",
+      "asset": "original/technology/Combustion_Drive.png",
+      "sha256": "108348f678cb0f48b154e302cd84f8350b20344310d95d4fc72fd6c61095ee0c"
+    },
+    {
+      "category": "technology",
+      "id": 7,
+      "label": "type_7",
+      "file": "technology/technology_07.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        902,
+        782,
+        1020,
+        900
+      ],
+      "shape_id": 43,
+      "size": [
+        118,
+        118
+      ],
+      "animated_overlays": [],
+      "name": "脉冲引擎",
+      "gameId": "Impulse_Drive",
+      "asset": "original/technology/Impulse_Drive.png",
+      "sha256": "499fedd55dfaf30c866d4eb434db7a460cf25d564584f659e88c2540b9bbe807"
+    },
+    {
+      "category": "technology",
+      "id": 8,
+      "label": "type_8",
+      "file": "technology/technology_08.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        6,
+        376,
+        124,
+        493
+      ],
+      "shape_id": 41,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "超空间引擎",
+      "gameId": "Hyperspace_Drive",
+      "asset": "original/technology/Hyperspace_Drive.png",
+      "sha256": "3e7ced3ba4d50463ea7c51bd703f667c53d5fee9face636b0d42a08f0a0a538a"
+    },
+    {
+      "category": "technology",
+      "id": 9,
+      "label": "type_9",
+      "file": "technology/technology_09.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        377,
+        253,
+        495,
+        370
+      ],
+      "shape_id": 40,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "间谍科技",
+      "gameId": "Espionage_Tech",
+      "asset": "original/technology/Espionage_Tech.png",
+      "sha256": "62405428f6e8419d2a25cddaee61955e61ef89e52847a8d9f35dc94f3ebeab0c"
+    },
+    {
+      "category": "technology",
+      "id": 10,
+      "label": "type_10",
+      "file": "technology/technology_10.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        782,
+        903,
+        900,
+        1021
+      ],
+      "shape_id": 37,
+      "size": [
+        118,
+        118
+      ],
+      "animated_overlays": [],
+      "name": "计算机科技",
+      "gameId": "Computer_Tech",
+      "asset": "original/technology/Computer_Tech.png",
+      "sha256": "6d1148692f834940a58a7109e389903a06fd879f0f59bf10f6e86e600e296a01"
+    },
+    {
+      "category": "technology",
+      "id": 11,
+      "label": "type_11",
+      "file": "technology/technology_11.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        378,
+        130,
+        496,
+        247
+      ],
+      "shape_id": 35,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "天体物理科技",
+      "gameId": "Astrophysics_Tech",
+      "asset": "original/technology/Astrophysics_Tech.png",
+      "sha256": "1f91aafc0f7cd328606a3b24a94fdcb96d0d9c9e5a2fd94fff3288372e5ceb8f"
+    },
+    {
+      "category": "technology",
+      "id": 14,
+      "label": "type_14",
+      "file": "technology/technology_14.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        254,
+        253,
+        372,
+        370
+      ],
+      "shape_id": 50,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "武器科技",
+      "gameId": "Weapons_Tech",
+      "asset": "original/technology/Weapons_Tech.png",
+      "sha256": "c8f9f73028c6fab243e3e6cb888acb19f50194850708e0fcc43954c25db136cf"
+    },
+    {
+      "category": "technology",
+      "id": 15,
+      "label": "type_15",
+      "file": "technology/technology_15.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        130,
+        129,
+        248,
+        246
+      ],
+      "shape_id": 48,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "护盾科技",
+      "gameId": "Shielding_Tech",
+      "asset": "original/technology/Shielding_Tech.png",
+      "sha256": "2839d2778a45fe8173dc7fca649b592dbae2f7a461a4e49bfc8601ea00875ae1"
+    },
+    {
+      "category": "technology",
+      "id": 16,
+      "label": "type_16",
+      "file": "technology/technology_16.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        378,
+        6,
+        496,
+        123
+      ],
+      "shape_id": 34,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "装甲科技",
+      "gameId": "Strength_Tech",
+      "asset": "original/technology/Strength_Tech.png",
+      "sha256": "bc53b23855e3bbb4ff74963f7613a761311f60c944a1dddc78f73f73a23ea481"
+    },
+    {
+      "category": "technology",
+      "id": 17,
+      "label": "type_17",
+      "file": "technology/technology_17.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        6,
+        129,
+        124,
+        246
+      ],
+      "shape_id": 45,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "氪晶科技",
+      "gameId": null,
+      "asset": "original/archive/technology_17.png",
+      "sha256": "fa9dacc9c1284d4c6f83784d3f24b816c776e8eb2166da9d3251be1164883629"
+    },
+    {
+      "category": "technology",
+      "id": 18,
+      "label": "type_18",
+      "file": "technology/technology_18.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        130,
+        253,
+        248,
+        370
+      ],
+      "shape_id": 49,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "超高温科技",
+      "gameId": null,
+      "asset": "original/archive/technology_18.png",
+      "sha256": "6406769a0b34ad33d3b766be1703ffd69e32395179ef55ffadaea718c712baa8"
+    },
+    {
+      "category": "technology",
+      "id": 19,
+      "label": "type_19",
+      "file": "technology/technology_19.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        254,
+        6,
+        372,
+        123
+      ],
+      "shape_id": 33,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "反重力科技",
+      "gameId": null,
+      "asset": "original/archive/technology_19.png",
+      "sha256": "dc24dee5cb93b5cbf83700dec79fce452ac28d23c0120aac7def72e24dca3f9a"
+    },
+    {
+      "category": "technology",
+      "id": 20,
+      "label": "type_20",
+      "file": "technology/technology_20.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        254,
+        130,
+        372,
+        247
+      ],
+      "shape_id": 32,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "合金探测科技",
+      "gameId": null,
+      "asset": "original/archive/technology_20.png",
+      "sha256": "db2f3b3ec69637b0a6131436ca59a8e37af11d6990e72f7bcc61964d145ca539"
+    },
+    {
+      "category": "technology",
+      "id": 21,
+      "label": "type_21",
+      "file": "technology/technology_21.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_3.png",
+      "crop_box": [
+        378,
+        377,
+        496,
+        494
+      ],
+      "shape_id": 38,
+      "size": [
+        118,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "动力科技",
+      "gameId": null,
+      "asset": "original/archive/technology_21.png",
+      "sha256": "46fd3c078ee5a642f81a7d0cfd1ab46a7859c7446d545f6696af0e216f4c048d"
+    },
+    {
+      "category": "fleet",
+      "id": 1,
+      "label": "type_1",
+      "file": "fleet/fleet_01.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        569,
+        296,
+        825,
+        430
+      ],
+      "shape_id": 654,
+      "size": [
+        256,
+        134
+      ],
+      "animated_overlays": [],
+      "name": "轻型战机",
+      "gameId": "Light_Fighter",
+      "asset": "original/units/Light_Fighter.png",
+      "sha256": "e580fed5932437b73152e94c51e4d085f07575465999e88eaf3c473618dc1559"
+    },
+    {
+      "category": "fleet",
+      "id": 2,
+      "label": "type_2",
+      "file": "fleet/fleet_02.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        506,
+        432,
+        739,
+        558
+      ],
+      "shape_id": 178,
+      "size": [
+        233,
+        126
+      ],
+      "animated_overlays": [],
+      "name": "重型战机",
+      "gameId": "Heavy_Fighter",
+      "asset": "original/units/Heavy_Fighter.png",
+      "sha256": "3e708f17c1d7ed5d83f00a572055a82fdefd80c1379ad090834c6b353a504dd6"
+    },
+    {
+      "category": "fleet",
+      "id": 3,
+      "label": "type_3",
+      "file": "fleet/fleet_03.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        414,
+        240,
+        531
+      ],
+      "shape_id": 277,
+      "size": [
+        238,
+        117
+      ],
+      "animated_overlays": [],
+      "name": "巡洋舰",
+      "gameId": "Cruiser",
+      "asset": "original/units/Cruiser.png",
+      "sha256": "3d48c887f9bab4d8ebcca02109ee57319ae335a22028075f638b303f581366a3"
+    },
+    {
+      "category": "fleet",
+      "id": 4,
+      "label": "type_4",
+      "file": "fleet/fleet_04.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        665,
+        217,
+        802
+      ],
+      "shape_id": 339,
+      "size": [
+        215,
+        137
+      ],
+      "animated_overlays": [],
+      "name": "战列舰",
+      "gameId": "Battleship",
+      "asset": "original/units/Battleship.png",
+      "sha256": "47ecac68344c7f9db0e90e755bc8e663efcf58154089affe41772229f3334e7a"
+    },
+    {
+      "category": "fleet",
+      "id": 5,
+      "label": "type_5",
+      "file": "fleet/fleet_05.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        804,
+        203,
+        980
+      ],
+      "shape_id": 623,
+      "size": [
+        201,
+        176
+      ],
+      "animated_overlays": [],
+      "name": "无畏舰",
+      "gameId": "Dreadnought",
+      "asset": "original/units/Dreadnought.png",
+      "sha256": "de4f75e8989173b17c2c92b47c3934f0a0800e7cf882ad0624f76924ac4df729"
+    },
+    {
+      "category": "fleet",
+      "id": 6,
+      "label": "type_6",
+      "file": "fleet/fleet_06.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        741,
+        474,
+        963,
+        628
+      ],
+      "shape_id": 393,
+      "size": [
+        222,
+        154
+      ],
+      "animated_overlays": [],
+      "name": "行星轰炸机",
+      "gameId": "Bomber",
+      "asset": "original/units/Bomber.png",
+      "sha256": "06e790caeb5a0759e01158a62394dc4e5fa954e1ffc44e11c9b1c5d842746c3f"
+    },
+    {
+      "category": "fleet",
+      "id": 7,
+      "label": "type_7",
+      "file": "fleet/fleet_07.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        310,
+        188,
+        567,
+        322
+      ],
+      "shape_id": 423,
+      "size": [
+        257,
+        134
+      ],
+      "animated_overlays": [],
+      "name": "驱逐舰",
+      "gameId": "Destroyer",
+      "asset": "original/units/Destroyer.png",
+      "sha256": "50e2657043f123f1f9af9931c7ed4737028ec993d36f090c19d2cc45ccb4e521"
+    },
+    {
+      "category": "fleet",
+      "id": 9,
+      "label": "type_9",
+      "file": "fleet/fleet_09.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        255,
+        324,
+        504,
+        492
+      ],
+      "shape_id": 232,
+      "size": [
+        249,
+        168
+      ],
+      "animated_overlays": [],
+      "name": "轻型运输舰",
+      "gameId": "Cargo_Ship",
+      "asset": "original/units/Cargo_Ship.png",
+      "sha256": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b"
+    },
+    {
+      "category": "fleet",
+      "id": 10,
+      "label": "type_10",
+      "file": "fleet/fleet_10.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        575,
+        161,
+        833,
+        294
+      ],
+      "shape_id": 360,
+      "size": [
+        258,
+        133
+      ],
+      "animated_overlays": [],
+      "name": "重型运输舰",
+      "gameId": "Large_Cargo_Ship",
+      "asset": "original/units/Large_Cargo_Ship.png",
+      "sha256": "f7ff2c0c710201910c42c29f88995f12e773b93241b188864dc8b4155ff69126"
+    },
+    {
+      "category": "fleet",
+      "id": 11,
+      "label": "type_11",
+      "file": "fleet/fleet_11.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        242,
+        253,
+        412
+      ],
+      "shape_id": 144,
+      "size": [
+        251,
+        170
+      ],
+      "animated_overlays": [],
+      "name": "殖民舰",
+      "gameId": "Colony_Ship",
+      "asset": "original/units/Colony_Ship.png",
+      "sha256": "97591de09b367666e8bba05904d1d29b4b34f6a659cb4d968bc0ae7ecdbfb814"
+    },
+    {
+      "category": "fleet",
+      "id": 12,
+      "label": "type_12",
+      "file": "fleet/fleet_12.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        575,
+        2,
+        835,
+        159
+      ],
+      "shape_id": 100,
+      "size": [
+        260,
+        157
+      ],
+      "animated_overlays": [],
+      "name": "回收舰",
+      "gameId": "Recycler",
+      "asset": "original/units/Recycler.png",
+      "sha256": "62cc1cc41c1cd7c45a1527ffa8a3d66e27836368ae7d4f4f14a7816f6f2fe465"
+    },
+    {
+      "category": "fleet",
+      "id": 13,
+      "label": "type_13",
+      "file": "fleet/fleet_13.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        835,
+        270,
+        987,
+        472
+      ],
+      "shape_id": 583,
+      "size": [
+        152,
+        202
+      ],
+      "animated_overlays": [],
+      "name": "探测器",
+      "gameId": "Probe",
+      "asset": "original/units/Probe.png",
+      "sha256": "332d64b82df25e0cc94a4bdce067449c5f0931d02f315be3cfdd9dc77f4973c7"
+    },
+    {
+      "category": "fleet",
+      "id": 14,
+      "label": "type_14",
+      "file": "fleet/fleet_14.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        694,
+        630,
+        895,
+        731
+      ],
+      "shape_id": 734,
+      "size": [
+        201,
+        101
+      ],
+      "animated_overlays": [],
+      "name": "太阳能卫星",
+      "gameId": "Solar_Satellite",
+      "asset": "original/units/Solar_Satellite.png",
+      "sha256": "77b4f7aae69b9e19cd10ab3f6b6218e928a2f2ea3bd1d9d2a01ef08997168d58"
+    },
+    {
+      "category": "defense",
+      "id": 15,
+      "label": "type_15",
+      "file": "defense/fleet_15.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        837,
+        2,
+        1017,
+        152
+      ],
+      "shape_id": 1035,
+      "size": [
+        180,
+        150
+      ],
+      "animated_overlays": [],
+      "name": "火箭发射器",
+      "gameId": "Rocket_Launcher",
+      "asset": "original/units/Rocket_Launcher.png",
+      "sha256": "98077b7deedb26b8383cdddb32ee17c65ebf9a6c1f30df512fe15a78b7dc84ae"
+    },
+    {
+      "category": "defense",
+      "id": 16,
+      "label": "type_16",
+      "file": "defense/fleet_16.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        479,
+        864,
+        620,
+        964
+      ],
+      "shape_id": 1038,
+      "size": [
+        141,
+        100
+      ],
+      "animated_overlays": [],
+      "name": "轻型激光炮",
+      "gameId": "Light_Laser",
+      "asset": "original/units/Light_Laser.png",
+      "sha256": "09d899efbb288243155093b091a96ac83f49f29044338e0cc74f6f257cca6819"
+    },
+    {
+      "category": "defense",
+      "id": 17,
+      "label": "type_17",
+      "file": "defense/fleet_17.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        837,
+        154,
+        995,
+        268
+      ],
+      "shape_id": 1041,
+      "size": [
+        158,
+        114
+      ],
+      "animated_overlays": [],
+      "name": "重型激光炮",
+      "gameId": "Heavy_Laser",
+      "asset": "original/units/Heavy_Laser.png",
+      "sha256": "16e71fc3563ccb2900d3826258734228b2d2fcbd55e37dd2cb9342405496b29b"
+    },
+    {
+      "category": "defense",
+      "id": 18,
+      "label": "type_18",
+      "file": "defense/fleet_18.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        347,
+        795,
+        477,
+        942
+      ],
+      "shape_id": 1044,
+      "size": [
+        130,
+        147
+      ],
+      "animated_overlays": [],
+      "name": "磁轨炮",
+      "gameId": "MK2_Cannon",
+      "asset": "original/units/MK2_Cannon.png",
+      "sha256": "2d249cb98d3c28351ffcfd66a08dfe0191a29e8f51e018a22dcb965831140047"
+    },
+    {
+      "category": "defense",
+      "id": 19,
+      "label": "type_19",
+      "file": "defense/fleet_19.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        205,
+        804,
+        345,
+        966
+      ],
+      "shape_id": 1047,
+      "size": [
+        140,
+        162
+      ],
+      "animated_overlays": [],
+      "name": "中子炮",
+      "gameId": "Ion_Cannon",
+      "asset": "original/units/Ion_Cannon.png",
+      "sha256": "953c15138cef7ac715c7620f121a3adbb0cf7c3473be39e61374e85dd37fab63"
+    },
+    {
+      "category": "defense",
+      "id": 20,
+      "label": "type_20",
+      "file": "defense/fleet_20.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        479,
+        720,
+        677,
+        862
+      ],
+      "shape_id": 1050,
+      "size": [
+        198,
+        142
+      ],
+      "animated_overlays": [],
+      "name": "等离子炮塔",
+      "gameId": "Plasma_Cannon",
+      "asset": "original/units/Plasma_Cannon.png",
+      "sha256": "f4ed6347c6d7ceee95545fb032ac22efd75c532737b8eb713f260201d4f8cff7"
+    },
+    {
+      "category": "defense",
+      "id": 21,
+      "label": "type_21",
+      "file": "defense/fleet_21.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        533,
+        229,
+        663
+      ],
+      "shape_id": 1053,
+      "size": [
+        227,
+        130
+      ],
+      "animated_overlays": [],
+      "name": "小型防护盾",
+      "gameId": "Small_Shield_Dome",
+      "asset": "original/units/Small_Shield_Dome.png",
+      "sha256": "2c24eb8ca288754b76717b6f87fbdd4c9cb45e4891367cf23300b57a5dc43298"
+    },
+    {
+      "category": "defense",
+      "id": 22,
+      "label": "type_22",
+      "file": "defense/fleet_22.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        242,
+        494,
+        470,
+        626
+      ],
+      "shape_id": 1056,
+      "size": [
+        228,
+        132
+      ],
+      "animated_overlays": [],
+      "name": "大型防护盾",
+      "gameId": "Large_Shield_Dome",
+      "asset": "original/units/Large_Shield_Dome.png",
+      "sha256": "1c3a3f3a68cff95e0618441a52ffcb1e8c7fc20c50dc413f720a736f097439bb"
+    },
+    {
+      "category": "fleet",
+      "id": 23,
+      "label": "type_23",
+      "file": "fleet/fleet_23.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        472,
+        560,
+        692,
+        718
+      ],
+      "shape_id": 703,
+      "size": [
+        220,
+        158
+      ],
+      "animated_overlays": [],
+      "name": "拦截舰（暂译）",
+      "gameId": null,
+      "asset": "original/archive/fleet_23.png",
+      "sha256": "14e559652ee7ea02c9d4f332763c3fda5a2391af82df5a1196b4fa3d30c87622"
+    },
+    {
+      "category": "fleet",
+      "id": 24,
+      "label": "type_24",
+      "file": "fleet/fleet_24.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        231,
+        628,
+        449,
+        793
+      ],
+      "shape_id": 549,
+      "size": [
+        218,
+        165
+      ],
+      "animated_overlays": [],
+      "name": "巨兽舰（暂译）",
+      "gameId": null,
+      "asset": "original/archive/fleet_24.png",
+      "sha256": "f6324df90210bc892b12194bee4bf504c441ee781591a11f07520e0157e5098f"
+    },
+    {
+      "category": "fleet",
+      "id": 25,
+      "label": "type_25",
+      "file": "fleet/fleet_25.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        310,
+        2,
+        573,
+        186
+      ],
+      "shape_id": 838,
+      "size": [
+        263,
+        184
+      ],
+      "animated_overlays": [],
+      "name": "噬能截击者",
+      "gameId": null,
+      "asset": "original/archive/fleet_25.png",
+      "sha256": "7bf16d8d69fe7b9f5bd40c9784c2c90c78aeaf67633dac997762368754289962"
+    },
+    {
+      "category": "fleet",
+      "id": 26,
+      "label": "type_26",
+      "file": "fleet/fleet_26.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        2,
+        308,
+        240
+      ],
+      "shape_id": 868,
+      "size": [
+        306,
+        238
+      ],
+      "animated_overlays": [],
+      "name": "钛能守卫者",
+      "gameId": null,
+      "asset": "original/archive/fleet_26.png",
+      "sha256": "b30435a96530b818f2bc7e4c4d6ebf22cc1bf9f0571cf80ae4e208871088e30a"
+    },
+    {
+      "category": "defense",
+      "id": 27,
+      "label": "type_27",
+      "file": "defense/fleet_27.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        630,
+        903,
+        776,
+        1009
+      ],
+      "shape_id": 1059,
+      "size": [
+        146,
+        106
+      ],
+      "animated_overlays": [],
+      "name": "质子炮",
+      "gameId": "Proton_Cannon",
+      "asset": "original/units/Proton_Cannon.png",
+      "sha256": "6425e9cb26a474bd61de9ced349cabd9e5140599fbbe215dd69d03f595ee20fc"
+    },
+    {
+      "category": "fleet",
+      "id": 28,
+      "label": "type_28",
+      "file": "fleet/fleet_28.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ship_destruction_star.png",
+      "crop_box": [
+        0,
+        0,
+        260,
+        145
+      ],
+      "shape_id": 906,
+      "size": [
+        260,
+        145
+      ],
+      "animated_overlays": [],
+      "name": "毁灭舰（暂译）",
+      "gameId": null,
+      "asset": "original/archive/fleet_28.png",
+      "sha256": "f09489129b34799030b907ef88c8bcd451054a4be3c4a028172d2f21f13588b7"
+    },
+    {
+      "category": "fleet",
+      "id": 29,
+      "label": "type_29",
+      "file": "fleet/fleet_29.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ship_Overlord.png",
+      "crop_box": [
+        0,
+        0,
+        258,
+        166
+      ],
+      "shape_id": 970,
+      "size": [
+        258,
+        166
+      ],
+      "animated_overlays": [],
+      "name": "收割者（暂译）",
+      "gameId": null,
+      "asset": "original/archive/fleet_29.png",
+      "sha256": "884556db6bad3f173ef334400c8be96d7544b5667be2900d33af4bb13b58a3ad"
+    },
+    {
+      "category": "building",
+      "id": 1,
+      "label": "building_1",
+      "file": "building/building_01.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        356,
+        322,
+        654
+      ],
+      "shape_id": 49,
+      "size": [
+        318,
+        298
+      ],
+      "animated_overlays": [],
+      "name": "金属加工厂",
+      "gameId": "Metal_Mine",
+      "asset": "original/buildings/Metal_Mine.png",
+      "sha256": "d8f697a5017fc5ff9efe9aa816ac77f3ce2158dee31671584eac9ae1bccc2a1d"
+    },
+    {
+      "category": "building",
+      "id": 2,
+      "label": "building_2",
+      "file": "building/building_02.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        934,
+        294,
+        1192
+      ],
+      "shape_id": 51,
+      "size": [
+        290,
+        258
+      ],
+      "animated_overlays": [],
+      "name": "晶体加工厂",
+      "gameId": "Crystal_Mine",
+      "asset": "original/buildings/Crystal_Mine.png",
+      "sha256": "d01da29666c941e6e1544f31d16f96ef602d0271b05a4d9c9d7261a5235c628c"
+    },
+    {
+      "category": "building",
+      "id": 3,
+      "label": "building_3",
+      "file": "building/building_03.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        656,
+        298,
+        932
+      ],
+      "shape_id": 53,
+      "size": [
+        294,
+        276
+      ],
+      "animated_overlays": [],
+      "name": "气体提炼厂",
+      "gameId": "Gas_Mine",
+      "asset": "original/buildings/Gas_Mine.png",
+      "sha256": "b684e201ec99c53ff2d8dd34d696ee6308ef4978687980bda1ee7dc29bcfcb41"
+    },
+    {
+      "category": "building",
+      "id": 4,
+      "label": "building_4",
+      "file": "building/building_04.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1418,
+        4,
+        1746,
+        242
+      ],
+      "shape_id": 55,
+      "size": [
+        328,
+        238
+      ],
+      "animated_overlays": [],
+      "name": "太阳能电厂",
+      "gameId": "Solar_Plant",
+      "asset": "original/buildings/Solar_Plant.png",
+      "sha256": "20bcce1d3d2f1182b4f07a68ce9607f0b1ae8712f15446dfe73f8ba320b834cb"
+    },
+    {
+      "category": "building",
+      "id": 5,
+      "label": "building_5",
+      "file": "building/building_05.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1347,
+        244,
+        1623,
+        469
+      ],
+      "shape_id": 57,
+      "size": [
+        276,
+        225
+      ],
+      "animated_overlays": [],
+      "name": "核电厂",
+      "gameId": "Fusion_Reactor",
+      "asset": "original/buildings/Fusion_Reactor.png",
+      "sha256": "dafaf5493176b297eb87dd12d05643d74edb33bbfe232b09310f8c73a0d63b74"
+    },
+    {
+      "category": "building",
+      "id": 6,
+      "label": "building_6",
+      "file": "building/building_06.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1070,
+        4,
+        1416,
+        242
+      ],
+      "shape_id": 59,
+      "size": [
+        346,
+        238
+      ],
+      "animated_overlays": [],
+      "name": "金属仓库",
+      "gameId": "Metal_Storage",
+      "asset": "original/buildings/Metal_Storage.png",
+      "sha256": "9520dc2dec2e9a5eca46c04b6bfbd24ca64a461d17d3737595e78c0746c10648"
+    },
+    {
+      "category": "building",
+      "id": 7,
+      "label": "building_7",
+      "file": "building/building_07.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        324,
+        473,
+        602,
+        689
+      ],
+      "shape_id": 61,
+      "size": [
+        278,
+        216
+      ],
+      "animated_overlays": [],
+      "name": "晶体仓库",
+      "gameId": "Crystal_Storage",
+      "asset": "original/buildings/Crystal_Storage.png",
+      "sha256": "78f58a6ecff87b7cc9db6bed9e96a396dd5a3b8e058bc08db9baabe8e3080e3d"
+    },
+    {
+      "category": "building",
+      "id": 8,
+      "label": "building_8",
+      "file": "building/building_08.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1748,
+        4,
+        2038,
+        244
+      ],
+      "shape_id": 63,
+      "size": [
+        290,
+        240
+      ],
+      "animated_overlays": [],
+      "name": "气体储藏槽",
+      "gameId": "Gas_Storage",
+      "asset": "original/buildings/Gas_Storage.png",
+      "sha256": "22e4f91a046b40734b2a1b7de6d8834a7508b61b52919804b5d98a27b851b945"
+    },
+    {
+      "category": "building",
+      "id": 9,
+      "label": "building_9",
+      "file": "building/building_09.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        400,
+        4,
+        728,
+        273
+      ],
+      "shape_id": 65,
+      "size": [
+        328,
+        269
+      ],
+      "animated_overlays": [
+        67
+      ],
+      "name": "机器人工厂",
+      "gameId": "Robotics_Facility",
+      "asset": "original/buildings/Robotics_Facility.png",
+      "sha256": "a6aee42da8cb00855b236780c8f1fa15696259b01970dac24f3cef2825c12a4a"
+    },
+    {
+      "category": "building",
+      "id": 10,
+      "label": "building_10",
+      "file": "building/building_10.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        4,
+        398,
+        354
+      ],
+      "shape_id": 70,
+      "size": [
+        394,
+        350
+      ],
+      "animated_overlays": [],
+      "name": "飞船基地",
+      "gameId": "Shipyard",
+      "asset": "original/buildings/Shipyard.png",
+      "sha256": "a816f67268046a8326f73a1fd2c6c825b0aca6b94e6544057d6bca7ba98a7df2"
+    },
+    {
+      "category": "building",
+      "id": 11,
+      "label": "building_11",
+      "file": "building/building_11.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        730,
+        4,
+        1068,
+        254
+      ],
+      "shape_id": 72,
+      "size": [
+        338,
+        250
+      ],
+      "animated_overlays": [],
+      "name": "研究实验室",
+      "gameId": "Research_Lab",
+      "asset": "original/buildings/Research_Lab.png",
+      "sha256": "93de97321fadaa5654d684f887612e4cff42afe524cccb6c222beda597422cac"
+    },
+    {
+      "category": "building",
+      "id": 12,
+      "label": "building_12",
+      "file": "building/building_12.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        766,
+        256,
+        1086,
+        492
+      ],
+      "shape_id": 74,
+      "size": [
+        320,
+        236
+      ],
+      "animated_overlays": [],
+      "name": "联盟太空站",
+      "gameId": "Alliance_Depot",
+      "asset": "original/buildings/Alliance_Depot.png",
+      "sha256": "de835f0a69d51d5a1907d9e4a58195bd778706e2dbc3445e5dd21f7b23d65b96"
+    },
+    {
+      "category": "building",
+      "id": 13,
+      "label": "building_13",
+      "file": "building/building_13.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        1194,
+        282,
+        1457
+      ],
+      "shape_id": 76,
+      "size": [
+        278,
+        263
+      ],
+      "animated_overlays": [],
+      "name": "预警雷达",
+      "gameId": "Radar_Facility",
+      "asset": "original/buildings/Radar_Facility.png",
+      "sha256": "8a714cbfecf8d5a0cb60c525113271e927b4b7da40fa0717c8d0640adfbea08f"
+    },
+    {
+      "category": "building",
+      "id": 14,
+      "label": "building_14",
+      "file": "building/building_14.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        4,
+        1720,
+        304,
+        1962
+      ],
+      "shape_id": 78,
+      "size": [
+        300,
+        242
+      ],
+      "animated_overlays": [],
+      "name": "纳米机器人工厂",
+      "gameId": "Nanite_Factory",
+      "asset": "original/buildings/Nanite_Factory.png",
+      "sha256": "66a294553947230ed4f7bd2e7ea5c69311f4a313e1a0b74d55fba569d7a5a80b"
+    },
+    {
+      "category": "building",
+      "id": 15,
+      "label": "building_15",
+      "file": "building/building_15.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        604,
+        473,
+        728,
+        713
+      ],
+      "shape_id": 93,
+      "size": [
+        124,
+        240
+      ],
+      "animated_overlays": [],
+      "name": "月球雷达",
+      "gameId": "The_EU_X_Radar",
+      "asset": "original/buildings/The_EU_X_Radar.png",
+      "sha256": "562e9d27ece5afc497c42b2e6e7e9dbbf080fd1c678b4fc7e777be6fe166ffae"
+    },
+    {
+      "category": "building",
+      "id": 16,
+      "label": "building_16",
+      "file": "building/building_16.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1378,
+        471,
+        1594,
+        701
+      ],
+      "shape_id": 95,
+      "size": [
+        216,
+        230
+      ],
+      "animated_overlays": [],
+      "name": "虫洞发生器",
+      "gameId": "Wormhole_Generator",
+      "asset": "original/buildings/Wormhole_Generator.png",
+      "sha256": "5e959ef5cc8da05b48b6b343a93fef760d6d05df461155d5e708920ffef43d1a"
+    },
+    {
+      "category": "building",
+      "id": 17,
+      "label": "building_17",
+      "file": "building/building_17.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        284,
+        1362,
+        524,
+        1516
+      ],
+      "shape_id": 87,
+      "size": [
+        240,
+        154
+      ],
+      "animated_overlays": [],
+      "name": "月球飞船基地",
+      "gameId": null,
+      "asset": "original/archive/building_17.png",
+      "sha256": "0798a8e54d07a1efe81b74bd820836f8c347a930bad28aad175071cbf5f869f3"
+    },
+    {
+      "category": "building",
+      "id": 18,
+      "label": "building_18",
+      "file": "building/building_18.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        275,
+        1518,
+        499,
+        1700
+      ],
+      "shape_id": 85,
+      "size": [
+        224,
+        182
+      ],
+      "animated_overlays": [],
+      "name": "月球机器人工厂",
+      "gameId": null,
+      "asset": "original/archive/building_18.png",
+      "sha256": "515a4b072a0a2563447928d1e64051f408f9be56a42f0f0fb32668d55e3f80d5"
+    },
+    {
+      "category": "building",
+      "id": 19,
+      "label": "building_19",
+      "file": "building/building_19.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        1812,
+        462,
+        2044,
+        653
+      ],
+      "shape_id": 89,
+      "size": [
+        232,
+        191
+      ],
+      "animated_overlays": [],
+      "name": "月球基地",
+      "gameId": "Moon_Base",
+      "asset": "original/buildings/Moon_Base.png",
+      "sha256": "e724e6cffbb4dc20e0e5a0023156695a5ed50ec7809ba1207d13fa203faba729"
+    },
+    {
+      "category": "building",
+      "id": 20,
+      "label": "building_20",
+      "file": "building/building_20.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        400,
+        275,
+        764,
+        471
+      ],
+      "shape_id": 80,
+      "size": [
+        364,
+        196
+      ],
+      "animated_overlays": [
+        82
+      ],
+      "name": "氪晶研究中心",
+      "gameId": null,
+      "asset": "original/archive/building_20.png",
+      "sha256": "0c859dede55ce1791717a1266c8d3da35f61496dd63229122a95da0717f86472"
+    },
+    {
+      "category": "building",
+      "id": 21,
+      "label": "building_21",
+      "file": "building/building_21.png",
+      "source_ui": "City_Explanation.tfs",
+      "source_atlas": "main_city_res.png",
+      "crop_box": [
+        296,
+        1171,
+        536,
+        1360
+      ],
+      "shape_id": 91,
+      "size": [
+        240,
+        189
+      ],
+      "animated_overlays": [],
+      "name": "旗舰中心",
+      "gameId": null,
+      "asset": "original/archive/building_21.png",
+      "sha256": "b9835e970a27aae5131b0051f1943f097d4d16b82803d5c1690d01c7ebcb2fef"
+    }
+  ],
+  "audio": [
+    {
+      "name": "太阳系",
+      "asset": "original/audio/BGS_Solar_System_Loop.mp3"
+    },
+    {
+      "name": "氪晶分解",
+      "asset": "original/audio/krypton_decompose.mp3"
+    },
+    {
+      "name": "氪晶启动",
+      "asset": "original/audio/krypton_start.mp3"
+    },
+    {
+      "name": "氪晶强化成功",
+      "asset": "original/audio/krypton_strength_success.mp3"
+    },
+    {
+      "name": "战斗",
+      "asset": "original/audio/ME_Battle.mp3"
+    },
+    {
+      "name": "舰队集结",
+      "asset": "original/audio/ME_Fleet_Battle_Prep.mp3"
+    },
+    {
+      "name": "母星",
+      "asset": "original/audio/ME_Home_Planet.mp3"
+    },
+    {
+      "name": "登录主题",
+      "asset": "original/audio/ME_Login.mp3"
+    },
+    {
+      "name": "月球",
+      "asset": "original/audio/ME_Moon.mp3"
+    },
+    {
+      "name": "月球诞生",
+      "asset": "original/audio/ME_Moon_Generated.mp3"
+    },
+    {
+      "name": "战斗失利",
+      "asset": "original/audio/ME_Sting_Battle_Lose.mp3"
+    },
+    {
+      "name": "战斗平局",
+      "asset": "original/audio/ME_Sting_Battle_Tie.mp3"
+    },
+    {
+      "name": "战斗胜利",
+      "asset": "original/audio/ME_Sting_Battle_Win.mp3"
+    },
+    {
+      "name": "任务完成",
+      "asset": "original/audio/ME_Sting_Task_Complete.mp3"
+    },
+    {
+      "name": "取消升级",
+      "asset": "original/audio/SE_Building_Update_Cancel.mp3"
+    },
+    {
+      "name": "建筑升级",
+      "asset": "original/audio/SE_Building_Updating.mp3"
+    },
+    {
+      "name": "界面弹出",
+      "asset": "original/audio/SE_Button_Appear.mp3"
+    },
+    {
+      "name": "建造舰船",
+      "asset": "original/audio/SE_Construct_Fleet.mp3"
+    },
+    {
+      "name": "建筑降级",
+      "asset": "original/audio/SE_Demote.mp3"
+    },
+    {
+      "name": "进入银河",
+      "asset": "original/audio/SE_Enter_Galaxy.mp3"
+    },
+    {
+      "name": "进入太阳系",
+      "asset": "original/audio/SE_Enter_Solar_System.mp3"
+    },
+    {
+      "name": "舰队出航",
+      "asset": "original/audio/SE_Fleet_Dispatch.mp3"
+    },
+    {
+      "name": "月球扫描",
+      "asset": "original/audio/SE_Induction_Circle_Scan.mp3"
+    },
+    {
+      "name": "暗物质提示",
+      "asset": "original/audio/SE_Purchase_DarkMatter.mp3"
+    },
+    {
+      "name": "资源兑换",
+      "asset": "original/audio/SE_Purchasing_Resources.mp3"
+    },
+    {
+      "name": "关闭雷达",
+      "asset": "original/audio/SE_Radar_Off.mp3"
+    },
+    {
+      "name": "开启雷达",
+      "asset": "original/audio/SE_Radar_On.mp3"
+    },
+    {
+      "name": "雷达警报",
+      "asset": "original/audio/SE_Rader_Facility_Warning.mp3"
+    },
+    {
+      "name": "获得礼包",
+      "asset": "original/audio/SE_Receive_Package.mp3"
+    },
+    {
+      "name": "科技研究",
+      "asset": "original/audio/SE_Research_Tech_Update.mp3"
+    },
+    {
+      "name": "取消研究",
+      "asset": "original/audio/SE_Research_Tech_Update_Cancel.mp3"
+    },
+    {
+      "name": "虫洞传送",
+      "asset": "original/audio/SE_Transfer_Circle.mp3"
+    },
+    {
+      "name": "按钮点击",
+      "asset": "original/audio/sound_button_click.wav"
+    }
+  ],
+  "scenes": [
+    {
+      "name": "主星场景 · 组合预览",
+      "asset": "original/scenes/home-preview.png",
+      "composition": "地表原图叠加等比裁切的星空；非原版场景精确位置还原",
+      "width": 1852,
+      "height": 1288,
+      "sha256": "e2404b413f4d55c35ade0f15ad9e1d166f1a7b4643c22cdccb91ebb0d0f209e8"
+    },
+    {
+      "name": "主星基地地表",
+      "asset": "original/scenes/home-ground.png",
+      "source_ui": "City.tfs",
+      "source_atlas": "stage_animation_res.png",
+      "shape_id": 485,
+      "box": [
+        2,
+        2,
+        1854,
+        1290
+      ],
+      "width": 1852,
+      "height": 1288,
+      "sha256": "94a7606a1dad5106eb6fcf5ecbe2906333ad44b0f0be212f43b7caaee3e1de73"
+    },
+    {
+      "name": "主星星空",
+      "asset": "original/scenes/home-space.png",
+      "source_ui": "City.tfs",
+      "source_atlas": "space_bg1.png",
+      "shape_id": 16,
+      "box": [
+        0,
+        0,
+        1024,
+        650
+      ],
+      "width": 1024,
+      "height": 650,
+      "sha256": "a766198a2354da29dd6961731f2270a213807805ea9d3ca78c8cca77ab3f5122"
+    }
+  ],
+  "city": {
+    "asset": "original/scenes/city.json",
+    "fps": 30.0,
+    "widths": {
+      "Metal_Mine": 137.37,
+      "Crystal_Mine": 125.27,
+      "Gas_Mine": 127.0,
+      "Solar_Plant": 141.68,
+      "Fusion_Reactor": 119.22,
+      "Metal_Storage": 149.46,
+      "Crystal_Storage": 120.09,
+      "Gas_Storage": 125.27,
+      "Robotics_Facility": 141.68,
+      "Shipyard": 170.19,
+      "Research_Lab": 146.0,
+      "Alliance_Depot": 138.23,
+      "Radar_Facility": 120.09,
+      "Nanite_Factory": 129.59,
+      "Command_Center": 140,
+      "Terraformer": 145,
+      "Missile_Silo": 130
+    }
+  },
+  "unmatched": {
+    "technology": [
+      "Intergalactic_Network",
+      "Graviton_Tech"
+    ],
+    "units": [
+      "Death_Star",
+      "Guardian",
+      "Interceptor_Missile",
+      "Interplanetary_Missile"
+    ],
+    "buildings": [
+      "Command_Center",
+      "Terraformer",
+      "Missile_Silo"
+    ]
+  }
+}

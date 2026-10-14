@@ -1,0 +1,15 @@
+node_modules/
+data/
+
+# Local captures, replay fixtures, isolated saves, tool downloads and Git backups.
+/output/
+/opendesign/previews/
+
+# Recovered modelling work is archived locally. Keep the two source meshes used
+# by the identity regression test; these are stored through Git LFS.
+/models/recovered/*
+!/models/recovered/remaining-tripo-20261013/
+/models/recovered/remaining-tripo-20261013/*
+!/models/recovered/remaining-tripo-20261013/manifest.json
+!/models/recovered/remaining-tripo-20261013/Colony_Ship.glb
+!/models/recovered/remaining-tripo-20261013/Devourer_Interceptor.glb

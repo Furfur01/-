@@ -1,0 +1,574 @@
+{
+  "method": "Offline static parsing; no APK or bytecode execution, no server request.",
+  "packages": [
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data1.pak",
+      "entries": 169,
+      "luaChunks": 169,
+      "otherHeaders": []
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data1_64.pak",
+      "entries": 169,
+      "luaChunks": 169,
+      "otherHeaders": []
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/affairs_and_krypton_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/black_mask_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000100000001000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/building_bulletin_res_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/galaxy_combat_bg_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/hexagon_efc_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000400000004000000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/krypton_1_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000200000002000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/main_city_res_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000800000008000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/main_stage_space_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000800000008000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/moon_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000800000008000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/portal_res_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/ShipCityTech_1_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/ShipCityTech_3_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000200000002000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/Shop_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000100000001000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/SolarSystem_Bg_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/space_other_space_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000400000004000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/stage_animation_res_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000800000008000000000000"
+      ]
+    },
+    {
+      "path": "tap4fun/galaxy_empire/AppOriginalData/Android/data2/starfortress_space_res_alpha.pak",
+      "entries": 1,
+      "luaChunks": 0,
+      "otherHeaders": [
+        "34000000000800000008000000000000"
+      ]
+    }
+  ],
+  "fieldReaders": [
+    {
+      "package": "data1.pak",
+      "source": "@./GameObjectMission.lua",
+      "lines": [
+        125,
+        168
+      ],
+      "fields": [
+        "speed"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        135,
+        184
+      ],
+      "fields": [
+        "armour",
+        "attack",
+        "capacity",
+        "fatal_damage_list",
+        "fuel_usage",
+        "shield",
+        "speed"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        272,
+        295
+      ],
+      "fields": [
+        "bonus_damage_rate",
+        "damage_rate"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        627,
+        661
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        682,
+        739
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        1022,
+        1038
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallengeRank.lua",
+      "lines": [
+        727,
+        745
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1042,
+        1113
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1134,
+        1219
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1345,
+        1361
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1609,
+        1627
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIMail.lua",
+      "lines": [
+        726,
+        942
+      ],
+      "fields": [
+        "capacity"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIMail.lua",
+      "lines": [
+        1626,
+        2061
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1.pak",
+      "source": "@./GameUISolar.lua",
+      "lines": [
+        398,
+        447
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameObjectMission.lua",
+      "lines": [
+        125,
+        168
+      ],
+      "fields": [
+        "speed"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        135,
+        184
+      ],
+      "fields": [
+        "armour",
+        "attack",
+        "capacity",
+        "fatal_damage_list",
+        "fuel_usage",
+        "shield",
+        "speed"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        272,
+        295
+      ],
+      "fields": [
+        "bonus_damage_rate",
+        "damage_rate"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        627,
+        661
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        682,
+        739
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallenge.lua",
+      "lines": [
+        1022,
+        1038
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallengeRank.lua",
+      "lines": [
+        727,
+        745
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1042,
+        1113
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1134,
+        1219
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1345,
+        1361
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIGalaxyChallengeWD.lua",
+      "lines": [
+        1609,
+        1627
+      ],
+      "fields": [
+        "attack",
+        "shield"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIMail.lua",
+      "lines": [
+        726,
+        942
+      ],
+      "fields": [
+        "capacity"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIMail.lua",
+      "lines": [
+        1626,
+        2061
+      ],
+      "fields": [
+        "attack"
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUISolar.lua",
+      "lines": [
+        398,
+        447
+      ],
+      "fields": [
+        "attack"
+      ]
+    }
+  ],
+  "literalFieldAssignments": [],
+  "requestEvidence": [
+    {
+      "package": "data1.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        116,
+        133
+      ],
+      "constants": [
+        "data",
+        "fleet_type",
+        "GameGlobalData",
+        "GetFleetByType",
+        "fleets/",
+        "tostring",
+        "fleet_id",
+        "GameUtils",
+        "SendMsg",
+        "get"
+      ],
+      "callbackLocals": [
+        [
+          {
+            "name": "content",
+            "start": 0,
+            "end": 4
+          }
+        ]
+      ]
+    },
+    {
+      "package": "data1_64.pak",
+      "source": "@./GameUIFleetInfo.lua",
+      "lines": [
+        116,
+        133
+      ],
+      "constants": [
+        "data",
+        "fleet_type",
+        "GameGlobalData",
+        "GetFleetByType",
+        "fleets/",
+        "tostring",
+        "fleet_id",
+        "GameUtils",
+        "SendMsg",
+        "get"
+      ],
+      "callbackLocals": [
+        [
+          {
+            "name": "content",
+            "start": 0,
+            "end": 4
+          }
+        ]
+      ]
+    }
+  ],
+  "resourceSha256": "008356c656bf9a471c10c58cdc55750da02ce6ac6eb5b2b8e5b67f948f249dc1",
+  "resourceFiles": 804,
+  "extensions": {
+    "": 1,
+    ".pak": 19,
+    ".png": 280,
+    ".tfs": 410,
+    ".ttf": 1,
+    ".cn": 4,
+    ".de": 4,
+    ".en": 4,
+    ".fr": 4,
+    ".idx": 4,
+    ".it": 4,
+    ".jp": 4,
+    ".kor": 4,
+    ".pt": 4,
+    ".ru": 4,
+    ".sp": 4,
+    ".zh_hant": 4,
+    ".tfl": 2,
+    ".glsl": 10,
+    ".mp3": 32,
+    ".wav": 1
+  },
+  "databaseTables": [
+    "order_info",
+    "sqlite_sequence"
+  ],
+  "conclusion": "Ship identifiers, localized descriptions and stat field readers are present. Both Lua builds request fleets/<fleet_id> and pass response content to UpdatePanel. No constant-to-constant SETTABLE assignments for the nine stat/counter fields were found; no standalone numeric ship table was identified in the inspected resources. Native code was not fully decompiled; this is not proof that every possible embedded numeric value is absent."
+}

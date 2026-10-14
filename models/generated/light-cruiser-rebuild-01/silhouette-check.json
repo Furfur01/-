@@ -1,0 +1,16 @@
+{
+  "method": "Pixel intersection / union, alpha > 127; equal orthographic scale and canonical alignment; includes added weapons.",
+  "limitation": "Silhouette overlap only, not overall 3D similarity or visual-quality acceptance.",
+  "scores": {
+    "Cruiser": {
+      "front": 0.7744,
+      "side": 0.85,
+      "top": 0.8653
+    },
+    "Light_Fighter": {
+      "front": 0.8094,
+      "side": 0.8029,
+      "top": 0.8492
+    }
+  }
+}

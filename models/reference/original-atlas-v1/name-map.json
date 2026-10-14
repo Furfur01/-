@@ -1,0 +1,1033 @@
+{
+  "source": "yinhediguo.apk -> assets/tap4fun.zip -> AppOriginalData/Android",
+  "uploaded_atlas_alpha_and_opaque_pixels_match_apk": true,
+  "uploaded_atlas_counts": {
+    "fleet_and_satellite": 17,
+    "defense": 9,
+    "technology": 3
+  },
+  "all_extracted_fleet_icons": 19,
+  "missing_ui_icon": {
+    "id": 8,
+    "constant": "FT_DEAD_STAR",
+    "pc": 73,
+    "instruction": 2470723594,
+    "note": "Constant exists; the extracted Fleets.tfs icon list contains no type_8. Do not substitute another ship."
+  },
+  "guardian_note": "No FT_GUARDIAN constant in this client table. FT_FLEETTYPE_26 is specifically named Titanenergetic Frigate / 钛能守卫者 in localization.",
+  "rows": [
+    {
+      "category": "technology",
+      "id": 4,
+      "label": "type_4",
+      "file": "icons/technology_04_Hyperspace_Tech.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        902,
+        903,
+        1020,
+        1021
+      ],
+      "shape_id": 42,
+      "size": [
+        118,
+        118
+      ],
+      "name_zh": "超空间科技",
+      "name_en": "Hyperspace Tech",
+      "project_or_reference_id": "Hyperspace_Tech",
+      "enum_evidence": {
+        "constant": "RT_HYPERSPACE_TECH",
+        "pc": 16,
+        "instruction": 2218934282
+      },
+      "localization_key": "",
+      "in_uploaded_atlas": true,
+      "sha256": "9d5ac7047ce6526792a5d6da0cc6124bf5282df373af836acfa4efcf6bb82298",
+      "name_note": ""
+    },
+    {
+      "category": "technology",
+      "id": 7,
+      "label": "type_7",
+      "file": "icons/technology_07_Impulse_Drive.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        902,
+        782,
+        1020,
+        900
+      ],
+      "shape_id": 43,
+      "size": [
+        118,
+        118
+      ],
+      "name_zh": "脉冲引擎",
+      "name_en": "Impulse Drive",
+      "project_or_reference_id": "Impulse_Drive",
+      "enum_evidence": {
+        "constant": "RT_IMPULSE_DRIVE",
+        "pc": 25,
+        "instruction": 2269364234
+      },
+      "localization_key": "",
+      "in_uploaded_atlas": true,
+      "sha256": "499fedd55dfaf30c866d4eb434db7a460cf25d564584f659e88c2540b9bbe807",
+      "name_note": ""
+    },
+    {
+      "category": "technology",
+      "id": 10,
+      "label": "type_10",
+      "file": "icons/technology_10_Computer_Tech.png",
+      "source_ui": "ResearchLad.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        782,
+        903,
+        900,
+        1021
+      ],
+      "shape_id": 37,
+      "size": [
+        118,
+        118
+      ],
+      "name_zh": "计算机科技",
+      "name_en": "Computer Tech",
+      "project_or_reference_id": "Computer_Tech",
+      "enum_evidence": {
+        "constant": "RT_COMPUTER_TECH",
+        "pc": 34,
+        "instruction": 2319794186
+      },
+      "localization_key": "",
+      "in_uploaded_atlas": true,
+      "sha256": "6d1148692f834940a58a7109e389903a06fd879f0f59bf10f6e86e600e296a01",
+      "name_note": ""
+    },
+    {
+      "category": "fleet",
+      "id": 1,
+      "label": "type_1",
+      "file": "icons/fleet_01_Light_Fighter.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        569,
+        296,
+        825,
+        430
+      ],
+      "shape_id": 654,
+      "size": [
+        256,
+        134
+      ],
+      "name_zh": "轻型战机",
+      "name_en": "Light Fighter",
+      "project_or_reference_id": "Light_Fighter",
+      "enum_evidence": {
+        "constant": "FT_LIGHT_FIGHTER",
+        "pc": 52,
+        "instruction": 2411773962
+      },
+      "localization_key": "menu.light_fighter_description",
+      "in_uploaded_atlas": true,
+      "sha256": "e580fed5932437b73152e94c51e4d085f07575465999e88eaf3c473618dc1559",
+      "name_note": "",
+      "localization_cn": "就算在大型战舰不断兴起的今天，轻型战斗机也从未被人类抛弃过。快速、灵活的特点可以让他们很好地为舰队担任护航的任务，并且极低的造价也让这种飞船可以很容易以数量轻松碾压对手。",
+      "localization_en": "Light Fighters are an irreplaceable part of any fleet. They are quick and flexible for escort missions. Their low cost also makes them an excellent value."
+    },
+    {
+      "category": "fleet",
+      "id": 2,
+      "label": "type_2",
+      "file": "icons/fleet_02_Heavy_Fighter.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        506,
+        432,
+        739,
+        558
+      ],
+      "shape_id": 178,
+      "size": [
+        233,
+        126
+      ],
+      "name_zh": "重型战机",
+      "name_en": "Heavy Fighter",
+      "project_or_reference_id": "Heavy_Fighter",
+      "enum_evidence": {
+        "constant": "FT_HEAVY_FIGHTER",
+        "pc": 55,
+        "instruction": 2420195338
+      },
+      "localization_key": "menu.heavy_fighter_description",
+      "in_uploaded_atlas": true,
+      "sha256": "3e708f17c1d7ed5d83f00a572055a82fdefd80c1379ad090834c6b353a504dd6",
+      "name_note": "",
+      "localization_cn": "轻型战斗机的改进型，采用了更为坚固的装甲，同时加装了更为强大的武器系统，使得它在战场上拥有更强的生存能力和战斗能力。",
+      "localization_en": "Heavy Fighters, advanced versions of Light Fighters, are equipped with more solid armor and more powerful weapons systems. They are more durable and more likely to return from the battlefield."
+    },
+    {
+      "category": "fleet",
+      "id": 3,
+      "label": "type_3",
+      "file": "icons/fleet_03_Cruiser.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        414,
+        240,
+        531
+      ],
+      "shape_id": 277,
+      "size": [
+        238,
+        117
+      ],
+      "name_zh": "巡洋舰",
+      "name_en": "Cruiser",
+      "project_or_reference_id": "Cruiser",
+      "enum_evidence": {
+        "constant": "FT_CRUISER",
+        "pc": 58,
+        "instruction": 2428616714
+      },
+      "localization_key": "menu.cruiser_description",
+      "in_uploaded_atlas": true,
+      "sha256": "3d48c887f9bab4d8ebcca02109ee57319ae335a22028075f638b303f581366a3",
+      "name_note": "",
+      "localization_cn": "军事研究学者们发现，普通的战斗飞船已经难以抵抗星球防御设施的活力，因此人们急需一种更为强大的战斗舰船。经过长期的研究，巡洋舰开始登上站长舞台。强大的活力，厚重的装甲，兼具超快的航行速度，在中级战斗飞船中，这就是无敌的代表。巡洋舰的霸主地位持续了100年，虽然最终因为新型防御设施的出现而减小了作用。但它仍然因为对战斗机的强大克制作用而活跃在战场上。",
+      "localization_en": "Cruisers are powerful ships effective against planetary defense units. They are equipped with heavy armor but still quick, which makes them outstanding midsized battleships. The Cruiser dominated the battlefield for 100 years, but has been countered by the development of new defense units. It still plays an important role in ship to ship combat."
+    },
+    {
+      "category": "fleet",
+      "id": 4,
+      "label": "type_4",
+      "file": "icons/fleet_04_Battleship.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        665,
+        217,
+        802
+      ],
+      "shape_id": 339,
+      "size": [
+        215,
+        137
+      ],
+      "name_zh": "战列舰",
+      "name_en": "Battleship",
+      "project_or_reference_id": "Battleship",
+      "enum_evidence": {
+        "constant": "FT_BATTLESHIP",
+        "pc": 61,
+        "instruction": 2437038090
+      },
+      "localization_key": "menu.battleship_description",
+      "in_uploaded_atlas": true,
+      "sha256": "47ecac68344c7f9db0e90e755bc8e663efcf58154089affe41772229f3334e7a",
+      "name_note": "",
+      "localization_cn": "重型太空战争武器，是战争中的核心飞船之一。拥有难以穿透的装甲，恐怖的活力设置，甚至还具有一定的资源装载空间。这一切都使得它成为了夺取舰队组成中的必选飞船。",
+      "localization_en": "Battleships are one of the most important weapons in space combat. These heavy-duty ships are equipped with impenetrable armor, mighty power engines and large loading space, all essential for looting enemies."
+    },
+    {
+      "category": "fleet",
+      "id": 5,
+      "label": "type_5",
+      "file": "icons/fleet_05_Dreadnought.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        804,
+        203,
+        980
+      ],
+      "shape_id": 623,
+      "size": [
+        201,
+        176
+      ],
+      "name_zh": "无畏舰",
+      "name_en": "Dreadnought / Battlecruiser",
+      "project_or_reference_id": "Dreadnought",
+      "enum_evidence": {
+        "constant": "FT_BATTLEECRUISER",
+        "pc": 64,
+        "instruction": 2445459466
+      },
+      "localization_key": "menu.battlecruiser_description",
+      "in_uploaded_atlas": true,
+      "sha256": "de4f75e8989173b17c2c92b47c3934f0a0800e7cf882ad0624f76924ac4df729",
+      "name_note": "",
+      "localization_cn": "有史以来最先进的战斗飞船。凭借着激光加农炮和先进的超空间引擎，无畏舰可以对敌军的战列舰造成致命的伤害，同时他坚厚的躯体可以抵挡相当程度的攻击。由于复杂的飞船设计和庞大的武器系统开销，无畏舰的货物装载空间被迫减少，但站在它低耗气量的角度来看，是完全可以理解的。",
+      "localization_en": "The Dreadnought is the most advanced, offensive spaceship in the galaxy. Equipped with the latest laser cannons, reflective shields, and hyperspace engine, the Battecruiser can cause massive damages to enemy fleets while being able to endure enemy fire.  Designed to combat the Battleship, the Dreadnought sacrifices cargo capacity to in favor of extra defense and a larger weapons system."
+    },
+    {
+      "category": "fleet",
+      "id": 6,
+      "label": "type_6",
+      "file": "icons/fleet_06_Bomber.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        741,
+        474,
+        963,
+        628
+      ],
+      "shape_id": 393,
+      "size": [
+        222,
+        154
+      ],
+      "name_zh": "行星轰炸机 / 导弹舰",
+      "name_en": "Bomber",
+      "project_or_reference_id": "Bomber",
+      "enum_evidence": {
+        "constant": "FT_BOMBER",
+        "pc": 67,
+        "instruction": 2453880842
+      },
+      "localization_key": "menu.bomber_description",
+      "in_uploaded_atlas": true,
+      "sha256": "06e790caeb5a0759e01158a62394dc4e5fa954e1ffc44e11c9b1c5d842746c3f",
+      "name_note": "",
+      "localization_cn": "为了摧毁星球上的重型防御装置，导弹舰被专门研发出来。拜激光引导系统之赐，能制造超高温爆炸的等离子导弹被精确的发射到它们的目标上，对行星的防御系统造成毁灭性的伤害。",
+      "localization_en": "The bomber was developed especially to destroy the planetary defenses of a world.                                                      Over the centuries, as defenses were starting to get larger and more sophisticated, fleets were starting to be destroyed at an alarming rate. It was decided that a new ship was needed to break defenses to ensure maximum results. After years of research and development, the Bomber was created."
+    },
+    {
+      "category": "fleet",
+      "id": 7,
+      "label": "type_7",
+      "file": "icons/fleet_07_Destroyer.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        310,
+        188,
+        567,
+        322
+      ],
+      "shape_id": 423,
+      "size": [
+        257,
+        134
+      ],
+      "name_zh": "驱逐舰",
+      "name_en": "Destroyer",
+      "project_or_reference_id": "Destroyer",
+      "enum_evidence": {
+        "constant": "FT_DESTROYER",
+        "pc": 70,
+        "instruction": 2462302218
+      },
+      "localization_key": "",
+      "in_uploaded_atlas": true,
+      "sha256": "50e2657043f123f1f9af9931c7ed4737028ec993d36f090c19d2cc45ccb4e521",
+      "name_note": ""
+    },
+    {
+      "category": "fleet",
+      "id": 9,
+      "label": "type_9",
+      "file": "icons/fleet_09_Cargo_Ship.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        255,
+        324,
+        504,
+        492
+      ],
+      "shape_id": 232,
+      "size": [
+        249,
+        168
+      ],
+      "name_zh": "轻型运输舰",
+      "name_en": "Small Cargo",
+      "project_or_reference_id": "Cargo_Ship",
+      "enum_evidence": {
+        "constant": "FT_SMALL_CARGO",
+        "pc": 88,
+        "instruction": 2546253834
+      },
+      "localization_key": "menu.small_cargo_description",
+      "in_uploaded_atlas": true,
+      "sha256": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b",
+      "name_note": "",
+      "localization_cn": "主要用于星际运输的小型飞船，只保留了星际飞船最基本的装甲防护和武器，将内部空间全部用作物资仓库。但由于体积较小，只能装载5000单位的资源。而大型运输船是它装载量的5倍。",
+      "localization_en": "Equipped with basic armor and weapons, Small Cargo Ship is mainly used to transport. Its entire interior space is to store materials. However, due to its small size, it only has 5000 units of resource loading, which is 1/5 of the Large Cargo Ship."
+    },
+    {
+      "category": "fleet",
+      "id": 10,
+      "label": "type_10",
+      "file": "icons/fleet_10_Large_Cargo_Ship.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        575,
+        161,
+        833,
+        294
+      ],
+      "shape_id": 360,
+      "size": [
+        258,
+        133
+      ],
+      "name_zh": "重型运输舰",
+      "name_en": "Large Cargo",
+      "project_or_reference_id": "Large_Cargo_Ship",
+      "enum_evidence": {
+        "constant": "FT_LARGE_CARGO",
+        "pc": 91,
+        "instruction": 2554675210
+      },
+      "localization_key": "menu.large_cargo_description",
+      "in_uploaded_atlas": true,
+      "sha256": "f7ff2c0c710201910c42c29f88995f12e773b93241b188864dc8b4155ff69126",
+      "name_note": "",
+      "localization_cn": "大型运输船是小型运输船的发展,拥有更大的货仓和更快的速度.它的装载量是老式的5倍，并且速度更快！",
+      "localization_en": "The Large Cargo ship is designed to collect the strewn parts lost after battles. These ships can carry a great amount of parts back to your colony which will aid in your continued construction and expansion efforts."
+    },
+    {
+      "category": "fleet",
+      "id": 11,
+      "label": "type_11",
+      "file": "icons/fleet_11_Colony_Ship.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        242,
+        253,
+        412
+      ],
+      "shape_id": 144,
+      "size": [
+        251,
+        170
+      ],
+      "name_zh": "殖民舰 / 开拓船",
+      "name_en": "Colony Ship",
+      "project_or_reference_id": "Colony_Ship",
+      "enum_evidence": {
+        "constant": "FT_COLONY_SHIP",
+        "pc": 94,
+        "instruction": 2563096586
+      },
+      "localization_key": "menu.colony_ship_description",
+      "in_uploaded_atlas": true,
+      "sha256": "97591de09b367666e8bba05904d1d29b4b34f6a659cb4d968bc0ae7ecdbfb814",
+      "name_note": "",
+      "localization_cn": "开拓船可以让你开拓新的附属星，开拓前，请先检查天体物理科技，因为您可以拥有星球的数量和该科技有关。",
+      "localization_en": "The Colony Ship enables you to expand to settle new colonies on other planets. It's used once and then exhausted but the importance of this ship cannot be understated. Upgrade your Astrophysics Technology to enable to you colonize more planets up to the maximum of 8."
+    },
+    {
+      "category": "fleet",
+      "id": 12,
+      "label": "type_12",
+      "file": "icons/fleet_12_Recycler.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        575,
+        2,
+        835,
+        159
+      ],
+      "shape_id": 100,
+      "size": [
+        260,
+        157
+      ],
+      "name_zh": "回收舰",
+      "name_en": "Recycler",
+      "project_or_reference_id": "Recycler",
+      "enum_evidence": {
+        "constant": "FT_RECYCLER",
+        "pc": 97,
+        "instruction": 2571943946
+      },
+      "localization_key": "menu.recycler_description",
+      "in_uploaded_atlas": true,
+      "sha256": "62cc1cc41c1cd7c45a1527ffa8a3d66e27836368ae7d4f4f14a7816f6f2fe465",
+      "name_note": "",
+      "localization_cn": "在大型运输船基础上改进而来的一种舰船，用于回收星系中产生的大量战斗垃圾。由于需要避免被战斗区域的混乱能量撕裂，需要额外加厚装甲，因此占用了部分内部的装载空间。但因为如此，也只有回收船能够将战斗垃圾进行回收再利用。",
+      "localization_en": "Recycler is improved upon the basis of Large Cargo Ship, to recycle battle ruins in the galaxy. The extreme thick armor is designed to avoid potential harm in the battle zone, with no internal loading space. Because of that, Recycler is the only ship that is able to recycle the battle ruins."
+    },
+    {
+      "category": "fleet",
+      "id": 13,
+      "label": "type_13",
+      "file": "icons/fleet_13_Probe.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        835,
+        270,
+        987,
+        472
+      ],
+      "shape_id": 583,
+      "size": [
+        152,
+        202
+      ],
+      "name_zh": "间谍探测器",
+      "name_en": "Espionage Probe",
+      "project_or_reference_id": "Probe",
+      "enum_evidence": {
+        "constant": "FT_ESPIONAGE_PROBE",
+        "pc": 100,
+        "instruction": 2588295178
+      },
+      "localization_key": "menu.espionage_probe_description",
+      "in_uploaded_atlas": true,
+      "sha256": "332d64b82df25e0cc94a4bdce067449c5f0931d02f315be3cfdd9dc77f4973c7",
+      "name_note": "",
+      "localization_cn": "用于军事情报侦察的探测装置。指挥官可以将他们投送到敌人的星球周围，而这些探测器可以远距离传送信息。为了追求更快速地接近以便于侦察，因此这些探测器采用了特殊的激动装置，速度特别快，但没有任何防御和进攻能力。",
+      "localization_en": "Probes are used to scout for military information. Send it to enemy planets and remotely receive information. It's specially designed to be very fast but has no defensive or offensive capabilities."
+    },
+    {
+      "category": "fleet",
+      "id": 14,
+      "label": "type_14",
+      "file": "icons/fleet_14_Solar_Satellite.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        694,
+        630,
+        895,
+        731
+      ],
+      "shape_id": 734,
+      "size": [
+        201,
+        101
+      ],
+      "name_zh": "太阳能卫星",
+      "name_en": "Solar Satellite",
+      "project_or_reference_id": "Solar_Satellite",
+      "enum_evidence": {
+        "constant": "FT_SOLAR_SATELLITE",
+        "pc": 103,
+        "instruction": 2597158922
+      },
+      "localization_key": "menu.solar_satellite_description",
+      "in_uploaded_atlas": true,
+      "sha256": "77b4f7aae69b9e19cd10ab3f6b6218e928a2f2ea3bd1d9d2a01ef08997168d58",
+      "name_note": "",
+      "localization_cn": "太阳能卫星装备了太阳能电池，是构造简单的轨道卫星，它会把搜集到的能量传回到星球的地表上。这些能量使用特殊的雷射光来传输。太阳能卫星的效率取决于太阳光线的强弱。它的价格低廉，安装简单，这些卫星因为提供了地面建筑所需的电力而广为人知。不幸的是，这些卫星在战斗时极易被摧毁。",
+      "localization_en": "The Solar Satellite is a ship the collects energy. Although the solar satellite unit is significantly cheaper than a solar planet and very cost effective, it's vulnerable to destruction from enemies who wish to disrupt your energy production. It's best to make sure that your solar satellites have ample defense."
+    },
+    {
+      "category": "defense",
+      "id": 15,
+      "label": "type_15",
+      "file": "icons/defense_15_Rocket_Launcher.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        837,
+        2,
+        1017,
+        152
+      ],
+      "shape_id": 1035,
+      "size": [
+        180,
+        150
+      ],
+      "name_zh": "导弹发射装置",
+      "name_en": "Rocket Launcher",
+      "project_or_reference_id": "Rocket_Launcher",
+      "enum_evidence": {
+        "constant": "FT_ROCKET_LAUNCHER",
+        "pc": 106,
+        "instruction": 2613968906
+      },
+      "localization_key": "menu.rocket_launcher_description",
+      "in_uploaded_atlas": true,
+      "sha256": "98077b7deedb26b8383cdddb32ee17c65ebf9a6c1f30df512fe15a78b7dc84ae",
+      "name_note": "",
+      "localization_cn": "这是一种古老、简单、廉价的防御设施，只能对小型飞船具有威慑作用。对于大型舰队几乎毫无威慑力。",
+      "localization_en": "An old, simple, and cheap defense unit, it serves as a deterrent against lighter ships, but it is vulnerable against larger ships."
+    },
+    {
+      "category": "defense",
+      "id": 16,
+      "label": "type_16",
+      "file": "icons/defense_16_Light_Laser.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        479,
+        864,
+        620,
+        964
+      ],
+      "shape_id": 1038,
+      "size": [
+        141,
+        100
+      ],
+      "name_zh": "轻型激光炮",
+      "name_en": "Light Laser",
+      "project_or_reference_id": "Light_Laser",
+      "enum_evidence": {
+        "constant": "FT_LIGHT_LASER",
+        "pc": 109,
+        "instruction": 2630270986
+      },
+      "localization_key": "menu.light_laser_description",
+      "in_uploaded_atlas": true,
+      "sha256": "09d899efbb288243155093b091a96ac83f49f29044338e0cc74f6f257cca6819",
+      "name_note": "",
+      "localization_cn": "这是激光科技高能和定向研究实例化最成功的例子之一。作为为对抗新型舰船而制造出来的防御设施，轻型激光炮具有很强的伤害能力，一定的防护能力，但建造非常简单，性价比极高。因此，这种防御装置几乎遍布了每一个银河系的星球。",
+      "localization_en": "Light Lasers are designed to deliver heavy damage and with some self-defense. They are a defensive unit specially made to be able to attack fleets. Its simple construction has made it popular option among commanders."
+    },
+    {
+      "category": "defense",
+      "id": 17,
+      "label": "type_17",
+      "file": "icons/defense_17_Heavy_Laser.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        837,
+        154,
+        995,
+        268
+      ],
+      "shape_id": 1041,
+      "size": [
+        158,
+        114
+      ],
+      "name_zh": "重型激光炮",
+      "name_en": "Heavy Laser",
+      "project_or_reference_id": "Heavy_Laser",
+      "enum_evidence": {
+        "constant": "FT_HEAVY_LASER",
+        "pc": 112,
+        "instruction": 2639183882
+      },
+      "localization_key": "menu.heavy_laser_description",
+      "in_uploaded_atlas": true,
+      "sha256": "16e71fc3563ccb2900d3826258734228b2d2fcbd55e37dd2cb9342405496b29b",
+      "name_note": "",
+      "localization_cn": "轻型激光炮的改良版。武器和装甲均有所增强，自保能力更强，对舰队飞船也具有更高的伤害。",
+      "localization_en": "The Heavy Laser, improved upon Light Laser, is more powerful in weapon and in armor. It can deal higher damage to opponent fleets with enhanced self-protection."
+    },
+    {
+      "category": "defense",
+      "id": 18,
+      "label": "type_18",
+      "file": "icons/defense_18_MK2_Cannon.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        347,
+        795,
+        477,
+        942
+      ],
+      "shape_id": 1044,
+      "size": [
+        130,
+        147
+      ],
+      "name_zh": "MK2炮 / 磁轨炮",
+      "name_en": "MK2 Cannon",
+      "project_or_reference_id": "MK2_Cannon",
+      "enum_evidence": {
+        "constant": "FT_MK2",
+        "pc": 115,
+        "instruction": 2655993866
+      },
+      "localization_key": "",
+      "in_uploaded_atlas": true,
+      "sha256": "2d249cb98d3c28351ffcfd66a08dfe0191a29e8f51e018a22dcb965831140047",
+      "name_note": ""
+    },
+    {
+      "category": "defense",
+      "id": 19,
+      "label": "type_19",
+      "file": "icons/defense_19_Ion_Cannon.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        205,
+        804,
+        345,
+        966
+      ],
+      "shape_id": 1047,
+      "size": [
+        140,
+        162
+      ],
+      "name_zh": "中子炮",
+      "name_en": "Ion Cannon",
+      "project_or_reference_id": "Ion_Cannon",
+      "enum_evidence": {
+        "constant": "FT_ION_CANON",
+        "pc": 118,
+        "instruction": 2672803850
+      },
+      "localization_key": "menu.ion_canon_description",
+      "in_uploaded_atlas": true,
+      "sha256": "953c15138cef7ac715c7620f121a3adbb0cf7c3473be39e61374e85dd37fab63",
+      "name_note": "",
+      "localization_cn": "毫无疑问，中子炮是一种威力强大的防御建筑，他的威慑力可以维护一颗普通行星的安全。这种技术在21世纪时就已存在，当时称为EMP，也就是电磁脉冲。它有一个特性，脉冲能量会造成瞬间的突波，对电子设备造成严重的干扰，并把那些灵敏的电子设备摧毁。往日这类武器被搭载在炸弹或是火箭飞弹上，但随着EMP领域研究发展的结果，现在这类武器可以被很简单地改装成火炮。中子炮是这类武器中的佼佼者。密集的中子束可以破坏目标上任何未加防护的电子系统，并使得船舰上的防护盾产生器不稳定，并不会造成实质上的伤害。各式舰艇中只有巡洋舰搭载了中子炮，因为中子炮的能量消耗非常的巨大，在战斗中通常都是直接毁灭目标船舰，而不是瘫痪它的行动能力。",
+      "localization_en": "The Ion Cannon fires a continuous beam of accelerating ions, causing considerable damage to objects it strikes.                                                                 An ion cannon is a weapon that fires beams of ions (particles, i.e. atoms that have been affected in some way as to cause them to gain an electrical charge). The Ion Cannon is actually a type of Particle Cannon; only the particles used are ionized. Due to their electrical charges, they also have the potential to disable electronic devices, and anything else that has an electrical or similar power source, using a phenomena known as the the Electromagetic Pulse (EMP effect). Due to the cannons highly improved shielding system, this cannon provides improved protection for your larger, more destructive defense weapons."
+    },
+    {
+      "category": "defense",
+      "id": 20,
+      "label": "type_20",
+      "file": "icons/defense_20_Plasma_Cannon.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        479,
+        720,
+        677,
+        862
+      ],
+      "shape_id": 1050,
+      "size": [
+        198,
+        142
+      ],
+      "name_zh": "等离子炮",
+      "name_en": "Plasma Cannon",
+      "project_or_reference_id": "Plasma_Cannon",
+      "enum_evidence": {
+        "constant": "FT_PLASMA_CANON",
+        "pc": 121,
+        "instruction": 2689613834
+      },
+      "localization_key": "menu.plasma_canon_description",
+      "in_uploaded_atlas": true,
+      "sha256": "f4ed6347c6d7ceee95545fb032ac22efd75c532737b8eb713f260201d4f8cff7",
+      "name_note": "",
+      "localization_cn": "毫无疑问，这是有史以来最为先进的防御武器系统。\n很多个世纪以来，战舰的战力都远远优于防御设施。战舰带来的压力，迫使人们开始更高端防御设施的研究。自从等离子武器被导弹舰用无坚不摧的火力重新诠释以后，不断发展的高能等离子科技给防御者们带来了更多的思路。在这种情形下，等离子炮终于被制造出来。  \n庞大的体积注定了它能爆发出远比毁灭者更为庞大恐怖的毁灭力，但同样庞大的聚变反应堆却使它的防御不如攻击般耀眼。等离子炮也需要和其他防御设施配合才能缔造出完美的防御。",
+      "localization_en": "There is no doubt that the plasma cannon is the most advanced defensive weapon system in history.\nFor many centuries, the warship's combat power was far superior compared to defense facilities. The might of the warships pressure defenders to develop more high-end defense facilities. Since the plasma cannon proved that it can conquer the bombers,  continuous development of high energy plasma technology will start to create newer and better defensive facilities.\nSince the technology is so delicate, the plasma cannon must be used together with other defense facilities to create a perfect defense. \n"
+    },
+    {
+      "category": "defense",
+      "id": 21,
+      "label": "type_21",
+      "file": "icons/defense_21_Small_Shield_Dome.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        533,
+        229,
+        663
+      ],
+      "shape_id": 1053,
+      "size": [
+        227,
+        130
+      ],
+      "name_zh": "小型防护盾",
+      "name_en": "Small Shield Dome",
+      "project_or_reference_id": "Small_Shield_Dome",
+      "enum_evidence": {
+        "constant": "FT_SMALL_SHIELD_DOME",
+        "pc": 124,
+        "instruction": 2705801226
+      },
+      "localization_key": "menu.small_shield_dome_description",
+      "in_uploaded_atlas": true,
+      "sha256": "2c24eb8ca288754b76717b6f87fbdd4c9cb45e4891367cf23300b57a5dc43298",
+      "name_note": "",
+      "localization_cn": "为了保护星球上无法移动的建筑设施，同时为防御设施提供尽可能的保护，科学家们研究出了能量盾激发装置。这种装置可以产生一个小型能量盾，将星球纳于自己的护罩之内，任何对星球的进攻都会优先由护盾承受伤害。是保护指挥官们星球的一个不可缺少的手段。每个星球上防护盾同时只能有1个产生作用。",
+      "localization_en": "Small Shield Dome is designed to protect the building facilities of the planet while providing protection for defense units. It takes prior damage enemy attacks and is essential in protecting the planet. Only one dome will be effective on each planet."
+    },
+    {
+      "category": "defense",
+      "id": 22,
+      "label": "type_22",
+      "file": "icons/defense_22_Large_Shield_Dome.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        242,
+        494,
+        470,
+        626
+      ],
+      "shape_id": 1056,
+      "size": [
+        228,
+        132
+      ],
+      "name_zh": "大型防护盾",
+      "name_en": "Large Shield Dome",
+      "project_or_reference_id": "Large_Shield_Dome",
+      "enum_evidence": {
+        "constant": "FT_BIG_SHIELD_DOME",
+        "pc": 127,
+        "instruction": 2714828810
+      },
+      "localization_key": "menu.big_shield_dome_description",
+      "in_uploaded_atlas": true,
+      "sha256": "1c3a3f3a68cff95e0618441a52ffcb1e8c7fc20c50dc413f720a736f097439bb",
+      "name_note": "",
+      "localization_cn": "小型防护盾的改进型。拥有更为强大的伤害吸收能力，可以提供更为强大的保护能力。",
+      "localization_en": "The Large Shield Dome, improved upon the Small Shield Dome, is more powerful and able to absorb more damage providing more protection."
+    },
+    {
+      "category": "fleet",
+      "id": 23,
+      "label": "type_23",
+      "file": "icons/fleet_23_Interceptor.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        472,
+        560,
+        692,
+        718
+      ],
+      "shape_id": 703,
+      "size": [
+        220,
+        158
+      ],
+      "name_zh": "裂变者",
+      "name_en": "Interceptor",
+      "project_or_reference_id": "Interceptor",
+      "enum_evidence": {
+        "constant": "FT_INTERCEPTOR",
+        "pc": 76,
+        "instruction": 2479489034
+      },
+      "localization_key": "menu.interceptor",
+      "in_uploaded_atlas": true,
+      "sha256": "14e559652ee7ea02c9d4f332763c3fda5a2391af82df5a1196b4fa3d30c87622",
+      "name_note": "",
+      "localization_cn": "裂变者",
+      "localization_en": "Interceptor"
+    },
+    {
+      "category": "fleet",
+      "id": 24,
+      "label": "type_24",
+      "file": "icons/fleet_24_Iron_Behemoth.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        231,
+        628,
+        449,
+        793
+      ],
+      "shape_id": 549,
+      "size": [
+        218,
+        165
+      ],
+      "name_zh": "深空吞噬者",
+      "name_en": "Iron Behemoth",
+      "project_or_reference_id": "Iron_Behemoth",
+      "enum_evidence": {
+        "constant": "FT_BEHEMOTH",
+        "pc": 79,
+        "instruction": 2496299018
+      },
+      "localization_key": "building.TSZ_NAME",
+      "in_uploaded_atlas": true,
+      "sha256": "f6324df90210bc892b12194bee4bf504c441ee781591a11f07520e0157e5098f",
+      "name_note": "",
+      "localization_cn": "深空吞噬者",
+      "localization_en": "Iron Behemoth"
+    },
+    {
+      "category": "fleet",
+      "id": 25,
+      "label": "type_25",
+      "file": "icons/fleet_25_Devourer_Interceptor.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        310,
+        2,
+        573,
+        186
+      ],
+      "shape_id": 838,
+      "size": [
+        263,
+        184
+      ],
+      "name_zh": "噬能截击者",
+      "name_en": "Devourer Interceptor",
+      "project_or_reference_id": "Devourer_Interceptor",
+      "enum_evidence": {
+        "constant": "FT_FLEETTYPE_25",
+        "pc": 82,
+        "instruction": 2513109002
+      },
+      "localization_key": "menu.GC_fleet_type_25_description",
+      "in_uploaded_atlas": true,
+      "sha256": "7bf16d8d69fe7b9f5bd40c9784c2c90c78aeaf67633dac997762368754289962",
+      "name_note": "",
+      "localization_cn": "在对抗来自平行宇宙的敌人时，噬能截击者绝对是最恐怖的存在，它的攻击能够直接洞穿敌舰的防护，造成巨量伤害，是众多舰船的克星。",
+      "localization_en": "In battles with enemies from the parallel universe, the Devourer Interceptors are dreaded by all; their attack can penetrate enemies’ shields and deal fatal damage. They are regarded as the Kryptonite of most fleets."
+    },
+    {
+      "category": "fleet",
+      "id": 26,
+      "label": "type_26",
+      "file": "icons/fleet_26_Titanenergetic_Frigate.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        2,
+        2,
+        308,
+        240
+      ],
+      "shape_id": 868,
+      "size": [
+        306,
+        238
+      ],
+      "name_zh": "钛能守卫者",
+      "name_en": "Titanenergetic Frigate",
+      "project_or_reference_id": "Titanenergetic_Frigate",
+      "enum_evidence": {
+        "constant": "FT_FLEETTYPE_26",
+        "pc": 85,
+        "instruction": 2529918986
+      },
+      "localization_key": "menu.GC_fleet_type_26_description",
+      "in_uploaded_atlas": true,
+      "sha256": "b30435a96530b818f2bc7e4c4d6ebf22cc1bf9f0571cf80ae4e208871088e30a",
+      "name_note": "",
+      "localization_cn": "钛能守卫者——作为融合了钛能立方和晶钻矿石的高级战舰，其强大的装甲特性将舰队的防御推上了新的高度。",
+      "localization_en": "Titanenergetic Frigate- An advanced battle ship built by fusing Titanenergetic Cube and Crystal Ore together, with its immense armor speciality it enables the commanders to push their fleet defenses to a new height."
+    },
+    {
+      "category": "defense",
+      "id": 27,
+      "label": "type_27",
+      "file": "icons/defense_27_Proton_Cannon.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ShipCityTech_1.png",
+      "crop_box": [
+        630,
+        903,
+        776,
+        1009
+      ],
+      "shape_id": 1059,
+      "size": [
+        146,
+        106
+      ],
+      "name_zh": "质子炮",
+      "name_en": "Proton Cannon",
+      "project_or_reference_id": "Proton_Cannon",
+      "enum_evidence": {
+        "constant": "FT_PROTON",
+        "pc": 130,
+        "instruction": 2731638794
+      },
+      "localization_key": "menu.GC_proton_description",
+      "in_uploaded_atlas": true,
+      "sha256": "6425e9cb26a474bd61de9ced349cabd9e5140599fbbe215dd69d03f595ee20fc",
+      "name_note": "",
+      "localization_cn": "质子炮拥有巨大的体积，可以将加速到极高速度的质子流发射出去，破坏敌方舰船的原子级结构，从而让敌舰分崩离析。虽然质子炮的灵活性较差，不容易击中小型目标，但是对巨型战舰具有相当可怕的杀伤能力，堪称巨舰杀手。",
+      "localization_en": "Proton Cannons are immense in size. They fire by releasing hyper-accelerated protons into a concentrated beam, which can compromise the basic structures of the enemy's ships, destroying them. Photon Cannons may not be very versatile, they are poor at targeting small ships, but they are incredibly powerful against larger ships. "
+    },
+    {
+      "category": "fleet",
+      "id": 28,
+      "label": "type_28",
+      "file": "icons/fleet_28_Annihilator.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ship_destruction_star.png",
+      "crop_box": [
+        0,
+        0,
+        260,
+        145
+      ],
+      "shape_id": 906,
+      "size": [
+        260,
+        145
+      ],
+      "name_zh": "湮灭之星",
+      "name_en": "Annihilator",
+      "project_or_reference_id": "Annihilator",
+      "enum_evidence": {
+        "constant": "FT_BOMB",
+        "pc": 133,
+        "instruction": 2748448778
+      },
+      "localization_key": "menu.GC_bomb_description",
+      "in_uploaded_atlas": false,
+      "sha256": "f09489129b34799030b907ef88c8bcd451054a4be3c4a028172d2f21f13588b7",
+      "name_note": "",
+      "localization_cn": "湮灭之星是以引爆自己对敌人造成最大伤害为目的，它与之前的飞船在战斗方式上有明显区别： 1、逐个引爆：当敌方拥有钛能守卫者、噬能截击者、裂变者、深空吞噬者这四种飞船中的至少两种时，湮灭之星会逐个引爆自己，直到湮灭之星耗完或不满足引爆条件时才停止！ 2、群体伤害：湮灭之星爆炸时会对敌方每种飞船都造成伤害，但会随着敌方飞船种类数的增多而衰减。 3、无视护盾：湮灭之星爆炸造成伤害时，会无视对方飞船的护盾，直接扣减装甲值。 4、战略规避：星球在受到进攻时，该星球拥有的湮灭之星不会自动引爆。 5、储备上限：玩家所有星球同时最多拥有200个湮灭之星。 6、伤害加成：对不同飞船有不同的伤害加成比例。 7、伤害叠加：参战的湮灭之星越多则单个爆炸时造成的伤害越高。 8、湮灭：湮灭之星一旦爆炸则不会受战损恢复影响。",
+      "localization_en": "Annihilators destroy themselves to deal massive damage. Annihilators have certain distinctions compared to other ships. 1. Chain-reaction: the Annihilator will initiate a chain-reaction when the enemy has at least two of the following: Titanenergetic Frigate, Devourer Interceptor, Interceptor, or Behemoth. It will explode until all Annihilators are consumed or the conditions for the explosions aren’t met!2. AOE Damage: When the Annihilator explodes, enemy ships of each type will sustain damage. However, the more types of enemy ships, the less damage is done. 3. Shield Defiance: While exploding, the Annihilator will ignore all enemy shields and directly damage fleet armor value.4. Strategic Evasion: Annihilators will not explode automatically when the planet is under attack.5. Storage Limit: A commander can only hold up to a total off 200 Annihilators at once.6. Damage Multiplier: Different ship types will sustain different bonus damage. 7. Damage Stacking: The more Annihilators you have in battle, the more damage each one will do.8. Annihilate: Once the Annihilator has exploded, it will not take any battle recovery effects. "
+    },
+    {
+      "category": "fleet",
+      "id": 29,
+      "label": "type_29",
+      "file": "icons/fleet_29_Reaper.png",
+      "source_ui": "Fleets.tfs",
+      "source_atlas": "ship_Overlord.png",
+      "crop_box": [
+        0,
+        0,
+        258,
+        166
+      ],
+      "shape_id": 970,
+      "size": [
+        258,
+        166
+      ],
+      "name_zh": "Reaper（收割者·暂译）",
+      "name_en": "Reaper",
+      "project_or_reference_id": "Reaper",
+      "enum_evidence": {
+        "constant": "FT_REAPER",
+        "pc": 136,
+        "instruction": 2765258762
+      },
+      "localization_key": "menu.GC_reaper_description",
+      "in_uploaded_atlas": false,
+      "sha256": "884556db6bad3f173ef334400c8be96d7544b5667be2900d33af4bb13b58a3ad",
+      "name_note": "Chinese name is a working translation; APK description supplies English Reaper.",
+      "localization_cn": "他是从大型战舰爆炸中获得的精密零部件合成而来,他免疫湮灭之星的攻击，并且拥有特殊的攻击顺序，将是大型战舰的噩梦。",
+      "localization_en": "When large battleships exploded, intricate components got left behind. It is possible to build a ship called Reaper by using these components. These Reapers are immune to Annihilators attacks, and possess a special attack sequence, they will be the nightmare of the large battleships."
+    }
+  ]
+}

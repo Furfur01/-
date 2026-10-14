@@ -1,0 +1,1016 @@
+[
+  {
+    "file": "AutoUpdateInit.lua",
+    "source": "@./AutoUpdateInit.lua",
+    "functions": 53,
+    "bytes": 38723
+  },
+  {
+    "file": "GameActivityDetails.lua",
+    "source": "@./GameActivityDetails.lua",
+    "functions": 11,
+    "bytes": 4711
+  },
+  {
+    "file": "GameAllMine.lua",
+    "source": "@./GameAllMine.lua",
+    "functions": 57,
+    "bytes": 56451
+  },
+  {
+    "file": "GameAnnouncementDetails.lua",
+    "source": "@./GameAnnouncementDetails.lua",
+    "functions": 11,
+    "bytes": 4464
+  },
+  {
+    "file": "GameBuildingHelper.lua",
+    "source": "@./GameBuildingHelper.lua",
+    "functions": 6,
+    "bytes": 2931
+  },
+  {
+    "file": "GameCommonBG.lua",
+    "source": "@./GameCommonBG.lua",
+    "functions": 5,
+    "bytes": 1332
+  },
+  {
+    "file": "GameCommonInterface.lua",
+    "source": "@./GameCommonInterface.lua",
+    "functions": 13,
+    "bytes": 6295
+  },
+  {
+    "file": "GameConstants.lua",
+    "source": "@./GameConstants.lua",
+    "functions": 0,
+    "bytes": 1745
+  },
+  {
+    "file": "GameContact.lua",
+    "source": "@./GameContact.lua",
+    "functions": 10,
+    "bytes": 9421
+  },
+  {
+    "file": "GameCoordPanel.lua",
+    "source": "@./GameCoordPanel.lua",
+    "functions": 4,
+    "bytes": 2001
+  },
+  {
+    "file": "GameDemoteBox.lua",
+    "source": "@./GameDemoteBox.lua",
+    "functions": 5,
+    "bytes": 2168
+  },
+  {
+    "file": "GameDetailsOfFleets.lua",
+    "source": "@./GameDetailsOfFleets.lua",
+    "functions": 8,
+    "bytes": 3090
+  },
+  {
+    "file": "GameEngineUpdate.lua",
+    "source": "@./GameEngineUpdate.lua",
+    "functions": 19,
+    "bytes": 13749
+  },
+  {
+    "file": "GameEventTimerTick.lua",
+    "source": "@./GameEventTimerTick.lua",
+    "functions": 10,
+    "bytes": 10321
+  },
+  {
+    "file": "GameFleetConstruct.lua",
+    "source": "@./GameFleetConstruct.lua",
+    "functions": 34,
+    "bytes": 28558
+  },
+  {
+    "file": "GameFleetDefine.lua",
+    "source": "@./GameFleetDefine.lua",
+    "functions": 6,
+    "bytes": 8031
+  },
+  {
+    "file": "GameGachaHelper.lua",
+    "source": "@./GameGachaHelper.lua",
+    "functions": 5,
+    "bytes": 3371
+  },
+  {
+    "file": "GameGlobalData.lua",
+    "source": "@./GameGlobalData.lua",
+    "functions": 71,
+    "bytes": 34432
+  },
+  {
+    "file": "GameHeartBeat.lua",
+    "source": "@./GameHeartBeat.lua",
+    "functions": 4,
+    "bytes": 3920
+  },
+  {
+    "file": "GameHelp.lua",
+    "source": "@./GameHelp.lua",
+    "functions": 14,
+    "bytes": 9234
+  },
+  {
+    "file": "GameIAPMenu.lua",
+    "source": "@./GameIAPMenu.lua",
+    "functions": 43,
+    "bytes": 44120
+  },
+  {
+    "file": "GameItemDepot.lua",
+    "source": "@./GameItemDepot.lua",
+    "functions": 23,
+    "bytes": 25045
+  },
+  {
+    "file": "GameItemDetailBox.lua",
+    "source": "@./GameItemDetailBox.lua",
+    "functions": 7,
+    "bytes": 3641
+  },
+  {
+    "file": "GameItemHelper.lua",
+    "source": "@./GameItemHelper.lua",
+    "functions": 2,
+    "bytes": 1089
+  },
+  {
+    "file": "GameItemShop.lua",
+    "source": "@./GameItemShop.lua",
+    "functions": 38,
+    "bytes": 30099
+  },
+  {
+    "file": "GameKryptonAbout.lua",
+    "source": "@./GameKryptonAbout.lua",
+    "functions": 3,
+    "bytes": 798
+  },
+  {
+    "file": "GameKryptonBox.lua",
+    "source": "@./GameKryptonBox.lua",
+    "functions": 3,
+    "bytes": 2980
+  },
+  {
+    "file": "GameKryptonDefine.lua",
+    "source": "@./GameKryptonDefine.lua",
+    "functions": 1,
+    "bytes": 4379
+  },
+  {
+    "file": "GameKryptonEnhance.lua",
+    "source": "@./GameKryptonEnhance.lua",
+    "functions": 42,
+    "bytes": 29180
+  },
+  {
+    "file": "GameKryptonFuse.lua",
+    "source": "@./GameKryptonFuse.lua",
+    "functions": 36,
+    "bytes": 24104
+  },
+  {
+    "file": "GameKryptonLab.lua",
+    "source": "@./GameKryptonLab.lua",
+    "functions": 27,
+    "bytes": 13753
+  },
+  {
+    "file": "GameKryptonShop.lua",
+    "source": "@./GameKryptonShop.lua",
+    "functions": 30,
+    "bytes": 21059
+  },
+  {
+    "file": "GameMailStorage.lua",
+    "source": "@./GameMailStorage.lua",
+    "functions": 20,
+    "bytes": 13330
+  },
+  {
+    "file": "GameMyAcct.lua",
+    "source": "@./GameMyAcct.lua",
+    "functions": 24,
+    "bytes": 19422
+  },
+  {
+    "file": "GameNews.lua",
+    "source": "@./GameNews.lua",
+    "functions": 28,
+    "bytes": 25051
+  },
+  {
+    "file": "GameObjectDispatch.lua",
+    "source": "@./GameObjectDispatch.lua",
+    "functions": 46,
+    "bytes": 45146
+  },
+  {
+    "file": "GameObjectLoading.lua",
+    "source": "@./GameObjectLoading.lua",
+    "functions": 3,
+    "bytes": 1065
+  },
+  {
+    "file": "GameObjectMission.lua",
+    "source": "@./GameObjectMission.lua",
+    "functions": 20,
+    "bytes": 20190
+  },
+  {
+    "file": "GameOptions.lua",
+    "source": "@./GameOptions.lua",
+    "functions": 7,
+    "bytes": 5402
+  },
+  {
+    "file": "GamePlanetList.lua",
+    "source": "@./GamePlanetList.lua",
+    "functions": 34,
+    "bytes": 27949
+  },
+  {
+    "file": "GameProgPanel.lua",
+    "source": "@./GameProgPanel.lua",
+    "functions": 10,
+    "bytes": 3038
+  },
+  {
+    "file": "GameProgressTracker.lua",
+    "source": "@./GameProgressTracker.lua",
+    "functions": 16,
+    "bytes": 5870
+  },
+  {
+    "file": "GamePurchaseBox.lua",
+    "source": "@./GamePurchaseBox.lua",
+    "functions": 4,
+    "bytes": 2064
+  },
+  {
+    "file": "GameQuestGuide.lua",
+    "source": "@./GameQuestGuide.lua",
+    "functions": 35,
+    "bytes": 14793
+  },
+  {
+    "file": "GameRank.lua",
+    "source": "@./GameRank.lua",
+    "functions": 12,
+    "bytes": 15348
+  },
+  {
+    "file": "GameResearchDefine.lua",
+    "source": "@./GameResearchDefine.lua",
+    "functions": 2,
+    "bytes": 3043
+  },
+  {
+    "file": "GameScanBox.lua",
+    "source": "@./GameScanBox.lua",
+    "functions": 11,
+    "bytes": 6893
+  },
+  {
+    "file": "GameSetting.lua",
+    "source": "@./GameSetting.lua",
+    "functions": 20,
+    "bytes": 12568
+  },
+  {
+    "file": "GameStateBase.lua",
+    "source": "@./GameStateBase.lua",
+    "functions": 30,
+    "bytes": 15023
+  },
+  {
+    "file": "GameStateGalaxy.lua",
+    "source": "@./GameStateGalaxy.lua",
+    "functions": 2,
+    "bytes": 976
+  },
+  {
+    "file": "GameStateLoading.lua",
+    "source": "@./GameStateLoading.lua",
+    "functions": 10,
+    "bytes": 5600
+  },
+  {
+    "file": "GameStateManager.lua",
+    "source": "@./GameStateManager.lua",
+    "functions": 13,
+    "bytes": 4879
+  },
+  {
+    "file": "GameStateMoon.lua",
+    "source": "@./GameStateMoon.lua",
+    "functions": 5,
+    "bytes": 2952
+  },
+  {
+    "file": "GameStatePlanet.lua",
+    "source": "@./GameStatePlanet.lua",
+    "functions": 5,
+    "bytes": 5656
+  },
+  {
+    "file": "GameStateSolarSystem.lua",
+    "source": "@./GameStateSolarSystem.lua",
+    "functions": 2,
+    "bytes": 955
+  },
+  {
+    "file": "GameStateSplashLogin.lua",
+    "source": "@./GameStateSplashLogin.lua",
+    "functions": 3,
+    "bytes": 1152
+  },
+  {
+    "file": "GameTextEdit.lua",
+    "source": "@./GameTextEdit.lua",
+    "functions": 15,
+    "bytes": 8549
+  },
+  {
+    "file": "GameTimer.lua",
+    "source": "@./GameTimer.lua",
+    "functions": 8,
+    "bytes": 2337
+  },
+  {
+    "file": "GameTip.lua",
+    "source": "@./GameTip.lua",
+    "functions": 10,
+    "bytes": 3977
+  },
+  {
+    "file": "GameUIActivationCode.lua",
+    "source": "@./GameUIActivationCode.lua",
+    "functions": 10,
+    "bytes": 2396
+  },
+  {
+    "file": "GameUIAdmiral.lua",
+    "source": "@./GameUIAdmiral.lua",
+    "functions": 30,
+    "bytes": 18403
+  },
+  {
+    "file": "GameUIAdmiralManufacturing.lua",
+    "source": "@./GameUIAdmiralManufacturing.lua",
+    "functions": 26,
+    "bytes": 15646
+  },
+  {
+    "file": "GameUIAdmiralTech.lua",
+    "source": "@./GameUIAdmiralTech.lua",
+    "functions": 20,
+    "bytes": 14656
+  },
+  {
+    "file": "GameUIAllianceAssist.lua",
+    "source": "@./GameUIAllianceAssist.lua",
+    "functions": 18,
+    "bytes": 11081
+  },
+  {
+    "file": "GameUIAllianceCreate.lua",
+    "source": "@./GameUIAllianceCreate.lua",
+    "functions": 6,
+    "bytes": 3834
+  },
+  {
+    "file": "GameUIAllianceMember.lua",
+    "source": "@./GameUIAllianceMember.lua",
+    "functions": 11,
+    "bytes": 5829
+  },
+  {
+    "file": "GameUIAllianceReward.lua",
+    "source": "@./GameUIAllianceReward.lua",
+    "functions": 13,
+    "bytes": 8803
+  },
+  {
+    "file": "GameUIAllianceSearch.lua",
+    "source": "@./GameUIAllianceSearch.lua",
+    "functions": 23,
+    "bytes": 16061
+  },
+  {
+    "file": "GameUIApplyList.lua",
+    "source": "@./GameUIApplyList.lua",
+    "functions": 11,
+    "bytes": 4775
+  },
+  {
+    "file": "GameUIAssist.lua",
+    "source": "@./GameUIAssist.lua",
+    "functions": 5,
+    "bytes": 3266
+  },
+  {
+    "file": "GameUIBattleDetails.lua",
+    "source": "@./GameUIBattleDetails.lua",
+    "functions": 15,
+    "bytes": 17082
+  },
+  {
+    "file": "GameUIBattleOutCome.lua",
+    "source": "@./GameUIBattleOutCome.lua",
+    "functions": 8,
+    "bytes": 8609
+  },
+  {
+    "file": "GameUIBookMark.lua",
+    "source": "@./GameUIBookMark.lua",
+    "functions": 14,
+    "bytes": 7268
+  },
+  {
+    "file": "GameUIBuildingInfo.lua",
+    "source": "@./GameUIBuildingInfo.lua",
+    "functions": 9,
+    "bytes": 10394
+  },
+  {
+    "file": "GameUIBuildingList.lua",
+    "source": "@./GameUIBuildingList.lua",
+    "functions": 27,
+    "bytes": 19354
+  },
+  {
+    "file": "GameUIBuildingUpgrade.lua",
+    "source": "@./GameUIBuildingUpgrade.lua",
+    "functions": 6,
+    "bytes": 3044
+  },
+  {
+    "file": "GameUIBuyPhysical.lua",
+    "source": "@./GameUIBuyPhysical.lua",
+    "functions": 5,
+    "bytes": 1553
+  },
+  {
+    "file": "GameUIChat.lua",
+    "source": "@./GameUIChat.lua",
+    "functions": 29,
+    "bytes": 21354
+  },
+  {
+    "file": "GameUIChatButtons.lua",
+    "source": "@./GameUIChatButtons.lua",
+    "functions": 3,
+    "bytes": 1424
+  },
+  {
+    "file": "GameUIChatReport.lua",
+    "source": "@./GameUIChatReport.lua",
+    "functions": 6,
+    "bytes": 2949
+  },
+  {
+    "file": "GameUIChatRules.lua",
+    "source": "@./GameUIChatRules.lua",
+    "functions": 6,
+    "bytes": 1898
+  },
+  {
+    "file": "GameUIChllengeLog.lua",
+    "source": "@./GameUIChllengeLog.lua",
+    "functions": 10,
+    "bytes": 5269
+  },
+  {
+    "file": "GameUICityUIDown.lua",
+    "source": "@./GameUICityUIDown.lua",
+    "functions": 28,
+    "bytes": 18208
+  },
+  {
+    "file": "GameUICityUIUp.lua",
+    "source": "@./GameUICityUIUp.lua",
+    "functions": 60,
+    "bytes": 47958
+  },
+  {
+    "file": "GameUIDailyGift.lua",
+    "source": "@./GameUIDailyGift.lua",
+    "functions": 16,
+    "bytes": 9694
+  },
+  {
+    "file": "GameUIDailyReward.lua",
+    "source": "@./GameUIDailyReward.lua",
+    "functions": 20,
+    "bytes": 12421
+  },
+  {
+    "file": "GameUIDayTasklist.lua",
+    "source": "@./GameUIDayTasklist.lua",
+    "functions": 16,
+    "bytes": 6381
+  },
+  {
+    "file": "GameUIDirecMigration.lua",
+    "source": "@./GameUIDirecMigration.lua",
+    "functions": 12,
+    "bytes": 5430
+  },
+  {
+    "file": "GameUIDisputeTask.lua",
+    "source": "@./GameUIDisputeTask.lua",
+    "functions": 18,
+    "bytes": 11446
+  },
+  {
+    "file": "GameUIDonate.lua",
+    "source": "@./GameUIDonate.lua",
+    "functions": 12,
+    "bytes": 7564
+  },
+  {
+    "file": "GameUIECM.lua",
+    "source": "@./GameUIECM.lua",
+    "functions": 40,
+    "bytes": 21615
+  },
+  {
+    "file": "GameUIEditBox.lua",
+    "source": "@./GameUIEditBox.lua",
+    "functions": 7,
+    "bytes": 3458
+  },
+  {
+    "file": "GameUIElectronicWarfare.lua",
+    "source": "@./GameUIElectronicWarfare.lua",
+    "functions": 0,
+    "bytes": 91
+  },
+  {
+    "file": "GameUIFacebookChests.lua",
+    "source": "@./GameUIFacebookChests.lua",
+    "functions": 26,
+    "bytes": 24053
+  },
+  {
+    "file": "GameUIFirstRecharge.lua",
+    "source": "@./GameUIFirstRecharge.lua",
+    "functions": 9,
+    "bytes": 6113
+  },
+  {
+    "file": "GameUIFleetDevicUpgrade.lua",
+    "source": "@./GameUIFleetDevicUpgrade.lua",
+    "functions": 7,
+    "bytes": 4082
+  },
+  {
+    "file": "GameUIFleetDevice.lua",
+    "source": "@./GameUIFleetDevice.lua",
+    "functions": 18,
+    "bytes": 9358
+  },
+  {
+    "file": "GameUIFleetInfo.lua",
+    "source": "@./GameUIFleetInfo.lua",
+    "functions": 14,
+    "bytes": 16703
+  },
+  {
+    "file": "GameUIFleetRemake.lua",
+    "source": "@./GameUIFleetRemake.lua",
+    "functions": 30,
+    "bytes": 22079
+  },
+  {
+    "file": "GameUIFlightInfo.lua",
+    "source": "@./GameUIFlightInfo.lua",
+    "functions": 12,
+    "bytes": 4852
+  },
+  {
+    "file": "GameUIGalaxyChallenge.lua",
+    "source": "@./GameUIGalaxyChallenge.lua",
+    "functions": 53,
+    "bytes": 43669
+  },
+  {
+    "file": "GameUIGalaxyChallengeAD.lua",
+    "source": "@./GameUIGalaxyChallengeAD.lua",
+    "functions": 10,
+    "bytes": 7315
+  },
+  {
+    "file": "GameUIGalaxyChallengeHistory.lua",
+    "source": "@./GameUIGalaxyChallengeHistory.lua",
+    "functions": 10,
+    "bytes": 6565
+  },
+  {
+    "file": "GameUIGalaxyChallengeInfo.lua",
+    "source": "@./GameUIGalaxyChallengeInfo.lua",
+    "functions": 10,
+    "bytes": 5244
+  },
+  {
+    "file": "GameUIGalaxyChallengeInfoWD.lua",
+    "source": "@./GameUIGalaxyChallengeInfoWD.lua",
+    "functions": 22,
+    "bytes": 14640
+  },
+  {
+    "file": "GameUIGalaxyChallengeLeader.lua",
+    "source": "@./GameUIGalaxyChallengeLeader.lua",
+    "functions": 16,
+    "bytes": 6219
+  },
+  {
+    "file": "GameUIGalaxyChallengeRank.lua",
+    "source": "@./GameUIGalaxyChallengeRank.lua",
+    "functions": 41,
+    "bytes": 37707
+  },
+  {
+    "file": "GameUIGalaxyChallengeResult.lua",
+    "source": "@./GameUIGalaxyChallengeResult.lua",
+    "functions": 5,
+    "bytes": 1899
+  },
+  {
+    "file": "GameUIGalaxyChallengeResultWD.lua",
+    "source": "@./GameUIGalaxyChallengeResultWD.lua",
+    "functions": 9,
+    "bytes": 3670
+  },
+  {
+    "file": "GameUIGalaxyChallengeWD.lua",
+    "source": "@./GameUIGalaxyChallengeWD.lua",
+    "functions": 88,
+    "bytes": 77574
+  },
+  {
+    "file": "GameUIGalaxyMapScene.lua",
+    "source": "@./GameUIGalaxyMapScene.lua",
+    "functions": 23,
+    "bytes": 16072
+  },
+  {
+    "file": "GameUIGatewayBox.lua",
+    "source": "@./GameUIGatewayBox.lua",
+    "functions": 12,
+    "bytes": 5858
+  },
+  {
+    "file": "GameUIGlobalScreen.lua",
+    "source": "@./GameUIGlobalScreen.lua",
+    "functions": 13,
+    "bytes": 7152
+  },
+  {
+    "file": "GameUIGrowUpGift.lua",
+    "source": "@./GameUIGrowUpGift.lua",
+    "functions": 11,
+    "bytes": 11005
+  },
+  {
+    "file": "GameUIIntegralRank.lua",
+    "source": "@./GameUIIntegralRank.lua",
+    "functions": 14,
+    "bytes": 6244
+  },
+  {
+    "file": "GameUIInviteFridend.lua",
+    "source": "@./GameUIInviteFridend.lua",
+    "functions": 7,
+    "bytes": 2665
+  },
+  {
+    "file": "GameUIInviteReward.lua",
+    "source": "@./GameUIInviteReward.lua",
+    "functions": 6,
+    "bytes": 3177
+  },
+  {
+    "file": "GameUIMail.lua",
+    "source": "@./GameUIMail.lua",
+    "functions": 68,
+    "bytes": 95186
+  },
+  {
+    "file": "GameUIMailPosInfo.lua",
+    "source": "@./GameUIMailPosInfo.lua",
+    "functions": 10,
+    "bytes": 3523
+  },
+  {
+    "file": "GameUIMoon.lua",
+    "source": "@./GameUIMoon.lua",
+    "functions": 21,
+    "bytes": 10965
+  },
+  {
+    "file": "GameUIMoonBuildingList.lua",
+    "source": "@./GameUIMoonBuildingList.lua",
+    "functions": 18,
+    "bytes": 9596
+  },
+  {
+    "file": "GameUIMyAlliance.lua",
+    "source": "@./GameUIMyAlliance.lua",
+    "functions": 76,
+    "bytes": 44452
+  },
+  {
+    "file": "GameUINoAlliance.lua",
+    "source": "@./GameUINoAlliance.lua",
+    "functions": 5,
+    "bytes": 2516
+  },
+  {
+    "file": "GameUIOutCome.lua",
+    "source": "@./GameUIOutCome.lua",
+    "functions": 10,
+    "bytes": 6624
+  },
+  {
+    "file": "GameUIPackageDetail.lua",
+    "source": "@./GameUIPackageDetail.lua",
+    "functions": 12,
+    "bytes": 7449
+  },
+  {
+    "file": "GameUIPackageGacha.lua",
+    "source": "@./GameUIPackageGacha.lua",
+    "functions": 14,
+    "bytes": 9851
+  },
+  {
+    "file": "GameUIPackagePop.lua",
+    "source": "@./GameUIPackagePop.lua",
+    "functions": 14,
+    "bytes": 8541
+  },
+  {
+    "file": "GameUIPlanet.lua",
+    "source": "@./GameUIPlanet.lua",
+    "functions": 63,
+    "bytes": 32692
+  },
+  {
+    "file": "GameUIPlanetInfo.lua",
+    "source": "@./GameUIPlanetInfo.lua",
+    "functions": 10,
+    "bytes": 10210
+  },
+  {
+    "file": "GameUIQuest.lua",
+    "source": "@./GameUIQuest.lua",
+    "functions": 25,
+    "bytes": 24382
+  },
+  {
+    "file": "GameUIQuickBuyMall.lua",
+    "source": "@./GameUIQuickBuyMall.lua",
+    "functions": 24,
+    "bytes": 18197
+  },
+  {
+    "file": "GameUIRadar.lua",
+    "source": "@./GameUIRadar.lua",
+    "functions": 34,
+    "bytes": 21480
+  },
+  {
+    "file": "GameUIRegAgreement.lua",
+    "source": "@./GameUIRegAgreement.lua",
+    "functions": 5,
+    "bytes": 1884
+  },
+  {
+    "file": "GameUIRegister.lua",
+    "source": "@./GameUIRegister.lua",
+    "functions": 20,
+    "bytes": 9599
+  },
+  {
+    "file": "GameUIResearchLab.lua",
+    "source": "@./GameUIResearchLab.lua",
+    "functions": 35,
+    "bytes": 24600
+  },
+  {
+    "file": "GameUIResourceSettings.lua",
+    "source": "@./GameUIResourceSettings.lua",
+    "functions": 19,
+    "bytes": 15388
+  },
+  {
+    "file": "GameUIRewardPop.lua",
+    "source": "@./GameUIRewardPop.lua",
+    "functions": 11,
+    "bytes": 6606
+  },
+  {
+    "file": "GameUISolar.lua",
+    "source": "@./GameUISolar.lua",
+    "functions": 45,
+    "bytes": 36519
+  },
+  {
+    "file": "GameUISolarSovereignty.lua",
+    "source": "@./GameUISolarSovereignty.lua",
+    "functions": 13,
+    "bytes": 7363
+  },
+  {
+    "file": "GameUISpeedUp.lua",
+    "source": "@./GameUISpeedUp.lua",
+    "functions": 27,
+    "bytes": 27601
+  },
+  {
+    "file": "GameUISplash.lua",
+    "source": "@./GameUISplash.lua",
+    "functions": 59,
+    "bytes": 46017
+  },
+  {
+    "file": "GameUIStarFortress.lua",
+    "source": "@./GameUIStarFortress.lua",
+    "functions": 37,
+    "bytes": 19761
+  },
+  {
+    "file": "GameUIStarFortressDetail.lua",
+    "source": "@./GameUIStarFortressDetail.lua",
+    "functions": 18,
+    "bytes": 8708
+  },
+  {
+    "file": "GameUIStarFortressList.lua",
+    "source": "@./GameUIStarFortressList.lua",
+    "functions": 17,
+    "bytes": 9807
+  },
+  {
+    "file": "GameUIStarFortressMorale.lua",
+    "source": "@./GameUIStarFortressMorale.lua",
+    "functions": 17,
+    "bytes": 8449
+  },
+  {
+    "file": "GameUIStarFortressShop.lua",
+    "source": "@./GameUIStarFortressShop.lua",
+    "functions": 21,
+    "bytes": 12518
+  },
+  {
+    "file": "GameUITaskDetail.lua",
+    "source": "@./GameUITaskDetail.lua",
+    "functions": 16,
+    "bytes": 10186
+  },
+  {
+    "file": "GameUITechTree.lua",
+    "source": "@./GameUITechTree.lua",
+    "functions": 15,
+    "bytes": 14980
+  },
+  {
+    "file": "GameUITip.lua",
+    "source": "@./GameUITip.lua",
+    "functions": 11,
+    "bytes": 3771
+  },
+  {
+    "file": "GameUITop.lua",
+    "source": "@./GameUITop.lua",
+    "functions": 58,
+    "bytes": 58852
+  },
+  {
+    "file": "GameUITopActive.lua",
+    "source": "@./GameUITopActive.lua",
+    "functions": 15,
+    "bytes": 12200
+  },
+  {
+    "file": "GameUITopAliance.lua",
+    "source": "@./GameUITopAliance.lua",
+    "functions": 10,
+    "bytes": 6563
+  },
+  {
+    "file": "GameUITopFleets.lua",
+    "source": "@./GameUITopFleets.lua",
+    "functions": 9,
+    "bytes": 3752
+  },
+  {
+    "file": "GameUITutorial.lua",
+    "source": "@./GameUITutorial.lua",
+    "functions": 7,
+    "bytes": 3284
+  },
+  {
+    "file": "GameUIUsePanel.lua",
+    "source": "@./GameUIUsePanel.lua",
+    "functions": 12,
+    "bytes": 5325
+  },
+  {
+    "file": "GameUIVIPIntergral.lua",
+    "source": "@./GameUIVIPIntergral.lua",
+    "functions": 19,
+    "bytes": 12664
+  },
+  {
+    "file": "GameUIVIPMain.lua",
+    "source": "@./GameUIVIPMain.lua",
+    "functions": 21,
+    "bytes": 11806
+  },
+  {
+    "file": "GameUIVIPView.lua",
+    "source": "@./GameUIVIPView.lua",
+    "functions": 12,
+    "bytes": 5741
+  },
+  {
+    "file": "GameUiAllianceAssistCombat.lua",
+    "source": "@./GameUiAllianceAssistCombat.lua",
+    "functions": 8,
+    "bytes": 3103
+  },
+  {
+    "file": "GameUtils.lua",
+    "source": "@./GameUtils.lua",
+    "functions": 55,
+    "bytes": 35621
+  },
+  {
+    "file": "GameUtils2.lua",
+    "source": "@./GameUtils2.lua",
+    "functions": 3,
+    "bytes": 1157
+  },
+  {
+    "file": "LuaObject.lua",
+    "source": "@./LuaObject.lua",
+    "functions": 13,
+    "bytes": 6490
+  },
+  {
+    "file": "LuaUtils.lua",
+    "source": "@./LuaUtils.lua",
+    "functions": 29,
+    "bytes": 13012
+  },
+  {
+    "file": "Minheap.lua",
+    "source": "@./Minheap.lua",
+    "functions": 8,
+    "bytes": 3314
+  },
+  {
+    "file": "MusicHandler.lua",
+    "source": "@./MusicHandler.lua",
+    "functions": 8,
+    "bytes": 2161
+  },
+  {
+    "file": "RegisterAllLuaObject.lua",
+    "source": "@./RegisterAllLuaObject.lua",
+    "functions": 0,
+    "bytes": 15605
+  },
+  {
+    "file": "config.lua",
+    "source": "@../config.lua",
+    "functions": 0,
+    "bytes": 190
+  },
+  {
+    "file": "EngineDefault.lua",
+    "source": "@./EngineDefault/EngineDefault.lua",
+    "functions": 4,
+    "bytes": 3006
+  },
+  {
+    "file": "IAPPriceList.lua",
+    "source": "@./EngineDefault/IAPPriceList.lua",
+    "functions": 0,
+    "bytes": 5337
+  }
+]

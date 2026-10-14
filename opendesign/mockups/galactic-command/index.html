@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#091117"><base href="/opendesign/mockups/galactic-command/"><title>银河帝国 · 星域指挥</title><link rel="icon" href="data:,"><link rel="stylesheet" href="command.css">  <link rel="stylesheet" href="live-battle.css">
+</head>
+<body>
+  <div id="world-scene" aria-label="三维星球与固定建设区"></div>
+  <header class="topbar">
+    <button class="wordmark" data-page="home">银河帝国<small>GALACTIC IMPERIUM</small></button>
+    <label class="planet-picker"><span>当前殖民地</span><select id="planet-picker" aria-label="当前殖民地"><option>正在连接…</option></select></label>
+    <div id="resources" class="resources" aria-live="off"></div>
+    <div class="connection"><i></i><span id="connection">正在连接</span><button id="refresh" aria-label="刷新存档">↻</button></div>
+  </header>
+  <main id="workspace">
+    <section id="home-page" class="view active">
+      <aside class="planet-intro"><div class="overline">COLONY / OPERATIONS</div><div class="planet-heading"><i class="planet-emblem" aria-hidden="true"></i><div><h1 id="planet-name">主星</h1><p id="planet-type">类地星</p></div></div><p id="planet-coordinate" class="mono">—</p><p id="planet-specialty">三类资源 · 均衡开采</p><p id="planet-environment">温带海洋 · 三类矿产</p><div id="planet-facts" class="facts"></div><button id="enter-colony" class="primary">靠近殖民地 <span>↗</span></button><button id="orbit-view" class="text-button" hidden>← 返回轨道</button><button class="text-button planet-map-link" data-page="system">拉远进入太阳系 →</button></aside>
+      <div id="scene-caption" class="scene-caption"><span class="crosshair">＋</span><b>主星轨道</b><span>点击星球靠近 · 拖动环绕 · 滚轮缩放</span></div>
+      <aside id="colony-detail" class="side-panel"><div class="overline">COLONY / STATUS</div><h2>殖民地运行</h2><div id="home-queues"></div><div id="home-summary"></div><button class="text-button" data-page="buildings">全部建筑 →</button><a class="text-button model-atlas-link" href="buildings.html" target="_blank">建筑资料图鉴 ↗</a></aside>
+      <aside id="resource-operations" aria-label="资源综合体产量与容量"></aside>
+      <div id="building-labels"></div>
+    </section>
+    <section id="content-page" class="view"><div class="page-heading"><div><div id="page-eyebrow" class="overline"></div><h1 id="page-title"></h1></div><div id="page-actions"></div></div><div id="page-body" class="page-body"></div></section>
+    <section id="hangar-page" class="view"><iframe id="hangar" title="全舰船三维档案与克制表" src="about:blank"></iframe></section>
+    <section id="battle-page" class="view"><div id="mass-battle"></div></section>
+    <section id="system-page" class="view"><aside class="solar-heading"><div class="overline">SOLAR SYSTEM</div><h1 id="system-title">当前恒星系</h1><p>单击选中居中 · 双击靠近 · 滚轮连续缩放</p><button class="text-button" data-page="galaxy">← 银河星图</button></aside><aside id="system-target" class="side-panel"></aside><nav id="system-orbits" aria-label="当前恒星系天体"></nav><div class="solar-hint">拉近选中行星进入殖民地 · 拉远返回银河</div></section>
+    <section id="galaxy-page" class="view"><aside class="solar-heading"><div class="overline">GALAXY / 499 SYSTEMS</div><h1>银河星图</h1><p>滚轮缩放 · 拖动环绕 · 右键平移<br>双击天体靠近，随时停留观察</p><button class="text-button" data-page="system">定位本方恒星系 →</button></aside></section>
+  </main>
+  <footer class="bottom-bar"><nav aria-label="主导航"><button class="active" data-page="home"><span>01</span>星球</button><button data-page="system"><span>02</span>太阳系</button><button data-page="buildings"><span>03</span>建设</button><button data-page="shipyard"><span>04</span>造舰</button><button data-page="research"><span>05</span>研究</button><button data-page="fleet"><span>06</span>舰队</button><button data-page="hangar"><span>07</span>档案</button><button data-page="battle"><span>08</span>战场</button><button data-page="reports"><span>09</span>战报<i id="unread-count"></i></button><button data-page="more"><span>＋</span>更多</button></nav><span id="commander" class="commander"></span></footer>
+  <dialog id="detail-modal" aria-labelledby="modal-title"><div class="dialog-head"><div><div class="overline" id="modal-eyebrow">DETAIL</div><h2 id="modal-title"></h2></div><button id="close-modal" aria-label="关闭详情">×</button></div><div id="modal-body"></div></dialog>
+  <div id="notification" role="status" aria-live="polite"></div>
+  <div id="loading"><div class="loading-orbit"></div><h2>正在连接星域</h2><p>载入殖民地、舰队与科技档案</p><button id="retry" class="primary" hidden>重新连接</button></div>
+  <script src="../../shared/space-sky.js"></script><script src="api.js"></script><script src="mass-battle.js"></script><script src="live-battle.bundle.js"></script><script src="planet.bundle.js"></script><script src="command.js"></script>
+</body></html>

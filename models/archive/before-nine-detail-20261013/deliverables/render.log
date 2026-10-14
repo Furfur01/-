@@ -1,0 +1,499 @@
+BlenderMCP addon registered
+BlenderMCP addon unregistered
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:38:56 | INFO: Data are loaded, start creating Blender stuff
+01:38:56 | INFO: Blender create Mesh node tripo_mesh_cf8e911b-14ca-485a-b95e-3cd9488380c4
+01:38:59 | INFO: glTF import finished in 2.43s
+00:05.078  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-reference-front.png'
+00:05.156  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-reference-side.png'
+00:05.250  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:01 | INFO: Data are loaded, start creating Blender stuff
+01:39:01 | INFO: Blender create Mesh node 0
+01:39:01 | INFO: Blender create Mesh node 1
+01:39:01 | INFO: Blender create Mesh node 2
+01:39:01 | INFO: Blender create Mesh node 3
+01:39:01 | INFO: Blender create Mesh node 4
+01:39:01 | INFO: Blender create Mesh node 5
+01:39:01 | INFO: Blender create Mesh node 6
+01:39:01 | INFO: Blender create Mesh node 7
+01:39:01 | INFO: Blender create Mesh node 8
+01:39:01 | INFO: Blender create Mesh node 9
+01:39:01 | INFO: Blender create Mesh node 10
+01:39:01 | INFO: Blender create Mesh node 11
+01:39:01 | INFO: Blender create Mesh node 12
+01:39:01 | INFO: Blender create Mesh node 13
+01:39:01 | INFO: Blender create Mesh node 14
+01:39:01 | INFO: Blender create Mesh node 15
+01:39:01 | INFO: Blender create Mesh node 16
+01:39:01 | INFO: Blender create Mesh node 17
+01:39:01 | INFO: Blender create Mesh node 18
+01:39:01 | INFO: Blender create Mesh node 19
+01:39:01 | INFO: Blender create Mesh node 20
+01:39:01 | INFO: Blender create Mesh node 21
+01:39:01 | INFO: Blender create Mesh node 22
+01:39:01 | INFO: Blender create Mesh node 23
+01:39:01 | INFO: Blender create Mesh node 24
+01:39:01 | INFO: Blender create Mesh node 25
+01:39:01 | INFO: glTF import finished in 0.10s
+00:05.453  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-rebuilt-front.png'
+00:05.484  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-rebuilt-side.png'
+00:05.531  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship-rebuilt-top.png'
+00:05.594  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Battleship.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:01 | INFO: Data are loaded, start creating Blender stuff
+01:39:01 | INFO: Blender create Mesh node tripo_mesh_35574407-e8ed-42d1-85f2-2550229c9fe3
+01:39:04 | INFO: glTF import finished in 2.25s
+00:08.172  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-reference-front.png'
+00:08.250  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-reference-side.png'
+00:08.344  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:04 | INFO: Data are loaded, start creating Blender stuff
+01:39:04 | INFO: Blender create Mesh node 0
+01:39:04 | INFO: Blender create Mesh node 1
+01:39:04 | INFO: Blender create Mesh node 2
+01:39:04 | INFO: Blender create Mesh node 3
+01:39:04 | INFO: Blender create Mesh node 4
+01:39:04 | INFO: Blender create Mesh node 5
+01:39:04 | INFO: Blender create Mesh node 6
+01:39:04 | INFO: Blender create Mesh node 7
+01:39:04 | INFO: Blender create Mesh node 8
+01:39:04 | INFO: Blender create Mesh node 9
+01:39:04 | INFO: Blender create Mesh node 10
+01:39:04 | INFO: Blender create Mesh node 11
+01:39:04 | INFO: Blender create Mesh node 12
+01:39:04 | INFO: Blender create Mesh node 13
+01:39:04 | INFO: Blender create Mesh node 14
+01:39:04 | INFO: Blender create Mesh node 15
+01:39:04 | INFO: Blender create Mesh node 16
+01:39:04 | INFO: Blender create Mesh node 17
+01:39:04 | INFO: Blender create Mesh node 18
+01:39:04 | INFO: Blender create Mesh node 19
+01:39:04 | INFO: Blender create Mesh node 20
+01:39:04 | INFO: Blender create Mesh node 21
+01:39:04 | INFO: Blender create Mesh node 22
+01:39:04 | INFO: Blender create Mesh node 23
+01:39:04 | INFO: Blender create Mesh node 24
+01:39:04 | INFO: Blender create Mesh node 25
+01:39:04 | INFO: Blender create Mesh node 26
+01:39:04 | INFO: Blender create Mesh node 27
+01:39:04 | INFO: Blender create Mesh node 28
+01:39:04 | INFO: Blender create Mesh node 29
+01:39:04 | INFO: glTF import finished in 0.10s
+00:08.562  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-rebuilt-front.png'
+00:08.609  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-rebuilt-side.png'
+00:08.656  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber-rebuilt-top.png'
+00:08.719  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Bomber.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:05 | INFO: Data are loaded, start creating Blender stuff
+01:39:05 | INFO: Blender create Mesh node tripo_mesh_46d4d30e-30e6-4bb4-9ad1-ab2cba63379b
+01:39:07 | INFO: glTF import finished in 2.34s
+00:11.375  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-reference-front.png'
+00:11.453  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-reference-side.png'
+00:11.547  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:07 | INFO: Data are loaded, start creating Blender stuff
+01:39:07 | INFO: Blender create Mesh node 0
+01:39:07 | INFO: Blender create Mesh node 1
+01:39:07 | INFO: Blender create Mesh node 2
+01:39:07 | INFO: Blender create Mesh node 3
+01:39:07 | INFO: Blender create Mesh node 4
+01:39:07 | INFO: Blender create Mesh node 5
+01:39:07 | INFO: Blender create Mesh node 6
+01:39:07 | INFO: Blender create Mesh node 7
+01:39:07 | INFO: Blender create Mesh node 8
+01:39:07 | INFO: Blender create Mesh node 9
+01:39:07 | INFO: Blender create Mesh node 10
+01:39:07 | INFO: Blender create Mesh node 11
+01:39:07 | INFO: Blender create Mesh node 12
+01:39:07 | INFO: Blender create Mesh node 13
+01:39:07 | INFO: Blender create Mesh node 14
+01:39:07 | INFO: Blender create Mesh node 15
+01:39:07 | INFO: Blender create Mesh node 16
+01:39:07 | INFO: Blender create Mesh node 17
+01:39:07 | INFO: Blender create Mesh node 18
+01:39:07 | INFO: Blender create Mesh node 19
+01:39:07 | INFO: Blender create Mesh node 20
+01:39:07 | INFO: Blender create Mesh node 21
+01:39:07 | INFO: Blender create Mesh node 22
+01:39:07 | INFO: Blender create Mesh node 23
+01:39:07 | INFO: glTF import finished in 0.06s
+00:11.719  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-rebuilt-front.png'
+00:11.766  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-rebuilt-side.png'
+00:11.812  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship-rebuilt-top.png'
+00:11.891  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Cargo_Ship.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:08 | INFO: Data are loaded, start creating Blender stuff
+01:39:08 | INFO: Blender create Mesh node tripo_mesh_21828dc7-3842-4c30-be13-03f0b097ea36
+01:39:10 | INFO: glTF import finished in 2.41s
+00:14.609  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-reference-front.png'
+00:14.687  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-reference-side.png'
+00:14.781  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:11 | INFO: Data are loaded, start creating Blender stuff
+01:39:11 | INFO: Blender create Mesh node 0
+01:39:11 | INFO: Blender create Mesh node 1
+01:39:11 | INFO: Blender create Mesh node 2
+01:39:11 | INFO: Blender create Mesh node 3
+01:39:11 | INFO: Blender create Mesh node 4
+01:39:11 | INFO: Blender create Mesh node 5
+01:39:11 | INFO: Blender create Mesh node 6
+01:39:11 | INFO: Blender create Mesh node 7
+01:39:11 | INFO: Blender create Mesh node 8
+01:39:11 | INFO: Blender create Mesh node 9
+01:39:11 | INFO: Blender create Mesh node 10
+01:39:11 | INFO: Blender create Mesh node 11
+01:39:11 | INFO: Blender create Mesh node 12
+01:39:11 | INFO: Blender create Mesh node 13
+01:39:11 | INFO: Blender create Mesh node 14
+01:39:11 | INFO: Blender create Mesh node 15
+01:39:11 | INFO: Blender create Mesh node 16
+01:39:11 | INFO: Blender create Mesh node 17
+01:39:11 | INFO: Blender create Mesh node 18
+01:39:11 | INFO: Blender create Mesh node 19
+01:39:11 | INFO: Blender create Mesh node 20
+01:39:11 | INFO: Blender create Mesh node 21
+01:39:11 | INFO: Blender create Mesh node 22
+01:39:11 | INFO: Blender create Mesh node 23
+01:39:11 | INFO: glTF import finished in 0.06s
+00:14.953  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-rebuilt-front.png'
+00:15.000  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-rebuilt-side.png'
+00:15.047  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship-rebuilt-top.png'
+00:15.109  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Large_Cargo_Ship.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:11 | INFO: Data are loaded, start creating Blender stuff
+01:39:11 | INFO: Blender create Mesh node tripo_mesh_72a781e7-c02b-4b38-906a-a61b00f5b33d
+01:39:13 | INFO: glTF import finished in 2.27s
+00:17.687  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-reference-front.png'
+00:17.781  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-reference-side.png'
+00:17.875  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:14 | INFO: Data are loaded, start creating Blender stuff
+01:39:14 | INFO: Blender create Mesh node 0
+01:39:14 | INFO: Blender create Mesh node 1
+01:39:14 | INFO: Blender create Mesh node 2
+01:39:14 | INFO: Blender create Mesh node 3
+01:39:14 | INFO: Blender create Mesh node 4
+01:39:14 | INFO: Blender create Mesh node 5
+01:39:14 | INFO: Blender create Mesh node 6
+01:39:14 | INFO: Blender create Mesh node 7
+01:39:14 | INFO: Blender create Mesh node 8
+01:39:14 | INFO: Blender create Mesh node 9
+01:39:14 | INFO: Blender create Mesh node 10
+01:39:14 | INFO: Blender create Mesh node 11
+01:39:14 | INFO: Blender create Mesh node 12
+01:39:14 | INFO: Blender create Mesh node 13
+01:39:14 | INFO: Blender create Mesh node 14
+01:39:14 | INFO: Blender create Mesh node 15
+01:39:14 | INFO: glTF import finished in 0.06s
+00:18.047  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-rebuilt-front.png'
+00:18.078  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-rebuilt-side.png'
+00:18.125  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship-rebuilt-top.png'
+00:18.203  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Colony_Ship.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:14 | INFO: Data are loaded, start creating Blender stuff
+01:39:14 | INFO: Blender create Mesh node tripo_mesh_ff2fe5b7-1979-496e-9242-5a119d6467ec
+01:39:16 | INFO: glTF import finished in 2.26s
+00:20.766  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-reference-front.png'
+00:20.844  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-reference-side.png'
+00:20.937  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:17 | INFO: Data are loaded, start creating Blender stuff
+01:39:17 | INFO: Blender create Mesh node 0
+01:39:17 | INFO: Blender create Mesh node 1
+01:39:17 | INFO: Blender create Mesh node 2
+01:39:17 | INFO: Blender create Mesh node 3
+01:39:17 | INFO: Blender create Mesh node 4
+01:39:17 | INFO: Blender create Mesh node 5
+01:39:17 | INFO: Blender create Mesh node 6
+01:39:17 | INFO: Blender create Mesh node 7
+01:39:17 | INFO: Blender create Mesh node 8
+01:39:17 | INFO: Blender create Mesh node 9
+01:39:17 | INFO: Blender create Mesh node 10
+01:39:17 | INFO: Blender create Mesh node 11
+01:39:17 | INFO: Blender create Mesh node 12
+01:39:17 | INFO: Blender create Mesh node 13
+01:39:17 | INFO: Blender create Mesh node 14
+01:39:17 | INFO: Blender create Mesh node 15
+01:39:17 | INFO: Blender create Mesh node 16
+01:39:17 | INFO: Blender create Mesh node 17
+01:39:17 | INFO: Blender create Mesh node 18
+01:39:17 | INFO: Blender create Mesh node 19
+01:39:17 | INFO: Blender create Mesh node 20
+01:39:17 | INFO: Blender create Mesh node 21
+01:39:17 | INFO: Blender create Mesh node 22
+01:39:17 | INFO: Blender create Mesh node 23
+01:39:17 | INFO: Blender create Mesh node 24
+01:39:17 | INFO: glTF import finished in 0.06s
+00:21.125  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-rebuilt-front.png'
+00:21.156  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-rebuilt-side.png'
+00:21.203  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler-rebuilt-top.png'
+00:21.281  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Recycler.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:17 | INFO: Data are loaded, start creating Blender stuff
+01:39:17 | INFO: Blender create Mesh node 0
+01:39:17 | INFO: Blender create Mesh node 1
+01:39:17 | INFO: Blender create Mesh node 2
+01:39:17 | INFO: Blender create Mesh node 3
+01:39:17 | INFO: Blender create Mesh node 4
+01:39:17 | INFO: Blender create Mesh node 5
+01:39:17 | INFO: Blender create Mesh node 6
+01:39:17 | INFO: Blender create Mesh node 7
+01:39:17 | INFO: Blender create Mesh node 8
+01:39:17 | INFO: Blender create Mesh node 9
+01:39:17 | INFO: Blender create Mesh node 10
+01:39:17 | INFO: Blender create Mesh node 11
+01:39:17 | INFO: Blender create Mesh node 12
+01:39:17 | INFO: Blender create Mesh node 13
+01:39:17 | INFO: glTF import finished in 0.05s
+00:21.406  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Solar_Satellite-rebuilt-front.png'
+00:21.453  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Solar_Satellite-rebuilt-side.png'
+00:21.484  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Solar_Satellite-rebuilt-top.png'
+00:21.547  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Solar_Satellite.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:17 | INFO: Data are loaded, start creating Blender stuff
+01:39:17 | INFO: Blender create Mesh node tripo_mesh_122d43a7-83b4-488d-b932-400787292963
+01:39:20 | INFO: glTF import finished in 2.45s
+00:24.328  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-reference-front.png'
+00:24.437  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-reference-side.png'
+00:24.547  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:20 | INFO: Data are loaded, start creating Blender stuff
+01:39:20 | INFO: Blender create Mesh node 0
+01:39:20 | INFO: Blender create Mesh node 1
+01:39:20 | INFO: Blender create Mesh node 2
+01:39:20 | INFO: Blender create Mesh node 3
+01:39:20 | INFO: Blender create Mesh node 4
+01:39:20 | INFO: Blender create Mesh node 5
+01:39:20 | INFO: Blender create Mesh node 6
+01:39:20 | INFO: Blender create Mesh node 7
+01:39:20 | INFO: Blender create Mesh node 8
+01:39:20 | INFO: glTF import finished in 0.13s
+00:24.797  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-rebuilt-front.png'
+00:24.844  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-rebuilt-side.png'
+00:24.891  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star-rebuilt-top.png'
+00:24.969  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Death_Star.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:21 | INFO: Data are loaded, start creating Blender stuff
+01:39:21 | INFO: Blender create Mesh node tripo_mesh_8c0de3e6-ba90-455a-a2a1-65d33e6acc1e
+01:39:23 | INFO: glTF import finished in 2.41s
+00:27.687  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-reference-front.png'
+00:27.781  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-reference-side.png'
+00:27.875  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:24 | INFO: Data are loaded, start creating Blender stuff
+01:39:24 | INFO: Blender create Mesh node 0
+01:39:24 | INFO: Blender create Mesh node 1
+01:39:24 | INFO: Blender create Mesh node 2
+01:39:24 | INFO: Blender create Mesh node 3
+01:39:24 | INFO: Blender create Mesh node 4
+01:39:24 | INFO: Blender create Mesh node 5
+01:39:24 | INFO: Blender create Mesh node 6
+01:39:24 | INFO: Blender create Mesh node 7
+01:39:24 | INFO: Blender create Mesh node 8
+01:39:24 | INFO: Blender create Mesh node 9
+01:39:24 | INFO: Blender create Mesh node 10
+01:39:24 | INFO: Blender create Mesh node 11
+01:39:24 | INFO: Blender create Mesh node 12
+01:39:24 | INFO: Blender create Mesh node 13
+01:39:24 | INFO: Blender create Mesh node 14
+01:39:24 | INFO: Blender create Mesh node 15
+01:39:24 | INFO: Blender create Mesh node 16
+01:39:24 | INFO: Blender create Mesh node 17
+01:39:24 | INFO: Blender create Mesh node 18
+01:39:24 | INFO: Blender create Mesh node 19
+01:39:24 | INFO: Blender create Mesh node 20
+01:39:24 | INFO: Blender create Mesh node 21
+01:39:24 | INFO: Blender create Mesh node 22
+01:39:24 | INFO: Blender create Mesh node 23
+01:39:24 | INFO: Blender create Mesh node 24
+01:39:24 | INFO: Blender create Mesh node 25
+01:39:24 | INFO: Blender create Mesh node 26
+01:39:24 | INFO: Blender create Mesh node 27
+01:39:24 | INFO: Blender create Mesh node 28
+01:39:24 | INFO: Blender create Mesh node 29
+01:39:24 | INFO: Blender create Mesh node 30
+01:39:24 | INFO: Blender create Mesh node 31
+01:39:24 | INFO: Blender create Mesh node 32
+01:39:24 | INFO: Blender create Mesh node 33
+01:39:24 | INFO: glTF import finished in 0.15s
+00:28.125  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-rebuilt-front.png'
+00:28.172  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-rebuilt-side.png'
+00:28.219  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor-rebuilt-top.png'
+00:28.297  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Interceptor.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:24 | INFO: Data are loaded, start creating Blender stuff
+01:39:24 | INFO: Blender create Mesh node tripo_mesh_0212f724-e7f8-44e7-bf55-2ab4d123484a
+01:39:26 | INFO: glTF import finished in 2.42s
+00:31.031  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-reference-front.png'
+00:31.141  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-reference-side.png'
+00:31.234  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:27 | INFO: Data are loaded, start creating Blender stuff
+01:39:27 | INFO: Blender create Mesh node 0
+01:39:27 | INFO: Blender create Mesh node 1
+01:39:27 | INFO: Blender create Mesh node 2
+01:39:27 | INFO: Blender create Mesh node 3
+01:39:27 | INFO: Blender create Mesh node 4
+01:39:27 | INFO: Blender create Mesh node 5
+01:39:27 | INFO: Blender create Mesh node 6
+01:39:27 | INFO: Blender create Mesh node 7
+01:39:27 | INFO: Blender create Mesh node 8
+01:39:27 | INFO: Blender create Mesh node 9
+01:39:27 | INFO: Blender create Mesh node 10
+01:39:27 | INFO: Blender create Mesh node 11
+01:39:27 | INFO: Blender create Mesh node 12
+01:39:27 | INFO: Blender create Mesh node 13
+01:39:27 | INFO: Blender create Mesh node 14
+01:39:27 | INFO: Blender create Mesh node 15
+01:39:27 | INFO: Blender create Mesh node 16
+01:39:27 | INFO: Blender create Mesh node 17
+01:39:27 | INFO: Blender create Mesh node 18
+01:39:27 | INFO: Blender create Mesh node 19
+01:39:27 | INFO: Blender create Mesh node 20
+01:39:27 | INFO: Blender create Mesh node 21
+01:39:27 | INFO: Blender create Mesh node 22
+01:39:27 | INFO: Blender create Mesh node 23
+01:39:27 | INFO: Blender create Mesh node 24
+01:39:27 | INFO: Blender create Mesh node 25
+01:39:27 | INFO: Blender create Mesh node 26
+01:39:27 | INFO: Blender create Mesh node 27
+01:39:27 | INFO: Blender create Mesh node 28
+01:39:27 | INFO: glTF import finished in 0.11s
+00:31.469  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-rebuilt-front.png'
+00:31.516  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-rebuilt-side.png'
+00:31.562  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor-rebuilt-top.png'
+00:31.641  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Devourer_Interceptor.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:27 | INFO: Data are loaded, start creating Blender stuff
+01:39:27 | INFO: Blender create Mesh node tripo_mesh_a5991b91-f3a4-46bd-8a64-33f3c9dc3b93
+01:39:30 | INFO: glTF import finished in 2.31s
+00:34.250  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-reference-front.png'
+00:34.328  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-reference-side.png'
+00:34.406  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:30 | INFO: Data are loaded, start creating Blender stuff
+01:39:30 | INFO: Blender create Mesh node 0
+01:39:30 | INFO: Blender create Mesh node 1
+01:39:30 | INFO: Blender create Mesh node 2
+01:39:30 | INFO: Blender create Mesh node 3
+01:39:30 | INFO: Blender create Mesh node 4
+01:39:30 | INFO: Blender create Mesh node 5
+01:39:30 | INFO: Blender create Mesh node 6
+01:39:30 | INFO: Blender create Mesh node 7
+01:39:30 | INFO: Blender create Mesh node 8
+01:39:30 | INFO: Blender create Mesh node 9
+01:39:30 | INFO: Blender create Mesh node 10
+01:39:30 | INFO: Blender create Mesh node 11
+01:39:30 | INFO: Blender create Mesh node 12
+01:39:30 | INFO: Blender create Mesh node 13
+01:39:30 | INFO: Blender create Mesh node 14
+01:39:30 | INFO: Blender create Mesh node 15
+01:39:30 | INFO: Blender create Mesh node 16
+01:39:30 | INFO: Blender create Mesh node 17
+01:39:30 | INFO: Blender create Mesh node 18
+01:39:30 | INFO: Blender create Mesh node 19
+01:39:30 | INFO: Blender create Mesh node 20
+01:39:30 | INFO: Blender create Mesh node 21
+01:39:30 | INFO: Blender create Mesh node 22
+01:39:30 | INFO: Blender create Mesh node 23
+01:39:30 | INFO: Blender create Mesh node 24
+01:39:30 | INFO: Blender create Mesh node 25
+01:39:30 | INFO: Blender create Mesh node 26
+01:39:30 | INFO: Blender create Mesh node 27
+01:39:30 | INFO: Blender create Mesh node 28
+01:39:30 | INFO: Blender create Mesh node 29
+01:39:30 | INFO: Blender create Mesh node 30
+01:39:30 | INFO: Blender create Mesh node 31
+01:39:30 | INFO: Blender create Mesh node 32
+01:39:30 | INFO: Blender create Mesh node 33
+01:39:30 | INFO: glTF import finished in 0.10s
+00:34.625  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-rebuilt-front.png'
+00:34.672  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-rebuilt-side.png'
+00:34.719  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate-rebuilt-top.png'
+00:34.781  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Titanenergetic_Frigate.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:31 | INFO: Data are loaded, start creating Blender stuff
+01:39:31 | INFO: Blender create Mesh node 0
+01:39:31 | INFO: Blender create Mesh node 1
+01:39:31 | INFO: Blender create Mesh node 2
+01:39:31 | INFO: Blender create Mesh node 3
+01:39:31 | INFO: Blender create Mesh node 4
+01:39:31 | INFO: Blender create Mesh node 5
+01:39:31 | INFO: Blender create Mesh node 6
+01:39:31 | INFO: Blender create Mesh node 7
+01:39:31 | INFO: Blender create Mesh node 8
+01:39:31 | INFO: Blender create Mesh node 9
+01:39:31 | INFO: Blender create Mesh node 10
+01:39:31 | INFO: Blender create Mesh node 11
+01:39:31 | INFO: Blender create Mesh node 12
+01:39:31 | INFO: Blender create Mesh node 13
+01:39:31 | INFO: Blender create Mesh node 14
+01:39:31 | INFO: Blender create Mesh node 15
+01:39:31 | INFO: Blender create Mesh node 16
+01:39:31 | INFO: Blender create Mesh node 17
+01:39:31 | INFO: Blender create Mesh node 18
+01:39:31 | INFO: Blender create Mesh node 19
+01:39:31 | INFO: Blender create Mesh node 20
+01:39:31 | INFO: Blender create Mesh node 21
+01:39:31 | INFO: Blender create Mesh node 22
+01:39:31 | INFO: Blender create Mesh node 23
+01:39:31 | INFO: Blender create Mesh node 24
+01:39:31 | INFO: Blender create Mesh node 25
+01:39:31 | INFO: glTF import finished in 0.07s
+00:34.953  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Annihilator-rebuilt-front.png'
+00:35.000  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Annihilator-rebuilt-side.png'
+00:35.047  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Annihilator-rebuilt-top.png'
+00:35.109  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Annihilator.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:31 | INFO: Data are loaded, start creating Blender stuff
+01:39:31 | INFO: Blender create Mesh node 0
+01:39:31 | INFO: Blender create Mesh node 1
+01:39:31 | INFO: Blender create Mesh node 2
+01:39:31 | INFO: Blender create Mesh node 3
+01:39:31 | INFO: Blender create Mesh node 4
+01:39:31 | INFO: Blender create Mesh node 5
+01:39:31 | INFO: Blender create Mesh node 6
+01:39:31 | INFO: Blender create Mesh node 7
+01:39:31 | INFO: Blender create Mesh node 8
+01:39:31 | INFO: Blender create Mesh node 9
+01:39:31 | INFO: Blender create Mesh node 10
+01:39:31 | INFO: Blender create Mesh node 11
+01:39:31 | INFO: Blender create Mesh node 12
+01:39:31 | INFO: Blender create Mesh node 13
+01:39:31 | INFO: Blender create Mesh node 14
+01:39:31 | INFO: Blender create Mesh node 15
+01:39:31 | INFO: Blender create Mesh node 16
+01:39:31 | INFO: Blender create Mesh node 17
+01:39:31 | INFO: Blender create Mesh node 18
+01:39:31 | INFO: Blender create Mesh node 19
+01:39:31 | INFO: Blender create Mesh node 20
+01:39:31 | INFO: glTF import finished in 0.08s
+00:35.281  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Reaper-rebuilt-front.png'
+00:35.328  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Reaper-rebuilt-side.png'
+00:35.359  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Reaper-rebuilt-top.png'
+00:35.437  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Reaper.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:39:31 | INFO: Data are loaded, start creating Blender stuff
+01:39:31 | INFO: Blender create Mesh node 0
+01:39:31 | INFO: Blender create Mesh node 1
+01:39:31 | INFO: Blender create Mesh node 2
+01:39:31 | INFO: Blender create Mesh node 3
+01:39:31 | INFO: Blender create Mesh node 4
+01:39:31 | INFO: Blender create Mesh node 5
+01:39:31 | INFO: Blender create Mesh node 6
+01:39:31 | INFO: Blender create Mesh node 7
+01:39:31 | INFO: Blender create Mesh node 8
+01:39:31 | INFO: Blender create Mesh node 9
+01:39:31 | INFO: Blender create Mesh node 10
+01:39:31 | INFO: Blender create Mesh node 11
+01:39:31 | INFO: Blender create Mesh node 12
+01:39:31 | INFO: Blender create Mesh node 13
+01:39:31 | INFO: glTF import finished in 0.05s
+00:35.578  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Guardian-rebuilt-front.png'
+00:35.609  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Guardian-rebuilt-side.png'
+00:35.656  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Guardian-rebuilt-top.png'
+00:35.719  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\remaining-fleet-rebuild-01\Guardian.png'
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

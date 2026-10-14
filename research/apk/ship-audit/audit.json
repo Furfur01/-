@@ -1,0 +1,965 @@
+{
+  "apk": "d3bc4bc005a0a2798f833deedfd9014421401c5176a1cf254187d90ee2d35412",
+  "resourceZipSha256": "008356c656bf9a471c10c58cdc55750da02ce6ac6eb5b2b8e5b67f948f249dc1",
+  "counts": {
+    "apkShipTypes": 20,
+    "apkSprites": 19,
+    "legacyUnmapped": 1,
+    "models": 21,
+    "missingServerStatSets": 20,
+    "specialShipsWithoutLocalStats": 6
+  },
+  "fieldMapping": {
+    "armour": "strength",
+    "shield": "shield",
+    "attack": "attack",
+    "speed": "speed",
+    "capacity": "cargo",
+    "fuel_usage": "fuel"
+  },
+  "evidence": [
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "fatal_damage_list"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "armour"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "shield"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "attack"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "speed"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "capacity"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 135,
+      "lineEnd": 184,
+      "field": "fuel_usage"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 272,
+      "lineEnd": 295,
+      "field": "damage_rate"
+    },
+    {
+      "source": "output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json",
+      "lineStart": 272,
+      "lineEnd": 295,
+      "field": "bonus_damage_rate"
+    }
+  ],
+  "notes": [
+    "APK Lua prototypes read values from content; constants identify field names, not their numeric values.",
+    "Local rapid fire uses screenshot/community subset and is not verified as APK server algorithm.",
+    "Special ships remain archive-only without invented costs, stats or combat multipliers.",
+    "Reaper immunity and Annihilator behavior are documented in original localization; they are not implemented in ordinary rapid-fire settlement."
+  ],
+  "ships": [
+    {
+      "id": "Light_Fighter",
+      "apkId": 1,
+      "constant": "FT_LIGHT_FIGHTER",
+      "name": "轻型战机",
+      "reference": "icons/fleet_01_Light_Fighter.png",
+      "referenceHash": "e580fed5932437b73152e94c51e4d085f07575465999e88eaf3c473618dc1559",
+      "description": "就算在大型战舰不断兴起的今天，轻型战斗机也从未被人类抛弃过。快速、灵活的特点可以让他们很好地为舰队担任护航的任务，并且极低的造价也让这种飞船可以很容易以数量轻松碾压对手。",
+      "localizationKey": "menu.light_fighter_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 400,
+        "shield": 10,
+        "attack": 50,
+        "speed": 12500,
+        "cargo": 50,
+        "fuel": 20
+      },
+      "cost": [
+        3000,
+        1000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          1
+        ],
+        [
+          "Combustion_Drive",
+          1
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Heavy_Fighter",
+      "apkId": 2,
+      "constant": "FT_HEAVY_FIGHTER",
+      "name": "重型战机",
+      "reference": "icons/fleet_02_Heavy_Fighter.png",
+      "referenceHash": "3e708f17c1d7ed5d83f00a572055a82fdefd80c1379ad090834c6b353a504dd6",
+      "description": "轻型战斗机的改进型，采用了更为坚固的装甲，同时加装了更为强大的武器系统，使得它在战场上拥有更强的生存能力和战斗能力。",
+      "localizationKey": "menu.heavy_fighter_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 1000,
+        "shield": 25,
+        "attack": 150,
+        "speed": 10000,
+        "cargo": 100,
+        "fuel": 75
+      },
+      "cost": [
+        6000,
+        4000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Strength_Tech",
+          2
+        ],
+        [
+          "Impulse_Drive",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5,
+        "Cargo_Ship": 3
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Cruiser",
+      "apkId": 3,
+      "constant": "FT_CRUISER",
+      "name": "巡洋舰",
+      "reference": "icons/fleet_03_Cruiser.png",
+      "referenceHash": "3d48c887f9bab4d8ebcca02109ee57319ae335a22028075f638b303f581366a3",
+      "description": "军事研究学者们发现，普通的战斗飞船已经难以抵抗星球防御设施的活力，因此人们急需一种更为强大的战斗舰船。经过长期的研究，巡洋舰开始登上站长舞台。强大的活力，厚重的装甲，兼具超快的航行速度，在中级战斗飞船中，这就是无敌的代表。巡洋舰的霸主地位持续了100年，虽然最终因为新型防御设施的出现而减小了作用。但它仍然因为对战斗机的强大克制作用而活跃在战场上。",
+      "localizationKey": "menu.cruiser_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 2700,
+        "shield": 50,
+        "attack": 400,
+        "speed": 15000,
+        "cargo": 800,
+        "fuel": 300
+      },
+      "cost": [
+        20000,
+        7000,
+        2000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          5
+        ],
+        [
+          "Impulse_Drive",
+          4
+        ],
+        [
+          "Ion_Tech",
+          2
+        ]
+      ],
+      "rapid": {
+        "Light_Fighter": 6,
+        "Rocket_Launcher": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Battleship",
+      "apkId": 4,
+      "constant": "FT_BATTLESHIP",
+      "name": "战列舰",
+      "reference": "icons/fleet_04_Battleship.png",
+      "referenceHash": "47ecac68344c7f9db0e90e755bc8e663efcf58154089affe41772229f3334e7a",
+      "description": "重型太空战争武器，是战争中的核心飞船之一。拥有难以穿透的装甲，恐怖的活力设置，甚至还具有一定的资源装载空间。这一切都使得它成为了夺取舰队组成中的必选飞船。",
+      "localizationKey": "menu.battleship_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 6000,
+        "shield": 200,
+        "attack": 1000,
+        "speed": 10000,
+        "cargo": 1500,
+        "fuel": 250
+      },
+      "cost": [
+        45000,
+        15000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          7
+        ],
+        [
+          "Hyperspace_Drive",
+          4
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Dreadnought",
+      "apkId": 5,
+      "constant": "FT_BATTLEECRUISER",
+      "name": "无畏舰",
+      "reference": "icons/fleet_05_Dreadnought.png",
+      "referenceHash": "de4f75e8989173b17c2c92b47c3934f0a0800e7cf882ad0624f76924ac4df729",
+      "description": "有史以来最先进的战斗飞船。凭借着激光加农炮和先进的超空间引擎，无畏舰可以对敌军的战列舰造成致命的伤害，同时他坚厚的躯体可以抵挡相当程度的攻击。由于复杂的飞船设计和庞大的武器系统开销，无畏舰的货物装载空间被迫减少，但站在它低耗气量的角度来看，是完全可以理解的。",
+      "localizationKey": "menu.battlecruiser_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 7000,
+        "shield": 400,
+        "attack": 700,
+        "speed": 10000,
+        "cargo": 750,
+        "fuel": 250
+      },
+      "cost": [
+        30000,
+        40000,
+        15000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          8
+        ],
+        [
+          "Hyperspace_Drive",
+          5
+        ],
+        [
+          "Laser_Tech",
+          12
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ]
+      ],
+      "rapid": {
+        "Battleship": 10,
+        "Cruiser": 4,
+        "Heavy_Fighter": 4,
+        "Large_Cargo_Ship": 3,
+        "Cargo_Ship": 3,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Bomber",
+      "apkId": 6,
+      "constant": "FT_BOMBER",
+      "name": "行星轰炸机 / 导弹舰",
+      "reference": "icons/fleet_06_Bomber.png",
+      "referenceHash": "06e790caeb5a0759e01158a62394dc4e5fa954e1ffc44e11c9b1c5d842746c3f",
+      "description": "为了摧毁星球上的重型防御装置，导弹舰被专门研发出来。拜激光引导系统之赐，能制造超高温爆炸的等离子导弹被精确的发射到它们的目标上，对行星的防御系统造成毁灭性的伤害。",
+      "localizationKey": "menu.bomber_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 7500,
+        "shield": 500,
+        "attack": 1000,
+        "speed": 4000,
+        "cargo": 500,
+        "fuel": 1000
+      },
+      "cost": [
+        50000,
+        25000,
+        15000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          8
+        ],
+        [
+          "Impulse_Drive",
+          6
+        ],
+        [
+          "Plasma_Tech",
+          5
+        ]
+      ],
+      "rapid": {
+        "Rocket_Launcher": 20,
+        "Light_Laser": 20,
+        "Heavy_Laser": 10,
+        "Ion_Cannon": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Destroyer",
+      "apkId": 7,
+      "constant": "FT_DESTROYER",
+      "name": "驱逐舰",
+      "reference": "icons/fleet_07_Destroyer.png",
+      "referenceHash": "50e2657043f123f1f9af9931c7ed4737028ec993d36f090c19d2cc45ccb4e521",
+      "description": "",
+      "localizationKey": "",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 11000,
+        "shield": 500,
+        "attack": 2000,
+        "speed": 5000,
+        "cargo": 2000,
+        "fuel": 1000
+      },
+      "cost": [
+        60000,
+        50000,
+        15000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          9
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ],
+        [
+          "Hyperspace_Drive",
+          6
+        ]
+      ],
+      "rapid": {
+        "Dreadnought": 2,
+        "Light_Laser": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Death_Star",
+      "apkId": 8,
+      "constant": "FT_DEAD_STAR",
+      "name": "死星",
+      "reference": null,
+      "description": "APK 定义了编号 8，但 Fleets.tfs 没有对应图标。球形模型为概念补建。",
+      "identitySource": "APK enum only",
+      "modelSource": "Concept; no APK sprite",
+      "playable": true,
+      "stats": {
+        "strength": 900000,
+        "shield": 50000,
+        "attack": 200000,
+        "speed": 200,
+        "cargo": 1000000,
+        "fuel": 1000
+      },
+      "cost": [
+        5000000,
+        4000000,
+        1000000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          12
+        ],
+        [
+          "Hyperspace_Drive",
+          7
+        ],
+        [
+          "Hyperspace_Tech",
+          6
+        ],
+        [
+          "Graviton_Tech",
+          1
+        ]
+      ],
+      "rapid": {
+        "Dreadnought": 15,
+        "Large_Cargo_Ship": 250,
+        "Colony_Ship": 250,
+        "Solar_Satellite": 1250,
+        "Light_Fighter": 200,
+        "Rocket_Launcher": 20,
+        "Cargo_Ship": 250,
+        "Cruiser": 33,
+        "Probe": 5,
+        "Destroyer": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Cargo_Ship",
+      "apkId": 9,
+      "constant": "FT_SMALL_CARGO",
+      "name": "轻型运输舰",
+      "reference": "icons/fleet_09_Cargo_Ship.png",
+      "referenceHash": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b",
+      "description": "主要用于星际运输的小型飞船，只保留了星际飞船最基本的装甲防护和武器，将内部空间全部用作物资仓库。但由于体积较小，只能装载5000单位的资源。而大型运输船是它装载量的5倍。",
+      "localizationKey": "menu.small_cargo_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 400,
+        "shield": 10,
+        "attack": 5,
+        "speed": 5000,
+        "cargo": 5000,
+        "fuel": 10
+      },
+      "cost": [
+        2000,
+        2000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          2
+        ],
+        [
+          "Combustion_Drive",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Large_Cargo_Ship",
+      "apkId": 10,
+      "constant": "FT_LARGE_CARGO",
+      "name": "重型运输舰",
+      "reference": "icons/fleet_10_Large_Cargo_Ship.png",
+      "referenceHash": "f7ff2c0c710201910c42c29f88995f12e773b93241b188864dc8b4155ff69126",
+      "description": "大型运输船是小型运输船的发展,拥有更大的货仓和更快的速度.它的装载量是老式的5倍，并且速度更快！",
+      "localizationKey": "menu.large_cargo_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 1200,
+        "shield": 25,
+        "attack": 5,
+        "speed": 7500,
+        "cargo": 25000,
+        "fuel": 50
+      },
+      "cost": [
+        6000,
+        6000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Colony_Ship",
+      "apkId": 11,
+      "constant": "FT_COLONY_SHIP",
+      "name": "殖民舰 / 开拓船",
+      "reference": "icons/fleet_11_Colony_Ship.png",
+      "referenceHash": "97591de09b367666e8bba05904d1d29b4b34f6a659cb4d968bc0ae7ecdbfb814",
+      "description": "开拓船可以让你开拓新的附属星，开拓前，请先检查天体物理科技，因为您可以拥有星球的数量和该科技有关。",
+      "localizationKey": "menu.colony_ship_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 3000,
+        "shield": 100,
+        "attack": 50,
+        "speed": 2500,
+        "cargo": 7500,
+        "fuel": 1000
+      },
+      "cost": [
+        10000,
+        20000,
+        10000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Impulse_Drive",
+          3
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Recycler",
+      "apkId": 12,
+      "constant": "FT_RECYCLER",
+      "name": "回收舰",
+      "reference": "icons/fleet_12_Recycler.png",
+      "referenceHash": "62cc1cc41c1cd7c45a1527ffa8a3d66e27836368ae7d4f4f14a7816f6f2fe465",
+      "description": "在大型运输船基础上改进而来的一种舰船，用于回收星系中产生的大量战斗垃圾。由于需要避免被战斗区域的混乱能量撕裂，需要额外加厚装甲，因此占用了部分内部的装载空间。但因为如此，也只有回收船能够将战斗垃圾进行回收再利用。",
+      "localizationKey": "menu.recycler_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 1600,
+        "shield": 10,
+        "attack": 1,
+        "speed": 2000,
+        "cargo": 20000,
+        "fuel": 300
+      },
+      "cost": [
+        10000,
+        6000,
+        2000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ],
+        [
+          "Shielding_Tech",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Probe",
+      "apkId": 13,
+      "constant": "FT_ESPIONAGE_PROBE",
+      "name": "间谍探测器",
+      "reference": "icons/fleet_13_Probe.png",
+      "referenceHash": "332d64b82df25e0cc94a4bdce067449c5f0931d02f315be3cfdd9dc77f4973c7",
+      "description": "用于军事情报侦察的探测装置。指挥官可以将他们投送到敌人的星球周围，而这些探测器可以远距离传送信息。为了追求更快速地接近以便于侦察，因此这些探测器采用了特殊的激动装置，速度特别快，但没有任何防御和进攻能力。",
+      "localizationKey": "menu.espionage_probe_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 100,
+        "shield": 0,
+        "attack": 0,
+        "speed": 10000000,
+        "cargo": 5,
+        "fuel": 1
+      },
+      "cost": [
+        6000,
+        4000,
+        0
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Combustion_Drive",
+          3
+        ],
+        [
+          "Espionage_Tech",
+          2
+        ]
+      ],
+      "rapid": {},
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Solar_Satellite",
+      "apkId": 14,
+      "constant": "FT_SOLAR_SATELLITE",
+      "name": "太阳能卫星",
+      "reference": "icons/fleet_14_Solar_Satellite.png",
+      "referenceHash": "77b4f7aae69b9e19cd10ab3f6b6218e928a2f2ea3bd1d9d2a01ef08997168d58",
+      "description": "太阳能卫星装备了太阳能电池，是构造简单的轨道卫星，它会把搜集到的能量传回到星球的地表上。这些能量使用特殊的雷射光来传输。太阳能卫星的效率取决于太阳光线的强弱。它的价格低廉，安装简单，这些卫星因为提供了地面建筑所需的电力而广为人知。不幸的是，这些卫星在战斗时极易被摧毁。",
+      "localizationKey": "menu.solar_satellite_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": true,
+      "stats": {
+        "strength": 200,
+        "shield": 0,
+        "attack": 0,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "cost": [
+        0,
+        2000,
+        500
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          1
+        ]
+      ],
+      "rapid": {},
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Interceptor",
+      "apkId": 23,
+      "constant": "FT_INTERCEPTOR",
+      "name": "裂变者",
+      "reference": "icons/fleet_23_Interceptor.png",
+      "referenceHash": "14e559652ee7ea02c9d4f332763c3fda5a2391af82df5a1196b4fa3d30c87622",
+      "description": "裂变者",
+      "localizationKey": "menu.interceptor",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Iron_Behemoth",
+      "apkId": 24,
+      "constant": "FT_BEHEMOTH",
+      "name": "深空吞噬者",
+      "reference": "icons/fleet_24_Iron_Behemoth.png",
+      "referenceHash": "f6324df90210bc892b12194bee4bf504c441ee781591a11f07520e0157e5098f",
+      "description": "深空吞噬者",
+      "localizationKey": "building.TSZ_NAME",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Devourer_Interceptor",
+      "apkId": 25,
+      "constant": "FT_FLEETTYPE_25",
+      "name": "噬能截击者",
+      "reference": "icons/fleet_25_Devourer_Interceptor.png",
+      "referenceHash": "7bf16d8d69fe7b9f5bd40c9784c2c90c78aeaf67633dac997762368754289962",
+      "description": "在对抗来自平行宇宙的敌人时，噬能截击者绝对是最恐怖的存在，它的攻击能够直接洞穿敌舰的防护，造成巨量伤害，是众多舰船的克星。",
+      "localizationKey": "menu.GC_fleet_type_25_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Titanenergetic_Frigate",
+      "apkId": 26,
+      "constant": "FT_FLEETTYPE_26",
+      "name": "钛能守卫者",
+      "reference": "icons/fleet_26_Titanenergetic_Frigate.png",
+      "referenceHash": "b30435a96530b818f2bc7e4c4d6ebf22cc1bf9f0571cf80ae4e208871088e30a",
+      "description": "钛能守卫者——作为融合了钛能立方和晶钻矿石的高级战舰，其强大的装甲特性将舰队的防御推上了新的高度。",
+      "localizationKey": "menu.GC_fleet_type_26_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Annihilator",
+      "apkId": 28,
+      "constant": "FT_BOMB",
+      "name": "湮灭之星",
+      "reference": "icons/fleet_28_Annihilator.png",
+      "referenceHash": "f09489129b34799030b907ef88c8bcd451054a4be3c4a028172d2f21f13588b7",
+      "description": "湮灭之星是以引爆自己对敌人造成最大伤害为目的，它与之前的飞船在战斗方式上有明显区别： 1、逐个引爆：当敌方拥有钛能守卫者、噬能截击者、裂变者、深空吞噬者这四种飞船中的至少两种时，湮灭之星会逐个引爆自己，直到湮灭之星耗完或不满足引爆条件时才停止！ 2、群体伤害：湮灭之星爆炸时会对敌方每种飞船都造成伤害，但会随着敌方飞船种类数的增多而衰减。 3、无视护盾：湮灭之星爆炸造成伤害时，会无视对方飞船的护盾，直接扣减装甲值。 4、战略规避：星球在受到进攻时，该星球拥有的湮灭之星不会自动引爆。 5、储备上限：玩家所有星球同时最多拥有200个湮灭之星。 6、伤害加成：对不同飞船有不同的伤害加成比例。 7、伤害叠加：参战的湮灭之星越多则单个爆炸时造成的伤害越高。 8、湮灭：湮灭之星一旦爆炸则不会受战损恢复影响。",
+      "localizationKey": "menu.GC_bomb_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Reaper",
+      "apkId": 29,
+      "constant": "FT_REAPER",
+      "name": "Reaper（收割者·暂译）",
+      "reference": "icons/fleet_29_Reaper.png",
+      "referenceHash": "884556db6bad3f173ef334400c8be96d7544b5667be2900d33af4bb13b58a3ad",
+      "description": "他是从大型战舰爆炸中获得的精密零部件合成而来,他免疫湮灭之星的攻击，并且拥有特殊的攻击顺序，将是大型战舰的噩梦。",
+      "localizationKey": "menu.GC_reaper_description",
+      "identitySource": "APK enum + Fleets.tfs",
+      "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
+      "playable": false,
+      "stats": {
+        "strength": null,
+        "shield": null,
+        "attack": null,
+        "speed": null,
+        "cargo": null,
+        "fuel": null
+      },
+      "cost": null,
+      "requirements": null,
+      "rapid": null,
+      "statsSource": "Server data unavailable",
+      "rapidSource": "Server fatal_damage_list unavailable",
+      "apkStats": null,
+      "apkRapid": null
+    },
+    {
+      "id": "Guardian",
+      "apkId": null,
+      "constant": null,
+      "name": "守护者（旧版）",
+      "reference": null,
+      "description": "来自已有截图与旧版玩法。APK 未找到对应常量，不等同于 type_26 钛能守卫者。模型为概念补建。",
+      "identitySource": "Legacy screenshot; APK identity unconfirmed",
+      "modelSource": "Concept; no APK identity",
+      "playable": true,
+      "stats": {
+        "strength": 250000,
+        "shield": 100000,
+        "attack": 5000,
+        "speed": 1000,
+        "cargo": 10000,
+        "fuel": 1000
+      },
+      "cost": [
+        1500000,
+        1500000,
+        500000
+      ],
+      "requirements": [
+        [
+          "Shipyard",
+          12
+        ],
+        [
+          "Shielding_Tech",
+          10
+        ],
+        [
+          "Hyperspace_Tech",
+          7
+        ]
+      ],
+      "rapid": {
+        "Dreadnought": 2,
+        "Destroyer": 2,
+        "Death_Star": 10
+      },
+      "statsSource": "research/截图参数校准.md",
+      "rapidSource": "Current local rules; screenshot/community subset; APK rates unverified",
+      "apkStats": null,
+      "apkRapid": null
+    }
+  ]
+}

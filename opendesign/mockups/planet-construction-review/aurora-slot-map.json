@@ -1,0 +1,23 @@
+{
+  "version": "aurora-review-3",
+  "scope": "review-only; no save migration or production catalog changes",
+  "slots": [
+    {"type":"metal","buildingId":"Metal_Mine"},
+    {"type":"metalstore","buildingId":"Metal_Storage"},
+    {"type":"crystal","buildingId":"Crystal_Mine"},
+    {"type":"crystalstore","buildingId":"Crystal_Storage"},
+    {"type":"gas","buildingId":"Gas_Mine"},
+    {"type":"gasstore","buildingId":"Gas_Storage"},
+    {"type":"capital","buildingId":"Command_Center"},
+    {"type":"solar","buildingId":"Solar_Plant"},
+    {"type":"fusion","buildingId":"Fusion_Reactor"},
+    {"type":"robotics","buildingId":"Robotics_Facility"},
+    {"type":"spaceport","buildingId":"Shipyard","presentation":"太空电梯 + 轨道造舰站"},
+    {"type":"research","buildingId":"Research_Lab"},
+    {"type":"radar","buildingId":"Radar_Facility"},
+    {"type":"shipyard","buildingId":"Alliance_Depot","presentation":"联盟物流中心 / 地面造舰物资转运"},
+    {"type":"nano","buildingId":"Nanite_Factory"},
+    {"type":"shield","buildingId":"Terraformer","presentation":"地形改造器 / 环境控制穹顶"},
+    {"type":"missile","buildingId":"Missile_Silo"}
+  ]
+}

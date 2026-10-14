@@ -1,0 +1,484 @@
+{
+  "note": "All 18 original planet_Icon_17–34 labels, not 18 confirmed NPC categories. GameUISolar.GetSinglePlanetIcon uses planet_position > 16 as the default skin ID; a nonzero server planet_icon overrides it. getPiratesPlanetSpriteByIndex returns the ID unchanged. Other UI also uses planet_icon for player skins. Do not infer NPC type or level from these labels. 24 and 29 share one original shape.",
+  "source_logic": {
+    "GameUISolar.GetSinglePlanetIcon": {
+      "source_lines": [
+        558,
+        582
+      ],
+      "npc_default": "planet_position when > 16",
+      "override": "nonzero planet_icon from the server, returned unchanged"
+    },
+    "GameUISolar.getPiratesPlanetSpriteByIndex": {
+      "source_lines": [
+        595,
+        597
+      ],
+      "logic": "return id"
+    },
+    "GameUISolar.RefreshSystem": {
+      "source_lines": [
+        599,
+        665
+      ],
+      "name": "server planet_name",
+      "level": "pirate_level is displayed as LV; it does not choose the skin"
+    },
+    "GameUICityUIUp.UpdateSkyfall": {
+      "source_lines": [
+        801,
+        827
+      ],
+      "logic": "also uses planet_icon for player planet appearance"
+    }
+  },
+  "classification": "No client-side table associates these IDs with NPC faction, NPC level, or official category names. IDs 17–21 can reproduce ordinary NPC positions 17–21; any assignment to this project's simulated NPC templates is project-specific.",
+  "same_shape_labels": [
+    [
+      24,
+      29
+    ]
+  ],
+  "overlapping_atlas_regions": [
+    [
+      20,
+      32
+    ]
+  ],
+  "crosscheck": "SolarSystem_new and CityUI_UP, each in default/4x3/16x9 variants, resolve all 18 labels to byte-identical RGBA crops. No planet_Icon_35+ found in the extracted TFS inventory.",
+  "other_npcs": "GalaxyChallenge activity NPC images are server-provided image URLs; starfortress resources are a separate UI family, not part of this planet_Icon label table.",
+  "images": [
+    {
+      "skin_id": 17,
+      "asset": "npc-planet-17.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_17",
+      "frame": 12,
+      "shape_id": 99,
+      "crop_box": [
+        6,
+        212,
+        207,
+        415
+      ],
+      "size": [
+        201,
+        203
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "f26de42379b9c0359448e8986bb176898d71082ca6a59a31b35d0a78433d6f6b"
+    },
+    {
+      "skin_id": 18,
+      "asset": "npc-planet-18.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_18",
+      "frame": 13,
+      "shape_id": 100,
+      "crop_box": [
+        4,
+        3,
+        209,
+        208
+      ],
+      "size": [
+        205,
+        205
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "9256f1fad2adcb454f7a1e21ce245af3de4bbb0bfa2efc8badfd356ba7c5ea93"
+    },
+    {
+      "skin_id": 19,
+      "asset": "npc-planet-19.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_19",
+      "frame": 14,
+      "shape_id": 101,
+      "crop_box": [
+        628,
+        4,
+        832,
+        208
+      ],
+      "size": [
+        204,
+        204
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "7b7100a4eca979bf431cda2284a39c2a81cda44b0a98359084254d3d12996c89"
+    },
+    {
+      "skin_id": 20,
+      "asset": "npc-planet-20.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_20",
+      "frame": 15,
+      "shape_id": 102,
+      "crop_box": [
+        423,
+        7,
+        623,
+        208
+      ],
+      "size": [
+        200,
+        201
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "89f141a31b972bcd96c7b37071999c70ed963a1bd04e734a28981bf1d4ffb688"
+    },
+    {
+      "skin_id": 21,
+      "asset": "npc-planet-21.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_21",
+      "frame": 16,
+      "shape_id": 103,
+      "crop_box": [
+        211,
+        3,
+        416,
+        208
+      ],
+      "size": [
+        205,
+        205
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "f67727257538db78d3b4734ae690fad3b6c725f1b355c1ac16432da40b79ef44"
+    },
+    {
+      "skin_id": 22,
+      "asset": "npc-planet-22.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_22",
+      "frame": 17,
+      "shape_id": 104,
+      "crop_box": [
+        600,
+        211,
+        778,
+        471
+      ],
+      "size": [
+        178,
+        260
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "0ce00ff7c846fe073fd51755ea7813903d522cf345db7ecdf746200d95db4e2b"
+    },
+    {
+      "skin_id": 23,
+      "asset": "npc-planet-23.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_23",
+      "frame": 18,
+      "shape_id": 105,
+      "crop_box": [
+        211,
+        225,
+        399,
+        411
+      ],
+      "size": [
+        188,
+        186
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "20233f77abd8a9a78e26d5b85e307dbdeb6faae0f9cc397e7d032585c1a8bbb7"
+    },
+    {
+      "skin_id": 24,
+      "asset": "npc-planet-24.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_24",
+      "frame": 19,
+      "shape_id": 106,
+      "crop_box": [
+        209,
+        630,
+        414,
+        836
+      ],
+      "size": [
+        205,
+        206
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "5abbd350b797d99e5b710578621f3a8186b64fcfd69f454ac04030a2f9a7ae64"
+    },
+    {
+      "skin_id": 25,
+      "asset": "npc-planet-25.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_25",
+      "frame": 20,
+      "shape_id": 107,
+      "crop_box": [
+        541,
+        476,
+        778,
+        709
+      ],
+      "size": [
+        237,
+        233
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "01b3c5042ef46d711e9e4d72652633ba42b74e6f1e2552b105d3bf390c27ff4d"
+    },
+    {
+      "skin_id": 26,
+      "asset": "npc-planet-26.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_26",
+      "frame": 21,
+      "shape_id": 108,
+      "crop_box": [
+        3,
+        419,
+        210,
+        626
+      ],
+      "size": [
+        207,
+        207
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "1bacc9e89b20b15a1e9d43b89c85f3faf2c93cf9097d6cf08bfa12e66c329c03"
+    },
+    {
+      "skin_id": 27,
+      "asset": "npc-planet-27.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_27",
+      "frame": 22,
+      "shape_id": 109,
+      "crop_box": [
+        782,
+        211,
+        1021,
+        472
+      ],
+      "size": [
+        239,
+        261
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "47db7e3c97633646fe633e5905d90d4a3282ed20273dadfe1fca8764574bdc6d"
+    },
+    {
+      "skin_id": 28,
+      "asset": "npc-planet-28.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_28",
+      "frame": 23,
+      "shape_id": 110,
+      "crop_box": [
+        217,
+        420,
+        435,
+        628
+      ],
+      "size": [
+        218,
+        208
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "4c760d1818118cdcf33bfea80fdab3e8b3462a4fed1d7e5a5f080a95622ad02e"
+    },
+    {
+      "skin_id": 29,
+      "asset": "npc-planet-29.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_29",
+      "frame": 24,
+      "shape_id": 106,
+      "crop_box": [
+        209,
+        630,
+        414,
+        836
+      ],
+      "size": [
+        205,
+        206
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "5abbd350b797d99e5b710578621f3a8186b64fcfd69f454ac04030a2f9a7ae64"
+    },
+    {
+      "skin_id": 30,
+      "asset": "npc-planet-30.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_30",
+      "frame": 25,
+      "shape_id": 111,
+      "crop_box": [
+        782,
+        476,
+        1018,
+        706
+      ],
+      "size": [
+        236,
+        230
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "722298a7679f44861fc3e02790fb494be93d8af07557fc8f4bfab20b24d1425a"
+    },
+    {
+      "skin_id": 31,
+      "asset": "npc-planet-31.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_31",
+      "frame": 26,
+      "shape_id": 112,
+      "crop_box": [
+        1,
+        630,
+        208,
+        836
+      ],
+      "size": [
+        207,
+        206
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "2ca46b94964f9f2f26e194365a0abe41e4cb4acfdbcc6efad609c256e08bc539"
+    },
+    {
+      "skin_id": 32,
+      "asset": "npc-planet-32.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_32",
+      "frame": 27,
+      "shape_id": 113,
+      "crop_box": [
+        423,
+        4,
+        624,
+        210
+      ],
+      "size": [
+        201,
+        206
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "27960101e660ba11746100827f8cff0c7a9d8fa1e19148a66af8f95f917dffd1"
+    },
+    {
+      "skin_id": 33,
+      "asset": "npc-planet-33.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_33",
+      "frame": 28,
+      "shape_id": 114,
+      "crop_box": [
+        413,
+        229,
+        585,
+        403
+      ],
+      "size": [
+        172,
+        174
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "f14651722d61b89d4601cd545ead895543a043525aaa89d799d5ceca2041fdce"
+    },
+    {
+      "skin_id": 34,
+      "asset": "npc-planet-34.png",
+      "source_ui": "SolarSystem_new.tfs",
+      "source_atlas": "SolarSystem_planets.png",
+      "label": "planet_Icon_34",
+      "frame": 29,
+      "shape_id": 115,
+      "crop_box": [
+        733,
+        713,
+        1021,
+        939
+      ],
+      "size": [
+        288,
+        226
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "sha256": "ad36b505a68b0ab677a7eb323f7d56888df374b48e97a117ac298f0cb4686232"
+    }
+  ]
+}

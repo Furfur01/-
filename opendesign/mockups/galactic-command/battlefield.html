@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>银河帝国 · 正在进入 Three.js</title></head><body><p>正在进入战场…</p><a id="continue" href="battlefield-three.html">进入 Three.js</a> · <a id="archive" href="legacy-webgl/battlefield.html">原版归档</a><script>
+const query=new URLSearchParams(location.search);
+const archived=query.get('map')==='death-star';
+const target=(archived?'legacy-webgl/battlefield.html':'battlefield-three.html')+location.search+location.hash;
+document.getElementById('continue').href=target;
+document.getElementById('archive').href='legacy-webgl/battlefield.html'+location.search+location.hash;
+location.replace(target);
+</script></body></html>

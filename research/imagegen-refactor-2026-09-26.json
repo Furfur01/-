@@ -1,0 +1,698 @@
+{
+  "date": "2026-09-26",
+  "mode": "builtin",
+  "technologyRevisionManifest": "imagegen-technology-stylefix-2026-09-26.json",
+  "items": [
+    {
+      "kind": "terrain",
+      "id": "colony-zones",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. Create one COMPLETE landscape colony GROUND map, 1600 wide by 1120 tall composition, orthographic isometric 2:1 terrain camera, no horizon. Whole frame covers the ground. Upper-left quarter has low rusty iron ore mountains; upper-right quarter has low dark mountains with vivid blue crystal deposits; lower-left quarter has low rocky gas vents with restrained green vapour. Lower-right quarter has a split horseshoe-shaped dark mountain range around a large empty flat centre for a spaceship port, canyon opens toward centre of map. Wide connected flat dark blue-grey industrial ground in centre from x=540 to1060,y=80 to1020. Keep six generous flat construction clearings near exact coordinate centres: metal x205 y240, x400 y360; crystal x1170 y260,x1390 y350; gas x200 y780,x410 y930. Shipyard large flat empty clearing x1280 y830 in canyon. The whole ground is coherent with modest worn panel walkways blending with rust regolith. All clearings are empty neutral ground, not printed pads. Terrain mountains near outside edges must not crowd centre. No buildings, no vehicles, no landing pads, no placement rings, no arrows, no text. Landscape game background; simplified old prerendered RTS textures, NOT cinematic matte painting.",
+      "mode": "builtin",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-1516801b-311a-414d-84c9-856c72c45e05.png",
+      "saved": [
+        "godot/assets/colony-zones.png",
+        "opendesign/mockups/galaxy-empire/assets/colony-zones.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Recycler",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. A squat heavy salvage spacecraft with two large open grabber claws at its nose and a broad industrial cargo body, silver-grey steel, brass claw hinges, small cyan engine glow; threequarter topview nose to bottomleft. One single sprite. Square canvas with GENUINE TRANSPARENT ALPHA background. Object intentionally SMALL in centre: maximum length including every fin and glow only60% of canvas width and60% of height. The surrounding40% empty transparent border is REQUIRED. Entire object must be visible, no edge cropping whatsoever. Matte painted game sprite textures, few details, clear silhouette at96pixels. No floor, no text, no other items.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-a76998d8-4162-4139-858a-4194b198d52d.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Recycler.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Recycler.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Probe",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. A small spherical space reconnaissance probe with a large cyan lens facing bottomleft, three antennae and two short stabilizer fins, grey metal shell and brass rim; threequarter topview. One single sprite. Square canvas with GENUINE TRANSPARENT ALPHA background. Object intentionally SMALL in centre: maximum length including every fin and glow only60% of canvas width and60% of height. The surrounding40% empty transparent border is REQUIRED. Entire object must be visible, no edge cropping whatsoever. Matte painted game sprite textures, few details, clear silhouette at96pixels. No floor, no text, no other items.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-2cb0d6ac-0d6b-419c-b0ed-bb267254ad49.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Probe.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Probe.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Solar_Satellite",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. One solar power satellite, compact grey cylindrical central body with four flat dark blue solar panel wings arranged in an X, slim small gold antenna; threequarter elevated isometric view. One single sprite. Square canvas with GENUINE TRANSPARENT ALPHA background. Object intentionally SMALL in centre: maximum length including every fin and glow only60% of canvas width and60% of height. The surrounding40% empty transparent border is REQUIRED. Entire object must be visible, no edge cropping whatsoever. Matte painted game sprite textures, few details, clear silhouette at96pixels. No floor, no text, no other items.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-e3c6930d-7e34-4e06-823c-845eae62e126.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Solar_Satellite.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Solar_Satellite.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Cargo_Ship",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. One single compact light cargo spacecraft, rectangular small silver freight hull with two bulky cargo boxes and a small cockpit, twin small cyan engines. Full isolated ship, three-quarter elevated view nose points diagonally toward bottom-left and engines upper-right. Clearly civilian utility ship, no guns. Square image, genuinely transparent background alpha. Entire ship and all fins and thruster glows fully visible within frame, INTENTIONALLY SMALL: entire object including every engine glow and fin occupies MAXIMUM60% of image width and60% height, centered in generous40% empty transparent border. NOTHING touches image edges. No floor, no shadow plane, no checkerboard painted into image. Single asset only, NOT a contact sheet.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-25355253-1083-495c-bac6-66b69da6e2ba.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Cargo_Ship.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Cargo_Ship.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Large_Cargo_Ship",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. One single heavy cargo spacecraft, long broad modular rectangular silver freight hull with six large grey and ochre cargo containers, small front bridge and four stubby cyan engines. Full isolated ship, three-quarter elevated view nose points diagonally toward bottom-left and engines upper-right. Clearly civilian utility ship, no guns. Square image, genuinely transparent background alpha. Entire ship and all fins and thruster glows fully visible within frame, INTENTIONALLY SMALL: entire object including every engine glow and fin occupies MAXIMUM60% of image width and60% height, centered in generous40% empty transparent border. NOTHING touches image edges. No floor, no shadow plane, no checkerboard painted into image. Single asset only, NOT a contact sheet.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-6f72be2c-817b-4fbf-9e57-19561cc37b2d.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Large_Cargo_Ship.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Large_Cargo_Ship.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Colony_Ship",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. One single colony spacecraft, large cylindrical silver habitat barrel with visible rotating collar, three short radial arms, small bridge at forward end and three small cyan engine glows. Full isolated ship, three-quarter elevated view nose points diagonally toward bottom-left and engines upper-right. Clearly civilian interstellar colony transport, no guns. Square image, genuinely transparent background alpha. Entire ship and all fins and thruster glows fully visible within frame, INTENTIONALLY SMALL: entire object including every engine glow and fin occupies MAXIMUM60% of image width and60% height, centered in generous40% empty transparent border. NOTHING touches image edges. No floor, no shadow plane, no checkerboard painted into image. Single asset only, NOT a contact sheet.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-f1e2ffd7-d341-456e-9dac-ef57f7c03ad9.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Colony_Ship.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Colony_Ship.png"
+      ]
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Energy_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A squat octagonal power-cell reactor with three thick blue glowing vertical slots and two small brass terminals.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-2c40d481-19d6-452b-aee3-3dd130b8bd69.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Energy_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Energy_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Laser_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. One short heavy silver laser emitter barrel angled bottomleft, blue focusing lens, emitting a single short straight blue beam.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-ccadcc02-d4e1-4f0f-97e4-c0d9757d5993.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Laser_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Laser_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Ion_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. Two simple stout grey fork-shaped magnet electrodes holding one small floating blue ion sphere between them.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-e4e4c363-f1a1-4ff6-ab08-a01956731aba.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Ion_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Ion_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Hyperspace_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. Three concentric grey orbital rings around a small darkblue spatial rift, with one small metal cube disappearing halfway through the rift.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-ec0590e2-ec8d-42bd-8412-e23d58d9e313.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Hyperspace_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Hyperspace_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Plasma_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. One chunky grey cylindrical containment canister with large transparent green chamber holding a bright green plasma blob, two broad ring clamps.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-c054e168-8d36-4afe-bdc6-f3073257ebf2.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Plasma_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Plasma_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Espionage_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A single small silver sensor dish and large blue optical lens integrated into a squat reconnaissance receiver box.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-c5886b46-4711-4c27-8c10-304af26727d2.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Espionage_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Espionage_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Computer_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. One thick square gunmetal processor module with a single blue central grid and eight large brass contacts, no micro-detail.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-42f9f6e5-03ae-43ce-adfd-29b0c4f33bb3.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Computer_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Computer_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Astrophysics_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A simple small blue-grey planet and two moon spheres encircled by two metallic orbital guide rings, like a mechanical observatory model.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-b0a6773c-8a2f-4cd4-b4f1-7ad01ade8dcc.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Astrophysics_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Astrophysics_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Combustion_Drive",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A single short silver rocket engine with large copper combustion chamber and orange flame, chunky bell nozzle.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-373fc88d-1dec-4dec-9714-b148c3226cda.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Combustion_Drive.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Combustion_Drive.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Impulse_Drive",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A compact blue pulse thruster assembly with three thick silver rings around a short glowing blue core, one small blue exhaust pulse.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-a109fe00-08ca-4646-9f90-68202373c437.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Impulse_Drive.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Impulse_Drive.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Hyperspace_Drive",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A central stubby silver engine barrel inside two large grey warp rings with three thick radial supports and restrained purple-blue core glow.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-f20ab4dd-3007-4b27-be74-d22f2d5e9927.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Hyperspace_Drive.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Hyperspace_Drive.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Weapons_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A pair of chunky grey spaceship autocannon barrels on one small brass bracket, blunt armor plated weapon assembly.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-3487d10c-b881-4c80-9cfd-5a8bc755ed1e.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Weapons_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Weapons_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Shielding_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A small grey shield generator beneath a simple translucent blue hemispherical protective bubble, one broad hexagon visible on bubble.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-bb94f33e-7a68-4ec8-a38f-c27cab633ebe.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Shielding_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Shielding_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Strength_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. Three stacked thick spaceship hull armor plates offset from each other, darkgrey underlayer, silver top plate, brass reinforcing strips.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-41cac250-533b-4ad3-bb73-8edbb1be461f.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Strength_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Strength_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Graviton_Tech",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. A dark violet small sphere suspended between four chunky silver gravity clamps arranged around a square mechanical frame, simple sparse lines bending toward sphere.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-648309c9-a689-40c8-8979-2d18f8abe622.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Graviton_Tech.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Graviton_Tech.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "technologies-v2",
+      "id": "Intergalactic_Network",
+      "prompt": "Use case: stylized-concept. Single square technology icon for an OLD 2010 ISOMETRIC SPACE STRATEGY game. NOT photorealistic. Low-poly chunky pre-rendered sprite look, grey painted steel, broad beveled panels, modest cyan and brass accent. Maximum8 main shapes, very little surface detail, broad flat tonal shading, no tiny wires or bolts, no scratches. Readable when reduced to80pixels. A simple solid dark navy-blue background #0b1725, no floor, no border, no text or letters, no watermark. Object group centered filling72% of frame, fully visible. Three-quarter isometric top view. NO cinematic lighting, NO bloom, NO machinery photo, NO complex industrial diorama. Three compact silver satellite relay nodes connected in a triangle by thin cyan light paths, a small blue planet behind centre, no complex map.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-0f303d38-52f4-480c-9e15-58f95a88d0f7.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/technologies-v2/Intergalactic_Network.png",
+        "opendesign/mockups/galaxy-empire/assets/technologies-v2/Intergalactic_Network.png"
+      ],
+      "status": "First pass; final metallic style revision is recorded in imagegen-technology-stylefix-2026-09-26.json"
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Metal_Mine",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Industrial metal ore smelter mine: squat square grey furnace with warm orange open furnace mouth, one short red-striped chimney, thick red pipes and small drill head, very small puff of smoke that stays inside frame.",
+      "anchor": [
+        0.5,
+        0.67
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-268bbc46-2a87-4ef6-a1c8-0097dcfbf4b2.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Metal_Mine.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Metal_Mine.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Crystal_Mine",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Blue crystal mining station: short grey hydraulic drilling crane leaning over a small cluster of vivid blue crystals on the foundation, low control booth, one compact processing pipe.",
+      "anchor": [
+        0.5,
+        0.68
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-eaa9664b-9a09-4329-827d-d887b6c43183.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Crystal_Mine.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Crystal_Mine.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Gas_Mine",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Gas extractor refinery: three tall cylindrical green-glass extraction columns held by grey metal rings, thick curved silver pipes and small squat pressure pump.",
+      "anchor": [
+        0.5,
+        0.73
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-628a2d11-36dd-41fa-b8b2-6a5bd036785a.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Gas_Mine.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Gas_Mine.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Solar_Plant",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Solar power station: two broad curved dark blue solar collector roofs side by side on low silver pylons, one slim grey transformer mast at the rear.",
+      "anchor": [
+        0.5,
+        0.71
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-be5146ba-2d16-4021-aa66-169ba03d0bd8.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Solar_Plant.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Solar_Plant.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Metal_Storage",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Heavy industrial metal warehouse: square low grey storage bunker, ribbed silver roof and one wide dark open garage door showing neatly stacked orange metal crates.",
+      "anchor": [
+        0.5,
+        0.66
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-ba8d9645-fc6c-401d-af14-8c3134401bad.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Metal_Storage.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Metal_Storage.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Crystal_Storage",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Crystal warehouse: squat square grey reinforced storage chamber with two broad blue glass side windows showing large blue crystals, thick corner columns and broad flat roof.",
+      "anchor": [
+        0.5,
+        0.68
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-9c047167-196c-457c-8cee-df2d2c438b53.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Crystal_Storage.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Crystal_Storage.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Gas_Storage",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Gas warehouse: three large silver spherical-topped storage tanks connected by thick grey pipes with brass valves, one smaller pressure gauge unit.",
+      "anchor": [
+        0.5,
+        0.665
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-d5941729-f90a-4908-bb3a-639c3157f7b4.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Gas_Storage.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Gas_Storage.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Robotics_Facility",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Robotics factory: low open silver machine hall with a dark central garage and two yellow industrial robot arms mounted on the roof, one unfinished machine on assemblyline.",
+      "anchor": [
+        0.5,
+        0.66
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-3fcca4fc-7518-4687-a022-2671dcd7d57c.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Robotics_Facility.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Robotics_Facility.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Shipyard",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Spacecraft construction port: broad grey drydock gantry, two yellow side cranes and rear tall metal support beams surrounding ONE small silver spacecraft under construction; wide empty front apron built into the foundation.",
+      "anchor": [
+        0.5,
+        0.66
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-9a323c5c-3336-4919-b8b7-786f35452c3b.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Shipyard.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Shipyard.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Research_Lab",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Research laboratory: compact circular silver laboratory with a large blue glass segmented dome and two short grey communication spires, cyan door lamps.",
+      "anchor": [
+        0.5,
+        0.65
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-7b46f43d-4c02-4c45-b6c2-c9283e11f964.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Research_Lab.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Research_Lab.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Radar_Facility",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Radar station: one big white-grey radio dish tilted upperright on a stout silver pivot above a squat grey control room, one short antenna mast beside it.",
+      "anchor": [
+        0.5,
+        0.74
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-220d6b9f-cc69-432c-8950-c919713ad879.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Radar_Facility.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Radar_Facility.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Fusion_Reactor",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Fusion power reactor: one squat blue-glowing central reactor core between three thick grey cooling towers, thick silver connecting pipes.",
+      "anchor": [
+        0.5,
+        0.66
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-635b330e-2325-438d-bda0-76e4184f242b.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Fusion_Reactor.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Fusion_Reactor.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Nanite_Factory",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Nanite factory: three tall silver cylindrical microfabrication towers joined by thick grey pipe bridges, one small yellow robotic arm and restrained blue status lights.",
+      "anchor": [
+        0.5,
+        0.71
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-5d11de9a-0359-456b-8ea5-b81e0a72db24.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Nanite_Factory.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Nanite_Factory.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Alliance_Depot",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Alliance logistics depot: low wide silver supply bunker with two short landing gantries, several large grey container stacks neatly arranged and one small communication dish.",
+      "anchor": [
+        0.5,
+        0.62
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-7abffc1b-afb2-4238-8529-8ba0d579b4c1.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Alliance_Depot.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Alliance_Depot.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Moon_Base",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Moon habitat base: two connected silver pressure domes with tiny blue portholes, airlock doorway in front, one short antenna tower.",
+      "anchor": [
+        0.5,
+        0.64
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-33bb0f11-e629-40b3-b576-d43bc2839370.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Moon_Base.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Moon_Base.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Wormhole_Generator",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Wormhole generator: one thick upright silver segmented circular gate with a contained flat blue swirling portal, two side stabilizer pylons and chunky feet.",
+      "anchor": [
+        0.5,
+        0.675
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-4d5ecc01-518b-479f-bcb7-c7b2a92ed757.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Wormhole_Generator.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Wormhole_Generator.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Command_Center",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Command headquarters: one tall rectangular grey command tower with a faceted cyan top window, silver vertical broad stripes, attached low command bunker and one small antenna.",
+      "anchor": [
+        0.5,
+        0.74
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-0624f306-9ae7-425c-8179-4db9ff54e0b9.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Command_Center.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Command_Center.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "The_EU_X_Radar",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Lunar long-range sensor station: three grey radio dishes of different sizes around a stout darkgrey central sensor mast, small silver command cabin with blue windows.",
+      "anchor": [
+        0.5,
+        0.705
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-cc2f96f9-77fe-4d3e-bf56-5bc9d0e4da22.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/The_EU_X_Radar.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/The_EU_X_Radar.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Terraformer",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Planetary terraformer: three stout silver atmospheric processing towers around a low central dome with faint green glow, thick grey ducts and one small green biome chamber.",
+      "anchor": [
+        0.51,
+        0.695
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-a60048df-ecbd-4919-9d78-7f035478bc81.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Terraformer.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Terraformer.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "buildings-v2",
+      "id": "Missile_Silo",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. BUILDING SPRITE. One standalone building only, mounted ON ITS OWN INTEGRATED flat square metal foundation, seen in precise orthographic isometric2:1 (diamond footprint). Genuine transparent alpha background, no floor outside foundation. Square canvas. Important standardized ANCHOR: diamond foundation centre lies at normalized(.50,.80), its bottom tip at(.50,.92), leftmost tip(.20,.80), rightmost tip(.80,.80), reartip(.50,.68). Thin bevel rim around metal foundation, subtle yellow safety paint, foundation physically connected to structure. Building body rises above this foundation up towardy=.20. Keep ALL building parts including antenna and steam inside image with generous transparent margins. Entire structure+base visible; no cropped corners; no shadow outside base. NO separate floating landingpad, no extra surrounding objects. Medium-simple 2010 game textures, solid readable silhouettes, modest texture wear, not photoreal hightech laboratory. Missile silo: low square darkgrey armored bunker with two open circular vertical launch hatches, one black-silver rocket tip visible in one hatch, one short control tower and yellow safety rim.",
+      "anchor": [
+        0.5,
+        0.64
+      ],
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-1ecc3c7b-6119-444d-bc0c-3ff3d78db19e.png",
+      "mode": "builtin",
+      "anchorMethod": "Visually inspected centre between left and right foundation tips",
+      "saved": [
+        "godot/assets/buildings-v2/Missile_Silo.png",
+        "opendesign/mockups/galaxy-empire/assets/buildings-v2/Missile_Silo.png"
+      ],
+      "requestedFoundationBottom": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Interceptor_Missile",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. Three short slim black and silver interceptor rockets, simple pointed black noses, broad white silver midbodies and small tail fins, arranged as ONE compact parallel group, pointing diagonally toward upper-right. No launch smoke, no flames. Square image with truly transparent alpha background. Complete individual game unit sprite, centered and maximum60%of canvas width andheight leaving40% empty transparent border. Every tailfin and tip fully visible, no edge cropping. Medium low resolution pre-rendered game artwork, small amount of painted metal texture. No text/no labels/no extraobjects.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-6611b8d1-74e1-4c4e-b709-ed7720b761c9.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Interceptor_Missile.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Interceptor_Missile.png"
+      ]
+    },
+    {
+      "kind": "civilian",
+      "id": "Interplanetary_Missile",
+      "prompt": "Use case: stylized-concept. Asset for a faithful 2010-era isometric space empire RTS game, same visual family as old pre-rendered grey metallic spacecraft sprites: simple chunky low-poly shapes, baked painted textures, broad crisp highlights, muted blue-grey steel with occasional brass and cyan lamps. Clearly a small game sprite, not a photorealistic machinery photo or modern luxury concept render. No lettering, symbols, logos, watermark, UI frames or labels. One thick heavy interplanetary missile with long black pointed nose, silver-grey body, two yellow-black broad warning bands and four short rear stabilizer fins, pointing diagonally upper-right. No launch smoke, no flames. Square image with truly transparent alpha background. Complete individual game unit sprite, centered and maximum60%of canvas width andheight leaving40% empty transparent border. Every tailfin and tip fully visible, no edge cropping. Medium low resolution pre-rendered game artwork, small amount of painted metal texture. No text/no labels/no extraobjects.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd5-95d8-7340-89ca-c9ad9794be1c\\exec-251cac27-c268-41b9-8657-f75a6af0d068.png",
+      "mode": "builtin",
+      "saved": [
+        "godot/assets/civilian/Interplanetary_Missile.png",
+        "opendesign/mockups/galaxy-empire/assets/civilian/Interplanetary_Missile.png"
+      ]
+    }
+  ]
+}

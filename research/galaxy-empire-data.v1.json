@@ -1,0 +1,2281 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-09-24",
+  "game": "Tap4Fun Galaxy Empire / 银河帝国",
+  "status": "research_dataset_not_production_game_balance",
+  "notes": [
+    "社区资料混有Android/iOS、2012–2015及后期版本，未与用户截图精确客户端匹配。",
+    "中文名称为便于阅读的暂译，保留英文ID；不保证原版中文本地化一致。",
+    "资源数组顺序为金属/晶体/气体；sample_costs每行是目标等级/金属/晶体/气体。",
+    "null表示未知；0仅表示来源明确为零或未消耗。",
+    "成本增长率是根据表格推断，候选公式floor(base*growth^(targetLevel-1))不代表官方公式，也不代表已验证所有等级。",
+    "所有前置均属于已找到的子集；prerequisite_list_complete=false不能解释为无需其他前置。",
+    "来源是玩家可编辑资料；观察到的页面数字也可能错误。",
+    "舰船fuel字段保留来源数值，不擅自解释为每次出航固定耗气。",
+    "partial_rapid_fire仅列部分已见倍率，不构成完整克制表。"
+  ],
+  "buildings": [
+    {
+      "id": "Metal_Mine",
+      "name_zh_working": "金属矿",
+      "source": "https://galaxyempire.fandom.com/wiki/Metal_Mine",
+      "base_cost_mcg": [
+        60,
+        15,
+        0
+      ],
+      "cost_growth_candidate": 1.5,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          60,
+          15,
+          0
+        ],
+        [
+          2,
+          90,
+          22,
+          0
+        ],
+        [
+          3,
+          135,
+          33,
+          0
+        ],
+        [
+          4,
+          202,
+          50,
+          0
+        ],
+        [
+          5,
+          303,
+          75,
+          0
+        ],
+        [
+          6,
+          455,
+          113,
+          0
+        ],
+        [
+          7,
+          683,
+          170,
+          0
+        ],
+        [
+          8,
+          1025,
+          256,
+          0
+        ],
+        [
+          9,
+          1537,
+          384,
+          0
+        ],
+        [
+          10,
+          2306,
+          576,
+          0
+        ]
+      ],
+      "sample_energy_total": [
+        11,
+        24,
+        39,
+        57,
+        78,
+        103,
+        133,
+        168,
+        208,
+        255
+      ],
+      "production_formula": null,
+      "notes": [
+        "页面产量表包含军官加成和矛盾行，不能直接作为无加成产量。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 17.76721463,
+        "B": 0.406103736,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Crystal_Mine",
+      "name_zh_working": "晶体矿",
+      "source": "https://galaxyempire.fandom.com/wiki/Crystal_Mine",
+      "base_cost_mcg": [
+        48,
+        24,
+        0
+      ],
+      "cost_growth_candidate": 1.6,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          48,
+          24,
+          0
+        ],
+        [
+          2,
+          76,
+          38,
+          0
+        ],
+        [
+          3,
+          168,
+          67,
+          0
+        ],
+        [
+          4,
+          196,
+          98,
+          0
+        ],
+        [
+          5,
+          314,
+          157,
+          0
+        ],
+        [
+          6,
+          503,
+          251,
+          0
+        ],
+        [
+          7,
+          805,
+          402,
+          0
+        ],
+        [
+          8,
+          1288,
+          644,
+          0
+        ],
+        [
+          9,
+          2061,
+          1030,
+          0
+        ],
+        [
+          10,
+          3298,
+          1649,
+          0
+        ]
+      ],
+      "sample_energy_total": [
+        11,
+        24,
+        39,
+        57,
+        78,
+        103,
+        133,
+        168,
+        208,
+        255
+      ],
+      "production_formula": null,
+      "notes": [
+        "L3原表168/67与其余行的1.6增长模式冲突；不要自动修正原始证据。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 14.3364115392396,
+        "B": 0.477180666567455,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Gas_Mine",
+      "name_zh_working": "气体矿",
+      "source": "https://galaxyempire.fandom.com/wiki/Gas_Mine",
+      "base_cost_mcg": [
+        225,
+        75,
+        0
+      ],
+      "cost_growth_candidate": 1.5,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          225,
+          75,
+          0
+        ],
+        [
+          2,
+          337,
+          112,
+          0
+        ],
+        [
+          3,
+          506,
+          168,
+          0
+        ],
+        [
+          4,
+          759,
+          253,
+          0
+        ],
+        [
+          5,
+          1139,
+          379,
+          0
+        ],
+        [
+          6,
+          1708,
+          569,
+          0
+        ],
+        [
+          7,
+          2562,
+          854,
+          0
+        ],
+        [
+          8,
+          3844,
+          1281,
+          0
+        ],
+        [
+          9,
+          5766,
+          1922,
+          0
+        ],
+        [
+          10,
+          8649,
+          2883,
+          0
+        ]
+      ],
+      "sample_energy_total": [
+        11,
+        37,
+        68,
+        105,
+        148,
+        199,
+        259,
+        329,
+        410,
+        504
+      ],
+      "production_formula": null,
+      "notes": [
+        "产量受星球温度影响。能源首行和后续累加关系需要校准；产量表存在升级后反降的混杂记录。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 71.2956607830762,
+        "B": 0.406140800737459,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Solar_Plant",
+      "name_zh_working": "太阳能电站",
+      "source": "https://galaxyempire.fandom.com/wiki/Solar_Plant",
+      "base_cost_mcg": [
+        75,
+        30,
+        0
+      ],
+      "cost_growth_candidate": 1.5,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": true,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          75,
+          30,
+          0
+        ],
+        [
+          2,
+          112,
+          45,
+          0
+        ],
+        [
+          3,
+          168,
+          67,
+          0
+        ],
+        [
+          4,
+          253,
+          101,
+          0
+        ],
+        [
+          5,
+          379,
+          151,
+          0
+        ],
+        [
+          6,
+          569,
+          227,
+          0
+        ],
+        [
+          7,
+          854,
+          341,
+          0
+        ],
+        [
+          8,
+          1281,
+          512,
+          0
+        ],
+        [
+          9,
+          1922,
+          768,
+          0
+        ],
+        [
+          10,
+          2883,
+          1153,
+          0
+        ]
+      ],
+      "sample_energy_supply": [
+        22,
+        48,
+        79,
+        117,
+        161,
+        212,
+        272,
+        342,
+        424,
+        518
+      ]
+    },
+    {
+      "id": "Fusion_Reactor",
+      "name_zh_working": "聚变反应堆",
+      "source": "https://galaxyempire.fandom.com/wiki/Fusion_Reactor",
+      "base_cost_mcg": [
+        900,
+        360,
+        180
+      ],
+      "cost_growth_candidate": 1.8,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Gas_Mine",
+          5
+        ],
+        [
+          "Energy_Tech",
+          3
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          900,
+          360,
+          180
+        ],
+        [
+          2,
+          1620,
+          648,
+          324
+        ],
+        [
+          3,
+          2916,
+          1166,
+          583
+        ],
+        [
+          4,
+          5248,
+          2099,
+          1049
+        ],
+        [
+          5,
+          9447,
+          3779,
+          1889
+        ]
+      ],
+      "notes": [
+        "发电量受能源科技等加成影响，耗气和发电精确公式待核验。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 251.240328234283,
+        "B": 0.588112522398604,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Metal_Storage",
+      "name_zh_working": "金属仓库",
+      "source": "https://galaxyempire.fandom.com/wiki/Metal_Storage",
+      "base_cost_mcg": [
+        1000,
+        0,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 180,
+        "B": 0.6931471805599453,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Crystal_Storage",
+      "name_zh_working": "晶体仓库",
+      "source": "https://galaxyempire.fandom.com/wiki/Crystal_Storage",
+      "base_cost_mcg": [
+        1000,
+        500,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 270,
+        "B": 0.6931471805599453,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Gas_Storage",
+      "name_zh_working": "气体仓库",
+      "source": "https://galaxyempire.fandom.com/wiki/Gas_Storage",
+      "base_cost_mcg": [
+        1000,
+        1000,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "notes": [
+        "L3容量页面写74000，另外两类仓库为75000，保留版本/笔误争议。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 360,
+        "B": 0.6931471805599453,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Robotics_Facility",
+      "name_zh_working": "机器人工厂",
+      "source": "https://galaxyempire.fandom.com/wiki/Robotics_Facility",
+      "base_cost_mcg": [
+        400,
+        120,
+        200
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "effect": "缩短建筑工期",
+      "notes": [
+        "页面还包含防守舰船维修功能；出现时期未确认，不能与初期版本无条件混用。"
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 93.1878031353441,
+        "B": 0.693667336899957,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Shipyard",
+      "name_zh_working": "造船厂",
+      "source": "https://galaxyempire.fandom.com/wiki/Shipyard",
+      "base_cost_mcg": [
+        400,
+        200,
+        100
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Robotics_Facility",
+          2
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "notes": [
+        "低等级成本模式清晰，极高等级表有疑似错误；工期公式存在口径差异。"
+      ]
+    },
+    {
+      "id": "Research_Lab",
+      "name_zh_working": "研究实验室",
+      "source": "https://galaxyempire.fandom.com/wiki/Research_Lab",
+      "base_cost_mcg": [
+        200,
+        400,
+        200
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "effect": "解锁科技并缩短研究工期；科技效果跨星球",
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 178.641766771527,
+        "B": 0.522122844299938,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Radar_Facility",
+      "name_zh_working": "雷达站",
+      "source": "https://galaxyempire.fandom.com/wiki/Radar_Facility",
+      "base_cost_mcg": [
+        80,
+        40,
+        null
+      ],
+      "cost_growth_candidate": 2.1,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          80,
+          40,
+          null
+        ],
+        [
+          2,
+          168,
+          84,
+          null
+        ],
+        [
+          3,
+          352,
+          176,
+          null
+        ],
+        [
+          4,
+          740,
+          370,
+          null
+        ],
+        [
+          5,
+          1555,
+          777,
+          null
+        ],
+        [
+          6,
+          3267,
+          1633,
+          null
+        ],
+        [
+          7,
+          6861,
+          3430,
+          null
+        ],
+        [
+          8,
+          14408,
+          7204,
+          null
+        ],
+        [
+          9,
+          30258,
+          15129,
+          null
+        ]
+      ],
+      "sample_energy_total": [
+        0,
+        3,
+        6,
+        9,
+        13,
+        21,
+        32,
+        48,
+        74,
+        112,
+        171,
+        260,
+        395,
+        601,
+        913
+      ],
+      "notes": [
+        "表头第三列已核对图标，是能源，不是气体。气体成本未明确列出，保留null。",
+        "高等级表以K/M取整显示，不能当精确整数。"
+      ],
+      "detection_unlocks": [
+        [
+          1,
+          "Light_Fighter"
+        ],
+        [
+          2,
+          "Probe"
+        ],
+        [
+          4,
+          "Colony_Ship"
+        ],
+        [
+          5,
+          "Cargo_Ship"
+        ],
+        [
+          7,
+          "Heavy_Fighter"
+        ],
+        [
+          8,
+          "Recycler"
+        ],
+        [
+          10,
+          "Large_Cargo_Ship"
+        ],
+        [
+          11,
+          "Cruiser"
+        ],
+        [
+          12,
+          "Battleship"
+        ],
+        [
+          13,
+          "Dreadnought"
+        ],
+        [
+          14,
+          "Destroyer"
+        ],
+        [
+          14,
+          "Bomber"
+        ]
+      ],
+      "community_build_time_fit": {
+        "formula_seconds": "(1 - discount_fraction) * A * exp(B * target_level) / (robotics_level + 1)",
+        "A": 19.7979797979798,
+        "B": 0.747914864323704,
+        "status": "community_curve_fit_not_verified_original_formula",
+        "notes": [
+          "系数来自社区页面拟合，不应替代原版引擎证据；服务器倍率、最短工期和纳米工厂叠加另待核验。"
+        ]
+      }
+    },
+    {
+      "id": "Nanite_Factory",
+      "name_zh_working": "纳米工厂",
+      "source": "https://galaxyempire.fandom.com/wiki/Nanite_Factory",
+      "base_cost_mcg": [
+        16000000,
+        8000000,
+        1600000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Robotics_Facility",
+          10
+        ],
+        [
+          "Fusion_Reactor",
+          14
+        ],
+        [
+          "Computer_Tech",
+          10
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "sample_costs": [
+        [
+          1,
+          16000000,
+          8000000,
+          1600000
+        ],
+        [
+          2,
+          32000000,
+          16000000,
+          3200000
+        ],
+        [
+          3,
+          64000000,
+          32000000,
+          6400000
+        ]
+      ],
+      "notes": [
+        "2倍增长仅据L1-L3；L4以后成本和减时规则有冲突，禁止无限外推。"
+      ]
+    },
+    {
+      "id": "Alliance_Depot",
+      "name_zh_working": "联盟设施",
+      "source": "https://galaxyempire.fandom.com/wiki/Alliance_Depot",
+      "base_cost_mcg": [
+        500,
+        1000,
+        0
+      ],
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": 1,
+      "community_build_seconds": 5,
+      "effect": "创建/加入联盟与联盟通信"
+    },
+    {
+      "id": "Galactonite_Research_Center",
+      "name_zh_working": "星石研究中心",
+      "source": "https://galaxyempire.fandom.com/wiki/Galactonite_Research_Center",
+      "base_cost_mcg": [
+        2000,
+        4000,
+        4000
+      ],
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [
+        [
+          "Shipyard",
+          2
+        ],
+        [
+          "Espionage_Tech",
+          1
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": 1,
+      "community_build_seconds": 5,
+      "version_group": "later_or_unverified",
+      "effect": "星石发现、装备、强化与融合"
+    },
+    {
+      "id": "Star_Gate",
+      "name_zh_working": "星门",
+      "source": "https://galaxyempire.fandom.com/wiki/Star_Gate",
+      "base_cost_mcg": null,
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "preexisting": true,
+      "version_group": "platform_dependent",
+      "notes": [
+        "页面称无需建造；iOS 2013年已有，Android 2014年3月加入。连接三种星系与对应太空要塞；任务数据未齐。"
+      ]
+    },
+    {
+      "id": "Moon_Base",
+      "name_zh_working": "月球基地",
+      "source": "https://galaxyempire.fandom.com/wiki/Moon_Base",
+      "base_cost_mcg": [
+        20000,
+        40000,
+        20000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "location": "moon",
+      "effect": "每级增加3建筑空间，本次升级占用1空间；净增加2",
+      "notes": [
+        "需先生成月球；最大空间资料有1–50与20–50两种说法。"
+      ]
+    },
+    {
+      "id": "Wormhole_Generator",
+      "name_zh_working": "虫洞发生器",
+      "source": "https://galaxyempire.fandom.com/wiki/Wormhole_Generator",
+      "base_cost_mcg": [
+        1600000,
+        3200000,
+        1600000
+      ],
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [
+        [
+          "Moon_Base",
+          3
+        ],
+        [
+          "Robotics_Facility",
+          3
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "location": "moon",
+      "effect": "两端月球都建成后传送舰队；不运资源，出发端冷却1小时",
+      "notes": [
+        "机器人工厂前置要求在月球上满足。升级上限未核验。"
+      ]
+    },
+    {
+      "id": "The_EU-X_radar_array",
+      "name_zh_working": "EU-X 雷达阵列",
+      "source": "https://galaxyempire.fandom.com/wiki/The_EU-X_radar_array",
+      "base_cost_mcg": null,
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "location": "moon",
+      "effect": "侦测飞向目标星球的舰队，不能扫描月球",
+      "range_systems_candidate": "level * level - 1",
+      "community_scan_gas": 50000,
+      "notes": [
+        "页面记载L3起可扫描并花费50000气体；建造成本、前置和跨银河边界规则待核验。"
+      ]
+    },
+    {
+      "id": "Pioneer_Lab",
+      "name_zh_working": "先驱实验室",
+      "source": "https://galaxyempire.fandom.com/wiki/Pioneer_Lab",
+      "base_cost_mcg": null,
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [
+        [
+          "Moon_Base",
+          1
+        ],
+        [
+          "Ultra_Temperature_Tech",
+          1
+        ],
+        [
+          "Anti-Gravity_Tech",
+          1
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "location": "moon",
+      "version_group": "later_or_unverified",
+      "account_limit": 1,
+      "displayed_cost_samples_with_unknown_discounts": [
+        [
+          1,
+          420000,
+          350000,
+          280000
+        ],
+        [
+          2,
+          570000,
+          475000,
+          380000
+        ]
+      ],
+      "notes": [
+        "表中成本可能已受超高温科技折扣，不能充当基础成本。"
+      ]
+    },
+    {
+      "id": "Wormhole_Stabilizer",
+      "name_zh_working": "虫洞稳定器",
+      "source": "https://galaxyempire.fandom.com/wiki/Wormhole_Stabilizer",
+      "base_cost_mcg": null,
+      "cost_growth_candidate": null,
+      "cost_model_status": "not_inferred",
+      "prerequisites": [],
+      "prerequisite_list_complete": false,
+      "maximum_level": null,
+      "version_group": "ios_variant_unverified",
+      "notes": [
+        "确认到名称与平台差异；数值未核验。"
+      ]
+    }
+  ],
+  "technologies": [
+    {
+      "id": "Energy_Tech",
+      "name_zh_working": "能源科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Energy_Tech",
+      "base_cost_mcg": [
+        0,
+        800,
+        400
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          1
+        ]
+      ],
+      "effect": "解锁能源相关技术；提高聚变电站效果，精确公式待核验"
+    },
+    {
+      "id": "Laser_Tech",
+      "name_zh_working": "激光科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Laser_Tech",
+      "base_cost_mcg": [
+        200,
+        100,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          1
+        ],
+        [
+          "Energy_Tech",
+          2
+        ]
+      ],
+      "effect": "解锁舰船、防御与后续科技"
+    },
+    {
+      "id": "Ion_Tech",
+      "name_zh_working": "离子科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Ion_Tech",
+      "base_cost_mcg": [
+        1000,
+        300,
+        100
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          4
+        ],
+        [
+          "Laser_Tech",
+          5
+        ],
+        [
+          "Energy_Tech",
+          4
+        ]
+      ],
+      "effect": "解锁离子相关装备"
+    },
+    {
+      "id": "Hyperspace_Tech",
+      "name_zh_working": "超空间科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Hyperspace_Tech",
+      "base_cost_mcg": [
+        0,
+        4000,
+        2000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          7
+        ],
+        [
+          "Energy_Tech",
+          5
+        ],
+        [
+          "Shielding_Tech",
+          5
+        ]
+      ],
+      "effect": "解锁高阶舰船；页面还称减少燃料，但系数未知"
+    },
+    {
+      "id": "Plasma_Tech",
+      "name_zh_working": "等离子科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Plasma_Tech",
+      "base_cost_mcg": [
+        2000,
+        4000,
+        1000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          4
+        ],
+        [
+          "Laser_Tech",
+          10
+        ],
+        [
+          "Ion_Tech",
+          5
+        ]
+      ],
+      "effect": "解锁等离子装备"
+    },
+    {
+      "id": "Espionage_Tech",
+      "name_zh_working": "间谍科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Espionage_Tech",
+      "base_cost_mcg": [
+        200,
+        1000,
+        200
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          3
+        ]
+      ],
+      "effect": "提高侦察能力；情报层级和成功概率待核验"
+    },
+    {
+      "id": "Computer_Tech",
+      "name_zh_working": "计算机科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Computer_Tech",
+      "base_cost_mcg": [
+        0,
+        400,
+        600
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          1
+        ]
+      ],
+      "effect": "每2级增加1个普通舰队派遣名额；基础名额未核验，星云名额另算"
+    },
+    {
+      "id": "Astrophysics_Tech",
+      "name_zh_working": "天体物理科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Astrophysics_Tech",
+      "base_cost_mcg": [
+        4000,
+        8000,
+        6000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          3
+        ],
+        [
+          "Espionage_Tech",
+          4
+        ],
+        [
+          "Impulse_Drive",
+          3
+        ]
+      ],
+      "effect": "每2级增加1个殖民名额，并增加星云探索能力",
+      "notes": [
+        "页面正文最多8殖民星与高等级表冲突，殖民上限须按版本配置。"
+      ]
+    },
+    {
+      "id": "Combustion_Drive",
+      "name_zh_working": "燃烧引擎",
+      "source": "https://galaxyempire.fandom.com/wiki/Combustion_Drive",
+      "base_cost_mcg": [
+        400,
+        0,
+        600
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          1
+        ],
+        [
+          "Energy_Tech",
+          1
+        ]
+      ],
+      "effect": "适用舰船速度每级提高10%"
+    },
+    {
+      "id": "Impulse_Drive",
+      "name_zh_working": "脉冲引擎",
+      "source": "https://galaxyempire.fandom.com/wiki/Impulse_Drive",
+      "base_cost_mcg": [
+        2000,
+        4000,
+        600
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          2
+        ],
+        [
+          "Energy_Tech",
+          1
+        ]
+      ],
+      "effect": "适用舰船速度每级提高20%"
+    },
+    {
+      "id": "Hyperspace_Drive",
+      "name_zh_working": "超空间引擎",
+      "source": "https://galaxyempire.fandom.com/wiki/Hyperspace_Drive",
+      "base_cost_mcg": [
+        10000,
+        20000,
+        6000
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          7
+        ],
+        [
+          "Hyperspace_Tech",
+          3
+        ]
+      ],
+      "effect": "适用舰船速度每级提高30%"
+    },
+    {
+      "id": "Weapons_Tech",
+      "name_zh_working": "武器科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Weapons_Tech",
+      "base_cost_mcg": [
+        800,
+        200,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          4
+        ]
+      ],
+      "effect": "攻击力每级提高10%；加成叠加口径待核验"
+    },
+    {
+      "id": "Shielding_Tech",
+      "name_zh_working": "护盾科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Shielding_Tech",
+      "base_cost_mcg": [
+        200,
+        600,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          6
+        ],
+        [
+          "Energy_Tech",
+          3
+        ]
+      ],
+      "effect": "护盾每级提高10%；加成叠加口径待核验"
+    },
+    {
+      "id": "Strength_Tech",
+      "name_zh_working": "强度科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Strength_Tech",
+      "base_cost_mcg": [
+        1000,
+        0,
+        0
+      ],
+      "cost_growth_candidate": 2,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          2
+        ]
+      ],
+      "effect": "舰体强度每级提高10%；加成叠加口径待核验"
+    },
+    {
+      "id": "Ultra_Temperature_Tech",
+      "name_zh_working": "超高温科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Ultra_Temperature_Tech",
+      "base_cost_mcg": [
+        140000,
+        111000,
+        87700
+      ],
+      "cost_growth_candidate": null,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          8
+        ],
+        [
+          "Energy_Tech",
+          9
+        ],
+        [
+          "Ion_Tech",
+          6
+        ],
+        [
+          "Combustion_Drive",
+          11
+        ]
+      ],
+      "effect": "先驱实验室费用每级减少3%",
+      "version_group": "later_or_unverified",
+      "notes": [
+        "首级数值由社区表转录；后续各资源的增长不一致，不能统一按1.4倍计算。"
+      ]
+    },
+    {
+      "id": "Anti-Gravity_Tech",
+      "name_zh_working": "反重力科技",
+      "source": "https://galaxyempire.fandom.com/wiki/Anti-Gravity_Tech",
+      "base_cost_mcg": [
+        140000,
+        111000,
+        87700
+      ],
+      "cost_growth_candidate": null,
+      "cost_model_status": "inferred_from_community_rows_not_official",
+      "prerequisites": [
+        [
+          "Research_Lab",
+          8
+        ],
+        [
+          "Laser_Tech",
+          10
+        ],
+        [
+          "Hyperspace_Tech",
+          7
+        ],
+        [
+          "Impulse_Drive",
+          6
+        ]
+      ],
+      "effect": "先驱实验室建设时间每级减少2%",
+      "version_group": "later_or_unverified",
+      "notes": [
+        "后续成本与超高温页面还有差异，保留原表首级值但不拟合全等级。"
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "Cargo_Ship",
+      "name_zh_working": "小型运输船",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Cargo_Ship",
+      "cost_mcg": [
+        2000,
+        2000,
+        0
+      ],
+      "base_stats": {
+        "strength": 400,
+        "shield": 10,
+        "attack": 5,
+        "speed": 5000,
+        "cargo": 5000,
+        "fuel": 20
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Large_Cargo_Ship",
+      "name_zh_working": "大型运输船",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Large_Cargo_Ship",
+      "cost_mcg": [
+        6000,
+        6000,
+        0
+      ],
+      "base_stats": {
+        "strength": 1200,
+        "shield": 25,
+        "attack": 5,
+        "speed": 7500,
+        "cargo": 25000,
+        "fuel": 50
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Colony_Ship",
+      "name_zh_working": "殖民船",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Colony_Ship",
+      "cost_mcg": [
+        10000,
+        20000,
+        10000
+      ],
+      "base_stats": {
+        "strength": 3000,
+        "shield": 100,
+        "attack": 50,
+        "speed": 2500,
+        "cargo": 7500,
+        "fuel": 1000
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "notes": [
+        "执行殖民需要天体物理至少2级；造船前置尚未整理。成功殖民消耗殖民船。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Recycler",
+      "name_zh_working": "回收船",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Recycler",
+      "cost_mcg": [
+        10000,
+        6000,
+        2000
+      ],
+      "base_stats": {
+        "strength": 1600,
+        "shield": 10,
+        "attack": 1,
+        "speed": 7500,
+        "cargo": 20000,
+        "fuel": 300
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ],
+        [
+          "Shielding_Tech",
+          2
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Probe",
+      "name_zh_working": "探测器",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Probe",
+      "cost_mcg": [
+        6000,
+        4000,
+        0
+      ],
+      "base_stats": {
+        "strength": 100,
+        "shield": 0,
+        "attack": 0,
+        "speed": 10000000,
+        "cargo": 5,
+        "fuel": 1
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Combustion_Drive",
+          3
+        ],
+        [
+          "Espionage_Tech",
+          2
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "notes": [
+        "价格明显不同于OGame，按此游戏社区表记录，不替换成OGame值。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Solar_Satellite",
+      "name_zh_working": "太阳能卫星",
+      "type": "civilian",
+      "source": "https://galaxyempire.fandom.com/wiki/Solar_Satellite",
+      "cost_mcg": [
+        0,
+        2000,
+        500
+      ],
+      "base_stats": {
+        "strength": 200,
+        "shield": 1,
+        "attack": 1,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "notes": [
+        "固定轨道能源单位，可被击毁；产能受温度影响。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Light_Fighter",
+      "name_zh_working": "轻型战斗机",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Light_Fighter",
+      "cost_mcg": [
+        3000,
+        1000,
+        0
+      ],
+      "base_stats": {
+        "strength": 400,
+        "shield": 10,
+        "attack": 50,
+        "speed": 12500,
+        "cargo": 50,
+        "fuel": 20
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          1
+        ],
+        [
+          "Combustion_Drive",
+          1
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Heavy_Fighter",
+      "name_zh_working": "重型战斗机",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Heavy_Fighter",
+      "cost_mcg": [
+        6000,
+        4000,
+        0
+      ],
+      "base_stats": {
+        "strength": 1000,
+        "shield": 25,
+        "attack": 150,
+        "speed": 10000,
+        "cargo": 100,
+        "fuel": 75
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Strength_Tech",
+          2
+        ],
+        [
+          "Impulse_Drive",
+          2
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Cruiser",
+      "name_zh_working": "巡洋舰",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Cruiser",
+      "cost_mcg": [
+        20000,
+        7000,
+        2000
+      ],
+      "base_stats": {
+        "strength": 2700,
+        "shield": 50,
+        "attack": 400,
+        "speed": 15000,
+        "cargo": 800,
+        "fuel": 300
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          5
+        ],
+        [
+          "Impulse_Drive",
+          4
+        ],
+        [
+          "Ion_Tech",
+          2
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "partial_rapid_fire": {
+        "Light_Fighter": 6,
+        "Rocket_Launcher": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Battleship",
+      "name_zh_working": "战列舰",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Battleship",
+      "cost_mcg": [
+        45000,
+        15000,
+        0
+      ],
+      "base_stats": {
+        "strength": 6000,
+        "shield": 200,
+        "attack": 1000,
+        "speed": 10000,
+        "cargo": 1500,
+        "fuel": 500
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          7
+        ],
+        [
+          "Hyperspace_Drive",
+          4
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Dreadnought",
+      "name_zh_working": "无畏舰",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Dreadnought",
+      "cost_mcg": [
+        30000,
+        40000,
+        15000
+      ],
+      "base_stats": {
+        "strength": 7000,
+        "shield": 400,
+        "attack": 700,
+        "speed": 10000,
+        "cargo": 750,
+        "fuel": 250
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          8
+        ],
+        [
+          "Hyperspace_Drive",
+          5
+        ],
+        [
+          "Laser_Tech",
+          12
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Bomber",
+      "name_zh_working": "轰炸机",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Bomber",
+      "cost_mcg": [
+        50000,
+        25000,
+        15000
+      ],
+      "base_stats": {
+        "strength": 7500,
+        "shield": 500,
+        "attack": 1000,
+        "speed": 4000,
+        "cargo": 500,
+        "fuel": 1000
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "partial_rapid_fire": {
+        "Rocket_Launcher": 20,
+        "Light_Laser": 20,
+        "Heavy_Laser": 10,
+        "Ion_Cannon": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "notes": [
+        "需要等离子相关科技；完整等级前置待核验。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Destroyer",
+      "name_zh_working": "毁灭者",
+      "type": "combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Destroyer",
+      "cost_mcg": [
+        60000,
+        50000,
+        15000
+      ],
+      "base_stats": {
+        "strength": 11000,
+        "shield": 500,
+        "attack": 2000,
+        "speed": 5000,
+        "cargo": 2000,
+        "fuel": 1000
+      },
+      "prerequisites": [
+        [
+          "Shipyard",
+          9
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ],
+        [
+          "Hyperspace_Drive",
+          6
+        ]
+      ],
+      "prerequisite_list_complete": false,
+      "partial_rapid_fire": {
+        "Dreadnought": 2,
+        "Light_Laser": 10,
+        "Probe": 10,
+        "Solar_Satellite": 5
+      },
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Interceptor",
+      "name_zh_working": "Interceptor",
+      "type": "later_combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Interceptor",
+      "cost_mcg": null,
+      "base_stats": {
+        "strength": 160000,
+        "shield": 1500,
+        "attack": 7000,
+        "speed": 5000,
+        "cargo": 2000,
+        "fuel": 1200
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "notes": [
+        "涉及Galaxium特殊购买与递增价格，不能用普通三资源成本替代。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Iron_Behemoth",
+      "name_zh_working": "Iron Behemoth",
+      "type": "later_combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Iron_Behemoth",
+      "cost_mcg": null,
+      "base_stats": {
+        "strength": 350000,
+        "shield": 4000,
+        "attack": 5500,
+        "speed": 5000,
+        "cargo": 4000,
+        "fuel": 3200
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "notes": [
+        "与先驱实验室及特殊材料有关，完整造价未齐。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Devourer_Interceptor",
+      "name_zh_working": "Devourer Interceptor",
+      "type": "later_combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Devourer_Interceptor",
+      "cost_mcg": null,
+      "base_stats": {
+        "strength": 150000,
+        "shield": 1500,
+        "attack": 6500,
+        "speed": 4000,
+        "cargo": 3000,
+        "fuel": 2200
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Titanenergetic_Frigate",
+      "name_zh_working": "Titanenergetic Frigate",
+      "type": "later_combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Titanenergetic_Frigate",
+      "cost_mcg": null,
+      "base_stats": {
+        "strength": 450000,
+        "shield": 3000,
+        "attack": 5000,
+        "speed": 4000,
+        "cargo": 4000,
+        "fuel": 2500
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Annihilator",
+      "name_zh_working": "Annihilator",
+      "type": "later_combat",
+      "source": "https://galaxyempire.fandom.com/wiki/Annihilator",
+      "cost_mcg": null,
+      "base_stats": null,
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Rocket_Launcher",
+      "name_zh_working": "火箭发射器",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Rocket_Launcher",
+      "cost_mcg": [
+        2000,
+        0,
+        0
+      ],
+      "base_stats": {
+        "strength": 200,
+        "shield": 20,
+        "attack": 80,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Light_Laser",
+      "name_zh_working": "轻型激光炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Light_Laser",
+      "cost_mcg": [
+        1500,
+        500,
+        0
+      ],
+      "base_stats": {
+        "strength": 200,
+        "shield": 25,
+        "attack": 100,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Heavy_Laser",
+      "name_zh_working": "重型激光炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Heavy_Laser",
+      "cost_mcg": [
+        6000,
+        2000,
+        0
+      ],
+      "base_stats": {
+        "strength": 800,
+        "shield": 100,
+        "attack": 250,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "MK2_Cannon",
+      "name_zh_working": "MK2 加农炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/MK2_Cannon",
+      "cost_mcg": [
+        20000,
+        15000,
+        2000
+      ],
+      "base_stats": {
+        "strength": 3500,
+        "shield": 200,
+        "attack": 1100,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Ion_Cannon",
+      "name_zh_working": "离子炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Ion_Cannon",
+      "cost_mcg": [
+        2000,
+        6000,
+        0
+      ],
+      "base_stats": {
+        "strength": 800,
+        "shield": 500,
+        "attack": 150,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Plasma_Cannon",
+      "name_zh_working": "等离子炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Plasma_Cannon",
+      "cost_mcg": [
+        50000,
+        50000,
+        30000
+      ],
+      "base_stats": {
+        "strength": 10000,
+        "shield": 300,
+        "attack": 3000,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Proton_Cannon",
+      "name_zh_working": "质子炮",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Proton_Cannon",
+      "cost_mcg": [
+        500000,
+        500000,
+        500000
+      ],
+      "base_stats": {
+        "strength": 120000,
+        "shield": 5000,
+        "attack": 5000,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "version_group": "later_or_unverified",
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Small_Shield_Dome",
+      "name_zh_working": "小型护盾罩",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Small_Shield_Dome",
+      "cost_mcg": [
+        10000,
+        10000,
+        0
+      ],
+      "base_stats": {
+        "strength": 2000,
+        "shield": 2000,
+        "attack": 1,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Large_Shield_Dome",
+      "name_zh_working": "大型护盾罩",
+      "type": "defense",
+      "source": "https://galaxyempire.fandom.com/wiki/Large_Shield_Dome",
+      "cost_mcg": [
+        50000,
+        50000,
+        0
+      ],
+      "base_stats": {
+        "strength": 10000,
+        "shield": 10000,
+        "attack": 1,
+        "speed": 0,
+        "cargo": 0,
+        "fuel": 0
+      },
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Intercept_Missile",
+      "name_zh_working": "拦截导弹",
+      "type": "missile",
+      "source": "https://galaxyempire.fandom.com/wiki/Intercept_Missile",
+      "cost_mcg": null,
+      "base_stats": null,
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "notes": [
+        "名称已见资料，数值未整理。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    },
+    {
+      "id": "Interplanetary_Missile",
+      "name_zh_working": "星际导弹",
+      "type": "missile",
+      "source": "https://galaxyempire.fandom.com/wiki/Interplanetary_Missile",
+      "cost_mcg": null,
+      "base_stats": null,
+      "prerequisites": null,
+      "prerequisite_list_complete": false,
+      "notes": [
+        "名称已见资料，数值未整理。"
+      ],
+      "overview_source": "https://galaxyempire.fandom.com/wiki/Ships"
+    }
+  ],
+  "storage_capacity_observed": {
+    "source_pages": [
+      "https://galaxyempire.fandom.com/wiki/Metal_Storage",
+      "https://galaxyempire.fandom.com/wiki/Crystal_Storage",
+      "https://galaxyempire.fandom.com/wiki/Gas_Storage"
+    ],
+    "level_1_to_14": [
+      20000,
+      40000,
+      75000,
+      140000,
+      255000,
+      470000,
+      865000,
+      1590000,
+      2920000,
+      5350000,
+      9810000,
+      18000000,
+      33000000,
+      60500000
+    ],
+    "notes": [
+      "K/M级数值为原页约数。气体仓库L3为74000，与其他页75000冲突。L15出现110M和111M两种值。"
+    ]
+  },
+  "rules": {
+    "debris": {
+      "sources": [
+        "https://galaxyempire.fandom.com/wiki/Moon",
+        "https://galaxyempire.fandom.com/wiki/Debris_Field",
+        "https://www.it.minsk.by/16581.html"
+      ],
+      "preferred_candidate_metal_crystal_fraction": 0.3,
+      "status": "corroborated_but_conflicted",
+      "notes": [
+        "多数舰船残骸表支持金属+晶体造价的30%；Moon正文又写1/3。",
+        "气体是否计入存在个别炮台数据冲突；防御残骸、维修先后次序仍待校验。",
+        "玩家战斗产生残骸；资料称NPC/探索战斗不产生。",
+        "回收船可回收；普通运输船能否辅助回收存在互相反驳的编辑。"
+      ]
+    },
+    "moon": {
+      "sources": [
+        "https://galaxyempire.fandom.com/wiki/Moon",
+        "https://menssurvivalguide.wordpress.com/2013/06/03/galaxy-empire-startup-guide/",
+        "https://writerparty.com/party/galaxy-empire-for-iphone-how-to-get-a-moon-base/"
+      ],
+      "debris_per_one_percentage_point": 400000,
+      "maximum_probability": 0.2,
+      "probability_formula_candidate": "min(0.20, floor(eligibleDebris / 400000) * 0.01)",
+      "formula_status": "implementation_reconstruction_of_reported_steps",
+      "formation_location": "battle_planet",
+      "notes": [
+        "双方损失参与残骸；800万有效残骸对应20%，不保证成功。",
+        "已有残骸是否累加参与本次判定、生成是否消耗残骸、已有月球时的行为需要核验。",
+        "催化道具可能增加10%概率，具体与上限叠加顺序未定，不能无条件加入经典规则。"
+      ]
+    },
+    "moon_base": {
+      "source": "https://galaxyempire.fandom.com/wiki/Moon_Base",
+      "initial_free_fields": 1,
+      "fields_unlocked_per_level": 3,
+      "upgrade_consumes_fields": 1,
+      "net_fields_added_per_upgrade": 2,
+      "maximum_fields": null
+    },
+    "wormhole": {
+      "source": "https://galaxyempire.fandom.com/wiki/Wormhole_Generator",
+      "departure_cooldown_seconds": 3600,
+      "resource_transport": false,
+      "needs_both_endpoints": true,
+      "fuel_cost": 0
+    },
+    "combat": {
+      "source": "https://galaxyempire.fandom.com/wiki/Battle_Calculator",
+      "community_calculator_rounds": 6,
+      "round_count_status": "community_reverse_engineered_calculator_not_official_spec",
+      "target_selection_algorithm": null,
+      "shield_refresh_algorithm": null,
+      "explosion_probability": null,
+      "rapid_fire_algorithm": null,
+      "notes": [
+        "左右两边舰队对射来自用户记忆，尚未找到并核对原版战斗回放视频。",
+        "回放必须读取一次性结算事件，不能重播时重新掷骰或发奖励；这是复刻工程设计建议。"
+      ]
+    },
+    "universe": {
+      "source": "https://galaxyempire.fandom.com/wiki/Universe",
+      "galaxies": 9,
+      "systems_per_galaxy": 499,
+      "planet_slots_per_system": 15,
+      "npc_slots_per_system": 5,
+      "nebula_slots_per_system": 1,
+      "status": "community_observation_version_not_pinned"
+    },
+    "flight": {
+      "source": "https://galaxyempire.fandom.com/wiki/Flight_time",
+      "speed_limited_by_slowest_ship": true,
+      "time_formula": null,
+      "fuel_formula": null,
+      "notes": [
+        "页面对距离与燃料的说明与OGame习惯不同；不直接移植OGame公式。"
+      ]
+    }
+  },
+  "open_questions": [
+    "目标客户端/服务器倍率与中文名映射",
+    "无加成矿产和能源精确公式、资源基础收入",
+    "建筑/科技/造舰工期及队列取消退款规则",
+    "侦察的信息层级与探针损失规则",
+    "飞行时间、速度档位、油耗、舰队召回与资源装载规则",
+    "完整快速射击矩阵、开火目标、护盾刷新、爆炸阈值、六轮后判定",
+    "战后维修、掠夺、残骸及造月结算顺序",
+    "防御、部分民用舰、轰炸机和月球设施的完整科技前置",
+    "殖民星上限、月球容量、星门/先驱等功能的平台和年代边界"
+  ]
+}

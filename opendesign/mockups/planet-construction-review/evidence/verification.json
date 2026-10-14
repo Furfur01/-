@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-13T13:47:01.425Z",
+  "passed": true,
+  "scope": "Independent first-round terrestrial colony inspection. The 20 switches are overview/mining district round trips; no production galaxy switching or economy validation is claimed.",
+  "browser": "Chrome headless, ANGLE D3D11",
+  "desktop": {
+    "width": 1440,
+    "height": 1000
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844
+  },
+  "sourceHashes": {
+    "review.bundle.js": "bfa68a205311925639e27133b0737ee85960d176063bf4d68e293cec2577e84d",
+    "review.js": "9fe058a89405425e86776f63e84a2d3bb728ae2a0480694358f2498df7055df1",
+    "resource-operations.js": "1472edc6b5188cd81fdb197966bf41cf7338624f8a0a123dcce5aafabcb68b99",
+    "building-models.js": "c44f2f3509358d1ecb0910a611ea9c1bc2d6cae7780b11b101081d0677b47fe2"
+  },
+  "pageErrors": [],
+  "apiRequests": [],
+  "consoleErrors": [],
+  "checks": [
+    {
+      "name": "17 buildings / 14 districts / 17 UI slots",
+      "passed": true
+    },
+    {
+      "name": "Opposite hemisphere UI",
+      "passed": true
+    },
+    {
+      "name": "Resource shortcut UI",
+      "passed": true,
+      "ids": [
+        "metal",
+        "crystal",
+        "gas"
+      ]
+    },
+    {
+      "name": "UI pause freezes simulation and resume advances",
+      "passed": true
+    },
+    {
+      "name": "UI speed selection",
+      "passed": true
+    },
+    {
+      "name": "Warehouse UI toggle",
+      "passed": true
+    },
+    {
+      "name": "Unbuilt hides both building bodies and scaffold",
+      "passed": true,
+      "foundations": [
+        {
+          "id": "Metal_Mine",
+          "children": [
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "Metal_Mine",
+              "type": "Group",
+              "visible": false
+            },
+            {
+              "name": "",
+              "type": "Group",
+              "visible": false
+            },
+            {
+              "name": "",
+              "type": "LineSegments",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            }
+          ]
+        },
+        {
+          "id": "Metal_Storage",
+          "children": [
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            },
+            {
+              "name": "Metal_Storage",
+              "type": "Group",
+              "visible": false
+            },
+            {
+              "name": "",
+              "type": "Group",
+              "visible": false
+            },
+            {
+              "name": "",
+              "type": "LineSegments",
+              "visible": true
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "All seven UI statuses and construction progress",
+      "passed": true
+    },
+    {
+      "name": "Every fixed building selectable by UI",
+      "passed": true,
+      "ids": [
+        "Metal_Mine",
+        "Metal_Storage",
+        "Crystal_Mine",
+        "Crystal_Storage",
+        "Gas_Mine",
+        "Gas_Storage",
+        "Command_Center",
+        "Solar_Plant",
+        "Fusion_Reactor",
+        "Robotics_Facility",
+        "Shipyard",
+        "Research_Lab",
+        "Radar_Facility",
+        "Alliance_Depot",
+        "Nanite_Factory",
+        "Terraformer",
+        "Missile_Silo"
+      ]
+    },
+    {
+      "name": "20 complete global / mining focus round trips without renderer allocation growth",
+      "passed": true,
+      "before": {
+        "geometries": 64,
+        "textures": 3,
+        "programs": 14
+      },
+      "after": {
+        "geometries": 64,
+        "textures": 3,
+        "programs": 14
+      },
+      "cycles": 20
+    },
+    {
+      "name": "390 px mobile layout has no horizontal overflow and resource UI works",
+      "passed": true
+    },
+    {
+      "name": "Data review filters, search, isolated local approval and JSON export",
+      "passed": true,
+      "entries": 179,
+      "category": "后期舰船",
+      "filtered": 44,
+      "exportPath": "D:\\Desktop\\data\\银河帝国\\output\\playwright\\colony-review\\data-review-test-export.json"
+    },
+    {
+      "name": "Zero page errors and zero API requests",
+      "passed": true
+    },
+    {
+      "name": "Visible globe label selects its district",
+      "passed": true
+    },
+    {
+      "name": "Canvas ray picking selects actual metal building",
+      "passed": true,
+      "point": {
+        "x": 460.01645276544156,
+        "y": 465.6794313365101
+      }
+    },
+    {
+      "name": "stopped drains transport then parks",
+      "passed": true,
+      "agents": [
+        {
+          "id": "haul-truck-1",
+          "phase": "parked",
+          "phaseProgress": 1,
+          "cargo": 0,
+          "position": [
+            1.35,
+            -0.02303089352320256,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 1,
+          "destination": "warehouse",
+          "waitingReason": "stopped"
+        },
+        {
+          "id": "haul-truck-2",
+          "phase": "parked",
+          "phaseProgress": 0,
+          "cargo": 0,
+          "position": [
+            2.25,
+            -0.06726919602801842,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 0,
+          "destination": "warehouse",
+          "waitingReason": "stopped"
+        }
+      ]
+    },
+    {
+      "name": "full drains transport then parks",
+      "passed": true,
+      "agents": [
+        {
+          "id": "haul-truck-1",
+          "phase": "parked",
+          "phaseProgress": 1,
+          "cargo": 0,
+          "position": [
+            1.35,
+            -0.02303089352320256,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 1,
+          "destination": "warehouse",
+          "waitingReason": "warehouse-full"
+        },
+        {
+          "id": "haul-truck-2",
+          "phase": "parked",
+          "phaseProgress": 1,
+          "cargo": 0,
+          "position": [
+            2.25,
+            -0.06726919602801842,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 1,
+          "destination": "warehouse",
+          "waitingReason": "warehouse-full"
+        }
+      ]
+    },
+    {
+      "name": "Missing warehouse reroutes unloading to temporary depot",
+      "passed": true,
+      "agents": [
+        {
+          "id": "haul-truck-1",
+          "phase": "parked",
+          "phaseProgress": 1,
+          "cargo": 0,
+          "position": [
+            -2.25,
+            -0.06726919602801842,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 1,
+          "destination": "temporary-depot",
+          "waitingReason": "dispatch-countdown"
+        },
+        {
+          "id": "haul-truck-2",
+          "phase": "parked",
+          "phaseProgress": 1,
+          "cargo": 0,
+          "position": [
+            -1.35,
+            -0.02303089352320256,
+            1.56
+          ],
+          "heading": 0,
+          "drillContact": false,
+          "completedCycles": 1,
+          "destination": "temporary-depot",
+          "waitingReason": "shared-lane-reserved"
+        }
+      ]
+    },
+    {
+      "name": "Low power pump progresses at 30 percent",
+      "passed": true,
+      "phaseDelta": 3
+    }
+  ],
+  "memory": {
+    "name": "20 complete global / mining focus round trips without renderer allocation growth",
+    "passed": true,
+    "before": {
+      "geometries": 64,
+      "textures": 3,
+      "programs": 14
+    },
+    "after": {
+      "geometries": 64,
+      "textures": 3,
+      "programs": 14
+    },
+    "cycles": 20
+  },
+  "screenshots": [
+    {
+      "name": "global-front",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\global-front.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "global-back",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\global-back.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "metal",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\metal.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "crystal",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\crystal.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "gas",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\gas.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "construction",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\construction.png",
+      "visuallyReviewed": true
+    },
+    {
+      "name": "mobile",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\mobile.png",
+      "visuallyReviewed": true
+    }
+  ],
+  "videos": [
+    {
+      "kind": "metal",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\metal.webm",
+      "bytes": 1933701,
+      "recordedOperationWallSeconds": 21.515,
+      "playback": {
+        "src": "http://127.0.0.1:8289/opendesign/mockups/planet-construction-review/evidence/metal.webm",
+        "duration": 24.24,
+        "currentTime": 0.691449,
+        "readyState": 4,
+        "videoWidth": 1440,
+        "videoHeight": 1000,
+        "error": null
+      },
+      "phases": [
+        "outbound",
+        "loading",
+        "returning",
+        "unloading",
+        "parked"
+      ],
+      "fullCyclesPerAgent": [
+        {
+          "id": "haul-truck-1",
+          "completed": 1
+        },
+        {
+          "id": "haul-truck-2",
+          "completed": 1
+        }
+      ],
+      "pumpCycles": null
+    },
+    {
+      "kind": "crystal",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\crystal.webm",
+      "bytes": 2205402,
+      "recordedOperationWallSeconds": 25.313,
+      "playback": {
+        "src": "http://127.0.0.1:8289/opendesign/mockups/planet-construction-review/evidence/crystal.webm",
+        "duration": 28.04,
+        "currentTime": 0.698466,
+        "readyState": 4,
+        "videoWidth": 1440,
+        "videoHeight": 1000,
+        "error": null
+      },
+      "phases": [
+        "outbound",
+        "loading",
+        "contact",
+        "returning",
+        "unloading",
+        "parked"
+      ],
+      "fullCyclesPerAgent": [
+        {
+          "id": "crystal-drilling-robot-1",
+          "completed": 1
+        },
+        {
+          "id": "crystal-drilling-robot-2",
+          "completed": 1
+        }
+      ],
+      "pumpCycles": null
+    },
+    {
+      "kind": "gas",
+      "path": "D:\\Desktop\\data\\银河帝国\\opendesign\\mockups\\planet-construction-review\\evidence\\gas.webm",
+      "bytes": 1161800,
+      "recordedOperationWallSeconds": 12.283,
+      "playback": {
+        "src": "http://127.0.0.1:8289/opendesign/mockups/planet-construction-review/evidence/gas.webm",
+        "duration": 15.04,
+        "currentTime": 0.695914,
+        "readyState": 4,
+        "videoWidth": 1440,
+        "videoHeight": 1000,
+        "error": null
+      },
+      "phases": [
+        "pump"
+      ],
+      "fullCyclesPerAgent": [],
+      "pumpCycles": 8.213053965006097
+    }
+  ],
+  "visualReview": {
+    "passed": true,
+    "terrain": "Warm light green / cream low-polygon surface; building foundations meet terrain. No floating detached landscape panel seen in the inspected views.",
+    "camera": "Stable orientation through resource and all 17 slot selections. Desktop mining scene spans roughly 450–520 pixels; buildings roughly 110–145 pixels, trucks roughly 45–60 pixels. The corrected mobile overview shows the complete globe with clear toolbar space.",
+    "metal": "Ore loading, visibly loaded return and warehouse unloading inspected in phase screenshots; both trucks completed one recorded cycle.",
+    "crystal": "Extended drill tip is visibly adjacent to/contacting the dedicated crystal face; loaded crystal return and warehouse unloading inspected in phase screenshots. Both robots completed one recorded cycle.",
+    "gas": "Continuous supported pipes visually connect well, processing station and storage; pump beam/rod and compressor rotation verified by sampled state and video.",
+    "construction": "At 67% progress the buildings are replaced by scaffolds. Unbuilt state has fixed base/outline and natural ore but no building body or scaffold.",
+    "nonBlockingObservations": [
+      "Overview labels cover some very small building roofs; labels remain usable navigation targets.",
+      "Far hemisphere lighting is darker than the front but land, buildings and labels remain identifiable."
+    ],
+    "inspectedAdditionalFrames": [
+      "unbuilt.png",
+      "metal-loading.png",
+      "metal-returning.png",
+      "metal-unloading.png",
+      "crystal-contact.png",
+      "crystal-returning.png",
+      "crystal-unloading.png",
+      "gas-pump.png"
+    ]
+  },
+  "dataReview": {
+    "entries": 179,
+    "categoryFilterPassed": true,
+    "searchPassed": true,
+    "isolatedLocalDecisionExportPassed": true,
+    "appliedToProduction": false
+  },
+  "reRun": {
+    "interaction": "node tests/colony-review-browser.cjs",
+    "video": "node output/playwright/colony-review/record.cjs",
+    "supplemental": "node output/playwright/colony-review/supplemental.cjs",
+    "summary": "node output/playwright/colony-review/finalize.cjs"
+  },
+  "detailedEvidence": [
+    "browser-results.json",
+    "video-results.json",
+    "supplemental-results.json"
+  ]
+}

@@ -1,0 +1,617 @@
+{
+  "source": "godot/assets/original",
+  "destination": "research/apk/native-preserved",
+  "skippedGodotMetadata": [
+    ".import",
+    ".uid"
+  ],
+  "sameContentAlreadyRetained": 853,
+  "copied": 121,
+  "files": [
+    {
+      "file": "library.json",
+      "bytes": 152800,
+      "sha256": "1fefe7d3ea934656ae09ea408ba744a67395cd8989017dce8c0fbde7c227cc60"
+    },
+    {
+      "file": "ui/literal-translations.json",
+      "bytes": 153000,
+      "sha256": "8bfedee1e06bcfcc4396283b300953a489376a15568a4c62dfc3e3ad1b4c0d9c"
+    },
+    {
+      "file": "ui/movies/Activities_center.json",
+      "bytes": 13259,
+      "sha256": "b63fbd1513f8101417919c96978b9abaedfeb29ae52d599e1c0f58a05c9cdf8c"
+    },
+    {
+      "file": "ui/movies/Activities_Details.json",
+      "bytes": 47590,
+      "sha256": "0bb0e4d490083234d90346c98a7456c1a518547baf278623d8c9a25e321cb205"
+    },
+    {
+      "file": "ui/movies/Activities_rank.json",
+      "bytes": 83900,
+      "sha256": "300b3e15300d0811f3ce53d3665adfded8ebfe6606ec75a8e97807152003ff45"
+    },
+    {
+      "file": "ui/movies/Alarm_cpm.json",
+      "bytes": 3420,
+      "sha256": "074522cada5f285b5a4c70623f7b1e1d06ef17230d96498b0925ec43686a52e7"
+    },
+    {
+      "file": "ui/movies/Alliance_contend.json",
+      "bytes": 34068,
+      "sha256": "c19c340e99847782c20faafd493718793dcec060f20e7d9400a0802322192dd8"
+    },
+    {
+      "file": "ui/movies/Alliance_contend_info.json",
+      "bytes": 49443,
+      "sha256": "24d01451f2e086fada9613321d9ee772e9cc5ba2da444e89d74a5fa81fef2490"
+    },
+    {
+      "file": "ui/movies/All_mine_new.json",
+      "bytes": 1717215,
+      "sha256": "837913b52af165e18e105f971a56150ff3bd9af5693d2802ad6a1479609c795f"
+    },
+    {
+      "file": "ui/movies/application_assist.json",
+      "bytes": 43466,
+      "sha256": "7a9b5a5babac7736e32786622435f68fa54164f313dbe00a2bd70867c509379d"
+    },
+    {
+      "file": "ui/movies/ApplyList.json",
+      "bytes": 64431,
+      "sha256": "40ea56dd44387d62172d9737efedb5769c187febbe5ac84f1ea3ae04f574dca9"
+    },
+    {
+      "file": "ui/movies/BG.json",
+      "bytes": 81902,
+      "sha256": "f626f2c193efb3374d022c5a02272495e6cc596c550ce561b9fe01d5a8fff2a0"
+    },
+    {
+      "file": "ui/movies/BookMark.json",
+      "bytes": 19250,
+      "sha256": "ce0b56d798b7272a715f0540351ecf76562c57c47c8825bf0b7bc071d4e0c478"
+    },
+    {
+      "file": "ui/movies/Btn_All.json",
+      "bytes": 120154,
+      "sha256": "782ca909a19675b92cdbe621318a7e68ca576d812b42dbea2f2d441e33bc6e88"
+    },
+    {
+      "file": "ui/movies/buildingList.json",
+      "bytes": 408742,
+      "sha256": "b46fe4da13e90ea078814f918d99c1458729e402762b1937b1b0fd4b98df4d91"
+    },
+    {
+      "file": "ui/movies/challenge_log.json",
+      "bytes": 11293,
+      "sha256": "b42c0acac7da9879361aea60970e63fa33d37bc43374884f7528e296e17e1d5f"
+    },
+    {
+      "file": "ui/movies/Chat.json",
+      "bytes": 61823,
+      "sha256": "cbdc012e66fc992793ea3644c35637bb1fc2ce240bb342077e83e78c0cd528ce"
+    },
+    {
+      "file": "ui/movies/Chat_Btn.json",
+      "bytes": 16881,
+      "sha256": "a61d9fa7f83f07fa0047f9fa66143acc5fe5d0284a07acf818ec69bc32911940"
+    },
+    {
+      "file": "ui/movies/Chat_ReportChatViolation.json",
+      "bytes": 12807,
+      "sha256": "19ae3883e63ca60c2abd346dc8b4802056bd0e30d44bde8657fa719f08ba1929"
+    },
+    {
+      "file": "ui/movies/Chat_rules.json",
+      "bytes": 17917,
+      "sha256": "633b545707ce46ac27de45236167b52b106ad171e0da3dcb581df8881ddd163d"
+    },
+    {
+      "file": "ui/movies/CityUI_Down.json",
+      "bytes": 107460,
+      "sha256": "bc375cb09d5818f7e038270a31e5469f49fdad9d82e1caf744b7faea8b05b000"
+    },
+    {
+      "file": "ui/movies/CityUI_UP.json",
+      "bytes": 267424,
+      "sha256": "a89bd83a919c45f728257279082b6ed1ec6d87bf7b9e245acba4076cb25515bd"
+    },
+    {
+      "file": "ui/movies/City_Explanation.json",
+      "bytes": 402015,
+      "sha256": "4d2ccdd7e6ed47fff3e60566e5e6d12c29999e7301c29db9116c603701255f12"
+    },
+    {
+      "file": "ui/movies/ContactUS.json",
+      "bytes": 46084,
+      "sha256": "6e326c2aebaf1a76c193718da0f00df32282bfdff69d6e02f53dbcc49925b108"
+    },
+    {
+      "file": "ui/movies/coordPanel.json",
+      "bytes": 8727,
+      "sha256": "99e21e5c56f1a7f4d80ce6e899e50c4bdb56c2ea28a0f1eb966139b691c1803c"
+    },
+    {
+      "file": "ui/movies/Daily_reward.json",
+      "bytes": 1547071,
+      "sha256": "e1268d60a0548f97b0b126bbd5d50eac3a0a92a5183224501e9d867ee15f6844"
+    },
+    {
+      "file": "ui/movies/DayRewards.json",
+      "bytes": 1083320,
+      "sha256": "77f8016b938b219d6274bf8c5f3bf1cad7544cdac232989a7c87103b069c51af"
+    },
+    {
+      "file": "ui/movies/demoteConfirmBox.json",
+      "bytes": 20780,
+      "sha256": "dae2a8c2375d323d130aaa4581865c905d23782445e163b679f78b76215ead23"
+    },
+    {
+      "file": "ui/movies/DetaildRouteInformation.json",
+      "bytes": 21751,
+      "sha256": "f3b7880a6e98649864bd99385d0af73db2c9087e5fc67477266d67774817321c"
+    },
+    {
+      "file": "ui/movies/Dispatch.json",
+      "bytes": 1931694,
+      "sha256": "abead8dbe2a6dfe1541f8d817df81a495e2d1becb15ef481622946565e37b43d"
+    },
+    {
+      "file": "ui/movies/ecm.json",
+      "bytes": 150615,
+      "sha256": "dddb738ded61afb1746b862198be04d7f7cf067b1b2511e7adaeb891a2cb825a"
+    },
+    {
+      "file": "ui/movies/edit_board.json",
+      "bytes": 12246,
+      "sha256": "c94963ed2369cc3a04bf999e37c8ab3ed25d4532b5bdb210ae42cc7e87fa081e"
+    },
+    {
+      "file": "ui/movies/fb_chests.json",
+      "bytes": 483898,
+      "sha256": "f0a1fa07a190a3fd888f9500de39c3698da288271047073242be1134cd72e1a3"
+    },
+    {
+      "file": "ui/movies/FleetDevice.json",
+      "bytes": 20129,
+      "sha256": "8489a96e5f25b8182e188e7b026797136c945d8ede320e6a7ed5975b5d2fd0b2"
+    },
+    {
+      "file": "ui/movies/FleetDevice_upgrade.json",
+      "bytes": 20615,
+      "sha256": "4e8052e974146293e8a072c314fe75d619c8503bacfc70d8c342e3a477723ac9"
+    },
+    {
+      "file": "ui/movies/FleetRemake.json",
+      "bytes": 1101146,
+      "sha256": "f2f02bfa84d7bb579fb63d61aa5ca128f4f87133147bc65e2aba61ed2e971db9"
+    },
+    {
+      "file": "ui/movies/Fleets.json",
+      "bytes": 1532332,
+      "sha256": "4e90cb27a9e27e689a7f8104bfbc4b33506cd9c3532007cf2bf858afb0e5098f"
+    },
+    {
+      "file": "ui/movies/FleetsTechnology.json",
+      "bytes": 54480,
+      "sha256": "7942a9836a69c170d34ef9bf4c5551cf3a47fa5193db764af89aeb93af93ff03"
+    },
+    {
+      "file": "ui/movies/Fleets_Explanation.json",
+      "bytes": 1466697,
+      "sha256": "6baa7a17305ec9d325850486253ce21cb1c24a63afacc050c0a05069c1ea17ad"
+    },
+    {
+      "file": "ui/movies/Fleets_Flag.json",
+      "bytes": 117076,
+      "sha256": "6ae4b3c51153392751e76fc532d46f3efb04a5f6439fe301e3966220f0fed5a0"
+    },
+    {
+      "file": "ui/movies/Friends_list.json",
+      "bytes": 113535,
+      "sha256": "0414903b678988f97f9f1d8dbf2af9f4747c2d409e4704009ca9c866d7ccaf2b"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge.json",
+      "bytes": 1656326,
+      "sha256": "468a5e8433b99027e79c2d1bed051c653e86a100b23e6df838c267ff5affd654"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_history.json",
+      "bytes": 90783,
+      "sha256": "37985059fbb8215930cd313c845e74bd3d28d418b2e79098f8f08e217bd9fed5"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_info_center.json",
+      "bytes": 29052,
+      "sha256": "4f4bef29a98e8477cbe53fc96cf516b3221f967017fcd289713773c6c063748b"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_info_center_WD.json",
+      "bytes": 36084,
+      "sha256": "9af92a55435ad9a8f721172c342c346864df4aae31a1915239a05b1ff5341403"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_leader.json",
+      "bytes": 25407,
+      "sha256": "b753f6a3ad6d748cecb086d4b201b62576a9fbf3290bcf400bbb3e708fa97ff1"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_rank.json",
+      "bytes": 1608830,
+      "sha256": "1b6fad6a0586672fbce91dbb825b3a90d389b2c753bb1a43edd7d61924fac567"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_reward.json",
+      "bytes": 24765,
+      "sha256": "38bf79cf4dc705787599872fc0c56cbd9386bedd9e70b6cc8f2075a408a0fcc4"
+    },
+    {
+      "file": "ui/movies/GalaxyChallenge_WD.json",
+      "bytes": 2357458,
+      "sha256": "8523b3bf5812e8b6d4eababa2bd755a863f9252aeefa80d3233af2710f09751c"
+    },
+    {
+      "file": "ui/movies/GalaxyMapScene.json",
+      "bytes": 37355,
+      "sha256": "2e66b759bba8b366c5737fa70a697b990c6f125d5cc5c4dc34111d72342fe5e9"
+    },
+    {
+      "file": "ui/movies/Galaxy_dispute_Task.json",
+      "bytes": 61306,
+      "sha256": "5e59ec4fcc7d34e6501732b1c0d949589deb565fc41f91b3bbd13f4ef9bbaa4a"
+    },
+    {
+      "file": "ui/movies/Galaxy_first_reward.json",
+      "bytes": 21560,
+      "sha256": "02a2ded0a07e91220552b2fcadd58a5e8f43438a6c5953cfeefbbcae4c4e08b2"
+    },
+    {
+      "file": "ui/movies/Galaxy_Task_details.json",
+      "bytes": 23611,
+      "sha256": "d49e4fb42d83d12969e4ffc13b7c19027d3c082dbb20fa66395007eb026b461e"
+    },
+    {
+      "file": "ui/movies/GameTip.json",
+      "bytes": 11737,
+      "sha256": "2f6f5d41e67595a96b8a11c6e0a3f8ccbb591fef094b40fa5944e723677fdd7d"
+    },
+    {
+      "file": "ui/movies/GatewayBox.json",
+      "bytes": 25751,
+      "sha256": "6007c0d0193599864ba36382b6016acc5e4a588eb628d5a45d022c4f1760032b"
+    },
+    {
+      "file": "ui/movies/GraceHouse.json",
+      "bytes": 85175,
+      "sha256": "05e4d0cf70e7585452bd04f11525bafbe212ef9fa474afe48b0db627cac215bc"
+    },
+    {
+      "file": "ui/movies/Help.json",
+      "bytes": 66544,
+      "sha256": "222a76d9fc3afdf6153e0b9ef8e84d2412af9ca86c59d5f78efa18db821f47eb"
+    },
+    {
+      "file": "ui/movies/index.json",
+      "bytes": 33980,
+      "sha256": "0011e207ce9b4fd9225015ec03bf8bb10005b80691e2601494dc96498e75f085"
+    },
+    {
+      "file": "ui/movies/Integral_Rank.json",
+      "bytes": 76865,
+      "sha256": "8b31fd32e82122e6b3814db2c9f88a0a4847714fa64b4c48cc10ea7d82b79fc1"
+    },
+    {
+      "file": "ui/movies/Invited_reward.json",
+      "bytes": 58335,
+      "sha256": "776acbc79d41b05150665664539434296a22b85208b8064bc61ce8ef81c19d64"
+    },
+    {
+      "file": "ui/movies/Invite_Friends.json",
+      "bytes": 16249,
+      "sha256": "70efd81567774109c99cf4b4a42fc30e9beb6a737e9e2ecf0fea1a0a031e55c7"
+    },
+    {
+      "file": "ui/movies/KryptonCrstalCenter.json",
+      "bytes": 525649,
+      "sha256": "1c45081c3458492f205c6d5dfdd35f6b3fdedd62947f60806afb6c45432803f5"
+    },
+    {
+      "file": "ui/movies/Krypton_about.json",
+      "bytes": 8966,
+      "sha256": "ac62043b1f6e29f855bf6acb10edf89c496f59ff2508eacbfada53f810990d4d"
+    },
+    {
+      "file": "ui/movies/krypton_enhance.json",
+      "bytes": 307596,
+      "sha256": "9e36259af8c66e0208b8479a11d31f68c1135834250f13e141076b1931396fa9"
+    },
+    {
+      "file": "ui/movies/krypton_fuse.json",
+      "bytes": 160105,
+      "sha256": "ae0a5d4ac3632bf825455891d2abecf6e268e0d254dcbac65889aa5484142b3c"
+    },
+    {
+      "file": "ui/movies/krypton_popbox.json",
+      "bytes": 77042,
+      "sha256": "ab1c89ed1baa702ff18dcabe5b121d9ba4646b4187b370171a615207e40dcd50"
+    },
+    {
+      "file": "ui/movies/Login.json",
+      "bytes": 253298,
+      "sha256": "ef033d4002b6a1cc373142026e1997c02ca3599429f7579d3bf2393df2a0fab5"
+    },
+    {
+      "file": "ui/movies/Lottery.json",
+      "bytes": 334286,
+      "sha256": "1665cd0d3234231ba6ec6f515df408b2406092ae7e8b83f8f502f3d407b99d1d"
+    },
+    {
+      "file": "ui/movies/Lottery_pop.json",
+      "bytes": 37847,
+      "sha256": "5959e0763b56cf95875d8cee2b0027a2133ecafe473614bb2bdef127c3857c29"
+    },
+    {
+      "file": "ui/movies/Mail.json",
+      "bytes": 104956,
+      "sha256": "ee30e839a34f6c6d5b2541cff12e8daed0c08ee52b6e2488e50623450b1fd2fb"
+    },
+    {
+      "file": "ui/movies/mail_position_info.json",
+      "bytes": 20768,
+      "sha256": "0397b7c80568a2369f3e173164aaab913133da225567ef373b3887bdb6dfdcc7"
+    },
+    {
+      "file": "ui/movies/Manufacturing.json",
+      "bytes": 1587586,
+      "sha256": "0a28da737726d0b72fb24a11679ddbfc2810ec6988299d0232fbbdcd8903b0e5"
+    },
+    {
+      "file": "ui/movies/MessageDialog.json",
+      "bytes": 64494,
+      "sha256": "64518c537049e65612db951588d22feed519b64e5afdc4624f99d042a2282270"
+    },
+    {
+      "file": "ui/movies/migrate_location.json",
+      "bytes": 26358,
+      "sha256": "361e334d69ea3cd4f8bbcba597cbe0839c51d211e58dbb3f5ce71451618e8749"
+    },
+    {
+      "file": "ui/movies/Mission.json",
+      "bytes": 110008,
+      "sha256": "c45d35715b8dc6cdb76988221bec1d2964389566e9efcd5b1a301b9d1297f6a7"
+    },
+    {
+      "file": "ui/movies/MoonbuildingList.json",
+      "bytes": 390179,
+      "sha256": "5e5b39b86941d728acebc7be7346381dba6c713c63c87989c3029ecacfb8ea72"
+    },
+    {
+      "file": "ui/movies/MyGuest.json",
+      "bytes": 83059,
+      "sha256": "cebd17a8492642b54cb416910af1aa7242599a9078042ddf82f39a051ca02c65"
+    },
+    {
+      "file": "ui/movies/Newbie_Task.json",
+      "bytes": 24992,
+      "sha256": "78d9afa3761cc910eecea5b6c5330111c9050da152e36141c8bb771eac81abe4"
+    },
+    {
+      "file": "ui/movies/NewsActivitiesfla.json",
+      "bytes": 16108,
+      "sha256": "9f9039e9802f86a4bb7b5b9379610c081c70eab986fe64e022b5fcad0916f97f"
+    },
+    {
+      "file": "ui/movies/News_Details.json",
+      "bytes": 7663,
+      "sha256": "6baa0ab3d5d9b818e82abe08773b442dc57922610ead1f4820e0a58fd7744cab"
+    },
+    {
+      "file": "ui/movies/Options.json",
+      "bytes": 89105,
+      "sha256": "8a66d2e05f31a4956fe76b1e01d3387eab4309d329ca79acdf85fc54ad9b9dfa"
+    },
+    {
+      "file": "ui/movies/package_detail.json",
+      "bytes": 27465,
+      "sha256": "34b211dfda4563232dcaa1c8edb32f7dff61b619afe2a8b99ab91e145c58cbe1"
+    },
+    {
+      "file": "ui/movies/package_gacha.json",
+      "bytes": 86514,
+      "sha256": "8f2b44514a85a7313c83dc25869b4ff96662267d80ffbc4576d05bac72c76368"
+    },
+    {
+      "file": "ui/movies/package_pop.json",
+      "bytes": 21825,
+      "sha256": "6b9c49999866fc0f124fb8809a4898e99abf7b2cb6aecad09bf4ed421804415f"
+    },
+    {
+      "file": "ui/movies/PlanetInformation_new.json",
+      "bytes": 38497,
+      "sha256": "86b4d29da80c108e6f11183f6159f3f7a46f81317a3b3746b3f7fade628485f0"
+    },
+    {
+      "file": "ui/movies/Planets_new.json",
+      "bytes": 87605,
+      "sha256": "a0e57da38c005615782d53c22a3b26a3dcb614c63a28299e2865ee0150a6afa6"
+    },
+    {
+      "file": "ui/movies/PROG_PANEL.json",
+      "bytes": 94326,
+      "sha256": "9f0a99ad4d30a464a3ebe469d14c7094eb7cf3567e0b4d97ba553cd2c8942db3"
+    },
+    {
+      "file": "ui/movies/Radar.json",
+      "bytes": 414560,
+      "sha256": "0c6910cbcbc623bc2ba2c27e560219dfe9a0b3270eeb7be8e2dbd8e64c501001"
+    },
+    {
+      "file": "ui/movies/Rank.json",
+      "bytes": 119471,
+      "sha256": "cf381588079c74d46477547ab05f8fefc6ab445303c11fbf199b62662a3cee6c"
+    },
+    {
+      "file": "ui/movies/Register.json",
+      "bytes": 16274,
+      "sha256": "ae9fee0f150cd792f02e6b0609760d3502f5f40d415d9b24f00c6c861f3beb25"
+    },
+    {
+      "file": "ui/movies/Register_agreement.json",
+      "bytes": 30572,
+      "sha256": "2a4a9643d66d3076cfe21a0f9308798dbfe6b078734d09088cc5bd49f9b37b5d"
+    },
+    {
+      "file": "ui/movies/ResearchLad.json",
+      "bytes": 83544,
+      "sha256": "0ea41ad8fbfd5f50e50c804cf9a1499fd2a3b2ad4350b330430c911f7e4fd165"
+    },
+    {
+      "file": "ui/movies/ResourceSettings.json",
+      "bytes": 80206,
+      "sha256": "cca99ef025c99448152cda9c4b8822114342d44d228f25335705f28e118e8a77"
+    },
+    {
+      "file": "ui/movies/ResourceSettings_new.json",
+      "bytes": 83250,
+      "sha256": "3a82c4a4d7a10571bf04dd66fdcccc4cc4da14dbaef56dbd800f7f001f7da6dd"
+    },
+    {
+      "file": "ui/movies/scan_report.json",
+      "bytes": 32773,
+      "sha256": "9256d7f754df0d1c58c26fd37c13436c61c3d5f17a039fb49c71d40bbf05fe97"
+    },
+    {
+      "file": "ui/movies/Settings.json",
+      "bytes": 65032,
+      "sha256": "95bbdf1e78cd310a2924dfdf6f08818096296a4057c64a42983b19d188cfacd3"
+    },
+    {
+      "file": "ui/movies/SolarSystem_new.json",
+      "bytes": 1589252,
+      "sha256": "28a22c71066978c39eb46483eefbd483c55f2628581fdca85def97ffb89d5824"
+    },
+    {
+      "file": "ui/movies/solar_sovereignty_des.json",
+      "bytes": 24544,
+      "sha256": "f2d5efa92930a6f17a0716c433d9a9c6d078d03abdc3cdc27cee7a7eb25215f6"
+    },
+    {
+      "file": "ui/movies/SpaceDepot.json",
+      "bytes": 35466,
+      "sha256": "2e7122b40152aab6124cf1ef785ca19d1ca5dbcf14c513e0a83530c6d88d8c0c"
+    },
+    {
+      "file": "ui/movies/SpeedUp.json",
+      "bytes": 68515,
+      "sha256": "d904239f60795ae33c9caffa3d3e4ead05796326b62d45965cef5f6bbf5730b8"
+    },
+    {
+      "file": "ui/movies/StarFortress.json",
+      "bytes": 738660,
+      "sha256": "3837baf530fb104cbb9fa7592da3dc108950bb745a40fe179ce23bebbd6d71fe"
+    },
+    {
+      "file": "ui/movies/StarFortress_details.json",
+      "bytes": 712449,
+      "sha256": "63ea2a1a207ce194cfe556fb2373b94d72eec41852054a1f2435a6428b8d700f"
+    },
+    {
+      "file": "ui/movies/StarFortress_list.json",
+      "bytes": 618772,
+      "sha256": "b2ff4f64bda58552ca574fd24985f4eb57b179c6d46530ac94af253923556601"
+    },
+    {
+      "file": "ui/movies/StarFortress_morale.json",
+      "bytes": 21208,
+      "sha256": "ce6e1445ac49dc3baa08fe857c761ea0f4d3eb5282816313bf4028936cd967d6"
+    },
+    {
+      "file": "ui/movies/StarFortress_shop.json",
+      "bytes": 18196,
+      "sha256": "e35d192602634c3e2619e0246f2dd028cd4190583c0c798d4629cfcbfbb3aa60"
+    },
+    {
+      "file": "ui/movies/Task.json",
+      "bytes": 40664,
+      "sha256": "c7783277d7d98e39423159c64c2f59215b3afdfd913a16751cf68f4cc9dbc201"
+    },
+    {
+      "file": "ui/movies/Task_list.json",
+      "bytes": 28594,
+      "sha256": "3edf3ecb25b04b6e92c8ab6345960bac1b2dd04d423259b1f3cff7c10bf7f31b"
+    },
+    {
+      "file": "ui/movies/TechTree.json",
+      "bytes": 1577134,
+      "sha256": "2171d916b72a973e1eb033f5c1580ad8f44e72a732a57b41b9669abee8c7d98b"
+    },
+    {
+      "file": "ui/movies/TwoInterface.json",
+      "bytes": 333684,
+      "sha256": "a43207b6d5960b4c60855f40958ed5815c7e623297eb013d3d4e3a1ed56b0edf"
+    },
+    {
+      "file": "ui/movies/unAlliance.json",
+      "bytes": 56699,
+      "sha256": "deeadf07b5894ed11a1a1819f7c971625fe1710a84f9037138f13a34a3ceda61"
+    },
+    {
+      "file": "ui/movies/unAlliance_create.json",
+      "bytes": 12808,
+      "sha256": "6a3b8ba78cd48fcfd3fc4fa8b5b8c804231ab25b5e3aca7b049554919b691133"
+    },
+    {
+      "file": "ui/movies/unAlliance_list.json",
+      "bytes": 64704,
+      "sha256": "33b2336d4630335f9cc2cac245b97f1103773c20034edd103285d2182b312f7d"
+    },
+    {
+      "file": "ui/movies/UniverseCampaign.json",
+      "bytes": 122392,
+      "sha256": "0586650d744844c6eb3d9f4d5394ae22d5017e533a76cdec5890a6a88746df85"
+    },
+    {
+      "file": "ui/movies/userAlliance.json",
+      "bytes": 313994,
+      "sha256": "3fecfacdd4a26dac926c96e880c5c9e4aeb77feff4f599f0655801a80778e231"
+    },
+    {
+      "file": "ui/movies/userAlliance_assist.json",
+      "bytes": 48966,
+      "sha256": "edc73223a6d2db80732c5f23760c8b44d889390e78be307a2abeaeefb8412e4f"
+    },
+    {
+      "file": "ui/movies/userAlliance_assistCombat.json",
+      "bytes": 21320,
+      "sha256": "ae5f44ac07fc3ba117a54e8eb75701b83a0a347a6fed6eb8797f786ca42a656e"
+    },
+    {
+      "file": "ui/movies/userAlliance_contribute.json",
+      "bytes": 66610,
+      "sha256": "f1f22f93a9acb37076870fcae0ffb46d20f16e453ffede62c7ec21bdbaecbac4"
+    },
+    {
+      "file": "ui/movies/userAlliance_member.json",
+      "bytes": 33153,
+      "sha256": "823a02f5440fed6521b66f18470891c619e9f32d722331826e851b61b9666e59"
+    },
+    {
+      "file": "ui/movies/userAlliance_reward.json",
+      "bytes": 14405,
+      "sha256": "3dc86db566d398d95ffd8ea3f1fc7e4ad1b77aff3bdb9f76aa7b5fb4fbb2536b"
+    },
+    {
+      "file": "ui/movies/userAlliance_tech.json",
+      "bytes": 54911,
+      "sha256": "56c7bcf21a57dfe744e3823541e01088618da8f4a7e8d0651a0fc5662ebed852"
+    },
+    {
+      "file": "ui/movies/USE_PANEL.json",
+      "bytes": 68268,
+      "sha256": "cb1b3916b7d9af46c2121c413cfe0f302a522b25efac1870e0f868f97a1d07c7"
+    }
+  ]
+}

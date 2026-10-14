@@ -1,0 +1,121 @@
+[
+  {
+    "id": "Annihilator",
+    "name": "湮灭之星",
+    "apkId": 28,
+    "file": "Annihilator.glb",
+    "preview": "Annihilator.png",
+    "triangles": 12252,
+    "meshes": 9,
+    "bounds": [
+      2.97361498158261,
+      1.0373133963215038,
+      7.999999999999999
+    ],
+    "relativeLength": 8,
+    "bytes": 1039988,
+    "revision": "special-reborn-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "无人反物质自行导弹",
+      "install": false,
+      "primary": "锁定 / 自行突击",
+      "kind": "antimatter",
+      "muzzles": [],
+      "caliber": 0.3,
+      "pointDefense": []
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Reaper",
+    "name": "Reaper（收割者·暂译）",
+    "apkId": 29,
+    "file": "Reaper.glb",
+    "preview": "Reaper.png",
+    "triangles": 22244,
+    "meshes": 33,
+    "bounds": [
+      100.70718503850416,
+      14.147600849297994,
+      90
+    ],
+    "relativeLength": 90,
+    "bytes": 1899604,
+    "revision": "special-reborn-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "相位收割舰 · 原创试装",
+      "install": false,
+      "primary": "双束相位收割",
+      "kind": "reaper",
+      "muzzles": [
+        [
+          -1.15,
+          0,
+          -5.2
+        ],
+        [
+          1.15,
+          0,
+          -5.2
+        ]
+      ],
+      "caliber": 0.15,
+      "pointDefense": [
+        [
+          -3.1,
+          0.62,
+          -0.1
+        ],
+        [
+          3.1,
+          0.62,
+          -0.1
+        ],
+        [
+          -3.1,
+          0.62,
+          1.5
+        ],
+        [
+          3.1,
+          0.62,
+          1.5
+        ]
+      ],
+      "missiles": [
+        [
+          -1.85,
+          0.56,
+          1.8
+        ],
+        [
+          1.85,
+          0.56,
+          1.8
+        ],
+        [
+          -1.85,
+          0.56,
+          2.2
+        ],
+        [
+          1.85,
+          0.56,
+          2.2
+        ]
+      ],
+      "launchDirection": [
+        0,
+        1,
+        0
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  }
+]

@@ -1,0 +1,302 @@
+BlenderMCP addon registered
+BlenderMCP addon unregistered
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:43 | INFO: Data are loaded, start creating Blender stuff
+01:40:43 | INFO: Blender create Mesh node 0
+01:40:43 | INFO: Blender create Mesh node 1
+01:40:43 | INFO: Blender create Mesh node 2
+01:40:43 | INFO: Blender create Mesh node 3
+01:40:43 | INFO: Blender create Mesh node 4
+01:40:43 | INFO: Blender create Mesh node 5
+01:40:43 | INFO: Blender create Mesh node 6
+01:40:43 | INFO: Blender create Mesh node 7
+01:40:43 | INFO: Blender create Mesh node 8
+01:40:43 | INFO: Blender create Mesh node 9
+01:40:43 | INFO: Blender create Mesh node 10
+01:40:43 | INFO: Blender create Mesh node 11
+01:40:43 | INFO: Blender create Mesh node 12
+01:40:43 | INFO: Blender create Mesh node 13
+01:40:43 | INFO: Blender create Mesh node 14
+01:40:43 | INFO: Blender create Mesh node 15
+01:40:43 | INFO: Blender create Mesh node 16
+01:40:43 | INFO: Blender create Mesh node 17
+01:40:43 | INFO: Blender create Mesh node 18
+01:40:43 | INFO: Blender create Mesh node 19
+01:40:43 | INFO: Blender create Mesh node 20
+01:40:43 | INFO: Blender create Mesh node 21
+01:40:43 | INFO: Blender create Mesh node 22
+01:40:43 | INFO: Blender create Mesh node 23
+01:40:43 | INFO: Blender create Mesh node 24
+01:40:43 | INFO: Blender create Mesh node 25
+01:40:43 | INFO: Blender create Mesh node 26
+01:40:43 | INFO: Blender create Mesh node 27
+01:40:43 | INFO: Blender create Mesh node 28
+01:40:43 | INFO: Blender create Mesh node 29
+01:40:43 | INFO: glTF import finished in 0.09s
+Bomber 282 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:43 | INFO: Data are loaded, start creating Blender stuff
+01:40:43 | INFO: Blender create Mesh node 0
+01:40:43 | INFO: Blender create Mesh node 1
+01:40:43 | INFO: Blender create Mesh node 2
+01:40:43 | INFO: Blender create Mesh node 3
+01:40:43 | INFO: Blender create Mesh node 4
+01:40:43 | INFO: Blender create Mesh node 5
+01:40:43 | INFO: Blender create Mesh node 6
+01:40:43 | INFO: Blender create Mesh node 7
+01:40:43 | INFO: Blender create Mesh node 8
+01:40:43 | INFO: Blender create Mesh node 9
+01:40:43 | INFO: Blender create Mesh node 10
+01:40:43 | INFO: Blender create Mesh node 11
+01:40:43 | INFO: Blender create Mesh node 12
+01:40:43 | INFO: Blender create Mesh node 13
+01:40:43 | INFO: Blender create Mesh node 14
+01:40:43 | INFO: Blender create Mesh node 15
+01:40:43 | INFO: Blender create Mesh node 16
+01:40:43 | INFO: Blender create Mesh node 17
+01:40:43 | INFO: Blender create Mesh node 18
+01:40:43 | INFO: Blender create Mesh node 19
+01:40:43 | INFO: Blender create Mesh node 20
+01:40:43 | INFO: Blender create Mesh node 21
+01:40:43 | INFO: Blender create Mesh node 22
+01:40:43 | INFO: Blender create Mesh node 23
+01:40:43 | INFO: glTF import finished in 0.05s
+Cargo_Ship 136 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:43 | INFO: Data are loaded, start creating Blender stuff
+01:40:43 | INFO: Blender create Mesh node 0
+01:40:43 | INFO: Blender create Mesh node 1
+01:40:43 | INFO: Blender create Mesh node 2
+01:40:43 | INFO: Blender create Mesh node 3
+01:40:43 | INFO: Blender create Mesh node 4
+01:40:43 | INFO: Blender create Mesh node 5
+01:40:43 | INFO: Blender create Mesh node 6
+01:40:43 | INFO: Blender create Mesh node 7
+01:40:43 | INFO: Blender create Mesh node 8
+01:40:43 | INFO: Blender create Mesh node 9
+01:40:43 | INFO: Blender create Mesh node 10
+01:40:43 | INFO: Blender create Mesh node 11
+01:40:43 | INFO: Blender create Mesh node 12
+01:40:43 | INFO: Blender create Mesh node 13
+01:40:43 | INFO: Blender create Mesh node 14
+01:40:43 | INFO: Blender create Mesh node 15
+01:40:43 | INFO: Blender create Mesh node 16
+01:40:43 | INFO: Blender create Mesh node 17
+01:40:43 | INFO: Blender create Mesh node 18
+01:40:43 | INFO: Blender create Mesh node 19
+01:40:43 | INFO: Blender create Mesh node 20
+01:40:43 | INFO: Blender create Mesh node 21
+01:40:43 | INFO: Blender create Mesh node 22
+01:40:43 | INFO: Blender create Mesh node 23
+01:40:43 | INFO: glTF import finished in 0.05s
+Large_Cargo_Ship 142 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:44 | INFO: Data are loaded, start creating Blender stuff
+01:40:44 | INFO: Blender create Mesh node 0
+01:40:44 | INFO: Blender create Mesh node 1
+01:40:44 | INFO: Blender create Mesh node 2
+01:40:44 | INFO: Blender create Mesh node 3
+01:40:44 | INFO: Blender create Mesh node 4
+01:40:44 | INFO: Blender create Mesh node 5
+01:40:44 | INFO: Blender create Mesh node 6
+01:40:44 | INFO: Blender create Mesh node 7
+01:40:44 | INFO: Blender create Mesh node 8
+01:40:44 | INFO: Blender create Mesh node 9
+01:40:44 | INFO: Blender create Mesh node 10
+01:40:44 | INFO: Blender create Mesh node 11
+01:40:44 | INFO: Blender create Mesh node 12
+01:40:44 | INFO: Blender create Mesh node 13
+01:40:44 | INFO: Blender create Mesh node 14
+01:40:44 | INFO: Blender create Mesh node 15
+01:40:44 | INFO: glTF import finished in 0.04s
+Colony_Ship 151 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:44 | INFO: Data are loaded, start creating Blender stuff
+01:40:44 | INFO: Blender create Mesh node 0
+01:40:44 | INFO: Blender create Mesh node 1
+01:40:44 | INFO: Blender create Mesh node 2
+01:40:44 | INFO: Blender create Mesh node 3
+01:40:44 | INFO: Blender create Mesh node 4
+01:40:44 | INFO: Blender create Mesh node 5
+01:40:44 | INFO: Blender create Mesh node 6
+01:40:44 | INFO: Blender create Mesh node 7
+01:40:44 | INFO: Blender create Mesh node 8
+01:40:44 | INFO: Blender create Mesh node 9
+01:40:44 | INFO: Blender create Mesh node 10
+01:40:44 | INFO: Blender create Mesh node 11
+01:40:44 | INFO: Blender create Mesh node 12
+01:40:44 | INFO: Blender create Mesh node 13
+01:40:44 | INFO: Blender create Mesh node 14
+01:40:44 | INFO: Blender create Mesh node 15
+01:40:44 | INFO: Blender create Mesh node 16
+01:40:44 | INFO: Blender create Mesh node 17
+01:40:44 | INFO: Blender create Mesh node 18
+01:40:44 | INFO: Blender create Mesh node 19
+01:40:44 | INFO: Blender create Mesh node 20
+01:40:44 | INFO: Blender create Mesh node 21
+01:40:44 | INFO: Blender create Mesh node 22
+01:40:44 | INFO: Blender create Mesh node 23
+01:40:44 | INFO: Blender create Mesh node 24
+01:40:44 | INFO: glTF import finished in 0.05s
+Recycler 146 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:44 | INFO: Data are loaded, start creating Blender stuff
+01:40:44 | INFO: Blender create Mesh node 0
+01:40:44 | INFO: Blender create Mesh node 1
+01:40:44 | INFO: Blender create Mesh node 2
+01:40:44 | INFO: Blender create Mesh node 3
+01:40:44 | INFO: Blender create Mesh node 4
+01:40:44 | INFO: Blender create Mesh node 5
+01:40:44 | INFO: Blender create Mesh node 6
+01:40:44 | INFO: Blender create Mesh node 7
+01:40:44 | INFO: Blender create Mesh node 8
+01:40:44 | INFO: Blender create Mesh node 9
+01:40:44 | INFO: Blender create Mesh node 10
+01:40:44 | INFO: Blender create Mesh node 11
+01:40:44 | INFO: Blender create Mesh node 12
+01:40:44 | INFO: Blender create Mesh node 13
+01:40:44 | INFO: glTF import finished in 0.05s
+Solar_Satellite 236 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:44 | INFO: Data are loaded, start creating Blender stuff
+01:40:44 | INFO: Blender create Mesh node 0
+01:40:44 | INFO: Blender create Mesh node 1
+01:40:44 | INFO: Blender create Mesh node 2
+01:40:44 | INFO: Blender create Mesh node 3
+01:40:44 | INFO: Blender create Mesh node 4
+01:40:44 | INFO: Blender create Mesh node 5
+01:40:44 | INFO: Blender create Mesh node 6
+01:40:44 | INFO: Blender create Mesh node 7
+01:40:44 | INFO: Blender create Mesh node 8
+01:40:44 | INFO: glTF import finished in 0.09s
+Death_Star 202 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:44 | INFO: Data are loaded, start creating Blender stuff
+01:40:44 | INFO: Blender create Mesh node 0
+01:40:44 | INFO: Blender create Mesh node 1
+01:40:44 | INFO: Blender create Mesh node 2
+01:40:44 | INFO: Blender create Mesh node 3
+01:40:44 | INFO: Blender create Mesh node 4
+01:40:44 | INFO: Blender create Mesh node 5
+01:40:44 | INFO: Blender create Mesh node 6
+01:40:44 | INFO: Blender create Mesh node 7
+01:40:44 | INFO: Blender create Mesh node 8
+01:40:44 | INFO: Blender create Mesh node 9
+01:40:44 | INFO: Blender create Mesh node 10
+01:40:44 | INFO: Blender create Mesh node 11
+01:40:44 | INFO: Blender create Mesh node 12
+01:40:44 | INFO: Blender create Mesh node 13
+01:40:44 | INFO: Blender create Mesh node 14
+01:40:44 | INFO: Blender create Mesh node 15
+01:40:44 | INFO: Blender create Mesh node 16
+01:40:44 | INFO: Blender create Mesh node 17
+01:40:44 | INFO: Blender create Mesh node 18
+01:40:44 | INFO: Blender create Mesh node 19
+01:40:44 | INFO: Blender create Mesh node 20
+01:40:44 | INFO: Blender create Mesh node 21
+01:40:44 | INFO: Blender create Mesh node 22
+01:40:44 | INFO: Blender create Mesh node 23
+01:40:44 | INFO: Blender create Mesh node 24
+01:40:44 | INFO: Blender create Mesh node 25
+01:40:44 | INFO: Blender create Mesh node 26
+01:40:44 | INFO: Blender create Mesh node 27
+01:40:44 | INFO: Blender create Mesh node 28
+01:40:44 | INFO: Blender create Mesh node 29
+01:40:44 | INFO: Blender create Mesh node 30
+01:40:44 | INFO: Blender create Mesh node 31
+01:40:44 | INFO: Blender create Mesh node 32
+01:40:44 | INFO: Blender create Mesh node 33
+01:40:44 | INFO: glTF import finished in 0.12s
+Interceptor 403 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:45 | INFO: Data are loaded, start creating Blender stuff
+01:40:45 | INFO: Blender create Mesh node 0
+01:40:45 | INFO: Blender create Mesh node 1
+01:40:45 | INFO: Blender create Mesh node 2
+01:40:45 | INFO: Blender create Mesh node 3
+01:40:45 | INFO: Blender create Mesh node 4
+01:40:45 | INFO: Blender create Mesh node 5
+01:40:45 | INFO: Blender create Mesh node 6
+01:40:45 | INFO: Blender create Mesh node 7
+01:40:45 | INFO: Blender create Mesh node 8
+01:40:45 | INFO: Blender create Mesh node 9
+01:40:45 | INFO: Blender create Mesh node 10
+01:40:45 | INFO: Blender create Mesh node 11
+01:40:45 | INFO: Blender create Mesh node 12
+01:40:45 | INFO: Blender create Mesh node 13
+01:40:45 | INFO: Blender create Mesh node 14
+01:40:45 | INFO: Blender create Mesh node 15
+01:40:45 | INFO: Blender create Mesh node 16
+01:40:45 | INFO: Blender create Mesh node 17
+01:40:45 | INFO: Blender create Mesh node 18
+01:40:45 | INFO: Blender create Mesh node 19
+01:40:45 | INFO: Blender create Mesh node 20
+01:40:45 | INFO: Blender create Mesh node 21
+01:40:45 | INFO: Blender create Mesh node 22
+01:40:45 | INFO: Blender create Mesh node 23
+01:40:45 | INFO: Blender create Mesh node 24
+01:40:45 | INFO: Blender create Mesh node 25
+01:40:45 | INFO: Blender create Mesh node 26
+01:40:45 | INFO: Blender create Mesh node 27
+01:40:45 | INFO: Blender create Mesh node 28
+01:40:45 | INFO: glTF import finished in 0.09s
+Devourer_Interceptor 291 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:45 | INFO: Data are loaded, start creating Blender stuff
+01:40:45 | INFO: Blender create Mesh node 0
+01:40:45 | INFO: Blender create Mesh node 1
+01:40:45 | INFO: Blender create Mesh node 2
+01:40:45 | INFO: Blender create Mesh node 3
+01:40:45 | INFO: Blender create Mesh node 4
+01:40:45 | INFO: Blender create Mesh node 5
+01:40:45 | INFO: Blender create Mesh node 6
+01:40:45 | INFO: Blender create Mesh node 7
+01:40:45 | INFO: Blender create Mesh node 8
+01:40:45 | INFO: Blender create Mesh node 9
+01:40:45 | INFO: Blender create Mesh node 10
+01:40:45 | INFO: Blender create Mesh node 11
+01:40:45 | INFO: Blender create Mesh node 12
+01:40:45 | INFO: Blender create Mesh node 13
+01:40:45 | INFO: Blender create Mesh node 14
+01:40:45 | INFO: Blender create Mesh node 15
+01:40:45 | INFO: Blender create Mesh node 16
+01:40:45 | INFO: Blender create Mesh node 17
+01:40:45 | INFO: Blender create Mesh node 18
+01:40:45 | INFO: Blender create Mesh node 19
+01:40:45 | INFO: Blender create Mesh node 20
+01:40:45 | INFO: Blender create Mesh node 21
+01:40:45 | INFO: Blender create Mesh node 22
+01:40:45 | INFO: Blender create Mesh node 23
+01:40:45 | INFO: Blender create Mesh node 24
+01:40:45 | INFO: Blender create Mesh node 25
+01:40:45 | INFO: Blender create Mesh node 26
+01:40:45 | INFO: Blender create Mesh node 27
+01:40:45 | INFO: Blender create Mesh node 28
+01:40:45 | INFO: Blender create Mesh node 29
+01:40:45 | INFO: Blender create Mesh node 30
+01:40:45 | INFO: Blender create Mesh node 31
+01:40:45 | INFO: Blender create Mesh node 32
+01:40:45 | INFO: Blender create Mesh node 33
+01:40:45 | INFO: glTF import finished in 0.09s
+Titanenergetic_Frigate 246 components, 1 clusters
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:40:45 | INFO: Data are loaded, start creating Blender stuff
+01:40:45 | INFO: Blender create Mesh node 0
+01:40:45 | INFO: Blender create Mesh node 1
+01:40:45 | INFO: Blender create Mesh node 2
+01:40:45 | INFO: Blender create Mesh node 3
+01:40:45 | INFO: Blender create Mesh node 4
+01:40:45 | INFO: Blender create Mesh node 5
+01:40:45 | INFO: Blender create Mesh node 6
+01:40:45 | INFO: Blender create Mesh node 7
+01:40:45 | INFO: Blender create Mesh node 8
+01:40:45 | INFO: Blender create Mesh node 9
+01:40:45 | INFO: Blender create Mesh node 10
+01:40:45 | INFO: Blender create Mesh node 11
+01:40:45 | INFO: Blender create Mesh node 12
+01:40:45 | INFO: Blender create Mesh node 13
+01:40:45 | INFO: glTF import finished in 0.05s
+Guardian 138 components, 1 clusters
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

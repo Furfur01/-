@@ -1,0 +1,266 @@
+{
+  "source": "City.tfs",
+  "size": [
+    1600,
+    1120
+  ],
+  "defaults": {
+    "Metal_Mine": [
+      431.53,
+      390.65
+    ],
+    "Crystal_Mine": [
+      447.95,
+      768.71
+    ],
+    "Gas_Mine": [
+      1098.49,
+      287.83
+    ],
+    "Solar_Plant": [
+      524.41,
+      551.69
+    ],
+    "Fusion_Reactor": [
+      777.54,
+      697.41
+    ],
+    "Metal_Storage": [
+      894.6,
+      763.35
+    ],
+    "Crystal_Storage": [
+      628.51,
+      451.46
+    ],
+    "Gas_Storage": [
+      660.48,
+      299.27
+    ],
+    "Robotics_Facility": [
+      1100.65,
+      530.27
+    ],
+    "Shipyard": [
+      1266.95,
+      612.1
+    ],
+    "Research_Lab": [
+      1245.36,
+      339.96
+    ],
+    "Alliance_Depot": [
+      1304.54,
+      489.64
+    ],
+    "Radar_Facility": [
+      809.07,
+      427.61
+    ],
+    "Nanite_Factory": [
+      1039.31,
+      668.01
+    ],
+    "Command_Center": [
+      990,
+      350
+    ],
+    "Terraformer": [
+      920,
+      560
+    ],
+    "Missile_Silo": [
+      675,
+      650
+    ]
+  },
+  "widths": {
+    "Metal_Mine": 137.37,
+    "Crystal_Mine": 125.27,
+    "Gas_Mine": 127.0,
+    "Solar_Plant": 141.68,
+    "Fusion_Reactor": 119.22,
+    "Metal_Storage": 149.46,
+    "Crystal_Storage": 120.09,
+    "Gas_Storage": 125.27,
+    "Robotics_Facility": 141.68,
+    "Shipyard": 170.19,
+    "Research_Lab": 146.0,
+    "Alliance_Depot": 138.23,
+    "Radar_Facility": 120.09,
+    "Nanite_Factory": 129.59,
+    "Command_Center": 140,
+    "Terraformer": 145,
+    "Missile_Silo": 130
+  },
+  "placement_sources": {
+    "Metal_Mine": {
+      "instance": "building_sprite_1",
+      "shape_id": 846,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        362.85097192224623,
+        285.097192224622
+      ]
+    },
+    "Crystal_Mine": {
+      "instance": "building_sprite_2",
+      "shape_id": 905,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        385.3131749460043,
+        677.3218142548596
+      ]
+    },
+    "Gas_Mine": {
+      "instance": "building_sprite_3",
+      "shape_id": 916,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        1034.9892008639308,
+        190.0647948164147
+      ]
+    },
+    "Solar_Plant": {
+      "instance": "building_sprite_4",
+      "shape_id": 926,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        453.56371490280776,
+        467.3866090712743
+      ]
+    },
+    "Fusion_Reactor": {
+      "instance": "building_sprite_5",
+      "shape_id": 948,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        717.92656587473,
+        617.7105831533477
+      ]
+    },
+    "Metal_Storage": {
+      "instance": "building_sprite_6",
+      "shape_id": 998,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        819.8704103671706,
+        679.049676025918
+      ]
+    },
+    "Crystal_Storage": {
+      "instance": "building_sprite_7",
+      "shape_id": 1109,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        568.4665226781857,
+        374.94600431965443
+      ]
+    },
+    "Gas_Storage": {
+      "instance": "building_sprite_8",
+      "shape_id": 1117,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        597.840172786177,
+        214.2548596112311
+      ]
+    },
+    "Robotics_Facility": {
+      "instance": "building_sprite_9",
+      "shape_id": 1125,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        1029.8056155507559,
+        434.9892008639309
+      ]
+    },
+    "Shipyard": {
+      "instance": "building_sprite_10",
+      "shape_id": 1204,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        1181.8574514038876,
+        488.12095032397406
+      ]
+    },
+    "Research_Lab": {
+      "instance": "building_sprite_11",
+      "shape_id": 1222,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        1172.3542116630667,
+        251.40388768898487
+      ]
+    },
+    "Alliance_Depot": {
+      "instance": "building_sprite_12",
+      "shape_id": 1234,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        1235.4211663066953,
+        406.0475161987041
+      ]
+    },
+    "Radar_Facility": {
+      "instance": "building_sprite_13",
+      "shape_id": 1256,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        761.5550755939524,
+        354.64362850971924
+      ]
+    },
+    "Nanite_Factory": {
+      "instance": "building_sprite_14",
+      "shape_id": 1311,
+      "matrix": [
+        0.4319654427645788,
+        0.0,
+        0.0,
+        0.4319654427645788,
+        974.5140388768898,
+        582.2894168466522
+      ]
+    }
+  }
+}

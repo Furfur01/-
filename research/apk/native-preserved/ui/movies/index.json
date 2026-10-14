@@ -1,0 +1,1680 @@
+[
+  {
+    "id": "Activities_center",
+    "source": "Activities_center.tfs",
+    "asset": "original/ui/movies/Activities_center.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 5,
+    "missing": [
+      "NewActivity_IMG_0.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_6.png"
+    ]
+  },
+  {
+    "id": "Activities_Details",
+    "source": "Activities_Details.tfs",
+    "asset": "original/ui/movies/Activities_Details.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 7,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "Activities_rank",
+    "source": "Activities_rank.tfs",
+    "asset": "original/ui/movies/Activities_rank.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 11,
+    "texts": 11,
+    "missing": []
+  },
+  {
+    "id": "Alarm_cpm",
+    "source": "Alarm_cpm.tfs",
+    "asset": "original/ui/movies/Alarm_cpm.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 1,
+    "texts": 1,
+    "missing": []
+  },
+  {
+    "id": "All_mine_new",
+    "source": "All_mine_new.tfs",
+    "asset": "original/ui/movies/All_mine_new.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 400,
+    "texts": 87,
+    "missing": []
+  },
+  {
+    "id": "Alliance_contend",
+    "source": "Alliance_contend.tfs",
+    "asset": "original/ui/movies/Alliance_contend.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 5,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "Alliance_contend_info",
+    "source": "Alliance_contend_info.tfs",
+    "asset": "original/ui/movies/Alliance_contend_info.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 29,
+    "texts": 19,
+    "missing": []
+  },
+  {
+    "id": "application_assist",
+    "source": "application_assist.tfs",
+    "asset": "original/ui/movies/application_assist.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 17,
+    "missing": []
+  },
+  {
+    "id": "ApplyList",
+    "source": "ApplyList.tfs",
+    "asset": "original/ui/movies/ApplyList.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 10,
+    "missing": []
+  },
+  {
+    "id": "BG",
+    "source": "BG.tfs",
+    "asset": "original/ui/movies/BG.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 4,
+    "texts": 0,
+    "missing": []
+  },
+  {
+    "id": "BookMark",
+    "source": "BookMark.tfs",
+    "asset": "original/ui/movies/BookMark.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 23,
+    "texts": 6,
+    "missing": []
+  },
+  {
+    "id": "Btn_All",
+    "source": "Btn_All.tfs",
+    "asset": "original/ui/movies/Btn_All.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 40,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "buildingList",
+    "source": "buildingList.tfs",
+    "asset": "original/ui/movies/buildingList.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 45,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "challenge_log",
+    "source": "challenge_log.tfs",
+    "asset": "original/ui/movies/challenge_log.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 10,
+    "missing": []
+  },
+  {
+    "id": "Chat",
+    "source": "Chat.tfs",
+    "asset": "original/ui/movies/Chat.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "Chat_Btn",
+    "source": "Chat_Btn.tfs",
+    "asset": "original/ui/movies/Chat_Btn.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "Chat_ReportChatViolation",
+    "source": "Chat_ReportChatViolation.tfs",
+    "asset": "original/ui/movies/Chat_ReportChatViolation.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 7,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "Chat_rules",
+    "source": "Chat_rules.tfs",
+    "asset": "original/ui/movies/Chat_rules.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 7,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "City_Explanation",
+    "source": "City_Explanation.tfs",
+    "asset": "original/ui/movies/City_Explanation.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 33,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "CityUI_Down",
+    "source": "CityUI_Down.tfs",
+    "asset": "original/ui/movies/CityUI_Down.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 45,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "CityUI_UP",
+    "source": "CityUI_UP.tfs",
+    "asset": "original/ui/movies/CityUI_UP.json",
+    "size": [
+      640.0,
+      940.0
+    ],
+    "shapes": 191,
+    "texts": 33,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_11.png",
+      "NA_Item_12.png",
+      "NA_Item_13.png",
+      "NA_Item_14.png",
+      "NA_Item_15.png",
+      "NA_Item_16.png",
+      "NA_Item_17.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "ContactUS",
+    "source": "ContactUS.tfs",
+    "asset": "original/ui/movies/ContactUS.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 1,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "coordPanel",
+    "source": "coordPanel.tfs",
+    "asset": "original/ui/movies/coordPanel.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 0,
+    "texts": 6,
+    "missing": []
+  },
+  {
+    "id": "Daily_reward",
+    "source": "Daily_reward.tfs",
+    "asset": "original/ui/movies/Daily_reward.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 475,
+    "texts": 7,
+    "missing": [
+      "NA_item_1.png",
+      "NA_item_10.png",
+      "NA_item_11.png",
+      "NA_item_12.png",
+      "NA_item_13.png",
+      "NA_item_14.png",
+      "NA_item_15.png",
+      "NA_item_16.png",
+      "NA_item_17.png",
+      "NA_item_18.png",
+      "NA_item_2.png",
+      "NA_item_3.png",
+      "NA_item_4.png",
+      "NA_item_5.png",
+      "NA_item_6.png",
+      "NA_item_7.png",
+      "NA_item_8.png",
+      "NA_item_9.png"
+    ]
+  },
+  {
+    "id": "DayRewards",
+    "source": "DayRewards.tfs",
+    "asset": "original/ui/movies/DayRewards.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 486,
+    "texts": 5,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_11.png",
+      "NA_Item_12.png",
+      "NA_Item_13.png",
+      "NA_Item_14.png",
+      "NA_Item_15.png",
+      "NA_Item_16.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "demoteConfirmBox",
+    "source": "demoteConfirmBox.tfs",
+    "asset": "original/ui/movies/demoteConfirmBox.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "DetaildRouteInformation",
+    "source": "DetaildRouteInformation.tfs",
+    "asset": "original/ui/movies/DetaildRouteInformation.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "Dispatch",
+    "source": "Dispatch.tfs",
+    "asset": "original/ui/movies/Dispatch.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 500,
+    "texts": 47,
+    "missing": []
+  },
+  {
+    "id": "ecm",
+    "source": "ecm.tfs",
+    "asset": "original/ui/movies/ecm.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 21,
+    "texts": 23,
+    "missing": [
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "id": "edit_board",
+    "source": "edit_board.tfs",
+    "asset": "original/ui/movies/edit_board.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 1,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "fb_chests",
+    "source": "fb_chests.tfs",
+    "asset": "original/ui/movies/fb_chests.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 9,
+    "missing": [
+      "NA_item_1.png",
+      "NA_item_10.png",
+      "NA_item_11.png",
+      "NA_item_12.png",
+      "NA_item_2.png",
+      "NA_item_3.png",
+      "NA_item_4.png",
+      "NA_item_5.png",
+      "NA_item_6.png",
+      "NA_item_7.png",
+      "NA_item_8.png",
+      "NA_item_9.png",
+      "NA_item_fix_1.png",
+      "NA_item_fix_2.png",
+      "NA_item_fix_3.png",
+      "NA_item_fix_4.png"
+    ]
+  },
+  {
+    "id": "FleetDevice",
+    "source": "FleetDevice.tfs",
+    "asset": "original/ui/movies/FleetDevice.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 6,
+    "missing": [
+      "NA_item_1.png",
+      "NA_item_2.png",
+      "NA_item_3.png",
+      "NA_item_4.png",
+      "NA_item_5.png",
+      "NA_item_6.png"
+    ]
+  },
+  {
+    "id": "FleetDevice_upgrade",
+    "source": "FleetDevice_upgrade.tfs",
+    "asset": "original/ui/movies/FleetDevice_upgrade.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 7,
+    "texts": 9,
+    "missing": []
+  },
+  {
+    "id": "FleetRemake",
+    "source": "FleetRemake.tfs",
+    "asset": "original/ui/movies/FleetRemake.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 366,
+    "texts": 9,
+    "missing": [
+      "NA_item_1.png",
+      "NA_item_2.png",
+      "NA_item_3.png",
+      "NA_item_4.png",
+      "NA_item_5.png",
+      "NA_item_6.png"
+    ]
+  },
+  {
+    "id": "Fleets",
+    "source": "Fleets.tfs",
+    "asset": "original/ui/movies/Fleets.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 367,
+    "texts": 20,
+    "missing": []
+  },
+  {
+    "id": "Fleets_Explanation",
+    "source": "Fleets_Explanation.tfs",
+    "asset": "original/ui/movies/Fleets_Explanation.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 364,
+    "texts": 4,
+    "missing": []
+  },
+  {
+    "id": "Fleets_Flag",
+    "source": "Fleets_Flag.tfs",
+    "asset": "original/ui/movies/Fleets_Flag.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 18,
+    "missing": []
+  },
+  {
+    "id": "FleetsTechnology",
+    "source": "FleetsTechnology.tfs",
+    "asset": "original/ui/movies/FleetsTechnology.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 36,
+    "texts": 11,
+    "missing": []
+  },
+  {
+    "id": "Friends_list",
+    "source": "Friends_list.tfs",
+    "asset": "original/ui/movies/Friends_list.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 15,
+    "texts": 21,
+    "missing": []
+  },
+  {
+    "id": "Galaxy_dispute_Task",
+    "source": "Galaxy_dispute_Task.tfs",
+    "asset": "original/ui/movies/Galaxy_dispute_Task.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 17,
+    "texts": 10,
+    "missing": []
+  },
+  {
+    "id": "Galaxy_first_reward",
+    "source": "Galaxy_first_reward.tfs",
+    "asset": "original/ui/movies/Galaxy_first_reward.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 9,
+    "texts": 5,
+    "missing": [
+      "NA_item_1.png",
+      "NA_item_2.png",
+      "NA_item_3.png",
+      "NA_item_4.png"
+    ]
+  },
+  {
+    "id": "Galaxy_Task_details",
+    "source": "Galaxy_Task_details.tfs",
+    "asset": "original/ui/movies/Galaxy_Task_details.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 6,
+    "missing": [
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "GalaxyChallenge",
+    "source": "GalaxyChallenge.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 379,
+    "texts": 66,
+    "missing": [
+      "NA_WAR_ITEM_0.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_5.png"
+    ]
+  },
+  {
+    "id": "GalaxyChallenge_history",
+    "source": "GalaxyChallenge_history.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_history.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 32,
+    "missing": []
+  },
+  {
+    "id": "GalaxyChallenge_info_center",
+    "source": "GalaxyChallenge_info_center.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_info_center.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 19,
+    "texts": 14,
+    "missing": []
+  },
+  {
+    "id": "GalaxyChallenge_info_center_WD",
+    "source": "GalaxyChallenge_info_center_WD.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_info_center_WD.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 22,
+    "texts": 20,
+    "missing": []
+  },
+  {
+    "id": "GalaxyChallenge_leader",
+    "source": "GalaxyChallenge_leader.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_leader.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 14,
+    "texts": 9,
+    "missing": []
+  },
+  {
+    "id": "GalaxyChallenge_rank",
+    "source": "GalaxyChallenge_rank.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_rank.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 373,
+    "texts": 64,
+    "missing": [
+      "NA_ITEM_1.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_13.png",
+      "NA_ITEM_14.png",
+      "NA_ITEM_15.png",
+      "NA_ITEM_16.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_9.png"
+    ]
+  },
+  {
+    "id": "GalaxyChallenge_reward",
+    "source": "GalaxyChallenge_reward.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_reward.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 2,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_11.png",
+      "NA_Item_12.png",
+      "NA_Item_13.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "GalaxyChallenge_WD",
+    "source": "GalaxyChallenge_WD.tfs",
+    "asset": "original/ui/movies/GalaxyChallenge_WD.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 428,
+    "texts": 119,
+    "missing": [
+      "NA_WAR_ITEM_0.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_5.png"
+    ]
+  },
+  {
+    "id": "GalaxyMapScene",
+    "source": "GalaxyMapScene.tfs",
+    "asset": "original/ui/movies/GalaxyMapScene.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 38,
+    "texts": 14,
+    "missing": []
+  },
+  {
+    "id": "GameTip",
+    "source": "GameTip.tfs",
+    "asset": "original/ui/movies/GameTip.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 5,
+    "texts": 1,
+    "missing": []
+  },
+  {
+    "id": "GatewayBox",
+    "source": "GatewayBox.tfs",
+    "asset": "original/ui/movies/GatewayBox.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 4,
+    "texts": 2,
+    "missing": []
+  },
+  {
+    "id": "GraceHouse",
+    "source": "GraceHouse.tfs",
+    "asset": "original/ui/movies/GraceHouse.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 21,
+    "texts": 17,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "Help",
+    "source": "Help.tfs",
+    "asset": "original/ui/movies/Help.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 11,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "Integral_Rank",
+    "source": "Integral_Rank.tfs",
+    "asset": "original/ui/movies/Integral_Rank.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 17,
+    "missing": []
+  },
+  {
+    "id": "Invite_Friends",
+    "source": "Invite_Friends.tfs",
+    "asset": "original/ui/movies/Invite_Friends.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "Invited_reward",
+    "source": "Invited_reward.tfs",
+    "asset": "original/ui/movies/Invited_reward.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 4,
+    "missing": []
+  },
+  {
+    "id": "Krypton_about",
+    "source": "Krypton_about.tfs",
+    "asset": "original/ui/movies/Krypton_about.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 7,
+    "texts": 4,
+    "missing": []
+  },
+  {
+    "id": "krypton_enhance",
+    "source": "krypton_enhance.tfs",
+    "asset": "original/ui/movies/krypton_enhance.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 152,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "krypton_fuse",
+    "source": "krypton_fuse.tfs",
+    "asset": "original/ui/movies/krypton_fuse.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 158,
+    "texts": 10,
+    "missing": []
+  },
+  {
+    "id": "krypton_popbox",
+    "source": "krypton_popbox.tfs",
+    "asset": "original/ui/movies/krypton_popbox.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 23,
+    "missing": []
+  },
+  {
+    "id": "KryptonCrstalCenter",
+    "source": "KryptonCrstalCenter.tfs",
+    "asset": "original/ui/movies/KryptonCrstalCenter.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 158,
+    "texts": 19,
+    "missing": []
+  },
+  {
+    "id": "Login",
+    "source": "Login.tfs",
+    "asset": "original/ui/movies/Login.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 24,
+    "texts": 33,
+    "missing": []
+  },
+  {
+    "id": "Lottery",
+    "source": "Lottery.tfs",
+    "asset": "original/ui/movies/Lottery.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 4,
+    "missing": []
+  },
+  {
+    "id": "Lottery_pop",
+    "source": "Lottery_pop.tfs",
+    "asset": "original/ui/movies/Lottery_pop.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "Mail",
+    "source": "Mail.tfs",
+    "asset": "original/ui/movies/Mail.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 66,
+    "texts": 206,
+    "missing": []
+  },
+  {
+    "id": "mail_position_info",
+    "source": "mail_position_info.tfs",
+    "asset": "original/ui/movies/mail_position_info.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 9,
+    "texts": 9,
+    "missing": []
+  },
+  {
+    "id": "Manufacturing",
+    "source": "Manufacturing.tfs",
+    "asset": "original/ui/movies/Manufacturing.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 375,
+    "texts": 20,
+    "missing": []
+  },
+  {
+    "id": "MessageDialog",
+    "source": "MessageDialog.tfs",
+    "asset": "original/ui/movies/MessageDialog.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 20,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "migrate_location",
+    "source": "migrate_location.tfs",
+    "asset": "original/ui/movies/migrate_location.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "Mission",
+    "source": "Mission.tfs",
+    "asset": "original/ui/movies/Mission.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 18,
+    "missing": []
+  },
+  {
+    "id": "MoonbuildingList",
+    "source": "MoonbuildingList.tfs",
+    "asset": "original/ui/movies/MoonbuildingList.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 41,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "MyGuest",
+    "source": "MyGuest.tfs",
+    "asset": "original/ui/movies/MyGuest.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 28,
+    "missing": []
+  },
+  {
+    "id": "Newbie_Task",
+    "source": "Newbie_Task.tfs",
+    "asset": "original/ui/movies/Newbie_Task.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 2,
+    "missing": []
+  },
+  {
+    "id": "News_Details",
+    "source": "News_Details.tfs",
+    "asset": "original/ui/movies/News_Details.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 0,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "NewsActivitiesfla",
+    "source": "NewsActivitiesfla.tfs",
+    "asset": "original/ui/movies/NewsActivitiesfla.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 14,
+    "texts": 7,
+    "missing": [
+      "NewActivity_IMG_0.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_6.png"
+    ]
+  },
+  {
+    "id": "Options",
+    "source": "Options.tfs",
+    "asset": "original/ui/movies/Options.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "package_detail",
+    "source": "package_detail.tfs",
+    "asset": "original/ui/movies/package_detail.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 12,
+    "texts": 6,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_11.png",
+      "NA_Item_12.png",
+      "NA_Item_13.png",
+      "NA_Item_14.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "package_gacha",
+    "source": "package_gacha.tfs",
+    "asset": "original/ui/movies/package_gacha.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 9,
+    "texts": 2,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "package_pop",
+    "source": "package_pop.tfs",
+    "asset": "original/ui/movies/package_pop.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 2,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_11.png",
+      "NA_Item_12.png",
+      "NA_Item_13.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "PlanetInformation_new",
+    "source": "PlanetInformation_new.tfs",
+    "asset": "original/ui/movies/PlanetInformation_new.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 25,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "Planets_new",
+    "source": "Planets_new.tfs",
+    "asset": "original/ui/movies/Planets_new.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 37,
+    "texts": 12,
+    "missing": []
+  },
+  {
+    "id": "PROG_PANEL",
+    "source": "PROG_PANEL.tfs",
+    "asset": "original/ui/movies/PROG_PANEL.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 8,
+    "texts": 2,
+    "missing": []
+  },
+  {
+    "id": "Radar",
+    "source": "Radar.tfs",
+    "asset": "original/ui/movies/Radar.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 19,
+    "texts": 23,
+    "missing": []
+  },
+  {
+    "id": "Rank",
+    "source": "Rank.tfs",
+    "asset": "original/ui/movies/Rank.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 15,
+    "texts": 34,
+    "missing": []
+  },
+  {
+    "id": "Register",
+    "source": "Register.tfs",
+    "asset": "original/ui/movies/Register.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 6,
+    "texts": 11,
+    "missing": []
+  },
+  {
+    "id": "Register_agreement",
+    "source": "Register_agreement.tfs",
+    "asset": "original/ui/movies/Register_agreement.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 11,
+    "texts": 4,
+    "missing": []
+  },
+  {
+    "id": "ResearchLad",
+    "source": "ResearchLad.tfs",
+    "asset": "original/ui/movies/ResearchLad.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 42,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "ResourceSettings",
+    "source": "ResourceSettings.tfs",
+    "asset": "original/ui/movies/ResourceSettings.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 11,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "ResourceSettings_new",
+    "source": "ResourceSettings_new.tfs",
+    "asset": "original/ui/movies/ResourceSettings_new.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 11,
+    "texts": 14,
+    "missing": []
+  },
+  {
+    "id": "scan_report",
+    "source": "scan_report.tfs",
+    "asset": "original/ui/movies/scan_report.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 24,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "Settings",
+    "source": "Settings.tfs",
+    "asset": "original/ui/movies/Settings.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 1,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "solar_sovereignty_des",
+    "source": "solar_sovereignty_des.tfs",
+    "asset": "original/ui/movies/solar_sovereignty_des.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 20,
+    "missing": []
+  },
+  {
+    "id": "SolarSystem_new",
+    "source": "SolarSystem_new.tfs",
+    "asset": "original/ui/movies/SolarSystem_new.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 249,
+    "texts": 96,
+    "missing": []
+  },
+  {
+    "id": "SpaceDepot",
+    "source": "SpaceDepot.tfs",
+    "asset": "original/ui/movies/SpaceDepot.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 20,
+    "texts": 15,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "SpeedUp",
+    "source": "SpeedUp.tfs",
+    "asset": "original/ui/movies/SpeedUp.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 16,
+    "texts": 11,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "StarFortress",
+    "source": "StarFortress.tfs",
+    "asset": "original/ui/movies/StarFortress.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 127,
+    "texts": 33,
+    "missing": []
+  },
+  {
+    "id": "StarFortress_details",
+    "source": "StarFortress_details.tfs",
+    "asset": "original/ui/movies/StarFortress_details.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 127,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "StarFortress_list",
+    "source": "StarFortress_list.tfs",
+    "asset": "original/ui/movies/StarFortress_list.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 265,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "StarFortress_morale",
+    "source": "StarFortress_morale.tfs",
+    "asset": "original/ui/movies/StarFortress_morale.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 21,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "StarFortress_shop",
+    "source": "StarFortress_shop.tfs",
+    "asset": "original/ui/movies/StarFortress_shop.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 5,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png"
+    ]
+  },
+  {
+    "id": "Task",
+    "source": "Task.tfs",
+    "asset": "original/ui/movies/Task.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 25,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "Task_list",
+    "source": "Task_list.tfs",
+    "asset": "original/ui/movies/Task_list.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 13,
+    "texts": 6,
+    "missing": []
+  },
+  {
+    "id": "TechTree",
+    "source": "TechTree.tfs",
+    "asset": "original/ui/movies/TechTree.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 389,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "TwoInterface",
+    "source": "TwoInterface.tfs",
+    "asset": "original/ui/movies/TwoInterface.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 29,
+    "texts": 7,
+    "missing": []
+  },
+  {
+    "id": "unAlliance",
+    "source": "unAlliance.tfs",
+    "asset": "original/ui/movies/unAlliance.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 15,
+    "texts": 9,
+    "missing": []
+  },
+  {
+    "id": "unAlliance_create",
+    "source": "unAlliance_create.tfs",
+    "asset": "original/ui/movies/unAlliance_create.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 9,
+    "texts": 5,
+    "missing": []
+  },
+  {
+    "id": "unAlliance_list",
+    "source": "unAlliance_list.tfs",
+    "asset": "original/ui/movies/unAlliance_list.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 17,
+    "texts": 18,
+    "missing": []
+  },
+  {
+    "id": "UniverseCampaign",
+    "source": "UniverseCampaign.tfs",
+    "asset": "original/ui/movies/UniverseCampaign.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 173,
+    "texts": 41,
+    "missing": [
+      "NA_Item_1.png",
+      "NA_Item_10.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "USE_PANEL",
+    "source": "USE_PANEL.tfs",
+    "asset": "original/ui/movies/USE_PANEL.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 18,
+    "texts": 12,
+    "missing": []
+  },
+  {
+    "id": "userAlliance",
+    "source": "userAlliance.tfs",
+    "asset": "original/ui/movies/userAlliance.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 52,
+    "texts": 63,
+    "missing": []
+  },
+  {
+    "id": "userAlliance_assist",
+    "source": "userAlliance_assist.tfs",
+    "asset": "original/ui/movies/userAlliance_assist.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 4,
+    "texts": 18,
+    "missing": []
+  },
+  {
+    "id": "userAlliance_assistCombat",
+    "source": "userAlliance_assistCombat.tfs",
+    "asset": "original/ui/movies/userAlliance_assistCombat.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 3,
+    "missing": []
+  },
+  {
+    "id": "userAlliance_contribute",
+    "source": "userAlliance_contribute.tfs",
+    "asset": "original/ui/movies/userAlliance_contribute.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 19,
+    "texts": 13,
+    "missing": []
+  },
+  {
+    "id": "userAlliance_member",
+    "source": "userAlliance_member.tfs",
+    "asset": "original/ui/movies/userAlliance_member.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 10,
+    "texts": 8,
+    "missing": []
+  },
+  {
+    "id": "userAlliance_reward",
+    "source": "userAlliance_reward.tfs",
+    "asset": "original/ui/movies/userAlliance_reward.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 9,
+    "texts": 2,
+    "missing": [
+      "NA_Item_0.png",
+      "NA_Item_1.png",
+      "NA_Item_2.png",
+      "NA_Item_3.png",
+      "NA_Item_4.png",
+      "NA_Item_5.png",
+      "NA_Item_6.png",
+      "NA_Item_7.png",
+      "NA_Item_8.png",
+      "NA_Item_9.png"
+    ]
+  },
+  {
+    "id": "userAlliance_tech",
+    "source": "userAlliance_tech.tfs",
+    "asset": "original/ui/movies/userAlliance_tech.json",
+    "size": [
+      640.0,
+      960.0
+    ],
+    "shapes": 46,
+    "texts": 10,
+    "missing": []
+  }
+]

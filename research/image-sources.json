@@ -1,0 +1,117 @@
+{
+  "researchedAt": "2026-09-24",
+  "target": "Tap4Fun / Galaxy Empire / 银河帝国",
+  "count": 11,
+  "images": [
+    {
+      "id": "early-base",
+      "title": "早期基地与资源栏",
+      "url": "https://img.captain-droid.com/wp-content/uploads/2013/07/galaxy-empire-2.jpg.webp",
+      "source": "https://captain-droid.com/en/games/arcade/galaxy-empire/",
+      "period": "2013 年资料页收录，不能据此确定截图精确版本",
+      "kind": "带宣传排版的游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "顶部双列资源框、军官头像、底部五菜单与用户截图高度一致。宣传中的夸张资源数值不作为数值设计依据。"
+    },
+    {
+      "id": "early-fleet",
+      "title": "早期舰队派遣",
+      "url": "https://img.captain-droid.com/wp-content/uploads/2013/07/galaxy-empire-3.jpg.webp",
+      "source": "https://captain-droid.com/en/games/arcade/galaxy-empire/",
+      "period": "早期",
+      "kind": "带宣传排版的游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "派遣/飞行中双页签；六种舰船卡片；银河、星系、星球三级坐标输入。"
+    },
+    {
+      "id": "early-galaxy",
+      "title": "早期星系与目标选择",
+      "url": "https://img.captain-droid.com/wp-content/uploads/2013/07/galaxy-empire-4.jpg.webp",
+      "source": "https://captain-droid.com/en/games/arcade/galaxy-empire/",
+      "period": "早期",
+      "kind": "带宣传排版的游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "星球选择框、目标详情、坐标、侦察和攻击入口。"
+    },
+    {
+      "id": "early-officers",
+      "title": "早期军官界面",
+      "url": "https://img.captain-droid.com/wp-content/uploads/2013/07/galaxy-empire-5.jpg.webp",
+      "source": "https://captain-droid.com/en/games/arcade/galaxy-empire/",
+      "period": "早期",
+      "kind": "带宣传排版的游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "军官头像列表、效果说明、购买按钮；适合参考弹窗样式。"
+    },
+    {
+      "id": "early-poster",
+      "title": "早期宣传海报",
+      "url": "https://img.captain-droid.com/wp-content/uploads/2013/07/galaxy-empire-6.jpg.webp",
+      "source": "https://captain-droid.com/en/games/arcade/galaxy-empire/",
+      "period": "早期",
+      "kind": "海报",
+      "verified": "浏览器已视觉核对",
+      "notes": "Logo、低饱和装甲舰船、行星背景；不是实际战斗画面。"
+    },
+    {
+      "id": "2014-loading",
+      "title": "2014 资料页：启动图",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire1.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "新版 Logo 与舰船宣传视觉。"
+    },
+    {
+      "id": "2014-events",
+      "title": "2014 资料页：活动列表",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire2.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "截图中显示 2014 年活动和服务器时间。"
+    },
+    {
+      "id": "2014-base-empty",
+      "title": "2014 资料页：基地与空建筑位",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire3.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "固定平台、中央星门、较薄的新版资源栏。"
+    },
+    {
+      "id": "2014-fortress",
+      "title": "2014 资料页：星门与太空要塞",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire4.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "星空节点、要塞选择、详情与进入按钮；不应误标为早期普通星系页。"
+    },
+    {
+      "id": "2014-fleet",
+      "title": "2014 资料页：新版舰队派遣",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire5.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "六类舰船立绘，派遣/飞行中页签及三级坐标。"
+    },
+    {
+      "id": "2014-base-built",
+      "title": "2014 资料页：已建成的基地",
+      "url": "https://jeuxvideomobile.com/wp-content/uploads/2014/09/Galaxy-Empire6-600x1065.png",
+      "source": "https://jeuxvideomobile.com/iphone/galaxy-empire-iphone.html",
+      "period": "2014 年资料页",
+      "kind": "游戏截图",
+      "verified": "浏览器已视觉核对",
+      "notes": "太阳能电站、机器人工厂、金属仓库、晶体仓库、联盟建筑、星门。"
+    }
+  ]
+}

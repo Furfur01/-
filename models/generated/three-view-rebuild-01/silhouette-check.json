@@ -1,0 +1,16 @@
+{
+  "method": "Pixel intersection / union, alpha > 127; equal orthographic scale and canonical alignment; includes added weapons.",
+  "limitation": "Silhouette overlap only, not overall 3D similarity or visual-quality acceptance.",
+  "scores": {
+    "Destroyer": {
+      "front": 0.8607,
+      "side": 0.9101,
+      "top": 0.9257
+    },
+    "Iron_Behemoth": {
+      "front": 0.854,
+      "side": 0.8994,
+      "top": 0.8892
+    }
+  }
+}

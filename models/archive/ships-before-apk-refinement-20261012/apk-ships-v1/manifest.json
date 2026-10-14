@@ -1,0 +1,212 @@
+[
+  {
+    "id": "Light_Fighter",
+    "name": "轻型战机",
+    "apkId": 1,
+    "file": "Light_Fighter.glb",
+    "preview": "Light_Fighter.png",
+    "bytes": 100268,
+    "meshCount": 39,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Heavy_Fighter",
+    "name": "重型战机",
+    "apkId": 2,
+    "file": "Heavy_Fighter.glb",
+    "preview": "Heavy_Fighter.png",
+    "bytes": 625020,
+    "meshCount": 1,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Cruiser",
+    "name": "巡洋舰",
+    "apkId": 3,
+    "file": "Cruiser.glb",
+    "preview": "Cruiser.png",
+    "bytes": 801380,
+    "meshCount": 1,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Battleship",
+    "name": "战列舰",
+    "apkId": 4,
+    "file": "Battleship.glb",
+    "preview": "Battleship.png",
+    "bytes": 615312,
+    "meshCount": 1,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Dreadnought",
+    "name": "无畏舰",
+    "apkId": 5,
+    "file": "Dreadnought.glb",
+    "preview": "Dreadnought.png",
+    "bytes": 1254964,
+    "meshCount": 1,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Bomber",
+    "name": "行星轰炸机 / 导弹舰",
+    "apkId": 6,
+    "file": "Bomber.glb",
+    "preview": "Bomber.png",
+    "bytes": 118860,
+    "meshCount": 43,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Destroyer",
+    "name": "驱逐舰",
+    "apkId": 7,
+    "file": "Destroyer.glb",
+    "preview": "Destroyer.png",
+    "bytes": 866536,
+    "meshCount": 1,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Death_Star",
+    "name": "死星",
+    "apkId": 8,
+    "file": "Death_Star.glb",
+    "preview": "Death_Star.png",
+    "bytes": 280820,
+    "meshCount": 16,
+    "modelSource": "Concept; no APK sprite"
+  },
+  {
+    "id": "Cargo_Ship",
+    "name": "轻型运输舰",
+    "apkId": 9,
+    "file": "Cargo_Ship.glb",
+    "preview": "Cargo_Ship.png",
+    "bytes": 112340,
+    "meshCount": 53,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Large_Cargo_Ship",
+    "name": "重型运输舰",
+    "apkId": 10,
+    "file": "Large_Cargo_Ship.glb",
+    "preview": "Large_Cargo_Ship.png",
+    "bytes": 123016,
+    "meshCount": 59,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Colony_Ship",
+    "name": "殖民舰 / 开拓船",
+    "apkId": 11,
+    "file": "Colony_Ship.glb",
+    "preview": "Colony_Ship.png",
+    "bytes": 76216,
+    "meshCount": 32,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Recycler",
+    "name": "回收舰",
+    "apkId": 12,
+    "file": "Recycler.glb",
+    "preview": "Recycler.png",
+    "bytes": 89812,
+    "meshCount": 38,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Probe",
+    "name": "间谍探测器",
+    "apkId": 13,
+    "file": "Probe.glb",
+    "preview": "Probe.png",
+    "bytes": 62520,
+    "meshCount": 18,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Solar_Satellite",
+    "name": "太阳能卫星",
+    "apkId": 14,
+    "file": "Solar_Satellite.glb",
+    "preview": "Solar_Satellite.png",
+    "bytes": 195588,
+    "meshCount": 96,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Interceptor",
+    "name": "裂变者",
+    "apkId": 23,
+    "file": "Interceptor.glb",
+    "preview": "Interceptor.png",
+    "bytes": 238260,
+    "meshCount": 82,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Iron_Behemoth",
+    "name": "深空吞噬者",
+    "apkId": 24,
+    "file": "Iron_Behemoth.glb",
+    "preview": "Iron_Behemoth.png",
+    "bytes": 105608,
+    "meshCount": 43,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "name": "噬能截击者",
+    "apkId": 25,
+    "file": "Devourer_Interceptor.glb",
+    "preview": "Devourer_Interceptor.png",
+    "bytes": 107764,
+    "meshCount": 50,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "name": "钛能守卫者",
+    "apkId": 26,
+    "file": "Titanenergetic_Frigate.glb",
+    "preview": "Titanenergetic_Frigate.png",
+    "bytes": 104908,
+    "meshCount": 39,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Annihilator",
+    "name": "湮灭之星",
+    "apkId": 28,
+    "file": "Annihilator.glb",
+    "preview": "Annihilator.png",
+    "bytes": 116008,
+    "meshCount": 41,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Reaper",
+    "name": "Reaper（收割者·暂译）",
+    "apkId": 29,
+    "file": "Reaper.glb",
+    "preview": "Reaper.png",
+    "bytes": 100232,
+    "meshCount": 39,
+    "modelSource": "APK sprite reconstruction; hidden surfaces interpreted"
+  },
+  {
+    "id": "Guardian",
+    "name": "守护者（旧版）",
+    "apkId": null,
+    "file": "Guardian.glb",
+    "preview": "Guardian.png",
+    "bytes": 109304,
+    "meshCount": 26,
+    "modelSource": "Concept; no APK identity"
+  }
+]

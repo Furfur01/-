@@ -1,0 +1,42 @@
+{
+  "Bomber": {
+    "front": 0.6811,
+    "side": 0.8552,
+    "top": 0.7733
+  },
+  "Cargo_Ship": {
+    "front": 0.7605,
+    "side": 0.8086,
+    "top": 0.8365
+  },
+  "Large_Cargo_Ship": {
+    "front": 0.5728,
+    "side": 0.7041,
+    "top": 0.6064
+  },
+  "Colony_Ship": {
+    "front": 0.6692,
+    "side": 0.8415,
+    "top": 0.8724
+  },
+  "Recycler": {
+    "front": 0.668,
+    "side": 0.7305,
+    "top": 0.832
+  },
+  "Interceptor": {
+    "front": 0.74,
+    "side": 0.6237,
+    "top": 0.8092
+  },
+  "Devourer_Interceptor": {
+    "front": 0.7196,
+    "side": 0.669,
+    "top": 0.763
+  },
+  "Titanenergetic_Frigate": {
+    "front": 0.5992,
+    "side": 0.758,
+    "top": 0.6458
+  }
+}

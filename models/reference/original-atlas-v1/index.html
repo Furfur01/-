@@ -1,0 +1,161 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>银河帝国 · 原始图标名称核对</title><style>
+*{box-sizing:border-box}body{margin:0;background:#101a27;color:#eef4fc;font:16px/1.6 "Microsoft YaHei",sans-serif}main{max-width:1480px;margin:auto;padding:30px}h1{margin:0}p{color:#aec1d6}a{color:#77d5ef}nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}button{cursor:pointer;background:#23384d;color:white;border:1px solid #52728c;padding:8px 18px;border-radius:5px}button.active{background:#145573;border-color:#65d5ef}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.card{display:flex;flex-direction:column;padding:16px;background:#1b2b40;border:1px solid #30485e;border-radius:8px}.card img{width:100%;height:188px;object-fit:contain}.card strong{font-size:21px}.card p{margin:2px 0}code,small{font-size:12px;color:#7fadc8}.selected{outline:3px solid #6bdcf4}.atlas{position:relative;max-width:1024px;margin:24px auto;background:#070e18}.atlas img{display:block;width:100%}.tag{position:absolute;padding:1px 5px;font:700 12px monospace;background:#0b263bdc;color:#bdf4ff;border:1px solid #71cee4}.note{padding:16px 20px;background:#1b2b40;border-left:3px solid #74c8df}details{margin:24px 0}summary{cursor:pointer;font-size:20px}</style>
+<main><h1>原始图标 ↔ 舰种名称</h1><p>直接读取 APK 解包数据：UI 图标帧 → 内部编号 → 舰种常量 → 中英文文案。保留原始像素，不用新绘制图代替。</p>
+<div class="note">你的图集中有 <b>17 个飞船／卫星、9 个防御设施、3 个科技图标</b>。另找到 2 艘独立图集飞船，共 19 个已提取舰船图标。<br>战列舰是 <b>type_4</b>；无畏舰是 <b>type_5</b>；殖民舰是 <b>type_11</b>。<br>type_8 的死星常量存在，但本次 UI 图标表没有对应图标。Reaper 的中文名称标为暂译。</div>
+<p><a href="name-map.csv">下载 CSV</a>　<a href="name-map.json">来源与编号 JSON</a>　<a href="fleet-names.png">舰船对照图</a>　<a href="defense-names.png">防御对照图</a></p>
+<details><summary>查看原图编号定位（点击编号定位到条目）</summary><div class="atlas"><img src="ships-and-defense-atlas.png" alt="用户提供的原始图集"><button class="tag" style="left:88.0859375%;top:88.18359375%" title="超空间科技" data-id="4" data-kind="technology">T04</button>
+<button class="tag" style="left:88.0859375%;top:76.3671875%" title="脉冲引擎" data-id="7" data-kind="technology">T07</button>
+<button class="tag" style="left:76.3671875%;top:88.18359375%" title="计算机科技" data-id="10" data-kind="technology">T10</button>
+<button class="tag" style="left:55.56640625%;top:28.90625%" title="轻型战机" data-id="1" data-kind="fleet">01</button>
+<button class="tag" style="left:49.4140625%;top:42.1875%" title="重型战机" data-id="2" data-kind="fleet">02</button>
+<button class="tag" style="left:0.1953125%;top:40.4296875%" title="巡洋舰" data-id="3" data-kind="fleet">03</button>
+<button class="tag" style="left:0.1953125%;top:64.94140625%" title="战列舰" data-id="4" data-kind="fleet">04</button>
+<button class="tag" style="left:0.1953125%;top:78.515625%" title="无畏舰" data-id="5" data-kind="fleet">05</button>
+<button class="tag" style="left:72.36328125%;top:46.2890625%" title="行星轰炸机 / 导弹舰" data-id="6" data-kind="fleet">06</button>
+<button class="tag" style="left:30.2734375%;top:18.359375%" title="驱逐舰" data-id="7" data-kind="fleet">07</button>
+<button class="tag" style="left:24.90234375%;top:31.640625%" title="轻型运输舰" data-id="9" data-kind="fleet">09</button>
+<button class="tag" style="left:56.15234375%;top:15.72265625%" title="重型运输舰" data-id="10" data-kind="fleet">10</button>
+<button class="tag" style="left:0.1953125%;top:23.6328125%" title="殖民舰 / 开拓船" data-id="11" data-kind="fleet">11</button>
+<button class="tag" style="left:56.15234375%;top:0.1953125%" title="回收舰" data-id="12" data-kind="fleet">12</button>
+<button class="tag" style="left:81.54296875%;top:26.3671875%" title="间谍探测器" data-id="13" data-kind="fleet">13</button>
+<button class="tag" style="left:67.7734375%;top:61.5234375%" title="太阳能卫星" data-id="14" data-kind="fleet">14</button>
+<button class="tag" style="left:81.73828125%;top:0.1953125%" title="导弹发射装置" data-id="15" data-kind="defense">15</button>
+<button class="tag" style="left:46.77734375%;top:84.375%" title="轻型激光炮" data-id="16" data-kind="defense">16</button>
+<button class="tag" style="left:81.73828125%;top:15.0390625%" title="重型激光炮" data-id="17" data-kind="defense">17</button>
+<button class="tag" style="left:33.88671875%;top:77.63671875%" title="MK2炮 / 磁轨炮" data-id="18" data-kind="defense">18</button>
+<button class="tag" style="left:20.01953125%;top:78.515625%" title="中子炮" data-id="19" data-kind="defense">19</button>
+<button class="tag" style="left:46.77734375%;top:70.3125%" title="等离子炮" data-id="20" data-kind="defense">20</button>
+<button class="tag" style="left:0.1953125%;top:52.05078125%" title="小型防护盾" data-id="21" data-kind="defense">21</button>
+<button class="tag" style="left:23.6328125%;top:48.2421875%" title="大型防护盾" data-id="22" data-kind="defense">22</button>
+<button class="tag" style="left:46.09375%;top:54.6875%" title="裂变者" data-id="23" data-kind="fleet">23</button>
+<button class="tag" style="left:22.55859375%;top:61.328125%" title="深空吞噬者" data-id="24" data-kind="fleet">24</button>
+<button class="tag" style="left:30.2734375%;top:0.1953125%" title="噬能截击者" data-id="25" data-kind="fleet">25</button>
+<button class="tag" style="left:0.1953125%;top:0.1953125%" title="钛能守卫者" data-id="26" data-kind="fleet">26</button>
+<button class="tag" style="left:61.5234375%;top:88.18359375%" title="质子炮" data-id="27" data-kind="defense">27</button></div></details>
+<nav><button class="active" data-filter="fleet">舰船 19</button><button data-filter="defense">防御 9</button><button data-filter="technology">原图内科技 3</button><button data-filter="all">全部</button></nav><section class="grid"><article class="card" data-kind="fleet" data-id="1">
+      <img src="icons/fleet_01_Light_Fighter.png" alt="轻型战机">
+      <strong>01 · 轻型战机</strong><p>Light Fighter</p>
+      <code>FT_LIGHT_FIGHTER</code><small>ShipCityTech_1.png · type_1</small></article>
+<article class="card" data-kind="fleet" data-id="2">
+      <img src="icons/fleet_02_Heavy_Fighter.png" alt="重型战机">
+      <strong>02 · 重型战机</strong><p>Heavy Fighter</p>
+      <code>FT_HEAVY_FIGHTER</code><small>ShipCityTech_1.png · type_2</small></article>
+<article class="card" data-kind="fleet" data-id="3">
+      <img src="icons/fleet_03_Cruiser.png" alt="巡洋舰">
+      <strong>03 · 巡洋舰</strong><p>Cruiser</p>
+      <code>FT_CRUISER</code><small>ShipCityTech_1.png · type_3</small></article>
+<article class="card" data-kind="fleet" data-id="4">
+      <img src="icons/fleet_04_Battleship.png" alt="战列舰">
+      <strong>04 · 战列舰</strong><p>Battleship</p>
+      <code>FT_BATTLESHIP</code><small>ShipCityTech_1.png · type_4</small></article>
+<article class="card" data-kind="fleet" data-id="5">
+      <img src="icons/fleet_05_Dreadnought.png" alt="无畏舰">
+      <strong>05 · 无畏舰</strong><p>Dreadnought / Battlecruiser</p>
+      <code>FT_BATTLEECRUISER</code><small>ShipCityTech_1.png · type_5</small></article>
+<article class="card" data-kind="fleet" data-id="6">
+      <img src="icons/fleet_06_Bomber.png" alt="行星轰炸机 / 导弹舰">
+      <strong>06 · 行星轰炸机 / 导弹舰</strong><p>Bomber</p>
+      <code>FT_BOMBER</code><small>ShipCityTech_1.png · type_6</small></article>
+<article class="card" data-kind="fleet" data-id="7">
+      <img src="icons/fleet_07_Destroyer.png" alt="驱逐舰">
+      <strong>07 · 驱逐舰</strong><p>Destroyer</p>
+      <code>FT_DESTROYER</code><small>ShipCityTech_1.png · type_7</small></article>
+<article class="card" data-kind="fleet" data-id="9">
+      <img src="icons/fleet_09_Cargo_Ship.png" alt="轻型运输舰">
+      <strong>09 · 轻型运输舰</strong><p>Small Cargo</p>
+      <code>FT_SMALL_CARGO</code><small>ShipCityTech_1.png · type_9</small></article>
+<article class="card" data-kind="fleet" data-id="10">
+      <img src="icons/fleet_10_Large_Cargo_Ship.png" alt="重型运输舰">
+      <strong>10 · 重型运输舰</strong><p>Large Cargo</p>
+      <code>FT_LARGE_CARGO</code><small>ShipCityTech_1.png · type_10</small></article>
+<article class="card" data-kind="fleet" data-id="11">
+      <img src="icons/fleet_11_Colony_Ship.png" alt="殖民舰 / 开拓船">
+      <strong>11 · 殖民舰 / 开拓船</strong><p>Colony Ship</p>
+      <code>FT_COLONY_SHIP</code><small>ShipCityTech_1.png · type_11</small></article>
+<article class="card" data-kind="fleet" data-id="12">
+      <img src="icons/fleet_12_Recycler.png" alt="回收舰">
+      <strong>12 · 回收舰</strong><p>Recycler</p>
+      <code>FT_RECYCLER</code><small>ShipCityTech_1.png · type_12</small></article>
+<article class="card" data-kind="fleet" data-id="13">
+      <img src="icons/fleet_13_Probe.png" alt="间谍探测器">
+      <strong>13 · 间谍探测器</strong><p>Espionage Probe</p>
+      <code>FT_ESPIONAGE_PROBE</code><small>ShipCityTech_1.png · type_13</small></article>
+<article class="card" data-kind="fleet" data-id="14">
+      <img src="icons/fleet_14_Solar_Satellite.png" alt="太阳能卫星">
+      <strong>14 · 太阳能卫星</strong><p>Solar Satellite</p>
+      <code>FT_SOLAR_SATELLITE</code><small>ShipCityTech_1.png · type_14</small></article>
+<article class="card" data-kind="fleet" data-id="23">
+      <img src="icons/fleet_23_Interceptor.png" alt="裂变者">
+      <strong>23 · 裂变者</strong><p>Interceptor</p>
+      <code>FT_INTERCEPTOR</code><small>ShipCityTech_1.png · type_23</small></article>
+<article class="card" data-kind="fleet" data-id="24">
+      <img src="icons/fleet_24_Iron_Behemoth.png" alt="深空吞噬者">
+      <strong>24 · 深空吞噬者</strong><p>Iron Behemoth</p>
+      <code>FT_BEHEMOTH</code><small>ShipCityTech_1.png · type_24</small></article>
+<article class="card" data-kind="fleet" data-id="25">
+      <img src="icons/fleet_25_Devourer_Interceptor.png" alt="噬能截击者">
+      <strong>25 · 噬能截击者</strong><p>Devourer Interceptor</p>
+      <code>FT_FLEETTYPE_25</code><small>ShipCityTech_1.png · type_25</small></article>
+<article class="card" data-kind="fleet" data-id="26">
+      <img src="icons/fleet_26_Titanenergetic_Frigate.png" alt="钛能守卫者">
+      <strong>26 · 钛能守卫者</strong><p>Titanenergetic Frigate</p>
+      <code>FT_FLEETTYPE_26</code><small>ShipCityTech_1.png · type_26</small></article>
+<article class="card" data-kind="fleet" data-id="28">
+      <img src="icons/fleet_28_Annihilator.png" alt="湮灭之星">
+      <strong>28 · 湮灭之星</strong><p>Annihilator</p>
+      <code>FT_BOMB</code><small>ship_destruction_star.png · type_28</small></article>
+<article class="card" data-kind="fleet" data-id="29">
+      <img src="icons/fleet_29_Reaper.png" alt="Reaper（收割者·暂译）">
+      <strong>29 · Reaper（收割者·暂译）</strong><p>Reaper</p>
+      <code>FT_REAPER</code><small>ship_Overlord.png · type_29</small></article>
+<article class="card" data-kind="defense" data-id="15">
+      <img src="icons/defense_15_Rocket_Launcher.png" alt="导弹发射装置">
+      <strong>15 · 导弹发射装置</strong><p>Rocket Launcher</p>
+      <code>FT_ROCKET_LAUNCHER</code><small>ShipCityTech_1.png · type_15</small></article>
+<article class="card" data-kind="defense" data-id="16">
+      <img src="icons/defense_16_Light_Laser.png" alt="轻型激光炮">
+      <strong>16 · 轻型激光炮</strong><p>Light Laser</p>
+      <code>FT_LIGHT_LASER</code><small>ShipCityTech_1.png · type_16</small></article>
+<article class="card" data-kind="defense" data-id="17">
+      <img src="icons/defense_17_Heavy_Laser.png" alt="重型激光炮">
+      <strong>17 · 重型激光炮</strong><p>Heavy Laser</p>
+      <code>FT_HEAVY_LASER</code><small>ShipCityTech_1.png · type_17</small></article>
+<article class="card" data-kind="defense" data-id="18">
+      <img src="icons/defense_18_MK2_Cannon.png" alt="MK2炮 / 磁轨炮">
+      <strong>18 · MK2炮 / 磁轨炮</strong><p>MK2 Cannon</p>
+      <code>FT_MK2</code><small>ShipCityTech_1.png · type_18</small></article>
+<article class="card" data-kind="defense" data-id="19">
+      <img src="icons/defense_19_Ion_Cannon.png" alt="中子炮">
+      <strong>19 · 中子炮</strong><p>Ion Cannon</p>
+      <code>FT_ION_CANON</code><small>ShipCityTech_1.png · type_19</small></article>
+<article class="card" data-kind="defense" data-id="20">
+      <img src="icons/defense_20_Plasma_Cannon.png" alt="等离子炮">
+      <strong>20 · 等离子炮</strong><p>Plasma Cannon</p>
+      <code>FT_PLASMA_CANON</code><small>ShipCityTech_1.png · type_20</small></article>
+<article class="card" data-kind="defense" data-id="21">
+      <img src="icons/defense_21_Small_Shield_Dome.png" alt="小型防护盾">
+      <strong>21 · 小型防护盾</strong><p>Small Shield Dome</p>
+      <code>FT_SMALL_SHIELD_DOME</code><small>ShipCityTech_1.png · type_21</small></article>
+<article class="card" data-kind="defense" data-id="22">
+      <img src="icons/defense_22_Large_Shield_Dome.png" alt="大型防护盾">
+      <strong>22 · 大型防护盾</strong><p>Large Shield Dome</p>
+      <code>FT_BIG_SHIELD_DOME</code><small>ShipCityTech_1.png · type_22</small></article>
+<article class="card" data-kind="defense" data-id="27">
+      <img src="icons/defense_27_Proton_Cannon.png" alt="质子炮">
+      <strong>27 · 质子炮</strong><p>Proton Cannon</p>
+      <code>FT_PROTON</code><small>ShipCityTech_1.png · type_27</small></article>
+<article class="card" data-kind="technology" data-id="4">
+      <img src="icons/technology_04_Hyperspace_Tech.png" alt="超空间科技">
+      <strong>04 · 超空间科技</strong><p>Hyperspace Tech</p>
+      <code>RT_HYPERSPACE_TECH</code><small>ShipCityTech_1.png · type_4</small></article>
+<article class="card" data-kind="technology" data-id="7">
+      <img src="icons/technology_07_Impulse_Drive.png" alt="脉冲引擎">
+      <strong>07 · 脉冲引擎</strong><p>Impulse Drive</p>
+      <code>RT_IMPULSE_DRIVE</code><small>ShipCityTech_1.png · type_7</small></article>
+<article class="card" data-kind="technology" data-id="10">
+      <img src="icons/technology_10_Computer_Tech.png" alt="计算机科技">
+      <strong>10 · 计算机科技</strong><p>Computer Tech</p>
+      <code>RT_COMPUTER_TECH</code><small>ShipCityTech_1.png · type_10</small></article></section>
+<p>说明：中文标签部分采用项目习惯称呼，具体绑定依据为 APK 内部常量；特殊舰的中文名称来自本地文案。原代码 FT_BATTLEECRUISER 的拼写原样保留。当前核对页不会改动游戏素材。</p></main>
+<script>function filter(kind){document.querySelectorAll('.card').forEach(c=>c.hidden=kind!=='all'&&c.dataset.kind!==kind);document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===kind))}document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>filter(b.dataset.filter));document.querySelectorAll('.tag').forEach(b=>b.onclick=()=>{filter(b.dataset.kind);document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));const c=document.querySelector(`.card[data-kind="${b.dataset.kind}"][data-id="${b.dataset.id}"]`);c.classList.add('selected');c.scrollIntoView({behavior:'smooth',block:'center'})});filter('fleet');</script><style>[hidden]{display:none!important}</style></html>

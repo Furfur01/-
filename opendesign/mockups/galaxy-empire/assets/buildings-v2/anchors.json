@@ -1,0 +1,82 @@
+{
+  "Metal_Mine": [
+    0.5,
+    0.67
+  ],
+  "Crystal_Mine": [
+    0.5,
+    0.68
+  ],
+  "Gas_Mine": [
+    0.5,
+    0.73
+  ],
+  "Solar_Plant": [
+    0.5,
+    0.71
+  ],
+  "Metal_Storage": [
+    0.5,
+    0.66
+  ],
+  "Crystal_Storage": [
+    0.5,
+    0.68
+  ],
+  "Gas_Storage": [
+    0.5,
+    0.665
+  ],
+  "Robotics_Facility": [
+    0.5,
+    0.66
+  ],
+  "Shipyard": [
+    0.5,
+    0.66
+  ],
+  "Research_Lab": [
+    0.5,
+    0.65
+  ],
+  "Radar_Facility": [
+    0.5,
+    0.74
+  ],
+  "Fusion_Reactor": [
+    0.5,
+    0.66
+  ],
+  "Nanite_Factory": [
+    0.5,
+    0.71
+  ],
+  "Alliance_Depot": [
+    0.5,
+    0.62
+  ],
+  "Moon_Base": [
+    0.5,
+    0.64
+  ],
+  "Wormhole_Generator": [
+    0.5,
+    0.675
+  ],
+  "Command_Center": [
+    0.5,
+    0.74
+  ],
+  "The_EU_X_Radar": [
+    0.5,
+    0.705
+  ],
+  "Terraformer": [
+    0.51,
+    0.695
+  ],
+  "Missile_Silo": [
+    0.5,
+    0.64
+  ]
+}

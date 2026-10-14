@@ -1,0 +1,98 @@
+[
+  {
+    "id": "Light_Fighter",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_0171864a-62eb-4347-a67e-950d3a084d0d.glb",
+    "file": "Light_Fighter.glb",
+    "sha256": "829cfb89d1a4465dc179fc81deeff9baf1197d31e2c1ea5da56590b63e81a58b",
+    "rotationZ": 0,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Cruiser",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_54725959-3bdd-4984-bd37-1a25b32b5dd6.glb",
+    "file": "Cruiser.glb",
+    "sha256": "cc77566a1f88eb578c792247b589e4d4beb7bd8c01c7d9b006c198619abdfea2",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Battleship",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_cf8e911b-14ca-485a-b95e-3cd9488380c4.glb",
+    "file": "Battleship.glb",
+    "sha256": "abb0e7f7bfb21fa56baa68a3345df53bd06b6b4d291efe0549e84fe391207085",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Bomber",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_35574407-e8ed-42d1-85f2-2550229c9fe3.glb",
+    "file": "Bomber.glb",
+    "sha256": "98fc3138c7e0621ec2a8fe142cca0d032fdf559f925eec11fe301a27b9ff9571",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Cargo_Ship",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_46d4d30e-30e6-4bb4-9ad1-ab2cba63379b.glb",
+    "file": "Cargo_Ship.glb",
+    "sha256": "7ec9817871e03f06fc011bd3879372f2fd56a677735b081bada19f785d875077",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Large_Cargo_Ship",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_21828dc7-3842-4c30-be13-03f0b097ea36.glb",
+    "file": "Large_Cargo_Ship.glb",
+    "sha256": "e5d35a3099df12e10d38b7630feff3b38b1b481be5e17c24e22da486ab0e97ee",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Colony_Ship",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_0212f724-e7f8-44e7-bf55-2ab4d123484a.glb",
+    "file": "Colony_Ship.glb",
+    "sha256": "252569b1e7d99b235c36d7b2e2ccb73af55237f88edc6f3a636dee569ee363b6",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Recycler",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_ff2fe5b7-1979-496e-9242-5a119d6467ec.glb",
+    "file": "Recycler.glb",
+    "sha256": "da3be16c12f68a0727302c074b68cb6d3bbc11cec412f3cb8116475242272cbd",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Death_Star",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_122d43a7-83b4-488d-b932-400787292963.glb",
+    "file": "Death_Star.glb",
+    "sha256": "6979a9a4ca0a24731aadb7af22e473d84ee42a2beea0fbdd00f3eade3a99bb07",
+    "rotationZ": 0,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Interceptor",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_8c0de3e6-ba90-455a-a2a1-65d33e6acc1e.glb",
+    "file": "Interceptor.glb",
+    "sha256": "ad663e66746d79ada15f0c2c1a6939e843fd4559e62c054bff19cb0f0744e6c5",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_72a781e7-c02b-4b38-906a-a61b00f5b33d.glb",
+    "file": "Devourer_Interceptor.glb",
+    "sha256": "5d23affa39036dd3bd8d3d95e22dee70b74b1e4d2eed0f6bdf877bebef52f01e",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "source": "C:\\Users\\Administrator\\Downloads\\tripo_pbr_model_a5991b91-f3a4-46bd-8a64-33f3c9dc3b93.glb",
+    "file": "Titanenergetic_Frigate.glb",
+    "sha256": "8fe9922ff4224c8eefb6be4a590018115987e55ba61c35b905837c22e859db65",
+    "rotationZ": -90,
+    "basis": "Visual match to APK sprite; Death_Star is concept reference."
+  }
+]

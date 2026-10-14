@@ -1,0 +1,20 @@
+{
+  "triangles": 25832,
+  "meshes": 45,
+  "bounds": [
+    4.952430248260498,
+    3.509999990463257,
+    15.013239860534668
+  ],
+  "revision": "battleship-sculpted-02",
+  "assemblies": [
+    "01_Continuous_keel_and_recessed_waist",
+    "02_Three_sculpted_bow_shells",
+    "03_Interlocking_shoulders_and_flanks",
+    "04_Stepped_command_spine",
+    "05_Recessed_weapons",
+    "06_Faceted_engine_cowlings"
+  ],
+  "glbRoundTrip": true,
+  "silhouetteVerified": false
+}

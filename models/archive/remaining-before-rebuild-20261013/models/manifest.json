@@ -1,0 +1,530 @@
+[
+  {
+    "id": "Cruiser",
+    "name": "巡洋舰",
+    "apkId": 3,
+    "file": "Cruiser.glb",
+    "preview": "Cruiser.png",
+    "triangles": 33548,
+    "meshes": 57,
+    "bounds": [
+      9.275286674499512,
+      4.210000097751617,
+      17.350000381469727
+    ],
+    "bytes": 2453956,
+    "revision": "concept-sample-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Battleship",
+    "name": "战列舰",
+    "apkId": 4,
+    "file": "Battleship.glb",
+    "preview": "Battleship.png",
+    "triangles": 16012,
+    "meshes": 47,
+    "bounds": [
+      4.952430248260498,
+      3.509999990463257,
+      15.013239860534668
+    ],
+    "bytes": 1185800,
+    "revision": "battleship-sculpted-03",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Light_Fighter",
+    "name": "轻型战机",
+    "apkId": 1,
+    "file": "Light_Fighter.glb",
+    "preview": "Light_Fighter.png",
+    "triangles": 11480,
+    "meshes": 26,
+    "bounds": [
+      6.538928031921387,
+      2.642199397087097,
+      10.768879890441895
+    ],
+    "bytes": 845760,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Bomber",
+    "name": "行星轰炸机 / 导弹舰",
+    "apkId": 6,
+    "file": "Bomber.glb",
+    "preview": "Bomber.png",
+    "triangles": 29272,
+    "meshes": 21,
+    "bounds": [
+      8.323604583740234,
+      3.1490666270256042,
+      14.720000267028809
+    ],
+    "bytes": 2123656,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Cargo_Ship",
+    "name": "轻型运输舰",
+    "apkId": 9,
+    "file": "Cargo_Ship.glb",
+    "preview": "Cargo_Ship.png",
+    "triangles": 25180,
+    "meshes": 27,
+    "bounds": [
+      6.829233169555664,
+      3.4578067660331726,
+      10.450000286102295
+    ],
+    "bytes": 1832384,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Large_Cargo_Ship",
+    "name": "重型运输舰",
+    "apkId": 10,
+    "file": "Large_Cargo_Ship.glb",
+    "preview": "Large_Cargo_Ship.png",
+    "triangles": 26724,
+    "meshes": 27,
+    "bounds": [
+      8.280430793762207,
+      3.7141000032424927,
+      12.900000095367432
+    ],
+    "bytes": 1943512,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Colony_Ship",
+    "name": "殖民舰 / 开拓船",
+    "apkId": 11,
+    "file": "Colony_Ship.glb",
+    "preview": "Colony_Ship.png",
+    "triangles": 25636,
+    "meshes": 23,
+    "bounds": [
+      7.6047234535217285,
+      3.0436490178108215,
+      12.6080002784729
+    ],
+    "bytes": 1862972,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Recycler",
+    "name": "回收舰",
+    "apkId": 12,
+    "file": "Recycler.glb",
+    "preview": "Recycler.png",
+    "triangles": 19872,
+    "meshes": 22,
+    "bounds": [
+      6.525886535644531,
+      4.400571405887604,
+      12.687599658966064
+    ],
+    "bytes": 1447116,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Probe",
+    "name": "间谍探测器",
+    "apkId": 13,
+    "file": "Probe.glb",
+    "preview": "Probe.png",
+    "triangles": 15064,
+    "meshes": 29,
+    "bounds": [
+      4.216036677360535,
+      4.685224771499634,
+      9.28499984741211
+    ],
+    "bytes": 1106624,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "radialBranches": {
+      "count": 3,
+      "spacingDegrees": 120,
+      "axis": "Z"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Solar_Satellite",
+    "name": "太阳能卫星",
+    "apkId": 14,
+    "file": "Solar_Satellite.glb",
+    "preview": "Solar_Satellite.png",
+    "triangles": 22624,
+    "meshes": 15,
+    "bounds": [
+      8.70199966430664,
+      3.924799919128418,
+      1.2680000066757202
+    ],
+    "bytes": 1640484,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Death_Star",
+    "name": "死星",
+    "apkId": 8,
+    "file": "Death_Star.glb",
+    "preview": "Death_Star.png",
+    "triangles": 32056,
+    "meshes": 14,
+    "bounds": [
+      6.923999786376953,
+      7.409999847412109,
+      6.923999786376953
+    ],
+    "bytes": 2319976,
+    "revision": "fleet-refinement-01",
+    "status": "refined-legacy-concept",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Interceptor",
+    "name": "裂变者",
+    "apkId": 23,
+    "file": "Interceptor.glb",
+    "preview": "Interceptor.png",
+    "triangles": 36240,
+    "meshes": 43,
+    "bounds": [
+      3.490000009536743,
+      4.574039936065674,
+      15.21999979019165
+    ],
+    "bytes": 2641640,
+    "revision": "fleet-sculpted-02",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "核子炮舰",
+      "scale": 1,
+      "primary": "核子大炮",
+      "kind": "nuclear",
+      "muzzles": [
+        [
+          0,
+          -0.14,
+          -6.1
+        ]
+      ],
+      "caliber": 0.43,
+      "pointDefense": [
+        [
+          -1.12,
+          1.905,
+          -2.1
+        ],
+        [
+          1.12,
+          1.905,
+          -2.1
+        ],
+        [
+          -1.12,
+          2.127,
+          0.8
+        ],
+        [
+          1.12,
+          2.127,
+          0.8
+        ],
+        [
+          -1.12,
+          2.118,
+          3.3
+        ],
+        [
+          1.12,
+          2.118,
+          3.3
+        ],
+        [
+          -0.6,
+          -1.516,
+          -4.2
+        ],
+        [
+          0.6,
+          -1.516,
+          -4.2
+        ],
+        [
+          -0.6,
+          -1.386,
+          -1.7
+        ],
+        [
+          0.6,
+          -1.386,
+          -1.7
+        ],
+        [
+          -0.6,
+          -1.386,
+          0.8
+        ],
+        [
+          0.6,
+          -1.386,
+          0.8
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "核子大炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "name": "噬能截击者",
+    "apkId": 25,
+    "file": "Devourer_Interceptor.glb",
+    "preview": "Devourer_Interceptor.png",
+    "triangles": 26708,
+    "meshes": 30,
+    "bounds": [
+      9.254718780517578,
+      3.540399968624115,
+      15.64341115951538
+    ],
+    "bytes": 1947036,
+    "revision": "fleet-sculpted-02",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "双主炮截击舰",
+      "scale": 1,
+      "primary": "双重型主炮",
+      "kind": "heavy",
+      "muzzles": [
+        [
+          -1.99,
+          -0.03,
+          -8.73
+        ],
+        [
+          1.99,
+          -0.03,
+          -8.73
+        ]
+      ],
+      "caliber": 0.43,
+      "pointDefense": [
+        [
+          -1.97,
+          0.924,
+          -5.23
+        ],
+        [
+          1.97,
+          0.924,
+          -5.23
+        ],
+        [
+          -1.97,
+          1.084,
+          -1.91
+        ],
+        [
+          1.97,
+          1.084,
+          -1.91
+        ],
+        [
+          -2.35,
+          1.525,
+          4.4
+        ],
+        [
+          2.35,
+          1.525,
+          4.4
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "双重型主炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "name": "钛能守卫者",
+    "apkId": 26,
+    "file": "Titanenergetic_Frigate.glb",
+    "preview": "Titanenergetic_Frigate.png",
+    "triangles": 25936,
+    "meshes": 39,
+    "bounds": [
+      2.8840000152587892,
+      2.176000022888184,
+      5.241279983520508
+    ],
+    "bytes": 1897268,
+    "revision": "fleet-sculpted-02",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "小型高级战机",
+      "scale": 0.4,
+      "primary": "中央主炮",
+      "kind": "advanced",
+      "muzzles": [
+        [
+          0,
+          0.27,
+          -6.7
+        ]
+      ],
+      "caliber": 0.21,
+      "pointDefense": [
+        [
+          -2.74,
+          0.859,
+          0.33
+        ],
+        [
+          2.74,
+          0.859,
+          0.33
+        ],
+        [
+          -2.74,
+          1.031,
+          2.4
+        ],
+        [
+          2.74,
+          1.031,
+          2.4
+        ]
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Annihilator",
+    "name": "湮灭之星",
+    "apkId": 28,
+    "file": "Annihilator.glb",
+    "preview": "Annihilator.png",
+    "triangles": 26200,
+    "meshes": 24,
+    "bounds": [
+      7.296987533569336,
+      3.1609585881233215,
+      14.720000267028809
+    ],
+    "bytes": 1904120,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Reaper",
+    "name": "Reaper（收割者·暂译）",
+    "apkId": 29,
+    "file": "Reaper.glb",
+    "preview": "Reaper.png",
+    "triangles": 42760,
+    "meshes": 32,
+    "bounds": [
+      6.460238456726074,
+      3.7607495188713074,
+      13.186035633087158
+    ],
+    "bytes": 3101972,
+    "revision": "fleet-refinement-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Guardian",
+    "name": "守护者（旧版）",
+    "apkId": null,
+    "file": "Guardian.glb",
+    "preview": "Guardian.png",
+    "triangles": 29316,
+    "meshes": 24,
+    "bounds": [
+      6.524399757385254,
+      6.524399995803833,
+      10.820000171661377
+    ],
+    "bytes": 2128908,
+    "revision": "fleet-refinement-01",
+    "status": "refined-legacy-concept",
+    "weaponLayout": null,
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  }
+]

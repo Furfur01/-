@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import {publicCatalog} from '../game/catalog.mjs';
+import {shipCounterProposal} from '../game/ship-counter-proposal.mjs';
+
+const root=path.resolve(import.meta.dirname,'..'),read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
+const ships=publicCatalog.shipArchive,source='output/apk-icons/lua-analysis/GameUIFleetInfo.lua.json',lua=read(source),evidence=[];
+function walk(p){for(const field of ['fatal_damage_list','damage_rate','bonus_damage_rate','armour','shield','attack','speed','capacity','fuel_usage'])if(p.constants?.includes(field))evidence.push({source,lineStart:p.line_start,lineEnd:p.line_end,field});for(const f of p.functions||[])walk(f);}walk(lua);
+assert.equal(new Set(evidence.map(e=>e.field)).size,9);
+const enums=read('research/apk/enum-definitions.json')['GameFleetDefine.lua'];
+for(const s of ships)if(s.apkId)assert.equal(enums[s.constant],s.apkId);
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex');
+const audit={apk:read('output/apk-inspection/summary.json').sha256,resourceZipSha256:hash('research/apk/tap4fun.zip'),counts:{apkShipTypes:20,apkSprites:19,legacyUnmapped:1,models:21,missingServerStatSets:20,specialShipsWithoutLocalStats:6},fieldMapping:{armour:'strength',shield:'shield',attack:'attack',speed:'speed',capacity:'cargo',fuel_usage:'fuel'},evidence,notes:['APK Lua prototypes read values from content; constants identify field names, not their numeric values.','Local rapid fire uses screenshot/community subset and is not verified as APK server algorithm.','Special ships remain archive-only without invented costs, stats or combat multipliers.','Reaper immunity and Annihilator behavior are documented in original localization; they are not implemented in ordinary rapid-fire settlement.'],ships};
+const out=path.join(root,'research/apk/ship-audit');fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'audit.json'),JSON.stringify(audit,null,2));
+const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+const csv=[['APK编号','常量','项目ID','名称','原图SHA256','模型依据','本地数值来源','护甲','护盾','攻击','速度','货舱','燃料','APK服务器属性','APK克制倍率'],...ships.map(s=>[s.apkId,s.constant,s.id,s.name,s.referenceHash,s.modelSource,s.statsSource,...Object.values(s.stats),'未取得','未取得'])].map(r=>r.map(q).join(',')).join('\n');
+fs.writeFileSync(path.join(out,'ships.csv'),'\ufeff'+csv);
+const units=publicCatalog.units,targets=[...ships,...Object.values(units).filter(u=>u.type==='defense'&&!u.missile)],matrix=[['攻击方 / 目标',...targets.map(t=>t.name)],...ships.map(s=>[s.name,...targets.map(t=>!units[s.id]||!units[t.id]?'?':units[s.id].rapid[t.id]||'—')])];
+fs.writeFileSync(path.join(out,'local-rapid-fire.csv'),'\ufeff'+matrix.map(r=>r.map(q).join(',')).join('\n'));
+console.log(JSON.stringify(audit.counts));
+const proposal=shipCounterProposal(publicCatalog.units,ships);
+fs.writeFileSync(path.join(out,'counter-proposal.json'),JSON.stringify(proposal,null,2));
+const proposed=[['攻击方 / 目标',...targets.map(t=>t.name)],...proposal.ships.map(s=>[s.name,...targets.map(t=>s.rapid[t.id]||'—')])];
+fs.writeFileSync(path.join(out,'proposed-rapid-fire.csv'),'\ufeff'+proposed.map(r=>r.map(q).join(',')).join('\n'));

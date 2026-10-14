@@ -1,0 +1,14 @@
+{
+  "Light_Fighter": {
+    "sha256": "814f2541b85fd7b9b1a345da18990b67e0390d6f29e2a3b4e192479a75ac486d",
+    "primitiveComponents": 261,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Cruiser": {
+    "sha256": "a9b83e77a8c438bbe3443227b557bcd6a202ca6c8595e5338811d4f029a5a0e2",
+    "primitiveComponents": 312,
+    "connectedClusters": 1,
+    "detached": []
+  }
+}

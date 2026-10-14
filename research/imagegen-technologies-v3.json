@@ -1,0 +1,200 @@
+{
+  "date": "2026-10-10",
+  "tool": "built-in imagegen",
+  "transparent_background": true,
+  "styleReference": "output/ui-concepts-starfield-v3/03-research.png",
+  "entries": [
+    {
+      "id": "Energy_Tech",
+      "name": "能源科技",
+      "file": "godot/assets/technologies-v3/Energy_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A spherical fusion containment reactor, open segmented titanium cage surrounding one restrained soft white-blue plasma core, concentric mechanical rings, clean distinctive round silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-895e1e1b-d3cc-4ec3-9388-11dda4c37c5b.png",
+      "sha256": "A177C1544DA4B257D73FF95BBD97FC5BA8DD46497AD8A54E3860DBEA27A50E93",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Laser_Tech",
+      "name": "激光科技",
+      "file": "godot/assets/technologies-v3/Laser_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A long precision laser optical emitter assembly, three exposed focusing lens stages, aligned optical rails and slender barrel, faint needle-thin pale-blue emission only, distinctive elongated slim silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-c7094cd2-97dd-471c-b53a-856c62e2d923.png",
+      "sha256": "F8222AD50B7E39A8E7DA8FBB84A455D4E04712361C8D78EB3D5DBE26019CF280",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Ion_Tech",
+      "name": "离子科技",
+      "file": "godot/assets/technologies-v3/Ion_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A compact ion accelerator with offset ceramic electrode plates, a stack of copper-gray acceleration grids inside an open cylindrical cage, short precise ion stream, asymmetrical compact technical silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-3c7a1fea-adaa-4c11-8ca7-d4666c7fdd4a.png",
+      "sha256": "831083B6E92D2DDD662A6067610205C7EF26234073FA6E6D02982C3CCEACABF8",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Hyperspace_Tech",
+      "name": "超空间科技",
+      "file": "godot/assets/technologies-v3/Hyperspace_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A laboratory spacetime field experiment: tilted gyroscopic double-ring apparatus enclosing a visibly warped transparent lens with a sparse delicate distorted light arc, no swirling nebula, no spaceship engine; distinctive open floating toroidal ring silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-0936947c-0ac6-4746-b744-c50ce2ab160b.png",
+      "sha256": "BFE333A3C1F27F1F79B0E9848FC7A5D0B48F6348A43C3A9852EBB2E50B6E528D",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Plasma_Tech",
+      "name": "等离子科技",
+      "file": "godot/assets/technologies-v3/Plasma_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A squat magnetic plasma injector, thick split toroidal electromagnets around an orange-white confined plasma capsule, external graphite cooling fins and exposed feed conduits; heavy broad silhouette clearly different from slim laser.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-40417e77-cd6b-44e5-9063-4ad2697f7954.png",
+      "sha256": "EB89B93C43A233C649980CE0137DEF0CE0DE38C201FBA891564A4E6280209AC9",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Espionage_Tech",
+      "name": "间谍科技",
+      "file": "godot/assets/technologies-v3/Espionage_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A sophisticated covert reconnaissance sensor pod with a faceted dark stealth casing, two fine optical apertures, directional antenna fins and folded receiver dish; compact triangular silhouette, absolutely no eye logos or humans.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-039ba894-8c05-4078-bcca-cdb0c1600ae4.png",
+      "sha256": "86D427167E40D7804337B39A0CF938560083DFEB7F8CEB472DEA8CFAAD8F52B1",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Computer_Tech",
+      "name": "计算机科技",
+      "file": "godot/assets/technologies-v3/Computer_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A physically tangible advanced flight-computer core, vertically stacked ceramic circuit slabs, densely machined processor modules and heat-sink fins around a tiny central white status light; square layered cube silhouette, no text or screen content.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-1f812ac7-a01e-4b63-bffe-1f64fb0e9a89.png",
+      "sha256": "879B4EE6AECAF9A43067C18F1D357198210300BD6B8C89ED8E20C32CEB32C97C",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Astrophysics_Tech",
+      "name": "天体物理科技",
+      "file": "godot/assets/technologies-v3/Astrophysics_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: An astrophysics observation instrument with a segmented compact telescope primary mirror, offset spectrometer and a small armillary observation ring, precision white metal optics, distinctive wide dish silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-13936a45-8025-4eca-9639-5431e7874a01.png",
+      "sha256": "4622692A88CE8355B13297CA1D0482B202EB6062635F5EFFF805C5515DC2F3B4",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Combustion_Drive",
+      "name": "燃烧引擎",
+      "file": "godot/assets/technologies-v3/Combustion_Drive.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A chemical rocket combustion engine section, exposed turbopump and braided feed lines above a single broad ribbed bell nozzle, practical aerospace engineering, subtle warm glow deep inside nozzle, clear pear-shaped silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-b16823d0-e31b-43f0-9ed5-1e1380576248.png",
+      "sha256": "60BF276F6190762FF110BDF98635C51027CDC99F4E0AE9EC1E461EDC4D6CEE2B",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Impulse_Drive",
+      "name": "脉冲引擎",
+      "file": "godot/assets/technologies-v3/Impulse_Drive.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A pulsed propulsion engine with three parallel electromagnetic acceleration stages and a broad flat exhaust throat, shielded ceramic casing and chunky capacitor banks, tiny icy-white pulse at aperture, distinct horizontal triplet silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-1165aeac-bc21-4411-a42b-88641f7f5948.png",
+      "sha256": "185B5E8CA9D4CBB2DB87FD3DC6EFBC9FF638508F9A2CC041EBE3CA9F7D9A888B",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Hyperspace_Drive",
+      "name": "超空间引擎",
+      "file": "godot/assets/technologies-v3/Hyperspace_Drive.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A complete operational jump-drive core: a long armored axial reactor passing through two large thick segmented field coils, practical mounting cradles and cryogenic plumbing, pale blue core light, clearly an engine not a science lens; distinctive elongated double-coil silhouette.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-cfc9b72d-4077-4fd5-8d58-0b2091f82317.png",
+      "sha256": "385B77192FAA29BCEC0826CFB0CCFD255A9E321CF4E6E51AEA1228B8CAC7B5CB",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Weapons_Tech",
+      "name": "武器科技",
+      "file": "godot/assets/technologies-v3/Weapons_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: An integrated precision fire-control and electromagnetic weapon assembly, twin short rail barrels on a compact gimballed mount, optical targeting lens and mechanical recoil housing, no spaceship body, clearly a weapon engineering specimen.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-cf24ffbc-134a-4c65-b88a-663812a903c7.png",
+      "sha256": "D11E151FD946A3F3CB853CA692A04EE039AF30E88E5FB57DFE7312F8ACB59B81",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Shielding_Tech",
+      "name": "护盾科技",
+      "file": "godot/assets/technologies-v3/Shielding_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A shield field emitter device: three curved metal prongs around a small flat emitter disc, a faint transparent partial force-field dome directly above it with subtle white interference lines, distinct umbrella silhouette, no large glow.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-d9f4f10d-bdec-4d21-b051-b31a97e032cb.png",
+      "sha256": "8581FBFBD878F636A7B39749414F3127ECAE52B2C58101D8FDB37CC6598946EC",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Strength_Tech",
+      "name": "强度科技",
+      "file": "godot/assets/technologies-v3/Strength_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A cutaway spacecraft armor engineering specimen, several offset interlocking titanium-ceramic plates revealing internal hexagonal composite honeycomb and dense structural ribs, floating compact slab with visible thickness, no pedestal.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-511ae822-6405-4602-a82a-2615f25bdd34.png",
+      "sha256": "61DD233FE37BFFF5A7C7EB8324B3DC24F9ED065C1CD68D27B3A69FE269DD281A",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Intergalactic_Network",
+      "name": "星际研究网络",
+      "file": "godot/assets/technologies-v3/Intergalactic_Network.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A compact interstellar research communications relay: three articulated receiver dishes radiating from one central data-link node, tiny fiber conduits and precision antenna booms, distinct three-armed structural silhouette, no drawn network lines in background.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-cc87a295-6139-4e86-bd68-00f5cb4e687e.png",
+      "sha256": "AE9A97BA45F97A06FB48B5BC86A458FA723817D8CD7AD016ED8A407F9908DF48",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Graviton_Tech",
+      "name": "引力子科技",
+      "file": "godot/assets/technologies-v3/Graviton_Tech.png",
+      "prompt": "Use case: product-mockup / game technology illustration. Generate ONE isolated sci-fi engineering object as a TRANSPARENT PNG asset for the existing Chinese game 银河帝国's research UI. The reference image is ONLY the approved material, lighting, and industrial technology illustration STYLE. Do not reproduce the UI page, text, background, blueprint, labels or panels. We will independently draw blueprint layers behind this subject in the actual game. Style: Starfield-inspired plausible NASA industrial engineering, finely machined pale titanium, off-white ceramic, graphite details, very restrained blue-white functional light, understated worn metal, premium realistic studio product render. Three-quarter view, entire object visible, square 1024x1024 composition with clear margins at least 10% on each side; strong readable distinctive silhouette, object occupies about 76% of canvas, centered, physically legible at 160px UI thumbnail. Neutral soft key light from upper-left, gentle rim light makes edges visible against a dark UI. No enclosing frame, no card, no floor, no cast shadow plane, no background gradient, no stars, no diagram lines, no lettering, numbers or watermark. Genuinely transparent background/alpha, not checkerboard artwork. Soft glows must remain tight to object. \nSubject: A precision graviton research chamber with four heavy curved superconducting arms suspending a tiny dark spherical core encircled by one fine ivory gravitational lens ring, severe symmetrical laboratory hardware, not a fantasy black-hole nebula.",
+      "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a1218e-3304-7c93-8f9f-573499e23134\\exec-bb08968a-a9bc-413c-af0e-d6b9b6d22459.png",
+      "sha256": "AFDF990E90E43DFBA11ABD7CD625DD51DEBEF0B3BF028D7E10171FF588337AB5",
+      "size": [
+        1254,
+        1254
+      ]
+    }
+  ]
+}

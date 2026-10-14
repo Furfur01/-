@@ -1,0 +1,1785 @@
+{
+  "status": "DRAFT_REQUIRES_USER_CONFIRMATION",
+  "appliedToCombat": false,
+  "interpretation": {
+    "damage_rate": "Local proposed rapid-fire r; continuation probability 1 - 1/r, not direct damage multiplication",
+    "bonus_damage_rate": "0 at base level; no invented enhancement progression",
+    "fatal_damage_list": "Derived outgoing and incoming relations; direction names are a local review format, not a recovered wire schema"
+  },
+  "roles": {
+    "Interceptor": "反轻型舰群；主克轻战机和重战机，受驱逐舰与重型特殊舰制约。",
+    "Iron_Behemoth": "重型突破舰；对中大型常规舰速射，受噬能截击者和 Reaper 制约。",
+    "Devourer_Interceptor": "反高护盾与大型舰；重点克制钛能守卫者，不额外拟造穿盾比例。",
+    "Titanenergetic_Frigate": "装甲护航舰；适度压制轻型舰和裂变者，受反重甲特殊舰制约。",
+    "Annihilator": "一次性群体打击；不用普通速射模拟爆炸，独立拟定伤害修正。",
+    "Reaper": "大型舰猎手；免疫湮灭之星，优先打击大型特殊舰。"
+  },
+  "ships": [
+    {
+      "id": "Light_Fighter",
+      "apkId": 1,
+      "name": "轻型战机",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 200,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 12,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Heavy_Fighter",
+      "apkId": 2,
+      "name": "重型战机",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5,
+        "Cargo_Ship": 3
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Cruiser",
+      "apkId": 3,
+      "name": "巡洋舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Light_Fighter": 6,
+        "Rocket_Launcher": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Rocket_Launcher",
+          "fleet_type": null,
+          "unit_name": "火箭发射器",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 33,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 8,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Battleship",
+      "apkId": 4,
+      "name": "战列舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Dreadnought",
+      "apkId": 5,
+      "name": "无畏舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Battleship": 10,
+        "Cruiser": 4,
+        "Heavy_Fighter": 4,
+        "Large_Cargo_Ship": 3,
+        "Cargo_Ship": 3,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Battleship",
+          "fleet_type": 4,
+          "unit_name": "战列舰",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Large_Cargo_Ship",
+          "fleet_type": 10,
+          "unit_name": "重型运输舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 15,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Bomber",
+      "apkId": 6,
+      "name": "行星轰炸机 / 导弹舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Rocket_Launcher": 20,
+        "Light_Laser": 20,
+        "Heavy_Laser": 10,
+        "Ion_Cannon": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Rocket_Launcher",
+          "fleet_type": null,
+          "unit_name": "火箭发射器",
+          "damage_rate": 20,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Light_Laser",
+          "fleet_type": null,
+          "unit_name": "轻型激光炮",
+          "damage_rate": 20,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Heavy_Laser",
+          "fleet_type": null,
+          "unit_name": "重型激光炮",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Ion_Cannon",
+          "fleet_type": null,
+          "unit_name": "中子炮",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Destroyer",
+      "apkId": 7,
+      "name": "驱逐舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Dreadnought": 2,
+        "Light_Laser": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5,
+        "Interceptor": 3
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Light_Laser",
+          "fleet_type": null,
+          "unit_name": "轻型激光炮",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Death_Star",
+      "apkId": 8,
+      "name": "死星",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Dreadnought": 15,
+        "Large_Cargo_Ship": 250,
+        "Colony_Ship": 250,
+        "Solar_Satellite": 1250,
+        "Light_Fighter": 200,
+        "Rocket_Launcher": 20,
+        "Cargo_Ship": 250,
+        "Cruiser": 33,
+        "Probe": 5,
+        "Destroyer": 5,
+        "Interceptor": 10,
+        "Iron_Behemoth": 3,
+        "Titanenergetic_Frigate": 2
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 15,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Large_Cargo_Ship",
+          "fleet_type": 10,
+          "unit_name": "重型运输舰",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Colony_Ship",
+          "fleet_type": 11,
+          "unit_name": "殖民舰 / 开拓船",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 1250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 200,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Rocket_Launcher",
+          "fleet_type": null,
+          "unit_name": "火箭发射器",
+          "damage_rate": 20,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 33,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Cargo_Ship",
+      "apkId": 9,
+      "name": "轻型运输舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Large_Cargo_Ship",
+      "apkId": 10,
+      "name": "重型运输舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Colony_Ship",
+      "apkId": 11,
+      "name": "殖民舰 / 开拓船",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 250,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Recycler",
+      "apkId": 12,
+      "name": "回收舰",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Probe",
+      "apkId": 13,
+      "name": "间谍探测器",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {},
+      "fatal_damage_list": [
+        {
+          "direction": "from",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Battleship",
+          "fleet_type": 4,
+          "unit_name": "战列舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Bomber",
+          "fleet_type": 6,
+          "unit_name": "行星轰炸机 / 导弹舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Large_Cargo_Ship",
+          "fleet_type": 10,
+          "unit_name": "重型运输舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Colony_Ship",
+          "fleet_type": 11,
+          "unit_name": "殖民舰 / 开拓船",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Recycler",
+          "fleet_type": 12,
+          "unit_name": "回收舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Solar_Satellite",
+      "apkId": 14,
+      "name": "太阳能卫星",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {},
+      "fatal_damage_list": [
+        {
+          "direction": "from",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Battleship",
+          "fleet_type": 4,
+          "unit_name": "战列舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Bomber",
+          "fleet_type": 6,
+          "unit_name": "行星轰炸机 / 导弹舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 1250,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Large_Cargo_Ship",
+          "fleet_type": 10,
+          "unit_name": "重型运输舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Colony_Ship",
+          "fleet_type": 11,
+          "unit_name": "殖民舰 / 开拓船",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Recycler",
+          "fleet_type": 12,
+          "unit_name": "回收舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Interceptor",
+      "apkId": 23,
+      "name": "裂变者",
+      "role": "反轻型舰群；主克轻战机和重战机，受驱逐舰与重型特殊舰制约。",
+      "rapid": {
+        "Light_Fighter": 12,
+        "Heavy_Fighter": 6,
+        "Cruiser": 3,
+        "Cargo_Ship": 10,
+        "Large_Cargo_Ship": 10,
+        "Probe": 10,
+        "Solar_Satellite": 10
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 12,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cargo_Ship",
+          "fleet_type": 9,
+          "unit_name": "轻型运输舰",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Large_Cargo_Ship",
+          "fleet_type": 10,
+          "unit_name": "重型运输舰",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Iron_Behemoth",
+      "apkId": 24,
+      "name": "深空吞噬者",
+      "role": "重型突破舰；对中大型常规舰速射，受噬能截击者和 Reaper 制约。",
+      "rapid": {
+        "Cruiser": 8,
+        "Battleship": 5,
+        "Dreadnought": 3,
+        "Destroyer": 2,
+        "Bomber": 6,
+        "Interceptor": 3,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 8,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Battleship",
+          "fleet_type": 4,
+          "unit_name": "战列舰",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Bomber",
+          "fleet_type": 6,
+          "unit_name": "行星轰炸机 / 导弹舰",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Devourer_Interceptor",
+      "apkId": 25,
+      "name": "噬能截击者",
+      "role": "反高护盾与大型舰；重点克制钛能守卫者，不额外拟造穿盾比例。",
+      "rapid": {
+        "Dreadnought": 6,
+        "Destroyer": 4,
+        "Titanenergetic_Frigate": 4,
+        "Guardian": 4,
+        "Death_Star": 2,
+        "Iron_Behemoth": 3,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Titanenergetic_Frigate",
+      "apkId": 26,
+      "name": "钛能守卫者",
+      "role": "装甲护航舰；适度压制轻型舰和裂变者，受反重甲特殊舰制约。",
+      "rapid": {
+        "Light_Fighter": 4,
+        "Heavy_Fighter": 3,
+        "Cruiser": 2,
+        "Interceptor": 4,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Light_Fighter",
+          "fleet_type": 1,
+          "unit_name": "轻型战机",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Heavy_Fighter",
+          "fleet_type": 2,
+          "unit_name": "重型战机",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Cruiser",
+          "fleet_type": 3,
+          "unit_name": "巡洋舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Interceptor",
+          "fleet_type": 23,
+          "unit_name": "裂变者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Annihilator",
+      "apkId": 28,
+      "name": "湮灭之星",
+      "role": "一次性群体打击；不用普通速射模拟爆炸，独立拟定伤害修正。",
+      "rapid": {},
+      "fatal_damage_list": []
+    },
+    {
+      "id": "Reaper",
+      "apkId": 29,
+      "name": "Reaper（收割者·暂译）",
+      "role": "大型舰猎手；免疫湮灭之星，优先打击大型特殊舰。",
+      "rapid": {
+        "Iron_Behemoth": 6,
+        "Titanenergetic_Frigate": 4,
+        "Devourer_Interceptor": 4,
+        "Death_Star": 4,
+        "Guardian": 3,
+        "Destroyer": 3,
+        "Battleship": 2,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Iron_Behemoth",
+          "fleet_type": 24,
+          "unit_name": "深空吞噬者",
+          "damage_rate": 6,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Titanenergetic_Frigate",
+          "fleet_type": 26,
+          "unit_name": "钛能守卫者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Guardian",
+          "fleet_type": null,
+          "unit_name": "守护者（旧版）",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Battleship",
+          "fleet_type": 4,
+          "unit_name": "战列舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Probe",
+          "fleet_type": 13,
+          "unit_name": "间谍探测器",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Solar_Satellite",
+          "fleet_type": 14,
+          "unit_name": "太阳能卫星",
+          "damage_rate": 5,
+          "bonus_damage_rate": 0
+        }
+      ]
+    },
+    {
+      "id": "Guardian",
+      "apkId": null,
+      "name": "守护者（旧版）",
+      "role": "保留现有基础定位与已有速射值。",
+      "rapid": {
+        "Dreadnought": 2,
+        "Destroyer": 2,
+        "Death_Star": 10,
+        "Devourer_Interceptor": 2
+      },
+      "fatal_damage_list": [
+        {
+          "direction": "against",
+          "target_id": "Dreadnought",
+          "fleet_type": 5,
+          "unit_name": "无畏舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Destroyer",
+          "fleet_type": 7,
+          "unit_name": "驱逐舰",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Death_Star",
+          "fleet_type": 8,
+          "unit_name": "死星",
+          "damage_rate": 10,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "against",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 2,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Devourer_Interceptor",
+          "fleet_type": 25,
+          "unit_name": "噬能截击者",
+          "damage_rate": 4,
+          "bonus_damage_rate": 0
+        },
+        {
+          "direction": "from",
+          "target_id": "Reaper",
+          "fleet_type": 29,
+          "unit_name": "Reaper（收割者·暂译）",
+          "damage_rate": 3,
+          "bonus_damage_rate": 0
+        }
+      ]
+    }
+  ],
+  "special": {
+    "Annihilator": {
+      "source": "menu.GC_bomb_description",
+      "trigger": {
+        "side": "attacker",
+        "atLeastDistinct": 2,
+        "enemyTypes": [
+          "Titanenergetic_Frigate",
+          "Devourer_Interceptor",
+          "Interceptor",
+          "Iron_Behemoth"
+        ]
+      },
+      "bypassShield": true,
+      "immuneTargets": [
+        "Reaper"
+      ],
+      "maxOwned": 200,
+      "recovery": false,
+      "damageProposal": {
+        "formula": "baseExplosionDamage × targetMultiplier × (1 + 0.05 × (initialBombCount - 1)) / sqrt(livingEnemyTypeCount)",
+        "baseExplosionDamage": null,
+        "multipliers": {
+          "Interceptor": 1.5,
+          "Iron_Behemoth": 1.25,
+          "Devourer_Interceptor": 1,
+          "Titanenergetic_Frigate": 0.75,
+          "Reaper": 0,
+          "default": 0.5
+        },
+        "note": "Multipliers, attenuation and stacking are draft design. Base explosion value needs separate confirmation; not executable balance."
+      }
+    },
+    "Reaper": {
+      "source": "menu.GC_reaper_description",
+      "immuneTo": [
+        "Annihilator"
+      ],
+      "proposedTargetPriority": [
+        "Iron_Behemoth",
+        "Titanenergetic_Frigate",
+        "Devourer_Interceptor",
+        "Death_Star",
+        "Guardian",
+        "Destroyer",
+        "Dreadnought",
+        "Battleship"
+      ],
+      "fallback": "Other living targets selected uniformly by ship count",
+      "prioritySource": "Draft ordering; APK confirms special ordering but does not supply it"
+    }
+  }
+}

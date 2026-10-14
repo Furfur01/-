@@ -1,0 +1,119 @@
+{
+  "generated": "2026-10-15T06:15:15.774Z",
+  "sections": [
+    {
+      "id": "mockups",
+      "label": "Mockups",
+      "groups": [
+        {
+          "slug": "galactic-command",
+          "files": [
+            {
+              "label": "astral.html",
+              "path": "mockups/galactic-command/astral.html"
+            },
+            {
+              "label": "battlefield-three.html",
+              "path": "mockups/galactic-command/battlefield-three.html"
+            },
+            {
+              "label": "battlefield.html",
+              "path": "mockups/galactic-command/battlefield.html"
+            },
+            {
+              "label": "buildings.html",
+              "path": "mockups/galactic-command/buildings.html"
+            },
+            {
+              "label": "colony-atlas.html",
+              "path": "mockups/galactic-command/colony-atlas.html"
+            },
+            {
+              "label": "hangar-three.html",
+              "path": "mockups/galactic-command/hangar-three.html"
+            },
+            {
+              "label": "hangar.html",
+              "path": "mockups/galactic-command/hangar.html"
+            },
+            {
+              "label": "hdri-options.html",
+              "path": "mockups/galactic-command/hdri-options.html"
+            },
+            {
+              "label": "index.html",
+              "path": "mockups/galactic-command/index.html"
+            },
+            {
+              "label": "battlefield.html",
+              "path": "mockups/galactic-command/legacy-webgl/battlefield.html"
+            },
+            {
+              "label": "hangar.html",
+              "path": "mockups/galactic-command/legacy-webgl/hangar.html"
+            },
+            {
+              "label": "mass-battle-selfcheck.html",
+              "path": "mockups/galactic-command/mass-battle-selfcheck.html"
+            },
+            {
+              "label": "remaining-review.html",
+              "path": "mockups/galactic-command/remaining-review.html"
+            },
+            {
+              "label": "ships.html",
+              "path": "mockups/galactic-command/ships.html"
+            }
+          ]
+        },
+        {
+          "slug": "galaxy-empire",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/galaxy-empire/index.html"
+            }
+          ]
+        },
+        {
+          "slug": "planet-construction-review",
+          "files": [
+            {
+              "label": "aurora-shell.html",
+              "path": "mockups/planet-construction-review/aurora-shell.html"
+            },
+            {
+              "label": "colony-v1.html",
+              "path": "mockups/planet-construction-review/colony-v1.html"
+            },
+            {
+              "label": "data-review.html",
+              "path": "mockups/planet-construction-review/data-review.html"
+            },
+            {
+              "label": "evidence-v1.html",
+              "path": "mockups/planet-construction-review/evidence-v1.html"
+            },
+            {
+              "label": "evidence.html",
+              "path": "mockups/planet-construction-review/evidence.html"
+            },
+            {
+              "label": "index.html",
+              "path": "mockups/planet-construction-review/index.html"
+            },
+            {
+              "label": "aurora-original.html",
+              "path": "mockups/planet-construction-review/reference/aurora-original.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-systems",
+      "label": "Design Systems",
+      "groups": []
+    }
+  ]
+}

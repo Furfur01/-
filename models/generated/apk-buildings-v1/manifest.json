@@ -1,0 +1,126 @@
+{
+  "reference": "APK original building sprites",
+  "format": "glTF 2.0 binary",
+  "models": [
+    {
+      "id": "Metal_Mine",
+      "name": "金属矿",
+      "description": "熔炼炉、红色粗管与排烟筒，前方保留开放熔池和装卸口。",
+      "file": "Metal_Mine.glb",
+      "preview": "Metal_Mine.png",
+      "bytes": 85940,
+      "meshes": 23,
+      "nodes": 172
+    },
+    {
+      "id": "Crystal_Mine",
+      "name": "晶体矿",
+      "description": "高位晶簇料斗连接加工机组，前方以带齿滚筒和矿石辨识开采功能。",
+      "file": "Crystal_Mine.glb",
+      "preview": "Crystal_Mine.png",
+      "bytes": 53900,
+      "meshes": 16,
+      "nodes": 178
+    },
+    {
+      "id": "Gas_Mine",
+      "name": "气体矿",
+      "description": "高机房与双排气系统，侧面储罐、水槽和管路形成完整的提炼装置。",
+      "file": "Gas_Mine.glb",
+      "preview": "Gas_Mine.png",
+      "bytes": 69512,
+      "meshes": 21,
+      "nodes": 141
+    },
+    {
+      "id": "Solar_Plant",
+      "name": "太阳能电站",
+      "description": "两面拱形光伏阵列包围中央机房，细分电池格、连接器与外围变电设施。",
+      "file": "Solar_Plant.glb",
+      "preview": "Solar_Plant.png",
+      "bytes": 77676,
+      "meshes": 15,
+      "nodes": 281
+    },
+    {
+      "id": "Metal_Storage",
+      "name": "金属仓库",
+      "description": "厚重工业箱体、顶部熔光窗口与斜面装卸舱门，保留原图的密闭轮廓。",
+      "file": "Metal_Storage.glb",
+      "preview": "Metal_Storage.png",
+      "bytes": 45980,
+      "meshes": 17,
+      "nodes": 144
+    },
+    {
+      "id": "Crystal_Storage",
+      "name": "晶体仓库",
+      "description": "根据原图重建储存主体、独立模块和可辨识的蓝色晶体结构。",
+      "file": "Crystal_Storage.glb",
+      "preview": "Crystal_Storage.png",
+      "bytes": 55920,
+      "meshes": 16,
+      "nodes": 130
+    },
+    {
+      "id": "Gas_Storage",
+      "name": "气体仓库",
+      "description": "成组压力容器连接输送管路，加入阀门、检修结构与安全标识。",
+      "file": "Gas_Storage.glb",
+      "preview": "Gas_Storage.png",
+      "bytes": 74684,
+      "meshes": 19,
+      "nodes": 167
+    },
+    {
+      "id": "Robotics_Facility",
+      "name": "机器人厂",
+      "description": "传送带穿过前方半圆机壳，后方加工桥与机械机构表现自动化生产。",
+      "file": "Robotics_Facility.glb",
+      "preview": "Robotics_Facility.png",
+      "bytes": 81628,
+      "meshes": 19,
+      "nodes": 168
+    },
+    {
+      "id": "Shipyard",
+      "name": "飞船基地",
+      "description": "圆拱船坞与高架停机坪组成上下两层，辅以舱门、储罐和导航灯。",
+      "file": "Shipyard.glb",
+      "preview": "Shipyard.png",
+      "bytes": 105508,
+      "meshes": 22,
+      "nodes": 163
+    },
+    {
+      "id": "Research_Lab",
+      "name": "研究实验室",
+      "description": "三座大小不同的蓝色玻璃穹顶，通过基座、通道和天线构成研究设施。",
+      "file": "Research_Lab.glb",
+      "preview": "Research_Lab.png",
+      "bytes": 108060,
+      "meshes": 19,
+      "nodes": 307
+    },
+    {
+      "id": "Radar_Facility",
+      "name": "雷达站",
+      "description": "四脚支撑环形基座与细高塔，金色球体和双竖板构成独特的探测阵列。",
+      "file": "Radar_Facility.glb",
+      "preview": "Radar_Facility.png",
+      "bytes": 89320,
+      "meshes": 20,
+      "nodes": 139
+    },
+    {
+      "id": "Fusion_Reactor",
+      "name": "核电站",
+      "description": "下沉环形反应井、铜色管路与独立圆盘高塔，突出能量核心与输送结构。",
+      "file": "Fusion_Reactor.glb",
+      "preview": "Fusion_Reactor.png",
+      "bytes": 94260,
+      "meshes": 23,
+      "nodes": 144
+    }
+  ]
+}

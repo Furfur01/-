@@ -1,0 +1,21 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {Box3,Vector3} from 'three';
+import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {createShipModel,disposeShip} from '../opendesign/mockups/galactic-command/ship-models.js';
+
+globalThis.FileReader=class{readAsArrayBuffer(blob){blob.arrayBuffer().then(result=>{this.result=result;this.onloadend?.();}).catch(error=>{this.error=error;this.onerror?.(error);});}};
+const out=new URL('../models/generated/battleship-sculpted-03/',import.meta.url);
+fs.mkdirSync(out,{recursive:true});
+const model=createShipModel('Battleship');
+assert.equal(model.userData.revision,'battleship-sculpted-03');
+assert.ok(new Box3().setFromObject(model.getObjectByName('05_Recessed_weapons')).max.y<1.34,'Weapons must stay close to the deck');
+const stats=root=>{let triangles=0,meshes=0;root.traverse(o=>{if(o.isMesh){const p=o.geometry.attributes.position;assert.ok(p.array.every(Number.isFinite));assert.ok(o.geometry.attributes.normal.array.every(Number.isFinite));meshes++;triangles+=(o.geometry.index?.count||p.count)/3;}});return {triangles,meshes,bounds:new Box3().setFromObject(root).getSize(new Vector3()).toArray()};};
+const a=stats(model);assert.ok(a.triangles>10000&&a.meshes<100);assert.ok(a.bounds.every(x=>x>0&&Number.isFinite(x)));
+const data=await new GLTFExporter().parseAsync(model,{binary:true,trs:true});
+const restored=(await new GLTFLoader().parseAsync(data,'')).scene;
+assert.deepEqual(stats(restored),a);
+fs.writeFileSync(new URL('Battleship.glb',out),Buffer.from(data));
+fs.writeFileSync(new URL('checks.json',out),JSON.stringify({...a,revision:model.userData.revision,assemblies:model.children.map(x=>x.name),glbRoundTrip:true,silhouetteVerified:false},null,2));
+console.log(JSON.stringify(a));disposeShip(model);disposeShip(restored);

@@ -1,0 +1,68 @@
+{
+  "Bomber": {
+    "sha256": "d88ec73e47e29ae0105dff99894976623a2cadbea7edb63bd93dfa07c9ef3ebc",
+    "primitiveComponents": 404,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Cargo_Ship": {
+    "sha256": "692af04e7b0a0f069ce41f7d35cc9bd007025d523723d0630c69a977779cdbde",
+    "primitiveComponents": 396,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Large_Cargo_Ship": {
+    "sha256": "2903d15a7ed59aa9100151bc97f6d712c131c71ec86afccc5daf046ddab9b52a",
+    "primitiveComponents": 272,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Colony_Ship": {
+    "sha256": "62543fa55081278ada1e4596ede1884adf482fe35c1f2468d177dac54098a0e3",
+    "primitiveComponents": 377,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Recycler": {
+    "sha256": "9f8bad57de7f508877b6e4e7a6bf88a48a5867d9379ce50b1907e1e0e1acff6c",
+    "primitiveComponents": 275,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Solar_Satellite": {
+    "sha256": "ff560d613de0f03db273bf476d593a83f0eaf6194b66074af2038f910752c94a",
+    "primitiveComponents": 290,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Death_Star": {
+    "sha256": "ed6dc22af4afff8662e6a1c95f254b21e2d79b7edc6bcda1ae15d93a54bc5bd0",
+    "primitiveComponents": 202,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Interceptor": {
+    "sha256": "2a27815b9b112e62797f6d276f5735b07e67feddc02aad5d9affa5ebb616969f",
+    "primitiveComponents": 621,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Devourer_Interceptor": {
+    "sha256": "1a77d0fb57e073ca1588a4f771e3ca6bc212a2768434da1b8d3947c3ce3822a3",
+    "primitiveComponents": 471,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Titanenergetic_Frigate": {
+    "sha256": "a21d33c518a560f67621b03a38fdb243bb0d9a7df325be60c76b8b267703d774",
+    "primitiveComponents": 425,
+    "connectedClusters": 1,
+    "detached": []
+  },
+  "Guardian": {
+    "sha256": "c8562c05a5cedb449eb1d4ad1192b738c329c41040a76c363e492f4bd6fa2976",
+    "primitiveComponents": 138,
+    "connectedClusters": 1,
+    "detached": []
+  }
+}

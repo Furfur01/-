@@ -1,0 +1,176 @@
+[
+  {
+    "id": "Destroyer",
+    "name": "驱逐舰",
+    "apkId": 7,
+    "file": "Destroyer.glb",
+    "preview": "Destroyer.png",
+    "triangles": 22932,
+    "meshes": 55,
+    "bounds": [
+      10.899429321289062,
+      4.493743896484375,
+      14.162942886352539
+    ],
+    "bytes": 1691336,
+    "revision": "three-view-rebuild-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "重型战舰",
+      "scale": 1,
+      "primary": "双等离子大炮",
+      "kind": "plasma",
+      "muzzles": [
+        [
+          -0.62,
+          -0.33,
+          -7.25
+        ],
+        [
+          0.62,
+          -0.33,
+          -7.25
+        ]
+      ],
+      "caliber": 0.23,
+      "pointDefense": [
+        [
+          -0.83,
+          0.997,
+          -3.3
+        ],
+        [
+          0.83,
+          0.997,
+          -3.3
+        ],
+        [
+          -2.6,
+          0.322,
+          1.2
+        ],
+        [
+          2.6,
+          0.322,
+          1.2
+        ],
+        [
+          -1.8,
+          0.512,
+          5.7
+        ],
+        [
+          1.8,
+          0.512,
+          5.7
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "双等离子大炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Iron_Behemoth",
+    "name": "深空吞噬者",
+    "apkId": 24,
+    "file": "Iron_Behemoth.glb",
+    "preview": "Iron_Behemoth.png",
+    "triangles": 18332,
+    "meshes": 36,
+    "bounds": [
+      23.386620712280273,
+      18.451999759674074,
+      39.030434036254874
+    ],
+    "bytes": 1347732,
+    "revision": "three-view-rebuild-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "超巨型非战斗旗舰",
+      "scale": 2.8,
+      "primary": "无主炮 · 近防自卫",
+      "kind": null,
+      "muzzles": [],
+      "caliber": 0,
+      "pointDefense": [
+        [
+          -1.65,
+          1.606,
+          -4.8
+        ],
+        [
+          1.65,
+          1.606,
+          -4.8
+        ],
+        [
+          -1.5,
+          1.271,
+          -1.2
+        ],
+        [
+          1.5,
+          1.271,
+          -1.2
+        ],
+        [
+          -1.3,
+          1.541,
+          1.1
+        ],
+        [
+          1.3,
+          1.541,
+          1.1
+        ],
+        [
+          -0.62,
+          1.673,
+          3
+        ],
+        [
+          0.62,
+          1.673,
+          3
+        ],
+        [
+          -2.2,
+          0.662,
+          5.25
+        ],
+        [
+          2.2,
+          0.662,
+          5.25
+        ],
+        [
+          -3.53,
+          0.673,
+          5.7
+        ],
+        [
+          3.53,
+          0.673,
+          5.7
+        ],
+        [
+          -0.5,
+          2.842,
+          5.75
+        ],
+        [
+          0.5,
+          2.842,
+          5.75
+        ]
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  }
+]

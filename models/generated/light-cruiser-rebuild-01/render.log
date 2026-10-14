@@ -1,0 +1,106 @@
+BlenderMCP addon registered
+BlenderMCP addon unregistered
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:21:39 | INFO: Data are loaded, start creating Blender stuff
+01:21:39 | INFO: Blender create Mesh node tripo_mesh_54725959-3bdd-4984-bd37-1a25b32b5dd6
+01:21:41 | INFO: glTF import finished in 2.26s
+00:05.516  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-reference-front.png'
+00:05.610  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-reference-side.png'
+00:05.703  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:21:44 | INFO: Data are loaded, start creating Blender stuff
+01:21:44 | INFO: Blender create Mesh node 0
+01:21:44 | INFO: Blender create Mesh node 1
+01:21:44 | INFO: Blender create Mesh node 2
+01:21:44 | INFO: Blender create Mesh node 3
+01:21:44 | INFO: Blender create Mesh node 4
+01:21:44 | INFO: Blender create Mesh node 5
+01:21:44 | INFO: Blender create Mesh node 6
+01:21:44 | INFO: Blender create Mesh node 7
+01:21:44 | INFO: Blender create Mesh node 8
+01:21:44 | INFO: Blender create Mesh node 9
+01:21:44 | INFO: Blender create Mesh node 10
+01:21:44 | INFO: Blender create Mesh node 11
+01:21:44 | INFO: Blender create Mesh node 12
+01:21:44 | INFO: Blender create Mesh node 13
+01:21:44 | INFO: Blender create Mesh node 14
+01:21:44 | INFO: Blender create Mesh node 15
+01:21:44 | INFO: Blender create Mesh node 16
+01:21:44 | INFO: Blender create Mesh node 17
+01:21:44 | INFO: Blender create Mesh node 18
+01:21:44 | INFO: Blender create Mesh node 19
+01:21:44 | INFO: Blender create Mesh node 20
+01:21:44 | INFO: Blender create Mesh node 21
+01:21:44 | INFO: Blender create Mesh node 22
+01:21:44 | INFO: Blender create Mesh node 23
+01:21:44 | INFO: Blender create Mesh node 24
+01:21:44 | INFO: Blender create Mesh node 25
+01:21:44 | INFO: Blender create Mesh node 26
+01:21:44 | INFO: glTF import finished in 0.11s
+00:05.922  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-rebuilt-front.png'
+00:05.953  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-rebuilt-side.png'
+00:06.000  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Cruiser-rebuilt-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:21:44 | INFO: Data are loaded, start creating Blender stuff
+01:21:44 | INFO: Blender create Mesh node tripo_mesh_0171864a-62eb-4347-a67e-950d3a084d0d
+01:21:47 | INFO: glTF import finished in 2.54s
+00:08.875  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-reference-front.png'
+00:08.969  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-reference-side.png'
+00:09.063  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-reference-top.png'
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:21:47 | INFO: Data are loaded, start creating Blender stuff
+01:21:47 | INFO: Blender create Mesh node 0
+01:21:47 | INFO: Blender create Mesh node 1
+01:21:47 | INFO: Blender create Mesh node 2
+01:21:47 | INFO: Blender create Mesh node 3
+01:21:47 | INFO: Blender create Mesh node 4
+01:21:47 | INFO: Blender create Mesh node 5
+01:21:47 | INFO: Blender create Mesh node 6
+01:21:47 | INFO: Blender create Mesh node 7
+01:21:47 | INFO: Blender create Mesh node 8
+01:21:47 | INFO: Blender create Mesh node 9
+01:21:47 | INFO: Blender create Mesh node 10
+01:21:47 | INFO: Blender create Mesh node 11
+01:21:47 | INFO: Blender create Mesh node 12
+01:21:47 | INFO: Blender create Mesh node 13
+01:21:47 | INFO: Blender create Mesh node 14
+01:21:47 | INFO: Blender create Mesh node 15
+01:21:47 | INFO: Blender create Mesh node 16
+01:21:47 | INFO: Blender create Mesh node 17
+01:21:47 | INFO: Blender create Mesh node 18
+01:21:47 | INFO: Blender create Mesh node 19
+01:21:47 | INFO: Blender create Mesh node 20
+01:21:47 | INFO: Blender create Mesh node 21
+01:21:47 | INFO: Blender create Mesh node 22
+01:21:47 | INFO: Blender create Mesh node 23
+01:21:47 | INFO: Blender create Mesh node 24
+01:21:47 | INFO: Blender create Mesh node 25
+01:21:47 | INFO: Blender create Mesh node 26
+01:21:47 | INFO: Blender create Mesh node 27
+01:21:47 | INFO: Blender create Mesh node 28
+01:21:47 | INFO: Blender create Mesh node 29
+01:21:47 | INFO: Blender create Mesh node 30
+01:21:47 | INFO: Blender create Mesh node 31
+01:21:47 | INFO: Blender create Mesh node 32
+01:21:47 | INFO: Blender create Mesh node 33
+01:21:47 | INFO: Blender create Mesh node 34
+01:21:47 | INFO: Blender create Mesh node 35
+01:21:47 | INFO: Blender create Mesh node 36
+01:21:47 | INFO: Blender create Mesh node 37
+01:21:47 | INFO: Blender create Mesh node 38
+01:21:47 | INFO: Blender create Mesh node 39
+01:21:47 | INFO: Blender create Mesh node 40
+01:21:47 | INFO: Blender create Mesh node 41
+01:21:47 | INFO: Blender create Mesh node 42
+01:21:47 | INFO: Blender create Mesh node 43
+01:21:47 | INFO: Blender create Mesh node 44
+01:21:47 | INFO: Blender create Mesh node 45
+01:21:47 | INFO: Blender create Mesh node 46
+01:21:47 | INFO: Blender create Mesh node 47
+01:21:47 | INFO: glTF import finished in 0.12s
+00:09.297  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-rebuilt-front.png'
+00:09.360  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-rebuilt-side.png'
+00:09.407  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\light-cruiser-rebuild-01\Light_Fighter-rebuilt-top.png'
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

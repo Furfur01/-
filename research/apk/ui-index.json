@@ -1,0 +1,4021 @@
+[
+  {
+    "file": "Activities_center.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 24,
+    "missing_bitmaps": [
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "Activities_center_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 24,
+    "missing_bitmaps": [
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "Activities_center_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 24,
+    "missing_bitmaps": [
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "Activities_Details.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 15,
+    "missing_bitmaps": [
+      "activity.png"
+    ]
+  },
+  {
+    "file": "Activities_Details_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 15,
+    "missing_bitmaps": [
+      "activity.png"
+    ]
+  },
+  {
+    "file": "Activities_Details_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 15,
+    "missing_bitmaps": [
+      "activity.png"
+    ]
+  },
+  {
+    "file": "Activities_rank.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 11,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Activities_rank_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 11,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Activities_rank_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alarm_cpm.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 4,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alarm_cpm_16x9.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 4,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alarm_cpm_4x3.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 4,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "All_mine_new.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 400,
+    "sprite_count": 698,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "All_mine_new_16x9.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 400,
+    "sprite_count": 698,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "All_mine_new_4x3.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 400,
+    "sprite_count": 698,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend_16x9.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend_4x3.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend_info.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 29,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend_info_16x9.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 29,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Alliance_contend_info_4x3.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 29,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "application_assist.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "application_assist_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "application_assist_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ApplyList.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ApplyList_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ApplyList_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BG.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 4,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BG_16x9.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 4,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BG_4x3.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 4,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BookMark.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 23,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BookMark_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 23,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "BookMark_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 23,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Btn_All.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 40,
+    "sprite_count": 114,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "buildingList.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 45,
+    "sprite_count": 90,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "buildingList_16x9.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 45,
+    "sprite_count": 90,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "buildingList_4x3.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 45,
+    "sprite_count": 90,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "challenge_log.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "challenge_log_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "challenge_log_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Challenge_outcome.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 24,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Challenge_outcome_16x9.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 24,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Challenge_outcome_4x3.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 24,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ChargingStation.tfs",
+    "bitmap_count": 40,
+    "bitmap_shapes": 40,
+    "sprite_count": 91,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png"
+    ]
+  },
+  {
+    "file": "ChargingStation_16x9.tfs",
+    "bitmap_count": 40,
+    "bitmap_shapes": 40,
+    "sprite_count": 91,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png"
+    ]
+  },
+  {
+    "file": "ChargingStation_4x3.tfs",
+    "bitmap_count": 40,
+    "bitmap_shapes": 40,
+    "sprite_count": 91,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png"
+    ]
+  },
+  {
+    "file": "Chat.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 13,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_16x9.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 13,
+    "sprite_count": 35,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_4x3.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 12,
+    "sprite_count": 35,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_Btn.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 6,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_Btn_16x9.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 6,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_Btn_4x3.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 6,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_ReportChatViolation.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_ReportChatViolation_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_ReportChatViolation_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 7,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_rules.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_rules_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Chat_rules_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "City.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 600,
+    "sprite_count": 866,
+    "missing_bitmaps": [
+      "main_stage_space_00.png"
+    ]
+  },
+  {
+    "file": "City_16x9.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 642,
+    "sprite_count": 929,
+    "missing_bitmaps": [
+      "main_stage_space_00.png"
+    ]
+  },
+  {
+    "file": "City_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 643,
+    "sprite_count": 931,
+    "missing_bitmaps": [
+      "main_stage_space_00.png"
+    ]
+  },
+  {
+    "file": "City_Explanation.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 33,
+    "sprite_count": 49,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "City_Explanation_16x9.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 33,
+    "sprite_count": 49,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "City_Explanation_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 33,
+    "sprite_count": 49,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "CityUI_Down.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 45,
+    "sprite_count": 57,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "CityUI_Down_16x9.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 45,
+    "sprite_count": 57,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "CityUI_Down_4x3.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 45,
+    "sprite_count": 57,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "CityUI_UP.tfs",
+    "bitmap_count": 38,
+    "bitmap_shapes": 209,
+    "sprite_count": 288,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_17.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "CityUI_UP_16x9.tfs",
+    "bitmap_count": 37,
+    "bitmap_shapes": 209,
+    "sprite_count": 288,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_17.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "CityUI_UP_4x3.tfs",
+    "bitmap_count": 38,
+    "bitmap_shapes": 204,
+    "sprite_count": 288,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_17.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ContactUS.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 15,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ContactUS_16x9.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 15,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ContactUS_4x3.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 15,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "coordPanel.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 0,
+    "sprite_count": 10,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "coordPanel_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 0,
+    "sprite_count": 10,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "coordPanel_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 0,
+    "sprite_count": 10,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Daily_reward.tfs",
+    "bitmap_count": 56,
+    "bitmap_shapes": 493,
+    "sprite_count": 784,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Daily_reward_16x9.tfs",
+    "bitmap_count": 56,
+    "bitmap_shapes": 493,
+    "sprite_count": 784,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Daily_reward_4x3.tfs",
+    "bitmap_count": 56,
+    "bitmap_shapes": 493,
+    "sprite_count": 784,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "DayRewards.tfs",
+    "bitmap_count": 49,
+    "bitmap_shapes": 503,
+    "sprite_count": 771,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "DayRewards_16x9.tfs",
+    "bitmap_count": 50,
+    "bitmap_shapes": 503,
+    "sprite_count": 771,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "DayRewards_4x3.tfs",
+    "bitmap_count": 49,
+    "bitmap_shapes": 503,
+    "sprite_count": 771,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_16.png",
+      "NA_Item_15.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "demoteConfirmBox.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 6,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "demoteConfirmBox_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 6,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "demoteConfirmBox_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 6,
+    "sprite_count": 16,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "DetaildRouteInformation.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "DetaildRouteInformation_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "DetaildRouteInformation_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Dispatch.tfs",
+    "bitmap_count": 42,
+    "bitmap_shapes": 503,
+    "sprite_count": 922,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Dispatch_16x9.tfs",
+    "bitmap_count": 42,
+    "bitmap_shapes": 503,
+    "sprite_count": 921,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Dispatch_4x3.tfs",
+    "bitmap_count": 42,
+    "bitmap_shapes": 503,
+    "sprite_count": 922,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "downloading.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "downloading_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "downloading_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ecm.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 22,
+    "sprite_count": 55,
+    "missing_bitmaps": [
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ecm_16x9.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 22,
+    "sprite_count": 55,
+    "missing_bitmaps": [
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ecm_4x3.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 15,
+    "sprite_count": 55,
+    "missing_bitmaps": [
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "edit_board.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 1,
+    "sprite_count": 14,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "edit_board_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 1,
+    "sprite_count": 14,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "edit_board_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 1,
+    "sprite_count": 14,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "fb_chests.tfs",
+    "bitmap_count": 28,
+    "bitmap_shapes": 32,
+    "sprite_count": 60,
+    "missing_bitmaps": [
+      "NA_item_fix_4.png",
+      "NA_item_fix_3.png",
+      "NA_item_fix_2.png",
+      "NA_item_fix_1.png",
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "fb_chests_16x9.tfs",
+    "bitmap_count": 28,
+    "bitmap_shapes": 32,
+    "sprite_count": 60,
+    "missing_bitmaps": [
+      "NA_item_fix_4.png",
+      "NA_item_fix_3.png",
+      "NA_item_fix_2.png",
+      "NA_item_fix_1.png",
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "fb_chests_4x3.tfs",
+    "bitmap_count": 28,
+    "bitmap_shapes": 32,
+    "sprite_count": 60,
+    "missing_bitmaps": [
+      "NA_item_fix_4.png",
+      "NA_item_fix_3.png",
+      "NA_item_fix_2.png",
+      "NA_item_fix_1.png",
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetDevice.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 14,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetDevice_16x9.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 14,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetDevice_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 14,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetDevice_upgrade.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetDevice_upgrade_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetDevice_upgrade_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 7,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetRemake.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 372,
+    "sprite_count": 654,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetRemake_16x9.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 372,
+    "sprite_count": 654,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "FleetRemake_4x3.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 372,
+    "sprite_count": 654,
+    "missing_bitmaps": [
+      "NA_item_6.png",
+      "NA_item_5.png",
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Fleets.tfs",
+    "bitmap_count": 30,
+    "bitmap_shapes": 367,
+    "sprite_count": 683,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_16x9.tfs",
+    "bitmap_count": 30,
+    "bitmap_shapes": 367,
+    "sprite_count": 683,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_4x3.tfs",
+    "bitmap_count": 30,
+    "bitmap_shapes": 367,
+    "sprite_count": 683,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Explanation.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 364,
+    "sprite_count": 621,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Explanation_16x9.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 364,
+    "sprite_count": 621,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Explanation_4x3.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 364,
+    "sprite_count": 621,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Flag.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 16,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Flag_16x9.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 16,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Fleets_Flag_4x3.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 16,
+    "sprite_count": 41,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetsTechnology.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 36,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetsTechnology_16x9.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 36,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "FleetsTechnology_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 36,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Friends_list.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 15,
+    "sprite_count": 53,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_Dialog_buy.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 12,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_Dialog_buy_16x9.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 12,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_Dialog_buy_4x3.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 12,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_dispute_Task.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_dispute_Task_16x9.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_dispute_Task_4x3.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 17,
+    "sprite_count": 43,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Galaxy_first_reward.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 13,
+    "sprite_count": 25,
+    "missing_bitmaps": [
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Galaxy_first_reward_16x9.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 13,
+    "sprite_count": 25,
+    "missing_bitmaps": [
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Galaxy_first_reward_4x3.tfs",
+    "bitmap_count": 32,
+    "bitmap_shapes": 13,
+    "sprite_count": 25,
+    "missing_bitmaps": [
+      "NA_item_4.png",
+      "NA_item_3.png",
+      "NA_item_2.png",
+      "NA_item_1.png"
+    ]
+  },
+  {
+    "file": "Galaxy_Task_details.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 17,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "Galaxy_Task_details_16x9.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 17,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "Galaxy_Task_details_4x3.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 17,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge.tfs",
+    "bitmap_count": 49,
+    "bitmap_shapes": 385,
+    "sprite_count": 721,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_16x9.tfs",
+    "bitmap_count": 49,
+    "bitmap_shapes": 385,
+    "sprite_count": 721,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_4x3.tfs",
+    "bitmap_count": 49,
+    "bitmap_shapes": 383,
+    "sprite_count": 721,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_history.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_history_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_history_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 19,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 19,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 19,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center_WD.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 22,
+    "sprite_count": 48,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center_WD_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 22,
+    "sprite_count": 48,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_info_center_WD_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 22,
+    "sprite_count": 48,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_leader.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_leader_16x9.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_leader_4x3.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_rank.tfs",
+    "bitmap_count": 52,
+    "bitmap_shapes": 389,
+    "sprite_count": 722,
+    "missing_bitmaps": [
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_16.png",
+      "NA_ITEM_15.png",
+      "NA_ITEM_14.png",
+      "NA_ITEM_13.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_rank_16x9.tfs",
+    "bitmap_count": 53,
+    "bitmap_shapes": 389,
+    "sprite_count": 722,
+    "missing_bitmaps": [
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_16.png",
+      "NA_ITEM_15.png",
+      "NA_ITEM_14.png",
+      "NA_ITEM_13.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_rank_4x3.tfs",
+    "bitmap_count": 53,
+    "bitmap_shapes": 388,
+    "sprite_count": 722,
+    "missing_bitmaps": [
+      "NA_ITEM_9.png",
+      "NA_ITEM_8.png",
+      "NA_ITEM_7.png",
+      "NA_ITEM_6.png",
+      "NA_ITEM_5.png",
+      "NA_ITEM_4.png",
+      "NA_ITEM_3.png",
+      "NA_ITEM_2.png",
+      "NA_ITEM_16.png",
+      "NA_ITEM_15.png",
+      "NA_ITEM_14.png",
+      "NA_ITEM_13.png",
+      "NA_ITEM_12.png",
+      "NA_ITEM_11.png",
+      "NA_ITEM_10.png",
+      "NA_ITEM_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_result.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 16,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_result_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 16,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_result_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 16,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_result_WD.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_result_WD_16x9.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_result_WD_4x3.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyChallenge_reward.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 20,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_reward_16x9.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 20,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_reward_4x3.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 20,
+    "sprite_count": 35,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_WD.tfs",
+    "bitmap_count": 46,
+    "bitmap_shapes": 434,
+    "sprite_count": 856,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_WD_16x9.tfs",
+    "bitmap_count": 46,
+    "bitmap_shapes": 434,
+    "sprite_count": 856,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyChallenge_WD_4x3.tfs",
+    "bitmap_count": 46,
+    "bitmap_shapes": 432,
+    "sprite_count": 856,
+    "missing_bitmaps": [
+      "NA_WAR_ITEM_5.png",
+      "NA_WAR_ITEM_4.png",
+      "NA_WAR_ITEM_3.png",
+      "NA_WAR_ITEM_2.png",
+      "NA_WAR_ITEM_1.png",
+      "NA_WAR_ITEM_0.png"
+    ]
+  },
+  {
+    "file": "GalaxyMapScene.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 38,
+    "sprite_count": 59,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyMapScene_16x9.tfs",
+    "bitmap_count": 23,
+    "bitmap_shapes": 44,
+    "sprite_count": 59,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GalaxyMapScene_4x3.tfs",
+    "bitmap_count": 23,
+    "bitmap_shapes": 41,
+    "sprite_count": 59,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GameTip.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 8,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GameTip_16x9.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 8,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GameTip_4x3.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 5,
+    "sprite_count": 8,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GatewayBox.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 4,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GatewayBox_16x9.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 4,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GatewayBox_4x3.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 4,
+    "sprite_count": 17,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "GraceHouse.tfs",
+    "bitmap_count": 24,
+    "bitmap_shapes": 29,
+    "sprite_count": 53,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GraceHouse_16x9.tfs",
+    "bitmap_count": 24,
+    "bitmap_shapes": 29,
+    "sprite_count": 53,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "GraceHouse_4x3.tfs",
+    "bitmap_count": 24,
+    "bitmap_shapes": 29,
+    "sprite_count": 53,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "Grow_bags.tfs",
+    "bitmap_count": 76,
+    "bitmap_shapes": 80,
+    "sprite_count": 97,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_64.png",
+      "NA_item_63.png",
+      "NA_item_62.png",
+      "NA_item_61.png",
+      "NA_item_60.png",
+      "NA_item_6.png",
+      "NA_item_59.png",
+      "NA_item_58.png",
+      "NA_item_57.png",
+      "NA_item_56.png",
+      "NA_item_55.png",
+      "NA_item_54.png",
+      "NA_item_53.png",
+      "NA_item_52.png",
+      "NA_item_51.png",
+      "NA_item_50.png",
+      "NA_item_5.png",
+      "NA_item_49.png",
+      "NA_item_48.png",
+      "NA_item_47.png",
+      "NA_item_46.png",
+      "NA_item_45.png",
+      "NA_item_44.png",
+      "NA_item_43.png",
+      "NA_item_42.png",
+      "NA_item_41.png",
+      "NA_item_40.png",
+      "NA_item_4.png",
+      "NA_item_39.png",
+      "NA_item_38.png",
+      "NA_item_37.png",
+      "NA_item_36.png",
+      "NA_item_35.png",
+      "NA_item_34.png",
+      "NA_item_33.png",
+      "NA_item_32.png",
+      "NA_item_31.png",
+      "NA_item_30.png",
+      "NA_item_3.png",
+      "NA_item_29.png",
+      "NA_item_28.png",
+      "NA_item_27.png",
+      "NA_item_26.png",
+      "NA_item_25.png",
+      "NA_item_24.png",
+      "NA_item_23.png",
+      "NA_item_22.png",
+      "NA_item_21.png",
+      "NA_item_20.png",
+      "NA_item_2.png",
+      "NA_item_19.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png",
+      "NA_item_0.png"
+    ]
+  },
+  {
+    "file": "Grow_bags_16x9.tfs",
+    "bitmap_count": 76,
+    "bitmap_shapes": 80,
+    "sprite_count": 97,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_64.png",
+      "NA_item_63.png",
+      "NA_item_62.png",
+      "NA_item_61.png",
+      "NA_item_60.png",
+      "NA_item_6.png",
+      "NA_item_59.png",
+      "NA_item_58.png",
+      "NA_item_57.png",
+      "NA_item_56.png",
+      "NA_item_55.png",
+      "NA_item_54.png",
+      "NA_item_53.png",
+      "NA_item_52.png",
+      "NA_item_51.png",
+      "NA_item_50.png",
+      "NA_item_5.png",
+      "NA_item_49.png",
+      "NA_item_48.png",
+      "NA_item_47.png",
+      "NA_item_46.png",
+      "NA_item_45.png",
+      "NA_item_44.png",
+      "NA_item_43.png",
+      "NA_item_42.png",
+      "NA_item_41.png",
+      "NA_item_40.png",
+      "NA_item_4.png",
+      "NA_item_39.png",
+      "NA_item_38.png",
+      "NA_item_37.png",
+      "NA_item_36.png",
+      "NA_item_35.png",
+      "NA_item_34.png",
+      "NA_item_33.png",
+      "NA_item_32.png",
+      "NA_item_31.png",
+      "NA_item_30.png",
+      "NA_item_3.png",
+      "NA_item_29.png",
+      "NA_item_28.png",
+      "NA_item_27.png",
+      "NA_item_26.png",
+      "NA_item_25.png",
+      "NA_item_24.png",
+      "NA_item_23.png",
+      "NA_item_22.png",
+      "NA_item_21.png",
+      "NA_item_20.png",
+      "NA_item_2.png",
+      "NA_item_19.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png",
+      "NA_item_0.png"
+    ]
+  },
+  {
+    "file": "Grow_bags_4x3.tfs",
+    "bitmap_count": 76,
+    "bitmap_shapes": 81,
+    "sprite_count": 97,
+    "missing_bitmaps": [
+      "NA_item_9.png",
+      "NA_item_8.png",
+      "NA_item_7.png",
+      "NA_item_64.png",
+      "NA_item_63.png",
+      "NA_item_62.png",
+      "NA_item_61.png",
+      "NA_item_60.png",
+      "NA_item_6.png",
+      "NA_item_59.png",
+      "NA_item_58.png",
+      "NA_item_57.png",
+      "NA_item_56.png",
+      "NA_item_55.png",
+      "NA_item_54.png",
+      "NA_item_53.png",
+      "NA_item_52.png",
+      "NA_item_51.png",
+      "NA_item_50.png",
+      "NA_item_5.png",
+      "NA_item_49.png",
+      "NA_item_48.png",
+      "NA_item_47.png",
+      "NA_item_46.png",
+      "NA_item_45.png",
+      "NA_item_44.png",
+      "NA_item_43.png",
+      "NA_item_42.png",
+      "NA_item_41.png",
+      "NA_item_40.png",
+      "NA_item_4.png",
+      "NA_item_39.png",
+      "NA_item_38.png",
+      "NA_item_37.png",
+      "NA_item_36.png",
+      "NA_item_35.png",
+      "NA_item_34.png",
+      "NA_item_33.png",
+      "NA_item_32.png",
+      "NA_item_31.png",
+      "NA_item_30.png",
+      "NA_item_3.png",
+      "NA_item_29.png",
+      "NA_item_28.png",
+      "NA_item_27.png",
+      "NA_item_26.png",
+      "NA_item_25.png",
+      "NA_item_24.png",
+      "NA_item_23.png",
+      "NA_item_22.png",
+      "NA_item_21.png",
+      "NA_item_20.png",
+      "NA_item_2.png",
+      "NA_item_19.png",
+      "NA_item_18.png",
+      "NA_item_17.png",
+      "NA_item_16.png",
+      "NA_item_15.png",
+      "NA_item_14.png",
+      "NA_item_13.png",
+      "NA_item_12.png",
+      "NA_item_11.png",
+      "NA_item_10.png",
+      "NA_item_1.png",
+      "NA_item_0.png"
+    ]
+  },
+  {
+    "file": "Help.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Help_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Help_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Integral_Rank.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Integral_Rank_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Integral_Rank_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 10,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invite_Friends.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invite_Friends_16x9.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invite_Friends_4x3.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invited_reward.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invited_reward_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Invited_reward_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 18,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ItemShop.tfs",
+    "bitmap_count": 29,
+    "bitmap_shapes": 38,
+    "sprite_count": 84,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ItemShop_16x9.tfs",
+    "bitmap_count": 29,
+    "bitmap_shapes": 38,
+    "sprite_count": 84,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ItemShop_4x3.tfs",
+    "bitmap_count": 29,
+    "bitmap_shapes": 34,
+    "sprite_count": 84,
+    "missing_bitmaps": [
+      "NAN_promo_3.png",
+      "NAN_promo_2.png",
+      "NAN_promo_1.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "ItemShopDetailsBox.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ItemShopDetailsBox_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ItemShopDetailsBox_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Krypton_about.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 7,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Krypton_about_16x9.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 7,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Krypton_about_4x3.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 7,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_enhance.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 152,
+    "sprite_count": 185,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_enhance_16x9.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 152,
+    "sprite_count": 185,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_enhance_4x3.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 151,
+    "sprite_count": 185,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_fuse.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 158,
+    "sprite_count": 198,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_fuse_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 158,
+    "sprite_count": 198,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_fuse_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 158,
+    "sprite_count": 198,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_popbox.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_popbox_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "krypton_popbox_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 16,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "KryptonCrstalCenter.tfs",
+    "bitmap_count": 27,
+    "bitmap_shapes": 158,
+    "sprite_count": 195,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "KryptonCrstalCenter_16x9.tfs",
+    "bitmap_count": 27,
+    "bitmap_shapes": 158,
+    "sprite_count": 195,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "KryptonCrstalCenter_4x3.tfs",
+    "bitmap_count": 27,
+    "bitmap_shapes": 158,
+    "sprite_count": 195,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Login.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 24,
+    "sprite_count": 123,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Login_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 24,
+    "sprite_count": 123,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Login_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 24,
+    "sprite_count": 123,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Lottery.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 32,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Lottery_pop.tfs",
+    "bitmap_count": 5,
+    "bitmap_shapes": 6,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mail.tfs",
+    "bitmap_count": 35,
+    "bitmap_shapes": 66,
+    "sprite_count": 146,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mail_16x9.tfs",
+    "bitmap_count": 35,
+    "bitmap_shapes": 65,
+    "sprite_count": 146,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mail_4x3.tfs",
+    "bitmap_count": 34,
+    "bitmap_shapes": 66,
+    "sprite_count": 147,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_details.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_details_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_details_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_outCome.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_outCome_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_battle_outCome_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_position_info.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_position_info_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "mail_position_info_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 9,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Manufacturing.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 375,
+    "sprite_count": 659,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Manufacturing_16x9.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 375,
+    "sprite_count": 659,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Manufacturing_4x3.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 375,
+    "sprite_count": 659,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MessageDialog.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 20,
+    "sprite_count": 42,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MessageDialog_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 20,
+    "sprite_count": 42,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MessageDialog_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 20,
+    "sprite_count": 42,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "migrate_location.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 26,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "migrate_location_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 26,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "migrate_location_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 13,
+    "sprite_count": 26,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mission.tfs",
+    "bitmap_count": 39,
+    "bitmap_shapes": 16,
+    "sprite_count": 82,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mission_16x9.tfs",
+    "bitmap_count": 39,
+    "bitmap_shapes": 16,
+    "sprite_count": 82,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Mission_4x3.tfs",
+    "bitmap_count": 39,
+    "bitmap_shapes": 16,
+    "sprite_count": 82,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Moon.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 48,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Moon_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 48,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Moon_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 48,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MoonbuildingList.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 41,
+    "sprite_count": 73,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MoonbuildingList_16x9.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 41,
+    "sprite_count": 73,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MoonbuildingList_4x3.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 41,
+    "sprite_count": 73,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MyGuest.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 8,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MyGuest_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 8,
+    "sprite_count": 38,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "MyGuest_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 8,
+    "sprite_count": 40,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Newbie_Task.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Newbie_Task_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Newbie_Task_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "News_Details.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 0,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "News_Details_16x9.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 0,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "News_Details_4x3.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 0,
+    "sprite_count": 7,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "NewsActivitiesfla.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 21,
+    "sprite_count": 32,
+    "missing_bitmaps": [
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "NewsActivitiesfla_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 22,
+    "sprite_count": 33,
+    "missing_bitmaps": [
+      "NewActivity_IMG_7.png",
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "NewsActivitiesfla_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 21,
+    "sprite_count": 32,
+    "missing_bitmaps": [
+      "NewActivity_IMG_6.png",
+      "NewActivity_IMG_5.png",
+      "NewActivity_IMG_4.png",
+      "NewActivity_IMG_3.png",
+      "NewActivity_IMG_2.png",
+      "NewActivity_IMG_1.png",
+      "NewActivity_IMG_0.png"
+    ]
+  },
+  {
+    "file": "Options.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Options_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Options_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 8,
+    "sprite_count": 11,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "package_detail.tfs",
+    "bitmap_count": 23,
+    "bitmap_shapes": 27,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_detail_16x9.tfs",
+    "bitmap_count": 23,
+    "bitmap_shapes": 27,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_detail_4x3.tfs",
+    "bitmap_count": 23,
+    "bitmap_shapes": 27,
+    "sprite_count": 37,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_14.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_gacha.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 17,
+    "sprite_count": 26,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_gacha_16x9.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 17,
+    "sprite_count": 26,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_gacha_4x3.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 17,
+    "sprite_count": 26,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_pop.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_pop_16x9.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "package_pop_4x3.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 20,
+    "sprite_count": 34,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_13.png",
+      "NA_Item_12.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "PlanetInformation_new.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 25,
+    "sprite_count": 50,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "PlanetInformation_new_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 25,
+    "sprite_count": 50,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "PlanetInformation_new_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 25,
+    "sprite_count": 50,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Planets_new.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 39,
+    "sprite_count": 69,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Planets_new_16x9.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 39,
+    "sprite_count": 69,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Planets_new_4x3.tfs",
+    "bitmap_count": 21,
+    "bitmap_shapes": 39,
+    "sprite_count": 69,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "PROG_PANEL.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 8,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "PROG_PANEL_16x9.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 8,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "PROG_PANEL_4x3.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 8,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "promo_popbox.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 23,
+    "sprite_count": 39,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "purchaseConfirmBox.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "purchaseConfirmBox_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "purchaseConfirmBox_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 14,
+    "sprite_count": 27,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "QuickBuyMall.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 31,
+    "sprite_count": 47,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "QuickBuyMall_16x9.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 31,
+    "sprite_count": 47,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "QuickBuyMall_4x3.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 31,
+    "sprite_count": 47,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "Radar.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 19,
+    "sprite_count": 60,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Radar_16x9.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 19,
+    "sprite_count": 60,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Radar_4x3.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 19,
+    "sprite_count": 60,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Rank.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 15,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Rank_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 15,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Rank_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 15,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 6,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register_16x9.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 6,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register_4x3.tfs",
+    "bitmap_count": 3,
+    "bitmap_shapes": 6,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register_agreement.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register_agreement_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Register_agreement_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResearchLad.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 42,
+    "sprite_count": 66,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResearchLad_16x9.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 42,
+    "sprite_count": 66,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResearchLad_4x3.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 42,
+    "sprite_count": 66,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 35,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings_16x9.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 35,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings_4x3.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 35,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings_new.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings_new_16x9.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "ResourceSettings_new_4x3.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 11,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "scan_report.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "scan_report_16x9.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "scan_report_4x3.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "screen_first_ad.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "screen_first_ad_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "screen_first_ad_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 11,
+    "sprite_count": 19,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Settings.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Settings_16x9.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Settings_4x3.tfs",
+    "bitmap_count": 1,
+    "bitmap_shapes": 1,
+    "sprite_count": 13,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "solar_sovereignty_des.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 13,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "solar_sovereignty_des_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 13,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "solar_sovereignty_des_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 13,
+    "sprite_count": 23,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "SolarSystem_new.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 249,
+    "sprite_count": 373,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "SolarSystem_new_16x9.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 249,
+    "sprite_count": 373,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "SolarSystem_new_4x3.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 246,
+    "sprite_count": 373,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "SpaceDepot.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 28,
+    "sprite_count": 57,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "SpaceDepot_16x9.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 28,
+    "sprite_count": 57,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "SpaceDepot_4x3.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 24,
+    "sprite_count": 57,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "SpeedUp.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 45,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "SpeedUp_16x9.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 45,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "SpeedUp_4x3.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 24,
+    "sprite_count": 45,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "StarFortress.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 127,
+    "sprite_count": 233,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_16x9.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 127,
+    "sprite_count": 233,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_4x3.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 125,
+    "sprite_count": 233,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_details.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 127,
+    "sprite_count": 223,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_details_16x9.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 127,
+    "sprite_count": 223,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_details_4x3.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 125,
+    "sprite_count": 223,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_list.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 265,
+    "sprite_count": 409,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_list_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 265,
+    "sprite_count": 409,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_list_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 265,
+    "sprite_count": 409,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_morale.tfs",
+    "bitmap_count": 12,
+    "bitmap_shapes": 21,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_morale_16x9.tfs",
+    "bitmap_count": 12,
+    "bitmap_shapes": 21,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_morale_4x3.tfs",
+    "bitmap_count": 12,
+    "bitmap_shapes": 21,
+    "sprite_count": 31,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "StarFortress_shop.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 21,
+    "sprite_count": 36,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "StarFortress_shop_16x9.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 21,
+    "sprite_count": 36,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "StarFortress_shop_4x3.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 21,
+    "sprite_count": 36,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "Task.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 25,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Task_16x9.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 25,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Task_4x3.tfs",
+    "bitmap_count": 20,
+    "bitmap_shapes": 25,
+    "sprite_count": 46,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Task_list.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 13,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Task_list_16x9.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 13,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "Task_list_4x3.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 13,
+    "sprite_count": 29,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TechTree.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 389,
+    "sprite_count": 650,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TechTree_16x9.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 389,
+    "sprite_count": 650,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TechTree_4x3.tfs",
+    "bitmap_count": 26,
+    "bitmap_shapes": 389,
+    "sprite_count": 650,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "testLoading.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "testLoading_16x9.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "testLoading_4x3.tfs",
+    "bitmap_count": 2,
+    "bitmap_shapes": 2,
+    "sprite_count": 12,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TwoInterface.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 30,
+    "sprite_count": 53,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TwoInterface_16x9.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 30,
+    "sprite_count": 53,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "TwoInterface_4x3.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 24,
+    "sprite_count": 54,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 15,
+    "sprite_count": 25,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_16x9.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 15,
+    "sprite_count": 25,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_4x3.tfs",
+    "bitmap_count": 10,
+    "bitmap_shapes": 15,
+    "sprite_count": 25,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_create.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 9,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_create_16x9.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 8,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_create_4x3.tfs",
+    "bitmap_count": 8,
+    "bitmap_shapes": 9,
+    "sprite_count": 22,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_list.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 17,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_list_16x9.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 17,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "unAlliance_list_4x3.tfs",
+    "bitmap_count": 6,
+    "bitmap_shapes": 17,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "UniverseCampaign.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 183,
+    "sprite_count": 218,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "UniverseCampaign_16x9.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 183,
+    "sprite_count": 218,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "UniverseCampaign_4x3.tfs",
+    "bitmap_count": 36,
+    "bitmap_shapes": 183,
+    "sprite_count": 218,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png"
+    ]
+  },
+  {
+    "file": "USE_PANEL.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 18,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "USE_PANEL_16x9.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 18,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "USE_PANEL_4x3.tfs",
+    "bitmap_count": 11,
+    "bitmap_shapes": 18,
+    "sprite_count": 36,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 52,
+    "sprite_count": 122,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_16x9.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 52,
+    "sprite_count": 122,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_4x3.tfs",
+    "bitmap_count": 14,
+    "bitmap_shapes": 51,
+    "sprite_count": 122,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assist.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 4,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assist_16x9.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 4,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assist_4x3.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 4,
+    "sprite_count": 20,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assistCombat.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 18,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assistCombat_16x9.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 18,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_assistCombat_4x3.tfs",
+    "bitmap_count": 7,
+    "bitmap_shapes": 10,
+    "sprite_count": 18,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_contribute.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 19,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_contribute_16x9.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 19,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_contribute_4x3.tfs",
+    "bitmap_count": 13,
+    "bitmap_shapes": 19,
+    "sprite_count": 37,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_member.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 10,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_member_16x9.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 10,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_member_4x3.tfs",
+    "bitmap_count": 4,
+    "bitmap_shapes": 10,
+    "sprite_count": 21,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_reward.tfs",
+    "bitmap_count": 16,
+    "bitmap_shapes": 19,
+    "sprite_count": 29,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "userAlliance_reward_16x9.tfs",
+    "bitmap_count": 18,
+    "bitmap_shapes": 21,
+    "sprite_count": 31,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_11.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "userAlliance_reward_4x3.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 20,
+    "sprite_count": 30,
+    "missing_bitmaps": [
+      "NA_Item_9.png",
+      "NA_Item_8.png",
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_10.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "userAlliance_tech.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 46,
+    "sprite_count": 44,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_tech_16x9.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 46,
+    "sprite_count": 44,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "userAlliance_tech_4x3.tfs",
+    "bitmap_count": 19,
+    "bitmap_shapes": 46,
+    "sprite_count": 44,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_intergral.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 20,
+    "sprite_count": 40,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "VIP_intergral_16x9.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 20,
+    "sprite_count": 40,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "VIP_intergral_4x3.tfs",
+    "bitmap_count": 17,
+    "bitmap_shapes": 20,
+    "sprite_count": 40,
+    "missing_bitmaps": [
+      "NA_Item_7.png",
+      "NA_Item_6.png",
+      "NA_Item_5.png",
+      "NA_Item_4.png",
+      "NA_Item_3.png",
+      "NA_Item_2.png",
+      "NA_Item_1.png",
+      "NA_Item_0.png"
+    ]
+  },
+  {
+    "file": "VIP_main.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 25,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_main_16x9.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 25,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_main_4x3.tfs",
+    "bitmap_count": 15,
+    "bitmap_shapes": 25,
+    "sprite_count": 45,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_view.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_view_16x9.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "VIP_view_4x3.tfs",
+    "bitmap_count": 9,
+    "bitmap_shapes": 10,
+    "sprite_count": 24,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "War_craft.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 349,
+    "sprite_count": 617,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "War_craft_16x9.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 349,
+    "sprite_count": 617,
+    "missing_bitmaps": []
+  },
+  {
+    "file": "War_craft_4x3.tfs",
+    "bitmap_count": 22,
+    "bitmap_shapes": 349,
+    "sprite_count": 617,
+    "missing_bitmaps": []
+  }
+]

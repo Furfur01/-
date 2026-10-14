@@ -1,0 +1,843 @@
+[
+  {
+    "id": "Destroyer",
+    "name": "驱逐舰",
+    "apkId": 7,
+    "file": "Destroyer.glb",
+    "preview": "Destroyer.png",
+    "triangles": 22932,
+    "meshes": 55,
+    "bounds": [
+      19.239344196946156,
+      7.932221312589212,
+      25
+    ],
+    "relativeLength": 25,
+    "bytes": 1691484,
+    "revision": "three-view-rebuild-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "重型战舰",
+      "scale": 1,
+      "primary": "双等离子大炮",
+      "kind": "plasma",
+      "muzzles": [
+        [
+          -0.62,
+          -0.33,
+          -7.25
+        ],
+        [
+          0.62,
+          -0.33,
+          -7.25
+        ]
+      ],
+      "caliber": 0.23,
+      "pointDefense": [
+        [
+          -0.83,
+          0.997,
+          -3.3
+        ],
+        [
+          0.83,
+          0.997,
+          -3.3
+        ],
+        [
+          -2.6,
+          0.322,
+          1.2
+        ],
+        [
+          2.6,
+          0.322,
+          1.2
+        ],
+        [
+          -1.8,
+          0.512,
+          5.7
+        ],
+        [
+          1.8,
+          0.512,
+          5.7
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "双等离子大炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Cruiser",
+    "name": "巡洋舰",
+    "apkId": 3,
+    "file": "Cruiser.glb",
+    "preview": "Cruiser.png",
+    "triangles": 14028,
+    "meshes": 27,
+    "bounds": [
+      6.631802199128849,
+      4.060693514160272,
+      10
+    ],
+    "relativeLength": 10,
+    "bytes": 1030320,
+    "revision": "fleet-three-view-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "离子巡洋舰",
+      "scale": 1,
+      "install": false,
+      "primary": "双联离子炮",
+      "kind": "ion",
+      "muzzles": [
+        [
+          -1.9636,
+          1.3664800000000001,
+          -0.9339
+        ],
+        [
+          -1.7963999999999998,
+          1.3664800000000001,
+          -0.9339
+        ],
+        [
+          1.7963999999999998,
+          1.3664800000000001,
+          -0.9339
+        ],
+        [
+          1.9636,
+          1.3664800000000001,
+          -0.9339
+        ]
+      ],
+      "caliber": 0.07,
+      "pointDefense": [
+        [
+          -1.88,
+          1.33,
+          -0.59
+        ],
+        [
+          1.88,
+          1.33,
+          -0.59
+        ]
+      ],
+      "pdScale": 0.38
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Battleship",
+    "name": "战列舰",
+    "apkId": 4,
+    "file": "Battleship.glb",
+    "preview": "Battleship.png",
+    "triangles": 16012,
+    "meshes": 47,
+    "bounds": [
+      6.597417072218983,
+      4.675872793706574,
+      20
+    ],
+    "relativeLength": 20,
+    "bytes": 1186308,
+    "revision": "battleship-sculpted-03",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "重型战列舰",
+      "scale": 1,
+      "install": false,
+      "primary": "低矮舰炮分组齐射",
+      "kind": "shell",
+      "muzzles": [
+        [
+          -1.4492,
+          1.02256,
+          -2.2083
+        ],
+        [
+          -1.0708,
+          1.02256,
+          -2.2083
+        ],
+        [
+          1.0708,
+          1.02256,
+          -2.2083
+        ],
+        [
+          1.4492,
+          1.02256,
+          -2.2083
+        ],
+        [
+          -0.1452,
+          1.22336,
+          -1.0173
+        ],
+        [
+          0.1452,
+          1.22336,
+          -1.0173
+        ]
+      ],
+      "caliber": 0.1,
+      "pointDefense": [
+        [
+          -1.45,
+          1.11,
+          2.02
+        ],
+        [
+          1.45,
+          1.11,
+          2.02
+        ]
+      ],
+      "pdScale": 0.6
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Heavy_Fighter",
+    "name": "重型战机",
+    "apkId": 2,
+    "file": "Heavy_Fighter.glb",
+    "preview": "Heavy_Fighter.png",
+    "triangles": 5766,
+    "meshes": 1,
+    "bounds": [
+      1.3497051267209856,
+      0.6133617190442989,
+      2
+    ],
+    "relativeLength": 2,
+    "bytes": 624512,
+    "revision": "preserved",
+    "status": "preserved-approved-reference",
+    "weaponLayout": {
+      "role": "重型战机",
+      "scale": 1,
+      "install": false,
+      "primary": "固定重型激光炮",
+      "kind": "heavy_laser",
+      "muzzles": [
+        [
+          1.095,
+          0.445,
+          -2.335
+        ]
+      ],
+      "caliber": 0.075,
+      "pointDefense": []
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Dreadnought",
+    "name": "无畏舰",
+    "apkId": 5,
+    "file": "Dreadnought.glb",
+    "preview": "Dreadnought.png",
+    "triangles": 14420,
+    "meshes": 14,
+    "bounds": [
+      7.4481311371013765,
+      6.6202120869897945,
+      20
+    ],
+    "relativeLength": 20,
+    "bytes": 1338472,
+    "revision": "fleet-sculpted-02",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "大型战舰",
+      "scale": 1,
+      "primary": "前置双激光炮",
+      "kind": "laser",
+      "muzzles": [
+        [
+          -1.48,
+          -0.92,
+          -6.19
+        ],
+        [
+          1.48,
+          -0.92,
+          -6.19
+        ]
+      ],
+      "caliber": 0.11,
+      "pointDefense": [
+        [
+          -0.91,
+          1.035,
+          -1.7
+        ],
+        [
+          0.91,
+          1.035,
+          -1.7
+        ],
+        [
+          -1.25,
+          1.505,
+          1.3
+        ],
+        [
+          1.25,
+          1.505,
+          1.3
+        ],
+        [
+          -0.7,
+          2.315,
+          2.65
+        ],
+        [
+          0.7,
+          2.315,
+          2.65
+        ]
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Light_Fighter",
+    "name": "轻型战机",
+    "apkId": 1,
+    "file": "Light_Fighter.glb",
+    "preview": "Light_Fighter.png",
+    "triangles": 19620,
+    "meshes": 48,
+    "bounds": [
+      0.9819290342148508,
+      0.43569931645695426,
+      1
+    ],
+    "relativeLength": 1,
+    "bytes": 1447736,
+    "revision": "fleet-three-view-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "轻型战机",
+      "scale": 1,
+      "install": false,
+      "primary": "固定轻型激光炮",
+      "kind": "light_laser",
+      "muzzles": [
+        [
+          -1.79,
+          -1.44,
+          -2.48
+        ],
+        [
+          1.79,
+          -1.44,
+          -2.48
+        ]
+      ],
+      "caliber": 0.052,
+      "pointDefense": []
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Bomber",
+    "name": "行星轰炸机 / 导弹舰",
+    "apkId": 6,
+    "file": "Bomber.glb",
+    "preview": "Bomber.png",
+    "triangles": 22072,
+    "meshes": 38,
+    "bounds": [
+      10.368804469258277,
+      4.841483828628603,
+      20
+    ],
+    "relativeLength": 20,
+    "bytes": 1620444,
+    "revision": "remaining-three-view-01",
+    "detailPass": "reference-structure-02",
+    "detailAssemblies": 15,
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "导弹舰",
+      "scale": 1,
+      "install": false,
+      "primary": "激光制导等离子导弹",
+      "kind": "missile",
+      "muzzles": [],
+      "caliber": 0.13,
+      "pointDefense": [
+        [
+          -0.85,
+          0.65,
+          0.25
+        ],
+        [
+          0.85,
+          0.65,
+          0.25
+        ]
+      ],
+      "pdScale": 0.42,
+      "missiles": [
+        [
+          -1.3258040842531666,
+          -1.0206093915781993,
+          -0.58
+        ],
+        [
+          -1.7884141145087944,
+          -1.1486404811888384,
+          -0.58
+        ],
+        [
+          -2.2510241447644215,
+          -1.2766715707994771,
+          -0.58
+        ],
+        [
+          -2.7136341750200494,
+          -1.4047026604101163,
+          -0.58
+        ],
+        [
+          1.3258040842531666,
+          -1.0206093915781993,
+          -0.58
+        ],
+        [
+          1.7884141145087944,
+          -1.1486404811888384,
+          -0.58
+        ],
+        [
+          2.2510241447644215,
+          -1.2766715707994771,
+          -0.58
+        ],
+        [
+          2.7136341750200494,
+          -1.4047026604101163,
+          -0.58
+        ]
+      ],
+      "launchDirection": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Interceptor",
+    "name": "裂变者",
+    "apkId": 23,
+    "file": "Interceptor.glb",
+    "preview": "Interceptor.png",
+    "triangles": 48940,
+    "meshes": 42,
+    "bounds": [
+      10.81259161487084,
+      22.844619224231316,
+      50
+    ],
+    "relativeLength": 50,
+    "bytes": 3558292,
+    "revision": "remaining-three-view-01",
+    "detailPass": "reference-structure-02",
+    "detailAssemblies": 17,
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "核子炮舰",
+      "scale": 1,
+      "primary": "核子大炮",
+      "kind": "nuclear",
+      "muzzles": [
+        [
+          0,
+          -0.36,
+          -5.86
+        ]
+      ],
+      "caliber": 0.33,
+      "pointDefense": [
+        [
+          -0.56,
+          1.9483,
+          -3
+        ],
+        [
+          0.56,
+          1.9483,
+          -3
+        ],
+        [
+          -0.56,
+          1.8838,
+          -0.1
+        ],
+        [
+          0.56,
+          1.8838,
+          -0.1
+        ],
+        [
+          -0.56,
+          1.802,
+          4.7
+        ],
+        [
+          0.56,
+          1.802,
+          4.7
+        ],
+        [
+          -0.48,
+          -2.259,
+          -1.7
+        ],
+        [
+          0.48,
+          -2.259,
+          -1.7
+        ],
+        [
+          -0.48,
+          -2.3317,
+          1
+        ],
+        [
+          0.48,
+          -2.3317,
+          1
+        ],
+        [
+          -0.48,
+          -2.05,
+          4.9
+        ],
+        [
+          0.48,
+          -2.05,
+          4.9
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "核子大炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Iron_Behemoth",
+    "name": "深空吞噬者",
+    "apkId": 24,
+    "file": "Iron_Behemoth.glb",
+    "preview": "Iron_Behemoth.png",
+    "triangles": 18332,
+    "meshes": 36,
+    "bounds": [
+      119.83787159813153,
+      94.5518553164653,
+      200.00000000000003
+    ],
+    "relativeLength": 200,
+    "bytes": 1347856,
+    "revision": "three-view-rebuild-01",
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "超巨型非战斗旗舰",
+      "scale": 2.8,
+      "primary": "无主炮 · 近防自卫",
+      "kind": null,
+      "muzzles": [],
+      "caliber": 0,
+      "pointDefense": [
+        [
+          -1.65,
+          1.606,
+          -4.8
+        ],
+        [
+          1.65,
+          1.606,
+          -4.8
+        ],
+        [
+          -1.5,
+          1.271,
+          -1.2
+        ],
+        [
+          1.5,
+          1.271,
+          -1.2
+        ],
+        [
+          -1.3,
+          1.541,
+          1.1
+        ],
+        [
+          1.3,
+          1.541,
+          1.1
+        ],
+        [
+          -0.62,
+          1.673,
+          3
+        ],
+        [
+          0.62,
+          1.673,
+          3
+        ],
+        [
+          -2.2,
+          0.662,
+          5.25
+        ],
+        [
+          2.2,
+          0.662,
+          5.25
+        ],
+        [
+          -3.53,
+          0.673,
+          5.7
+        ],
+        [
+          3.53,
+          0.673,
+          5.7
+        ],
+        [
+          -0.5,
+          2.842,
+          5.75
+        ],
+        [
+          0.5,
+          2.842,
+          5.75
+        ]
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "name": "噬能截击者",
+    "apkId": 25,
+    "file": "Devourer_Interceptor.glb",
+    "preview": "Devourer_Interceptor.png",
+    "triangles": 22232,
+    "meshes": 37,
+    "bounds": [
+      28.652999815448428,
+      13.655387214635102,
+      50
+    ],
+    "relativeLength": 50,
+    "bytes": 1632616,
+    "revision": "remaining-three-view-01",
+    "detailPass": "reference-structure-02",
+    "detailAssemblies": 19,
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "双主炮截击舰",
+      "scale": 1,
+      "primary": "双重型主炮",
+      "kind": "heavy",
+      "muzzles": [
+        [
+          -1.67,
+          -1.05,
+          -7.02
+        ],
+        [
+          1.67,
+          -1.05,
+          -7.02
+        ]
+      ],
+      "caliber": 0.3,
+      "pointDefense": [
+        [
+          -1.67,
+          0.0547,
+          -4.8
+        ],
+        [
+          1.67,
+          0.0547,
+          -4.8
+        ],
+        [
+          -1.67,
+          -0.0534,
+          -1.5
+        ],
+        [
+          1.67,
+          -0.0534,
+          -1.5
+        ],
+        [
+          -2.85,
+          0.46,
+          4.65
+        ],
+        [
+          2.85,
+          0.46,
+          4.65
+        ]
+      ]
+    },
+    "spinalMount": {
+      "name": "双重型主炮",
+      "reason": "主炮嵌入原有纵向炮舱，依照用户指定的武器配置。"
+    },
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "name": "钛能守卫者",
+    "apkId": 26,
+    "file": "Titanenergetic_Frigate.glb",
+    "preview": "Titanenergetic_Frigate.png",
+    "triangles": 25116,
+    "meshes": 34,
+    "bounds": [
+      3.1860273761977425,
+      1.695311212516628,
+      5
+    ],
+    "relativeLength": 5,
+    "bytes": 1837252,
+    "revision": "remaining-three-view-01",
+    "detailPass": "reference-structure-02",
+    "detailAssemblies": 15,
+    "status": "refined-awaiting-shape-review",
+    "weaponLayout": {
+      "role": "小型高级战机",
+      "scale": 0.4,
+      "primary": "中央聚能主炮 + 两侧十二联导弹口",
+      "kind": "advanced",
+      "muzzles": [
+        [
+          0,
+          -0.4,
+          -7.01
+        ]
+      ],
+      "caliber": 0.21,
+      "pointDefense": [],
+      "missiles": [
+        [
+          -3.65,
+          -0.9,
+          -0.87
+        ],
+        [
+          -3.65,
+          -0.56,
+          -0.87
+        ],
+        [
+          -3.35,
+          -0.9,
+          -0.87
+        ],
+        [
+          -3.35,
+          -0.56,
+          -0.87
+        ],
+        [
+          -3.0500000000000003,
+          -0.9,
+          -0.87
+        ],
+        [
+          -3.0500000000000003,
+          -0.56,
+          -0.87
+        ],
+        [
+          3.0500000000000003,
+          -0.9,
+          -0.87
+        ],
+        [
+          3.0500000000000003,
+          -0.56,
+          -0.87
+        ],
+        [
+          3.35,
+          -0.9,
+          -0.87
+        ],
+        [
+          3.35,
+          -0.56,
+          -0.87
+        ],
+        [
+          3.65,
+          -0.9,
+          -0.87
+        ],
+        [
+          3.65,
+          -0.56,
+          -0.87
+        ]
+      ],
+      "launchDirection": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "spinalMount": null,
+    "glbRoundTrip": true,
+    "silhouetteVerified": false
+  }
+]

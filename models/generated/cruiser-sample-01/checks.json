@@ -1,0 +1,24 @@
+{
+  "meshes": 57,
+  "triangles": 33548,
+  "bounds": [
+    9.275286674499512,
+    4.210000097751617,
+    17.350000381469727
+  ],
+  "bytes": 2455240,
+  "assemblies": [
+    "01_Pressure_hull_and_keel",
+    "02_Segmented_foredeck",
+    "03_Dorsal_spine_and_shoulders",
+    "04_Recessed_missile_batteries",
+    "05_Turret_batteries",
+    "06_Stepped_command_bridge",
+    "07_Aft_wings_and_pylons",
+    "08_Engine_nacelles",
+    "09_Service_walls_and_belly"
+  ],
+  "glbRoundTrip": true,
+  "silhouetteVerified": false,
+  "reference": "fleet_03_Cruiser.png"
+}

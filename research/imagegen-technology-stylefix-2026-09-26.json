@@ -1,0 +1,319 @@
+{
+  "date": "2026-09-26",
+  "status": "complete",
+  "mode": "built-in imagegen",
+  "count": 16,
+  "style": "Silver-grey prerendered metal equipment matching Cargo_Ship; individual full-frame assets with opaque navy backgrounds.",
+  "assets": [
+    {
+      "id": "Ion_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-8e787174-1fff-48df-a2c4-1f151b3e0868.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Ion_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Ion_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. Subject: an ion accelerator test apparatus with two substantial metallic emitter arms holding a small cyan ion cloud between them. Make the energy cloud soft and luminous, never a faceted crystal.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Ion_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Hyperspace_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-f938dfcc-ab9e-4c3b-84b6-bc63f7c906a8.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Hyperspace_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Hyperspace_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. Subject: a hyperspace field experiment with three concentric heavy segmented metal rings surrounding a small blue spatial distortion. Metallic silver ring panels and dark bolted supports, not flat geometric rings.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Hyperspace_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Plasma_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-b1c8f3c3-be90-4f3e-a58e-b534be1a6f87.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Plasma_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Plasma_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: compact cylindrical plasma containment chamber with thick silver metal caps and dark metal supports. Small soft green-blue plasma glow behind a narrow glass window; no lime green cartoon bubbles, no plastic.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Plasma_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Espionage_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-551ba8ea-6344-47cf-abca-d932e58e1edb.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Espionage_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Espionage_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a compact espionage sensor array with a broad deep-blue optical lens, heavy silver housing, and one small parabolic receiving dish. Realistic smooth glass lens and softly shaded metallic dish, no faceted blue gemstone.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Espionage_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Computer_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-d4e2d7f6-a611-4fdc-aeba-7850ffc5821d.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Computer_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Computer_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a rugged starship computer processor module with a substantial square silver housing, recessed central processor and dark connector banks. Restrained blue illuminated segments, clear readable architecture, old prerendered metallic game asset.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Computer_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Astrophysics_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-13a6c187-9d03-4709-b569-ba0afcf53ac7.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Astrophysics_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Astrophysics_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a mechanical astronomical observatory instrument: a smoothly shaded blue globe with subtle cloud patterns, two small moons and orbital rings on a heavy silver instrument base. Dim miniature planet, grey metal rings with recessed joints, scientific apparatus rather than a toy.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Astrophysics_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Combustion_Drive",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-3945339e-5177-4a08-8584-a49426c6b252.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Combustion_Drive.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Combustion_Drive.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: single combustion rocket engine with thick silver pressure chamber, side fuel pipe and bronze bell nozzle; a short natural orange exhaust plume fits entirely within frame. Smoothly shaded metal chamber, thermal shading on bell, no faceted polygon flame.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Combustion_Drive.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Impulse_Drive",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-53e4f2e1-d111-41b2-9b82-d92f4c044865.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Impulse_Drive.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Impulse_Drive.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: one compact impulse propulsion module with three silver-metal magnetic collars, deeply recessed ribbed mechanical core and a small soft blue exhaust. Cylindrical hardware with armored panels, no large toy-like neon tubes.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Impulse_Drive.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Hyperspace_Drive",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-064ab133-e63e-418e-90bb-3be82b43daf9.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Hyperspace_Drive.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Hyperspace_Drive.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a hyperspace propulsion assembly, a long dark cylinder supported through two massive silver segmented circular field rings, subdued blue central aperture and a few narrow cyan ring windows. Convincing baked metal shading, dark structural cavities.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Hyperspace_Drive.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Weapons_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-3176ce9b-8d3b-41f2-84f5-1294b1a3f707.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Weapons_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Weapons_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a dual heavy cannon turret laboratory prototype, two chunky silver-grey naval gun barrels pointing diagonally toward lower left, detailed dark bore interiors, swivel base, broad armor plates, a few dull brass fittings. No firing effects.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Weapons_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Shielding_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-1a08ca17-3574-4adf-938e-32dfb3db9638.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Shielding_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Shielding_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a heavy silver segmented shield generator on a low hexagonal base under a faint transparent blue energy dome. Dome nearly invisible except sparse fine blue hexagon seams and edge light; steel equipment should dominate, with broad mechanical armor, soft baked shadows, restrained cyan windows.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Shielding_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Strength_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-e2eb3856-a302-424b-84e0-23fe7ccf11b0.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Strength_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Strength_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: two stacked thick starship armor plate samples, brushed silver-grey panels and dark laminated metal layers visible at edges, two bronze reinforcement strips, bolts and recessed panel joins. Distinct beveled armor plate silhouette, no glowing energy, not flat blocks.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Strength_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Intergalactic_Network",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-945a3a58-a1e3-454b-b767-b4927939ee05.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Intergalactic_Network.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Intergalactic_Network.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: three squat silvery communication relay instruments with smoothly curved receiving dishes arranged in a triangle around a small smoothly rendered blue planet. Fine subdued blue signal links connect them. Preserve the three-node network concept, matching heavy metallic starship materials rather than plastic toys.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Intergalactic_Network.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Graviton_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-b31c9748-209b-46ff-98d9-a07dd0c7b427.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Graviton_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Graviton_Tech.png"
+      ],
+      "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. IMPORTANT backdrop: fully opaque very dark navy background, never transparency or checkerboard. Subject: a gravitational research apparatus, four substantial silver-metal pylon arms on one square test stand, holding a small nearly black violet gravitational sphere with soft blue field wisps. No purple gemstone, no facet shading. Broad worn silver plates with dark mechanical joints and softly baked shadows.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Graviton_Tech.png",
+        "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Energy_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-ca1f12f6-95ef-40c7-9bde-0f64260d2ca0.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Energy_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Energy_Tech.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Preserve this existing game technology equipment illustration exactly: same silver-grey metal equipment, surface details, soft baked shadows, cyan power lights, shape, camera, and pose. Change only the empty transparent background to a fully opaque uniform very dark navy blue background (#071525) that fills all pixels behind the object. No transparency, no checkerboard.  No text, no UI, no border. Keep the centered square format and object size.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Energy_Tech.png"
+      ],
+      "previousPass": {
+        "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-f0068f7d-37a3-42d5-839e-c5072ab6b9f1.png",
+        "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. Subject: compact ship-scale power reactor with heavy silver shielding plates and narrow luminous blue reactor windows, recognizable generator shape.",
+        "references": [
+          "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Energy_Tech.png",
+          "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+        ]
+      },
+      "correction": "Added opaque navy background; shortened laser beam to fit frame.",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "Laser_Tech",
+      "mode": "built-in imagegen edit",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-09f2fc82-7957-4a11-a45c-fc4cb3a10998.png",
+      "destinations": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Laser_Tech.png",
+        "D:/Desktop/data/银河帝国/opendesign/mockups/galaxy-empire/assets/technologies-v2/Laser_Tech.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Preserve this existing game technology equipment illustration exactly: same silver-grey metal equipment, surface details, soft baked shadows, cyan power lights, shape, camera, and pose. Change only the empty transparent background to a fully opaque uniform very dark navy blue background (#071525) that fills all pixels behind the object. No transparency, no checkerboard. Also shorten the cyan laser beam so its fading endpoint is visible entirely inside the image, with a small navy margin at the left edge. No text, no UI, no border. Keep the centered square format and object size.",
+      "references": [
+        "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Laser_Tech.png"
+      ],
+      "previousPass": {
+        "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dcd4-5c48-7921-9be0-3fa2da09853d\\exec-62576cf1-9ac5-4fdf-8f5c-4d14cddf6b50.png",
+        "prompt": "Use case: style-transfer. This is a replacement square technology illustration for a 2010-era space strategy game's research laboratory. Image 1 is the technology icon to redraw; preserve its recognizable equipment concept and single-object composition but completely replace its flat low-poly material treatment. Image 2 is ONLY a material and lighting style reference: copy the cargo spacecraft's old prerendered game look, grey-silver metal armor panels, substantial dark mechanical recesses, softly baked dimensional shadows, broad metal edge highlights and occasional dull brass fittings. Match the spacecraft's level of medium detail. No faceted flat-shaded polygons, no cartoon toy look, no vector icon, no excessively fine micro-mechanics or photographic machinery. Use a three-quarter elevated camera and a clearly readable silhouette. One large equipment assembly centered and fully within the image with a 12% margin, subdued nearly black navy background. Restrained cyan energy lights, not giant neon surfaces. No labels, no typography, no text, no border, no interface, no spaceship pasted into the equipment. Square 1024x1024. Subject: a laboratory laser emitter on a swivel mount, silvery weapon casing and cylindrical lens barrel with a short restrained cyan beam; keep all beam and equipment inside the canvas.",
+        "references": [
+          "D:/Desktop/data/银河帝国/godot/assets/technologies-v2/Laser_Tech.png",
+          "D:/Desktop/data/银河帝国/godot/assets/civilian/Cargo_Ship.png"
+        ]
+      },
+      "correction": "Added opaque navy background; shortened laser beam to fit frame.",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "verification": {
+    "visuallyInspected": 16,
+    "crossTargetHashMatches": 16,
+    "opaqueCornerPixels": 16,
+    "generatedIndividually": true
+  }
+}

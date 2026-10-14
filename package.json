@@ -1,0 +1,31 @@
+{
+  "name": "galaxy-empire",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "build": "node scripts/build.mjs && node scripts/build-command.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check:git-size": "node scripts/check-git-size.mjs",
+    "build:command": "node scripts/build-command.mjs",
+    "build:three": "node scripts/build-three-flight.mjs",
+    "test:three": "node --test tests/three-battle-*.test.mjs",
+    "test:three:browser": "node tests/three-battle-regression.mjs",
+    "bench:three": "node tests/three-battle-comparison.mjs",
+    "preview:three": "node scripts/launch-three-battle-trial.mjs",
+    "record:three": "node scripts/record-three-battle.mjs",
+    "record:three:suite": "node scripts/record-three-battle-suite.mjs",
+    "preview:three:videos": "node scripts/preview-three-battle-videos.mjs",
+    "build:review": "node scripts/build-data-review.mjs && node scripts/build-colony-review.mjs",
+    "preview:review": "node scripts/serve-colony-review.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "version": "webgl-before-three-20261015",
+  "createdAt": "2026-10-14T18:46:19.693Z",
+  "description": "Frozen native WebGL baseline; only asset/navigation paths relocated.",
+  "files": {
+    "battlefield.html": {
+      "bytes": 70008,
+      "sha256": "fab3365a1340604b35ffb42bacb171e070cac2c8f7fc145dfa2aebfb27d4f4c8",
+      "sourceSha256": "fab3365a1340604b35ffb42bacb171e070cac2c8f7fc145dfa2aebfb27d4f4c8"
+    },
+    "hangar.html": {
+      "bytes": 69971,
+      "sha256": "fafb49100fc7fd4a0ea457449fd68ae0eb7367073420b8a1a7c04fadb695dab1",
+      "sourceSha256": "fafb49100fc7fd4a0ea457449fd68ae0eb7367073420b8a1a7c04fadb695dab1"
+    },
+    "flight-loader.js": {
+      "bytes": 2626,
+      "sha256": "0d490da90f0c01bcc24fa5dd7b35faee5a3b33d1e473ae5746f773aee5cbe7eb",
+      "sourceSha256": "0d490da90f0c01bcc24fa5dd7b35faee5a3b33d1e473ae5746f773aee5cbe7eb"
+    },
+    "ship-renderer.js": {
+      "bytes": 143751,
+      "sha256": "d94ef1c7548db836888f92687cb20c9bc7389a61f3bdb2cfe89dbf4552133335",
+      "sourceSha256": "20835c3a54a2858811572abc91b3f3a15e6df2d15fcba388f628acba4844084f"
+    },
+    "flight-runtime.js": {
+      "bytes": 85370,
+      "sha256": "fb2faf4f25f487ec3fc272ab51a02b278c4559e3813f613c15f2d316e5db2591",
+      "sourceSha256": "a9cb46fab94f257b28d2617b10edd3d29f7b35ee7f400c27a73e5e84e2f80f16"
+    },
+    "battlefield-controller.js": {
+      "bytes": 52316,
+      "sha256": "e1863b8b2632ac4c805a5809c9e56983c5544d0ff5c4548343bb5ce9e4a44e43",
+      "sourceSha256": "e1863b8b2632ac4c805a5809c9e56983c5544d0ff5c4548343bb5ce9e4a44e43"
+    },
+    "battle-display.js": {
+      "bytes": 2695,
+      "sha256": "d2d11e2ceffb314cadf7438fe002cba5d6656eb286575593e26c00d39a4a9ba1",
+      "sourceSha256": "d2d11e2ceffb314cadf7438fe002cba5d6656eb286575593e26c00d39a4a9ba1"
+    },
+    "flight-fleet.json": {
+      "bytes": 65148,
+      "sha256": "363a2bf3db2f2de5c0624223b44d0598e17ba465ef8da4936712c9fa7799e6b1",
+      "sourceSha256": "363a2bf3db2f2de5c0624223b44d0598e17ba465ef8da4936712c9fa7799e6b1"
+    },
+    "flight-fleet.bin": {
+      "bytes": 42104088,
+      "sha256": "afb13923e060e5c3fff5be94d21c0f4d321b47cd903d578138348f5046901262",
+      "sourceSha256": "afb13923e060e5c3fff5be94d21c0f4d321b47cd903d578138348f5046901262"
+    },
+    "battle-fleet.json": {
+      "bytes": 45748,
+      "sha256": "ba2f04048c0e5421c886edff44ce7aa48cc5ff363fd2fb482396c947eb4632d6",
+      "sourceSha256": "ba2f04048c0e5421c886edff44ce7aa48cc5ff363fd2fb482396c947eb4632d6"
+    },
+    "battle-fleet.bin": {
+      "bytes": 108424680,
+      "sha256": "e8b4b72908b1dbe46d29d782833e606b61c3444ea3b8a9cfddc1ffcbb848e724",
+      "sourceSha256": "e8b4b72908b1dbe46d29d782833e606b61c3444ea3b8a9cfddc1ffcbb848e724"
+    },
+    "sky/multi-nebulae-2-rgbm.png": {
+      "bytes": 9410059,
+      "sha256": "51a02f0842aeea9343c61fbfc66e599e01bcb22ebe19a13c473dc30b077203d1"
+    },
+    "sky/multi-nebulae-2.webp": {
+      "bytes": 1263936,
+      "sha256": "93ebf3b1f6a1068c047372c601b53207af8af7abac8d2ebb5ad55f570763ad66"
+    }
+  }
+}

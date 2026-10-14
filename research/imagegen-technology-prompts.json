@@ -1,0 +1,118 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-09-24",
+  "assets": [
+    {
+      "id": "Energy_Tech",
+      "name": "能源科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A compact FUSION POWER REACTOR: a stout cylindrical silver reactor with a bright amber-white core visible through a narrow armored viewport, thick braided power cables, copper cooling pipes and four dark clamping pylons. Energy engineering, golden core contrasts with cool steel.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-4d2f50fb-fa7c-4799-8724-a66c0e3e68da.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Energy_Tech.png",
+      "godot": "godot/assets/technologies/Energy_Tech.png"
+    },
+    {
+      "id": "Laser_Tech",
+      "name": "激光科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A high-powered LASER RESEARCH BENCH: a long faceted silver optical emitter barrel with multiple dark heat sinks and a ruby focusing crystal, firing one thin vivid RED laser beam across the frame into a small testing block. Red focused beam, bulky cylindrical laser apparatus.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-79bb6aa8-e816-4398-8f29-50e94e0b57c7.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Laser_Tech.png",
+      "godot": "godot/assets/technologies/Laser_Tech.png"
+    },
+    {
+      "id": "Ion_Tech",
+      "name": "离子科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. An ION ACCELERATOR experiment: two heavy silver horseshoe-shaped magnetic electrodes surrounding a brilliant electric BLUE stream of charged particles. Exposed copper coils, ceramic insulators, a small glass ionization bulb. Two opposed electrode jaws are the unmistakable main silhouette.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-7002e79a-5cd9-463c-b612-5724252b2235.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Ion_Tech.png",
+      "godot": "godot/assets/technologies/Ion_Tech.png"
+    },
+    {
+      "id": "Hyperspace_Tech",
+      "name": "超空间科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A HYPERSPACE PHYSICS EXPERIMENT: a small turbulent violet spatial rift suspended between three articulated silver laboratory arms above a low circular experimental platform, a warped starfield visible inside the rift. A scientific apparatus investigating folded space; no engine exhaust, no giant portal building.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-c9841f71-e26a-4a74-9aeb-84fedad16049.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Hyperspace_Tech.png",
+      "godot": "godot/assets/technologies/Hyperspace_Tech.png"
+    },
+    {
+      "id": "Plasma_Tech",
+      "name": "等离子科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A PLASMA CONTAINMENT apparatus: a luminous GREEN plasma sphere held in midair between four thick curved silver magnetic containment claws. Dense black energy couplers, heavy ribbed ceramic base, fine green tendrils restricted to the central glasslike containment volume. Green is distinct from blue ion technology.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-3e7170ee-ed04-4b0b-b405-ff9e97b8aba6.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Plasma_Tech.png",
+      "godot": "godot/assets/technologies/Plasma_Tech.png"
+    },
+    {
+      "id": "Espionage_Tech",
+      "name": "间谍科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. An ESPIONAGE SENSOR MODULE: a compact dark-silver reconnaissance satellite head on a workbench, three prominent camera lenses of different sizes, one big amber optical eye, folded black antenna vanes, slender aerials, blue electronics. Secret surveillance precision optics, no humanoid spy.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-fb67cd4a-abda-4159-b681-1bc53cadf3c2.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Espionage_Tech.png",
+      "godot": "godot/assets/technologies/Espionage_Tech.png"
+    },
+    {
+      "id": "Computer_Tech",
+      "name": "计算机科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A FLEET COMPUTING CORE: a dense rugged square silver processor assembly with a cyan luminous central chip under a thick transparent cover, surrounding black heat sinks and many plug-in memory blades. Concentric circuit traces and heavy data cables, clearly a physical computer rather than a screen.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-b5a1af82-97ee-49f6-ba8e-c5ac4b8585eb.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Computer_Tech.png",
+      "godot": "godot/assets/technologies/Computer_Tech.png"
+    },
+    {
+      "id": "Astrophysics_Tech",
+      "name": "天体物理科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. An ASTROPHYSICS INSTRUMENT: a precise silver mechanical armillary orrery of a star and three small planets, projected orbital paths in restrained cyan light between physical brass and silver orbital rings, above a compact observatory calculation table in deep navy darkness. A visible tiny Saturn-like ringed planet, astronomical research with clear rings, no text star chart.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-55978e19-05ad-4f26-badb-c59aafa4b83f.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Astrophysics_Tech.png",
+      "godot": "godot/assets/technologies/Astrophysics_Tech.png"
+    },
+    {
+      "id": "Combustion_Drive",
+      "name": "燃烧引擎",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A COMBUSTION ROCKET ENGINE: one huge bell-shaped dark steel rocket nozzle angled toward lower right, silver combustion chamber, red-brown fuel lines and turbopumps exposed along its back. A short powerful ORANGE flame and heat shimmer emerge from the nozzle. Industrial chemical rocket hardware, simple unmistakable flared bell.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-da7134f1-a015-4968-b419-b2c4822e38ad.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Combustion_Drive.png",
+      "godot": "godot/assets/technologies/Combustion_Drive.png"
+    },
+    {
+      "id": "Impulse_Drive",
+      "name": "脉冲引擎",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. An IMPULSE PROPULSION ENGINE: a broad silver electromagnetic thruster with three parallel short exhaust apertures, rugged finned black casing, heavy copper pulse coils. Three restrained BLUE pulsed jets with visible separated luminous pulses trail to the lower right. Broad three-nozzle geometry, not a conventional single rocket bell.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-d84ed504-dbad-41ab-bf1c-b084321333bb.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Impulse_Drive.png",
+      "godot": "godot/assets/technologies/Impulse_Drive.png"
+    },
+    {
+      "id": "Hyperspace_Drive",
+      "name": "超空间引擎",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A HYPERSPACE DRIVE ENGINE: a long silver starship propulsion spindle enclosed in two heavy segmented circular accelerator rings, a compact VIOLET luminous drive core between the rings, dark radiator fins and thick high-energy conduits. Physical spaceship engine on an assembly cradle, powerful readable twin-ring silhouette, no open magical portal.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-86528807-4366-40c7-a513-954dc6acd372.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Hyperspace_Drive.png",
+      "godot": "godot/assets/technologies/Hyperspace_Drive.png"
+    },
+    {
+      "id": "Weapons_Tech",
+      "name": "武器科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A WEAPONS ENGINEERING TEST RIG: a massive silver twin-barrel naval mass-driver turret on a low armored swivel mount inside a dark testing hangar, long rectangular black barrels with copper cooling rails, visible ammunition feed and exposed targeting mechanisms. One tiny amber muzzle flash. Heavy military industrial firepower, no people.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-a90ecd7c-f18c-424d-b496-d1ebbddf4cbd.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Weapons_Tech.png",
+      "godot": "godot/assets/technologies/Weapons_Tech.png"
+    },
+    {
+      "id": "Shielding_Tech",
+      "name": "护盾科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A SHIELD GENERATOR TEST: a small rugged silver naval emitter surrounded by a translucent BLUE hemispherical energy shield with a few subtle hexagonal facets. A single orange projectile visibly stops at a bright concentrated impact flare on the dome. The silver emitter remains clearly visible through the blue shield; heavy equipment, compact laboratory test.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-37ed257d-be4e-4311-b9f8-d152c3994b1b.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Shielding_Tech.png",
+      "godot": "godot/assets/technologies/Shielding_Tech.png"
+    },
+    {
+      "id": "Strength_Tech",
+      "name": "强度科技",
+      "prompt": "Create ONE square 1024x1024 technology research portrait for a classic 2011-2013 space strategy game. Art direction: old pre-rendered PC RTS / early Galaxy Empire mobile game inventory artwork, realistic rugged industrial science fiction, dense beveled gunmetal machinery, worn silver metal, rivets, cables, pipes, restrained cyan instrumentation with warm tungsten highlights, hard directional studio-like lighting. A concrete piece of futuristic hardware fills 80 percent of the frame in a three-quarter view, staged in a very dark navy laboratory or space setting. Clear large silhouette and strong separation readable as a 140px in-game icon. Meticulous physically believable mechanical construction, hand-painted rendered-game texture, crisp details, modest glow, no soft plastic or cartoon style. Full-bleed square illustration, no borders, no text, no typography, no numbers, no logos, no icons, no UI, no split panels. A HULL ARMOR MATERIALS TEST: a thick overlapping stack of three battleship armor plates shown in an exposed cross section on a small industrial stand: worn silver outer plating, dark ceramic honeycomb middle layer, bronze reinforcement ribs. A deep fresh projectile crater and small amber sparks on the front plate; the rear layers remain intact. Solid rugged material science, no shield bubble, no engine.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0d21d-437f-73b2-9611-11f22ee35cd9\\exec-b6042372-6bfa-481a-a5cd-8c75a1ad3396.png",
+      "saved": "opendesign/mockups/galaxy-empire/assets/technologies/Strength_Tech.png",
+      "godot": "godot/assets/technologies/Strength_Tech.png"
+    }
+  ]
+}
