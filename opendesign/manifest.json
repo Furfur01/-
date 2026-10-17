@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-15T06:15:15.774Z",
+  "generated": "2026-10-17T00:33:30.198Z",
   "sections": [
     {
       "id": "mockups",
@@ -61,6 +61,10 @@
               "path": "mockups/galactic-command/remaining-review.html"
             },
             {
+              "label": "ships-review.html",
+              "path": "mockups/galactic-command/ships-review.html"
+            },
+            {
               "label": "ships.html",
               "path": "mockups/galactic-command/ships.html"
             }
@@ -72,6 +76,24 @@
             {
               "label": "index.html",
               "path": "mockups/galaxy-empire/index.html"
+            }
+          ]
+        },
+        {
+          "slug": "p0-command-preview",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/p0-command-preview/index.html"
+            }
+          ]
+        },
+        {
+          "slug": "p1-command-preview",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/p1-command-preview/index.html"
             }
           ]
         },
@@ -105,6 +127,15 @@
             {
               "label": "aurora-original.html",
               "path": "mockups/planet-construction-review/reference/aurora-original.html"
+            }
+          ]
+        },
+        {
+          "slug": "three-hud-preview",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/three-hud-preview/index.html"
             }
           ]
         }

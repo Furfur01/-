@@ -15,7 +15,8 @@ export function resourceComplexes(planet){
   return Object.fromEntries(RESOURCE_COMPLEXES.map(({id,storageId,resource})=>{
     const level=planet.buildings[id]||0,legacyStorageLevel=planet.buildings[storageId]||0;
     const storageLevel=Math.max(level,legacyStorageLevel);
-    return [id,{id,storageId,resource,level,legacyStorageLevel,storageLevel,native:planetType(planet).multipliers[resource]>0,capacity:capacityAtLevel(storageLevel),nextCapacity:capacityAtLevel(Math.max(level+1,legacyStorageLevel))}];
+    const type=planetType(planet);
+    return [id,{id,storageId,resource,level,legacyStorageLevel,storageLevel,native:type.specialty===null||type.specialty===resource,multiplier:type.multipliers[resource],capacity:capacityAtLevel(storageLevel),nextCapacity:capacityAtLevel(Math.max(level+1,legacyStorageLevel))}];
   }));
 }
 // Legacy warehouse levels remain in the save as a capacity floor. Existing paid

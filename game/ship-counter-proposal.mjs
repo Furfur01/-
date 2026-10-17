@@ -14,7 +14,7 @@ export function shipCounterProposal(units,archive){
   Object.assign(rapid.Death_Star,{Interceptor:10,Iron_Behemoth:3,Titanenergetic_Frigate:2});
   Object.assign(rapid.Guardian,{Devourer_Interceptor:2});
   const names=Object.fromEntries([...Object.values(units),...archive].map(s=>[s.id,s.name])),ids=Object.fromEntries(archive.map(s=>[s.id,s.apkId]));
-  const roles={Interceptor:'反轻型舰群；主克轻战机和重战机，受驱逐舰与重型特殊舰制约。',Iron_Behemoth:'超巨型非战斗旗舰；无主炮，小型近防炮拦截导弹与战机；拦截参数待定。',Devourer_Interceptor:'反高护盾与大型舰；重点克制钛能守卫者，不额外拟造穿盾比例。',Titanenergetic_Frigate:'小型高级战机；中央聚能主炮与两侧十二个导弹口；无炮台；克制参数仍待确认。',Annihilator:'一次性群体打击；不用普通速射模拟爆炸，独立拟定伤害修正。',Reaper:'大型舰猎手；免疫湮灭之星，优先打击大型特殊舰。'};
+  const roles={Interceptor:'反轻型舰群；主克轻战机和重战机，受驱逐舰与重型特殊舰制约。',Iron_Behemoth:'超巨型指挥母舰；锁定目标召集附近友军集火，全军攻击 +15%（不叠加）；定期补充蜂群，支持突击、护卫与编队阵型；无主炮，保留近防自卫。',Devourer_Interceptor:'反高护盾与大型舰；重点克制钛能守卫者，不额外拟造穿盾比例。',Titanenergetic_Frigate:'小型高级战机；中央聚能主炮与两侧十二个导弹口；无炮台；克制参数仍待确认。',Annihilator:'一次性群体打击；不用普通速射模拟爆炸，独立拟定伤害修正。',Reaper:'大型舰猎手；免疫湮灭之星，优先打击大型特殊舰。'};
   const ships=archive.map(s=>({id:s.id,apkId:s.apkId,name:s.name,role:roles[s.id]||'保留现有基础定位与已有速射值。',rapid:rapid[s.id],fatal_damage_list:[
     ...Object.entries(rapid[s.id]).map(([id,rate])=>({direction:'against',target_id:id,fleet_type:ids[id]??null,unit_name:names[id],damage_rate:rate,bonus_damage_rate:0})),
     ...Object.entries(rapid).filter(([,r])=>r[s.id]>1).map(([id,r])=>({direction:'from',target_id:id,fleet_type:ids[id]??null,unit_name:names[id],damage_rate:r[s.id],bonus_damage_rate:0}))

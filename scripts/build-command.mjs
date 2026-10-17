@@ -1,4 +1,6 @@
+import {cockpitClass,pilotHandling} from '../game/pilot-controls.mjs';
 import {steerPilot,predictPilot} from '../game/pilot-motion.mjs';
+import './build-command-p0.mjs';
 import {projectileContact} from '../game/projectile-contact.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -92,7 +94,7 @@ new vm.Script(scripts[1][1]+'\n'+extra);
 assert(!/磁轨科技|制导科技|火控科技|机炮科技/.test(scripts[1][1]));
 assert.deepEqual(archiveData[1].weapons,[[units.Cruiser.weapons[0].name,tech.Ion_Tech.name,'ION',0]]);
 assert.equal(scripts.length,2);fs.writeFileSync(path.join(dir,'ship-renderer.js'),scripts[0][1]);fs.writeFileSync(path.join(dir,'hangar.js'),scripts[1][1]+'\n'+extra);fs.writeFileSync(path.join(dir,'flight-runtime.js'),scripts[1][1]+'\n'+extra);
-fs.writeFileSync(path.join(dir,'battlefield-controller.js'),'window.createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown})=>{\n'+projectileContact.toString()+'\n'+steerPilot.toString()+'\n'+predictPilot.toString()+'\n'+fs.readFileSync(path.join(root,'scripts/hangar-source/battle-presentation.js'),'utf8')+'\n'+fs.readFileSync(path.join(root,'scripts/hangar-source/live-battle-adapter.js'),'utf8')+'\nreturn new NativeFleetBattle();\n};');
+fs.writeFileSync(path.join(dir,'battlefield-controller.js'),'window.createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown})=>{\n'+projectileContact.toString()+'\n'+cockpitClass.toString()+'\n'+pilotHandling.toString()+'\n'+steerPilot.toString()+'\n'+predictPilot.toString()+'\n'+fs.readFileSync(path.join(root,'scripts/hangar-source/battle-presentation.js'),'utf8')+'\n'+fs.readFileSync(path.join(root,'scripts/hangar-source/live-battle-adapter.js'),'utf8')+'\nreturn new NativeFleetBattle();\n};');
 const flightVersion=createHash('sha256').update(scripts[0][1]).update(scripts[1][1]+extra).update(fs.readFileSync(path.join(dir,'flight-fleet.json'))).update(fs.readFileSync(path.join(dir,'flight-fleet.bin'))).update(fs.readFileSync(path.join(dir,'flight-loader.js'))).update(fs.readFileSync(path.join(dir,'battlefield-controller.js'))).update(fs.readFileSync(path.join(dir,'battle-display.js'))).update(fs.readFileSync(path.join(dir,'battle-fleet.json'))).update(fs.readFileSync(path.join(dir,'battle-fleet.bin'))).digest('hex').slice(0,12);
 html=html.replace(scripts[0][0],'').replace(scripts[1][0],`<script src="flight-loader.js?v=${flightVersion}"></script>`);
 fs.writeFileSync(path.join(dir,'hangar.html'),html);
@@ -103,7 +105,7 @@ await build({entryPoints:[path.join(dir,'planet.js')],bundle:true,format:'iife',
 await build({entryPoints:[path.join(dir,'buildings-viewer.js')],bundle:true,format:'iife',minify:true,outfile:path.join(dir,'buildings.bundle.js')});
 await build({entryPoints:[path.join(dir,'ships-viewer.js')],bundle:true,format:'iife',minify:true,outfile:path.join(dir,'ships.bundle.js')});
 const atlasVersion=createHash('sha256').update(fs.readFileSync(path.join(dir,'ships.bundle.js'))).digest('hex').slice(0,12);
-const atlasFile=path.join(dir,'ships.html');fs.writeFileSync(atlasFile,fs.readFileSync(atlasFile,'utf8').replace(/ships\.bundle\.js\?v=[^"']+/,`ships.bundle.js?v=${atlasVersion}`));
+for(const name of ['ships.html','ships-review.html']){const atlasFile=path.join(dir,name);fs.writeFileSync(atlasFile,fs.readFileSync(atlasFile,'utf8').replace(/ships\.bundle\.js\?v=[^"']+/,`ships.bundle.js?v=${atlasVersion}`));}
 fs.writeFileSync(path.join(dir,'ships-data.json'),JSON.stringify({ships:publicCatalog.shipArchive,units,tech,proposal:shipCounterProposal(units,publicCatalog.shipArchive)},null,2));
 fs.mkdirSync(path.join(dir,'assets/ship-references'),{recursive:true});
 for(const ship of publicCatalog.shipArchive)if(ship.reference)fs.copyFileSync(path.join(root,'models/reference/original-atlas-v1',ship.reference),path.join(dir,'assets/ship-references',path.basename(ship.reference)));

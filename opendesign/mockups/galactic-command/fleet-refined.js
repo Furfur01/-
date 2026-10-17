@@ -210,6 +210,13 @@ export function createRefinedShip(id){
       for(let i=0;i<12;i++){const a=i*Math.PI/6;pipe([Math.cos(a)*.52,Math.sin(a)*.52,.16],[Math.cos(a)*.43,Math.sin(a)*.43,1.52],.026,'steel');}
       cyl(.23,.29,0,0,1.25,'black','z');ring(.22,.032,0,0,1.41,'edge');
     });
+    section('03_Aft_propulsion_cluster',()=>{
+      for(let n=0;n<3;n++){
+        const a=(n*2+1)*Math.PI/3,x=Math.cos(a),y=Math.sin(a);
+        pipe([x*.38,y*.38,1.12],[x*.78,y*.78,1.68],.12,'side');
+        engine(x*.78,y*.78,2.25,.28);
+      }
+    });
     for(let n=0;n<3;n++){
       const g=section('02_Radial_sensor_branch_'+(n+1),()=>{
         pipe([.4,0,.02],[1.13,0,.53],.11,'side');pipe([1.13,0,.53],[2.1,0,.4],.09,'steel');

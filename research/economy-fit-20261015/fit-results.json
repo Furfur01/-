@@ -1,0 +1,1040 @@
+{
+  "method": "OLS for production; fit early levels and evaluate later levels. Building k: median of normalized observations from three mines L>=7. Validate on four other building types. No inference of hidden temperatures or server multipliers.",
+  "crystal_fit": {
+    "free_parameters": {
+      "intercept": 29.32291177993967,
+      "amplitude": 80.03733627428628,
+      "growth": 1.0999645385718018
+    },
+    "fixed_growth_parameters": {
+      "intercept": 29.44496008731813,
+      "amplitude": 80.00573338261673,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "test_levels": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "train": {
+      "n": 12,
+      "mae": 0.2782785917707133,
+      "max_abs_error": 0.6161420036987693,
+      "mape_pct": 0.043683902803102505,
+      "max_relative_error_pct": 0.3086696097445338
+    },
+    "train_fixed_growth": {
+      "n": 12,
+      "mae": 0.2923845588747227,
+      "max_abs_error": 0.587637346649899,
+      "mape_pct": 0.0527732733729364,
+      "max_relative_error_pct": 0.38569812666369374
+    },
+    "holdout": {
+      "n": 7,
+      "mae": 0.4770937703638083,
+      "max_abs_error": 1.1574027585447766,
+      "mape_pct": 0.0073476923742766456,
+      "max_relative_error_pct": 0.016764234625503718
+    },
+    "holdout_fixed_growth": {
+      "n": 7,
+      "mae": 0.5228779941801674,
+      "max_abs_error": 1.2996799151051164,
+      "mape_pct": 0.007220887484152226,
+      "max_relative_error_pct": 0.01617523229751234
+    }
+  },
+  "metal_bonus_fit": {
+    "free_parameters": {
+      "intercept": 65.74076600544916,
+      "amplitude": 131.98468009283792,
+      "growth": 1.1000050540360304
+    },
+    "fixed_growth_parameters": {
+      "intercept": 65.68259433104981,
+      "amplitude": 131.99437129122285,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "test_levels": [
+      17,
+      18,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "train": {
+      "n": 16,
+      "mae": 0.25158217243111736,
+      "max_abs_error": 0.5784178040607912,
+      "mape_pct": 0.017495521684221072,
+      "max_relative_error_pct": 0.05127817411886448
+    },
+    "train_fixed_growth": {
+      "n": 16,
+      "mae": 0.25858807990793053,
+      "max_abs_error": 0.573868872186722,
+      "mape_pct": 0.01879091955525369,
+      "max_relative_error_pct": 0.05857689507348408
+    },
+    "holdout": {
+      "n": 15,
+      "mae": 1.4441836168836744,
+      "max_abs_error": 10.878093227584031,
+      "mape_pct": 0.0026620997941607474,
+      "max_relative_error_pct": 0.015729789501393997
+    },
+    "holdout_fixed_growth": {
+      "n": 15,
+      "mae": 1.834558440817515,
+      "max_abs_error": 6.36905101017328,
+      "mape_pct": 0.004175265098832811,
+      "max_relative_error_pct": 0.009209686809782637
+    }
+  },
+  "gas_early_fit": {
+    "free_parameters": {
+      "intercept": -1.1543531542809935,
+      "amplitude": 72.9042389202149,
+      "growth": 1.0996185479098637
+    },
+    "fixed_growth_parameters": {
+      "intercept": -0.776228180826113,
+      "amplitude": 72.71314863568642,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "test_levels": [
+      8,
+      9,
+      10,
+      11,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "train": {
+      "n": 7,
+      "mae": 0.1527738837929178,
+      "max_abs_error": 0.35046731427968325,
+      "mape_pct": 0.04565215796462581,
+      "max_relative_error_pct": 0.12085079802747699
+    },
+    "train_fixed_growth": {
+      "n": 7,
+      "mae": 0.1950253751597586,
+      "max_abs_error": 0.4326256785301439,
+      "mape_pct": 0.08630961337072215,
+      "max_relative_error_pct": 0.26358901066957163
+    },
+    "holdout": {
+      "n": 11,
+      "mae": 410.3014992802306,
+      "max_abs_error": 848.3024899527518,
+      "mape_pct": 13.502728343160571,
+      "max_relative_error_pct": 40.269729776563175
+    },
+    "holdout_fixed_growth": {
+      "n": 11,
+      "mae": 422.39434003586376,
+      "max_abs_error": 890.7778470568937,
+      "mape_pct": 13.691517703818324,
+      "max_relative_error_pct": 40.333390299748686
+    }
+  },
+  "Crystal_Mine_ordinary_simple_candidate": {
+    "n": 19,
+    "mae": 0.5486039494769497,
+    "max_abs_error": 1.2809314288251699,
+    "mape_pct": 0.08656644174039828,
+    "max_relative_error_pct": 0.8547008547008548
+  },
+  "Crystal_Mine_geologist_simple_candidate": {
+    "n": 26,
+    "mae": 0.5660852430524742,
+    "max_abs_error": 0.9675836286660342,
+    "mape_pct": 0.058427701686161106,
+    "max_relative_error_pct": 0.6201550387596988
+  },
+  "Metal_Mine_geologist_simple_candidate": {
+    "n": 31,
+    "mae": 0.7672409380980715,
+    "max_abs_error": 9.632984790339833,
+    "mape_pct": 0.015934233813099812,
+    "max_relative_error_pct": 0.11428571428572845
+  },
+  "Metal_Mine_ordinary_simple_candidate": {
+    "n": 9,
+    "mae": 3335.5982494796935,
+    "max_abs_error": 20579.370140469404,
+    "mape_pct": 11.162743681584839,
+    "max_relative_error_pct": 52.38080365625485
+  },
+  "production_anomalies_over_1pct": [
+    {
+      "building": "Metal_Mine",
+      "level": 1,
+      "column": "ordinary",
+      "observed": 200,
+      "candidate": 192.0,
+      "error": -8.0,
+      "relative_error_pct": -4.0000000000000036,
+      "effective_amplitude": null
+    },
+    {
+      "building": "Metal_Mine",
+      "level": 18,
+      "column": "ordinary",
+      "observed": 21500,
+      "candidate": 12069.421397143238,
+      "error": -9430.578602856762,
+      "relative_error_pct": -43.86315629235703,
+      "effective_amplitude": null
+    },
+    {
+      "building": "Metal_Mine",
+      "level": 21,
+      "column": "ordinary",
+      "observed": 39288,
+      "candidate": 18708.629859530596,
+      "error": -20579.370140469404,
+      "relative_error_pct": -52.38080365625485,
+      "effective_amplitude": null
+    },
+    {
+      "building": "Metal_Mine",
+      "level": 37,
+      "column": "geologist",
+      "observed": 155307,
+      "candidate": 166141.28489479492,
+      "error": 10834.284894794924,
+      "relative_error_pct": 6.97604415434907,
+      "effective_amplitude": null
+    }
+  ],
+  "gas_effective_amplitude": [
+    {
+      "building": "Gas_Mine",
+      "level": 1,
+      "column": "ordinary",
+      "observed": 79,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 71.81818181818181
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 2,
+      "column": "ordinary",
+      "observed": 175,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.31404958677685
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 3,
+      "column": "ordinary",
+      "observed": 290,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.62709742048582
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 4,
+      "column": "ordinary",
+      "observed": 425,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.57017963253874
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 5,
+      "column": "ordinary",
+      "observed": 585,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.64779479792112
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 6,
+      "column": "ordinary",
+      "observed": 772,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.62897900025267
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 7,
+      "column": "ordinary",
+      "observed": 991,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.64852788094716
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 8,
+      "column": "ordinary",
+      "observed": 888,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 51.78231920328037
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 9,
+      "column": "ordinary",
+      "observed": 1342,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 63.237667095097144
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 10,
+      "column": "ordinary",
+      "observed": 1531,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 59.026677611661256
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 11,
+      "column": "ordinary",
+      "observed": 1853,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 59.042290521729065
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 12,
+      "column": "range_endpoint",
+      "observed": 1491,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 39.589879100511794
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 12,
+      "column": "range_endpoint",
+      "observed": 2223,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 59.02635898084354
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 13,
+      "column": "ordinary",
+      "observed": 3264,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.72804118927297
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 14,
+      "column": "ordinary",
+      "observed": 3864,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.679426188478
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 15,
+      "column": "range_endpoint",
+      "observed": 2872,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 45.835597719215805
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 15,
+      "column": "range_endpoint",
+      "observed": 4554,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 72.67942618847799
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 16,
+      "column": "ordinary",
+      "observed": 4858,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 66.07764635428384
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 17,
+      "column": "ordinary",
+      "observed": 5678,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 66.08011941264508
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 18,
+      "column": "ordinary",
+      "observed": 6613,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 66.07812098164608
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 19,
+      "column": "ordinary",
+      "observed": 7756,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 66.74568299214644
+    },
+    {
+      "building": "Gas_Mine",
+      "level": 20,
+      "column": "ordinary",
+      "observed": 8892,
+      "candidate": null,
+      "error": null,
+      "relative_error_pct": null,
+      "effective_amplitude": 66.08695701953418
+    }
+  ],
+  "building_coefficient": {
+    "fit_k": 0.3594665516373701,
+    "simple_k": 0.36,
+    "training_count": 49,
+    "training_rule": "three mines, target level >=7; median, all rows retained; no outcome-based exclusion",
+    "conditions": "10% commander discount removed; assumes unknown nanite effect absent or constant. Server speed absorbed into k.",
+    "regular_observation_tolerance": "abs(error)<=max(2 seconds, 1% of observed)"
+  },
+  "building_all_regular": {
+    "simple_model": {
+      "n": 100,
+      "mae": 19.4296355714286,
+      "max_abs_error": 1680.48,
+      "mape_pct": 2.2448652391898634,
+      "max_relative_error_pct": 37.493975903614455
+    },
+    "fitted_model": {
+      "n": 100,
+      "mae": 21.580507926237416,
+      "max_abs_error": 1684.6312951579857,
+      "mape_pct": 2.203271209038507,
+      "max_relative_error_pct": 37.586597393083125
+    },
+    "within_tolerance": 96,
+    "outliers": [
+      {
+        "building": "Metal_Mine",
+        "level": 12,
+        "robotics": 7,
+        "seconds": 393,
+        "material_cost": 6486,
+        "normalized_k": 0.5385959502518244,
+        "candidate_seconds": 262.683,
+        "error_seconds": -130.317,
+        "relative_error_pct": -33.15954198473282,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 261.33357564746206,
+        "classification": "regular_level"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 4,
+        "robotics": 2,
+        "seconds": 50,
+        "material_cost": 294,
+        "normalized_k": 0.5668934240362812,
+        "candidate_seconds": 31.752,
+        "error_seconds": -18.248,
+        "relative_error_pct": -36.49600000000001,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 29.007442194609425,
+        "classification": "regular_level"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 5,
+        "robotics": 2,
+        "seconds": 81,
+        "material_cost": 471,
+        "normalized_k": 0.5732484076433121,
+        "candidate_seconds": 50.868,
+        "error_seconds": -30.131999999999998,
+        "relative_error_pct": -37.2,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 46.746205704089256,
+        "classification": "regular_level"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 15,
+        "robotics": 5,
+        "seconds": 4482,
+        "material_cost": 51880,
+        "normalized_k": 0.5759444872783346,
+        "candidate_seconds": 2801.52,
+        "error_seconds": -1680.48,
+        "relative_error_pct": -37.49397590361446,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 2761.122492316183,
+        "classification": "regular_level"
+      }
+    ]
+  },
+  "building_other_buildings_holdout": {
+    "simple_model": {
+      "n": 31,
+      "mae": 0.6189493087557557,
+      "max_abs_error": 1.5714285714286689,
+      "mape_pct": 0.12918879850415801,
+      "max_relative_error_pct": 0.9870129870129751
+    },
+    "fitted_model": {
+      "n": 31,
+      "mae": 3.9595003779368,
+      "max_abs_error": 61.4532513749582,
+      "mape_pct": 0.14374472062006702,
+      "max_relative_error_pct": 0.8373703294440827
+    },
+    "within_tolerance": 31,
+    "outliers": []
+  },
+  "building_low_levels": {
+    "simple_model": {
+      "n": 21,
+      "mae": 86.0979619047619,
+      "max_abs_error": 309.0,
+      "mape_pct": 1160.823238095238,
+      "max_relative_error_pct": 3982.3999999999996
+    },
+    "fitted_model": {
+      "n": 21,
+      "mae": 85.96367847257527,
+      "max_abs_error": 308.51989647363314,
+      "mape_pct": 1159.0113985131775,
+      "max_relative_error_pct": 3976.3506955677776
+    },
+    "within_tolerance": 0,
+    "outliers": [
+      {
+        "building": "Metal_Mine",
+        "level": 2,
+        "robotics": 1,
+        "seconds": 15,
+        "material_cost": 112,
+        "normalized_k": 0.2976190476190476,
+        "candidate_seconds": 18.144,
+        "error_seconds": 3.1439999999999984,
+        "relative_error_pct": 20.95999999999998,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 18.012296436457895,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Metal_Mine",
+        "level": 2,
+        "robotics": 2,
+        "seconds": 15,
+        "material_cost": 112,
+        "normalized_k": 0.4464285714285714,
+        "candidate_seconds": 12.096,
+        "error_seconds": -2.904,
+        "relative_error_pct": -19.36,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 12.008197624305263,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 2,
+        "robotics": 1,
+        "seconds": 15,
+        "material_cost": 114,
+        "normalized_k": 0.29239766081871343,
+        "candidate_seconds": 18.468,
+        "error_seconds": 3.468,
+        "relative_error_pct": 23.120000000000008,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 16.754321071794326,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 2,
+        "robotics": 2,
+        "seconds": 15,
+        "material_cost": 114,
+        "normalized_k": 0.43859649122807015,
+        "candidate_seconds": 12.312000000000001,
+        "error_seconds": -2.687999999999999,
+        "relative_error_pct": -17.91999999999999,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 11.169547381196217,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 2,
+        "robotics": 3,
+        "seconds": 15,
+        "material_cost": 114,
+        "normalized_k": 0.5847953216374269,
+        "candidate_seconds": 9.234,
+        "error_seconds": -5.766,
+        "relative_error_pct": -38.44,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 8.377160535897163,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Crystal_Mine",
+        "level": 2,
+        "robotics": 4,
+        "seconds": 15,
+        "material_cost": 114,
+        "normalized_k": 0.7309941520467835,
+        "candidate_seconds": 7.387200000000001,
+        "error_seconds": -7.612799999999999,
+        "relative_error_pct": -50.751999999999995,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 6.701728428717731,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Metal_Storage",
+        "level": 2,
+        "robotics": 1,
+        "seconds": 15,
+        "material_cost": 2000,
+        "normalized_k": 0.016666666666666666,
+        "candidate_seconds": 324.0,
+        "error_seconds": 309.0,
+        "relative_error_pct": 2060.0,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 324.0,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Metal_Storage",
+        "level": 2,
+        "robotics": 2,
+        "seconds": 15,
+        "material_cost": 2000,
+        "normalized_k": 0.025,
+        "candidate_seconds": 216.0,
+        "error_seconds": 201.0,
+        "relative_error_pct": 1340.0,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 216.0,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Fusion_Reactor",
+        "level": 1,
+        "robotics": 1,
+        "seconds": 5,
+        "material_cost": 1260,
+        "normalized_k": 0.008818342151675485,
+        "candidate_seconds": 204.12,
+        "error_seconds": 199.12,
+        "relative_error_pct": 3982.3999999999996,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 203.57099019626517,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Fusion_Reactor",
+        "level": 1,
+        "robotics": 2,
+        "seconds": 5,
+        "material_cost": 1260,
+        "normalized_k": 0.013227513227513227,
+        "candidate_seconds": 136.07999999999998,
+        "error_seconds": 131.07999999999998,
+        "relative_error_pct": 2621.6,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 135.71399346417678,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Fusion_Reactor",
+        "level": 1,
+        "robotics": 3,
+        "seconds": 5,
+        "material_cost": 1260,
+        "normalized_k": 0.01763668430335097,
+        "candidate_seconds": 102.06,
+        "error_seconds": 97.06,
+        "relative_error_pct": 1941.1999999999998,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 101.78549509813259,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Fusion_Reactor",
+        "level": 1,
+        "robotics": 4,
+        "seconds": 5,
+        "material_cost": 1260,
+        "normalized_k": 0.02204585537918871,
+        "candidate_seconds": 81.648,
+        "error_seconds": 76.648,
+        "relative_error_pct": 1532.96,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 81.42839607850607,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Fusion_Reactor",
+        "level": 2,
+        "robotics": 4,
+        "seconds": 15,
+        "material_cost": 2268,
+        "normalized_k": 0.036743092298647854,
+        "candidate_seconds": 146.9664,
+        "error_seconds": 131.9664,
+        "relative_error_pct": 879.7760000000001,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 146.61888201976447,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 1,
+        "robotics": 1,
+        "seconds": 5,
+        "material_cost": 600,
+        "normalized_k": 0.018518518518518517,
+        "candidate_seconds": 97.2,
+        "error_seconds": 92.2,
+        "relative_error_pct": 1844.0000000000002,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 135.5035237732027,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 1,
+        "robotics": 2,
+        "seconds": 5,
+        "material_cost": 600,
+        "normalized_k": 0.027777777777777776,
+        "candidate_seconds": 64.8,
+        "error_seconds": 59.8,
+        "relative_error_pct": 1196.0,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 90.33568251546846,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 1,
+        "robotics": 3,
+        "seconds": 5,
+        "material_cost": 600,
+        "normalized_k": 0.037037037037037035,
+        "candidate_seconds": 48.6,
+        "error_seconds": 43.6,
+        "relative_error_pct": 872.0000000000001,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 67.75176188660134,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 1,
+        "robotics": 4,
+        "seconds": 5,
+        "material_cost": 600,
+        "normalized_k": 0.046296296296296294,
+        "candidate_seconds": 38.879999999999995,
+        "error_seconds": 33.879999999999995,
+        "relative_error_pct": 677.5999999999999,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 54.20140950928108,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 1,
+        "robotics": 5,
+        "seconds": 5,
+        "material_cost": 600,
+        "normalized_k": 0.05555555555555555,
+        "candidate_seconds": 32.4,
+        "error_seconds": 27.4,
+        "relative_error_pct": 548.0,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 45.16784125773423,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Research_Lab",
+        "level": 2,
+        "robotics": 4,
+        "seconds": 15,
+        "material_cost": 1200,
+        "normalized_k": 0.06944444444444445,
+        "candidate_seconds": 77.75999999999999,
+        "error_seconds": 62.75999999999999,
+        "relative_error_pct": 418.3999999999999,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 91.36201105727295,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Robotics_Facility",
+        "level": 1,
+        "robotics": 0,
+        "seconds": 5,
+        "material_cost": 520,
+        "normalized_k": 0.010683760683760684,
+        "candidate_seconds": 168.48,
+        "error_seconds": 163.48,
+        "relative_error_pct": 3269.6,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 167.82531834727942,
+        "classification": "low_level_exception"
+      },
+      {
+        "building": "Robotics_Facility",
+        "level": 2,
+        "robotics": 1,
+        "seconds": 15,
+        "material_cost": 1040,
+        "normalized_k": 0.03205128205128205,
+        "candidate_seconds": 168.48,
+        "error_seconds": 153.48,
+        "relative_error_pct": 1023.1999999999999,
+        "within_2s_or_1pct": false,
+        "source_wiki_exponential_seconds": 167.91263645819797,
+        "classification": "low_level_exception"
+      }
+    ]
+  },
+  "building_by_type": {
+    "Metal_Mine": {
+      "simple": {
+        "n": 17,
+        "mae": 8.560288235294234,
+        "max_abs_error": 130.317,
+        "mape_pct": 3.787986017554684,
+        "max_relative_error_pct": 33.159541984732826
+      },
+      "wiki_exponential": {
+        "n": 17,
+        "mae": 12.107715816367666,
+        "max_abs_error": 131.66642435253794,
+        "mape_pct": 3.5412910293498476,
+        "max_relative_error_pct": 33.50290695993332
+      },
+      "within_tolerance": 16
+    },
+    "Crystal_Mine": {
+      "simple": {
+        "n": 29,
+        "mae": 60.53264926108382,
+        "max_abs_error": 1680.48,
+        "mape_pct": 5.168957048159227,
+        "max_relative_error_pct": 37.493975903614455
+      },
+      "wiki_exponential": {
+        "n": 29,
+        "mae": 77.95367599697668,
+        "max_abs_error": 1720.877507683817,
+        "mape_pct": 7.535497286246376,
+        "max_relative_error_pct": 42.28863493322314
+      },
+      "within_tolerance": 26
+    },
+    "Gas_Mine": {
+      "simple": {
+        "n": 23,
+        "mae": 0.9914956521738643,
+        "max_abs_error": 1.549599999999998,
+        "mape_pct": 0.26896323783957315,
+        "max_relative_error_pct": 1.0613698630136974
+      },
+      "wiki_exponential": {
+        "n": 23,
+        "mae": 1.5696284556446793,
+        "max_abs_error": 5.579655764699055,
+        "mape_pct": 0.2298382054728138,
+        "max_relative_error_pct": 0.5289160090666511
+      },
+      "within_tolerance": 23
+    },
+    "Metal_Storage": {
+      "simple": {
+        "n": 12,
+        "mae": 0.18095238095238622,
+        "max_abs_error": 1.5714285714286689,
+        "mape_pct": 0.030590226801323245,
+        "max_relative_error_pct": 0.2126425671757333
+      },
+      "wiki_exponential": {
+        "n": 12,
+        "mae": 0.1809523809526894,
+        "max_abs_error": 1.5714285714285552,
+        "mape_pct": 0.030590226801329275,
+        "max_relative_error_pct": 0.2126425671757179
+      },
+      "within_tolerance": 12
+    },
+    "Fusion_Reactor": {
+      "simple": {
+        "n": 9,
+        "mae": 0.9911111111111381,
+        "max_abs_error": 1.5135999999999967,
+        "mape_pct": 0.13936574756692438,
+        "max_relative_error_pct": 0.5755133079847896
+      },
+      "wiki_exponential": {
+        "n": 9,
+        "mae": 0.4934142892408886,
+        "max_abs_error": 1.4706122909640271,
+        "mape_pct": 0.0688965921510023,
+        "max_relative_error_pct": 0.3802281368821725
+      },
+      "within_tolerance": 9
+    },
+    "Research_Lab": {
+      "simple": {
+        "n": 5,
+        "mae": 1.0239999999999667,
+        "max_abs_error": 1.5199999999999818,
+        "mape_pct": 0.3398450217616057,
+        "max_relative_error_pct": 0.9870129870129751
+      },
+      "wiki_exponential": {
+        "n": 5,
+        "mae": 197.28861048353374,
+        "max_abs_error": 505.4594016467429,
+        "mape_pct": 25.423995359210476,
+        "max_relative_error_pct": 40.674018793978675
+      },
+      "within_tolerance": 5
+    },
+    "Robotics_Facility": {
+      "simple": {
+        "n": 5,
+        "mae": 0.595199999999943,
+        "max_abs_error": 0.9599999999999795,
+        "mape_pct": 0.13685063902053432,
+        "max_relative_error_pct": 0.28571428571427965
+      },
+      "wiki_exponential": {
+        "n": 5,
+        "mae": 0.32319663358898654,
+        "max_abs_error": 0.8404368933873911,
+        "mape_pct": 0.05497012436214371,
+        "max_relative_error_pct": 0.15592521213124141
+      },
+      "within_tolerance": 5
+    }
+  },
+  "solar_check": {
+    "metrics": {
+      "n": 26,
+      "mae": 0.0,
+      "max_abs_error": 0.0,
+      "mape_pct": 0.0,
+      "max_relative_error_pct": 0.0
+    },
+    "nonmatches": []
+  }
+}

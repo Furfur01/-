@@ -9,7 +9,8 @@ varying vec3 vN,vP,vC;uniform vec3 uColor,uLight,uEye;uniform float uKind,uAlpha
 ${auroraCelestialNoise}
 void main(){
  vec3 n=normalize(vN),view=normalize(uEye-vP),c=uColor;float emission=0.;
- if(uKind<-.5){float a=1.;if(uKind< -1.5){float d=length(gl_PointCoord-.5)*2.;a=pow(max(0.,1.-d),1.6);c=vN;}gl_FragColor=vec4(c,uAlpha*a);return;}
+ if(uKind<-.5){float a=1.;if(uKind< -1.5){float d=length(gl_PointCoord-.5)*2.;a=pow(max(0.,1.-d),1.6);c=uKind< -2.5?c:vN;}gl_FragColor=vec4(c,uAlpha*a);return;}
+ if(uKind>6.5){float day=max(dot(n,uLight),0.);float spec=pow(max(dot(n,normalize(uLight+view)),0.),38.);vec3 alloy=vC*(.38+.62*day)+vec3(.23,.29,.28)*spec;gl_FragColor=vec4(alloy,uAlpha);return;}
  float grain=clouds(n*48.),continent=clouds(n*4.8),rim=pow(1.-max(dot(n,view),0.),3.);
 
  if(uKind>5.5){c=vC*(.88+grain*.24);if(uBiome>.5&&uBiome<1.5)emission=smoothstep(.3,.7,c.r)* (1.-smoothstep(.22,.42,c.b));}
@@ -221,9 +222,9 @@ vec3 film(vec3 col){
  const texture=gl.createTexture();gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,256,256,0,gl.RGBA,gl.UNSIGNED_BYTE,noise);
  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
  const a=gl.getAttribLocation(program,'aPosition'),u={};for(const key of ['uCenter','uExtent','uEye','uRight','uUp','uForward','uNoise','uTime','uAspect','uFov','uAlpha','uType'])u[key]=gl.getUniformLocation(program,key);
- return {draw({q,id,eye,right,up,forward,time,alpha}){
+ return {draw({q,id,eye,right,up,forward,time,alpha,radius=2.05}){
   // Conservative perspective bounds, including close flybys inside the corona.
-  const bound=5.33,denom=q.depth-bound,full=denom<=0;
+  const bound=radius*2.6,denom=q.depth-bound,full=denom<=0;
   const center=full?[0,0]:[q.x/W*2-1,1-q.y/H*2];
   const extent=full?[1,1]:[bound*(1+Math.abs(center[0])*W/H*Math.tan(FOV/2))/denom/Math.tan(FOV/2)/(W/H),bound*(1+Math.abs(center[1])*Math.tan(FOV/2))/denom/Math.tan(FOV/2)];
   gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);

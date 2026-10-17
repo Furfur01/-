@@ -1,6 +1,7 @@
 import {loadFleetAssets} from './assets.js';
 import {startFlightRuntime} from './runtime.js';
 import {createFlightController} from './controller.js';
+import {openLocalBattle} from './local-battle.js';
 
 const started = performance.now();
 const loading = new AbortController();
@@ -10,6 +11,7 @@ if (legacy) legacy.href = (battlefield ? 'legacy-webgl/battlefield.html' : 'lega
 window.addEventListener('pagehide', () => loading.abort(), {once: true});
 
 try {
+ if(!battlefield||!await openLocalBattle(new URLSearchParams(location.search),loading.signal)){
   const {fleet, assets} = await loadFleetAssets({signal: loading.signal, includeBattleModels: battlefield});
   // Compatibility surfaces are for the existing parent frame and diagnostic tools.
   window.FlightFleet = fleet;
@@ -17,6 +19,7 @@ try {
   const app = startFlightRuntime({fleet, assets, createController: battlefield ? createFlightController : null});
   app.loadedMs = performance.now() - started;
   document.documentElement.dataset.renderer = 'three';
+ }
 } catch (error) {
   if (loading.signal.aborted) {
     // Leaving the page while assets load is a normal cancellation.

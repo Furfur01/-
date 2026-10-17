@@ -1,4 +1,4 @@
 @echo off
+chcp 65001 >nul
 cd /d "%~dp0"
-node "scripts\launch-html.mjs"
-if errorlevel 1 pause
+call "%~dp0银河帝国.cmd"

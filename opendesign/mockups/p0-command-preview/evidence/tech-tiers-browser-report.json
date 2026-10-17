@@ -1,0 +1,347 @@
+{
+  "errors": [],
+  "blocked": [],
+  "expected": {
+    "Energy_Tech": 0,
+    "Laser_Tech": 1,
+    "Ion_Tech": 2,
+    "Shielding_Tech": 1,
+    "Hyperspace_Tech": 2,
+    "Plasma_Tech": 3,
+    "Espionage_Tech": 0,
+    "Computer_Tech": 0,
+    "Impulse_Drive": 1,
+    "Astrophysics_Tech": 2,
+    "Combustion_Drive": 1,
+    "Hyperspace_Drive": 3,
+    "Weapons_Tech": 0,
+    "Strength_Tech": 0,
+    "Intergalactic_Network": 3,
+    "Graviton_Tech": 0
+  },
+  "zeroTier": [
+    "Energy_Tech",
+    "Espionage_Tech",
+    "Computer_Tech",
+    "Weapons_Tech",
+    "Strength_Tech",
+    "Graviton_Tech"
+  ],
+  "dom": {
+    "headings": [
+      "0 级科技",
+      "1 级科技",
+      "2 级科技",
+      "3 级科技"
+    ],
+    "nodes": [
+      {
+        "name": "能源科技",
+        "label": "能源科技，0 级科技，已研究等级 6",
+        "x": 34,
+        "y": 72
+      },
+      {
+        "name": "激光科技",
+        "label": "激光科技，1 级科技，已研究等级 6",
+        "x": 324,
+        "y": 178
+      },
+      {
+        "name": "离子科技",
+        "label": "离子科技，2 级科技，已研究等级 4",
+        "x": 614,
+        "y": 178
+      },
+      {
+        "name": "超空间科技",
+        "label": "超空间科技，2 级科技，已研究等级 5",
+        "x": 614,
+        "y": 72
+      },
+      {
+        "name": "等离子科技",
+        "label": "等离子科技，3 级科技，已研究等级 0，条件不足",
+        "x": 904,
+        "y": 178
+      },
+      {
+        "name": "间谍科技",
+        "label": "间谍科技，0 级科技，已研究等级 4",
+        "x": 34,
+        "y": 178
+      },
+      {
+        "name": "计算机科技",
+        "label": "计算机科技，0 级科技，已研究等级 4",
+        "x": 34,
+        "y": 284
+      },
+      {
+        "name": "天体物理科技",
+        "label": "天体物理科技，2 级科技，已研究等级 4",
+        "x": 614,
+        "y": 284
+      },
+      {
+        "name": "燃烧引擎",
+        "label": "燃烧引擎，1 级科技，已研究等级 6",
+        "x": 324,
+        "y": 390
+      },
+      {
+        "name": "脉冲引擎",
+        "label": "脉冲引擎，1 级科技，已研究等级 4",
+        "x": 324,
+        "y": 284
+      },
+      {
+        "name": "超空间引擎",
+        "label": "超空间引擎，3 级科技，已研究等级 5",
+        "x": 904,
+        "y": 72
+      },
+      {
+        "name": "武器科技",
+        "label": "武器科技，0 级科技，已研究等级 4",
+        "x": 34,
+        "y": 390
+      },
+      {
+        "name": "护盾科技",
+        "label": "护盾科技，1 级科技，已研究等级 5",
+        "x": 324,
+        "y": 72
+      },
+      {
+        "name": "强度科技",
+        "label": "强度科技，0 级科技，已研究等级 4",
+        "x": 34,
+        "y": 496
+      },
+      {
+        "name": "星际研究网络",
+        "label": "星际研究网络，3 级科技，已研究等级 0，条件不足",
+        "x": 904,
+        "y": 284
+      },
+      {
+        "name": "引力子科技",
+        "label": "引力子科技，0 级科技，已研究等级 0，条件不足",
+        "x": 34,
+        "y": 602
+      }
+    ],
+    "filters": [],
+    "edgeCount": 15,
+    "edgePaths": [
+      "M 258 116 H 280 V 222 H 324",
+      "M 548 222 H 579 V 222 H 614",
+      "M 258 116 H 298 V 42 H 598 V 222 H 614",
+      "M 258 116 H 280 V 47 H 598 V 116 H 614",
+      "M 548 116 H 579 V 116 H 614",
+      "M 548 222 H 588 V 52 H 888 V 222 H 904",
+      "M 838 222 H 860 V 222 H 904",
+      "M 258 222 H 289 V 57 H 598 V 328 H 614",
+      "M 548 328 H 588 V 328 H 614",
+      "M 258 116 H 280 V 434 H 324",
+      "M 258 116 H 289 V 328 H 324",
+      "M 838 116 H 878 V 116 H 904",
+      "M 258 116 H 280 V 116 H 324",
+      "M 258 328 H 289 V 62 H 888 V 328 H 904",
+      "M 838 116 H 878 V 328 H 904"
+    ],
+    "overflow": false
+  },
+  "checks": [
+    {
+      "id": "Energy_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    },
+    {
+      "id": "Laser_Tech",
+      "tier": 1,
+      "labelCorrect": true,
+      "x": 324
+    },
+    {
+      "id": "Ion_Tech",
+      "tier": 2,
+      "labelCorrect": true,
+      "x": 614
+    },
+    {
+      "id": "Hyperspace_Tech",
+      "tier": 2,
+      "labelCorrect": true,
+      "x": 614
+    },
+    {
+      "id": "Plasma_Tech",
+      "tier": 3,
+      "labelCorrect": true,
+      "x": 904
+    },
+    {
+      "id": "Espionage_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    },
+    {
+      "id": "Computer_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    },
+    {
+      "id": "Astrophysics_Tech",
+      "tier": 2,
+      "labelCorrect": true,
+      "x": 614
+    },
+    {
+      "id": "Combustion_Drive",
+      "tier": 1,
+      "labelCorrect": true,
+      "x": 324
+    },
+    {
+      "id": "Impulse_Drive",
+      "tier": 1,
+      "labelCorrect": true,
+      "x": 324
+    },
+    {
+      "id": "Hyperspace_Drive",
+      "tier": 3,
+      "labelCorrect": true,
+      "x": 904
+    },
+    {
+      "id": "Weapons_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    },
+    {
+      "id": "Shielding_Tech",
+      "tier": 1,
+      "labelCorrect": true,
+      "x": 324
+    },
+    {
+      "id": "Strength_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    },
+    {
+      "id": "Intergalactic_Network",
+      "tier": 3,
+      "labelCorrect": true,
+      "x": 904
+    },
+    {
+      "id": "Graviton_Tech",
+      "tier": 0,
+      "labelCorrect": true,
+      "x": 34
+    }
+  ],
+  "edgeOrder": [
+    {
+      "from": "Energy_Tech",
+      "to": "Laser_Tech",
+      "forward": true
+    },
+    {
+      "from": "Laser_Tech",
+      "to": "Ion_Tech",
+      "forward": true
+    },
+    {
+      "from": "Energy_Tech",
+      "to": "Ion_Tech",
+      "forward": true
+    },
+    {
+      "from": "Energy_Tech",
+      "to": "Hyperspace_Tech",
+      "forward": true
+    },
+    {
+      "from": "Shielding_Tech",
+      "to": "Hyperspace_Tech",
+      "forward": true
+    },
+    {
+      "from": "Laser_Tech",
+      "to": "Plasma_Tech",
+      "forward": true
+    },
+    {
+      "from": "Ion_Tech",
+      "to": "Plasma_Tech",
+      "forward": true
+    },
+    {
+      "from": "Espionage_Tech",
+      "to": "Astrophysics_Tech",
+      "forward": true
+    },
+    {
+      "from": "Impulse_Drive",
+      "to": "Astrophysics_Tech",
+      "forward": true
+    },
+    {
+      "from": "Energy_Tech",
+      "to": "Combustion_Drive",
+      "forward": true
+    },
+    {
+      "from": "Energy_Tech",
+      "to": "Impulse_Drive",
+      "forward": true
+    },
+    {
+      "from": "Hyperspace_Tech",
+      "to": "Hyperspace_Drive",
+      "forward": true
+    },
+    {
+      "from": "Energy_Tech",
+      "to": "Shielding_Tech",
+      "forward": true
+    },
+    {
+      "from": "Computer_Tech",
+      "to": "Intergalactic_Network",
+      "forward": true
+    },
+    {
+      "from": "Hyperspace_Tech",
+      "to": "Intergalactic_Network",
+      "forward": true
+    }
+  ],
+  "desktop720": {
+    "width": 1280,
+    "scrollWidth": 1280
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390,
+    "zeroTier": [
+      "能源科技",
+      "间谍科技",
+      "计算机科技",
+      "武器科技",
+      "强度科技",
+      "引力子科技"
+    ]
+  }
+}

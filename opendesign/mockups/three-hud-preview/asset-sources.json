@@ -1,0 +1,11 @@
+{
+  "reference": {
+    "source": "C:/Users/Administrator/Downloads/VALIANT_TALON_Dual_GUI.html",
+    "sha256": "eb6d0478920880a0d10d87940eea6a1e7b1f6f27cb7b92d1bf3a5577f973fea0"
+  },
+  "flagship": {
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "id": "Iron_Behemoth"
+  },
+  "mode": "isolated browser-only preview; no game API or save access"
+}

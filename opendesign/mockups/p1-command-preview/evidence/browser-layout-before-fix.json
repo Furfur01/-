@@ -1,0 +1,436 @@
+[
+  {
+    "name": "殖民地建设",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "scrollHeight": 900,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "action-body",
+        "height": 308,
+        "scroll": 388
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "行星防务",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "scrollHeight": 900,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "facility-list",
+        "height": 484,
+        "scroll": 530
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "舰队行动",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "scrollHeight": 900,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "action-body",
+        "height": 444,
+        "scroll": 498
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "帝国王庭",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "scrollHeight": 900,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "colony-table-wrap",
+        "height": 327,
+        "scroll": 390
+      },
+      {
+        "class": "template-panel",
+        "height": 438,
+        "scroll": 566
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "殖民地建设",
+    "width": 1280,
+    "height": 720,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "scrollHeight": 720,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "facility-list",
+        "height": 341,
+        "scroll": 445
+      },
+      {
+        "class": "action-body",
+        "height": 196,
+        "scroll": 345
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "行星防务",
+    "width": 1280,
+    "height": 720,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "scrollHeight": 720,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "facility-list",
+        "height": 337,
+        "scroll": 530
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "舰队行动",
+    "width": 1280,
+    "height": 720,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "scrollHeight": 720,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "action-body",
+        "height": 307,
+        "scroll": 437
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "帝国王庭",
+    "width": 1280,
+    "height": 720,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "scrollHeight": 720,
+    "brokenImages": [],
+    "scrollAreas": [
+      {
+        "class": "colony-table-wrap",
+        "height": 182,
+        "scroll": 366
+      },
+      {
+        "class": "template-panel",
+        "height": 335,
+        "scroll": 480
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "name": "殖民地建设",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "scrollHeight": 2023,
+    "brokenImages": [],
+    "scrollAreas": [],
+    "smallTargets": [
+      {
+        "name": "银河帝国GALACTIC EMPIRE",
+        "width": 127.03125,
+        "height": 36
+      },
+      {
+        "name": "当前示例殖民地",
+        "width": 61,
+        "height": 16
+      },
+      {
+        "name": "搜索建筑",
+        "width": 294,
+        "height": 30
+      },
+      {
+        "name": "资源",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "name": "工业",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "name": "行政",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "name": "设施预览",
+        "width": 64,
+        "height": 40
+      },
+      {
+        "name": "固定建设区",
+        "width": 75,
+        "height": 40
+      },
+      {
+        "name": "继续演示",
+        "width": 26,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "name": "行星防务",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "scrollHeight": 1668,
+    "brokenImages": [],
+    "scrollAreas": [],
+    "smallTargets": [
+      {
+        "name": "银河帝国GALACTIC EMPIRE",
+        "width": 127.03125,
+        "height": 36
+      },
+      {
+        "name": "当前示例殖民地",
+        "width": 61,
+        "height": 16
+      },
+      {
+        "name": "炮塔",
+        "width": 34,
+        "height": 44
+      },
+      {
+        "name": "防御建造数量",
+        "width": 238,
+        "height": 37
+      },
+      {
+        "name": "继续演示",
+        "width": 26,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "name": "舰队行动",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "scrollHeight": 1758,
+    "brokenImages": [],
+    "scrollAreas": [],
+    "smallTargets": [
+      {
+        "name": "银河帝国GALACTIC EMPIRE",
+        "width": 127.03125,
+        "height": 36
+      },
+      {
+        "name": "当前示例殖民地",
+        "width": 61,
+        "height": 16
+      },
+      {
+        "name": "运输物资",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "攻击目标",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "侦察",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "回收残骸",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "殖民",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "银心探险",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "小行星采矿",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "驻扎",
+        "width": 79,
+        "height": 42
+      },
+      {
+        "name": "继续演示",
+        "width": 26,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "name": "帝国王庭",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "scrollHeight": 1661,
+    "brokenImages": [],
+    "scrollAreas": [],
+    "smallTargets": [
+      {
+        "name": "银河帝国GALACTIC EMPIRE",
+        "width": 127.03125,
+        "height": 36
+      },
+      {
+        "name": "当前示例殖民地",
+        "width": 61,
+        "height": 16
+      },
+      {
+        "name": "能源不足赤炉",
+        "width": 105,
+        "height": 40
+      },
+      {
+        "name": "能源不足霜庭",
+        "width": 105,
+        "height": 40
+      },
+      {
+        "name": "资源不足霜庭",
+        "width": 105,
+        "height": 40
+      },
+      {
+        "name": "需要处理",
+        "width": 40,
+        "height": 45
+      },
+      {
+        "name": "建设闲置",
+        "width": 40,
+        "height": 45
+      },
+      {
+        "name": "能源不足",
+        "width": 40,
+        "height": 45
+      },
+      {
+        "name": "搜索殖民地",
+        "width": 299,
+        "height": 30
+      },
+      {
+        "name": "选择当前殖民地结果",
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "选择曙光",
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "曙光类地星 · 1:16:7",
+        "width": 91.078125,
+        "height": 37
+      },
+      {
+        "name": "选择赤炉",
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "赤炉金属岩星 · 1:16:3",
+        "width": 99.28125,
+        "height": 37
+      },
+      {
+        "name": "选择霜庭",
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "霜庭火星岩星 · 1:32:10",
+        "width": 103.734375,
+        "height": 37
+      },
+      {
+        "name": "选择远望",
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "远望气态巨星 · 1:84:13",
+        "width": 104.234375,
+        "height": 37
+      },
+      {
+        "name": "取消选择",
+        "width": 40,
+        "height": 44
+      },
+      {
+        "name": "发展计划类型",
+        "width": 156,
+        "height": 43
+      },
+      {
+        "name": "计划应用方式",
+        "width": 156,
+        "height": 43
+      },
+      {
+        "name": "继续演示",
+        "width": 26,
+        "height": 44
+      }
+    ]
+  }
+]

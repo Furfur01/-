@@ -1,0 +1,907 @@
+{
+  "tech": {
+    "Energy_Tech": {
+      "id": "Energy_Tech",
+      "name": "能源科技",
+      "cost": [
+        0,
+        800,
+        400
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          1
+        ]
+      ],
+      "description": "解锁能源相关技术",
+      "atlas": 3
+    },
+    "Laser_Tech": {
+      "id": "Laser_Tech",
+      "name": "激光科技",
+      "cost": [
+        200,
+        100,
+        0
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          1
+        ],
+        [
+          "Energy_Tech",
+          2
+        ]
+      ],
+      "description": "解锁舰船、防御与后续科技",
+      "atlas": 11
+    },
+    "Ion_Tech": {
+      "id": "Ion_Tech",
+      "name": "离子科技",
+      "cost": [
+        1000,
+        300,
+        100
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          4
+        ],
+        [
+          "Laser_Tech",
+          5
+        ],
+        [
+          "Energy_Tech",
+          4
+        ]
+      ],
+      "description": "解锁离子相关装备",
+      "atlas": 11
+    },
+    "Hyperspace_Tech": {
+      "id": "Hyperspace_Tech",
+      "name": "超空间科技",
+      "cost": [
+        0,
+        4000,
+        2000
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          7
+        ],
+        [
+          "Energy_Tech",
+          5
+        ],
+        [
+          "Shielding_Tech",
+          5
+        ]
+      ],
+      "description": "解锁高阶舰船",
+      "atlas": 15
+    },
+    "Plasma_Tech": {
+      "id": "Plasma_Tech",
+      "name": "等离子科技",
+      "cost": [
+        2000,
+        4000,
+        1000
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          4
+        ],
+        [
+          "Laser_Tech",
+          10
+        ],
+        [
+          "Ion_Tech",
+          5
+        ]
+      ],
+      "description": "解锁等离子装备",
+      "atlas": 11
+    },
+    "Espionage_Tech": {
+      "id": "Espionage_Tech",
+      "name": "间谍科技",
+      "cost": [
+        200,
+        1000,
+        200
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          3
+        ]
+      ],
+      "description": "提高侦察能力",
+      "atlas": 10
+    },
+    "Computer_Tech": {
+      "id": "Computer_Tech",
+      "name": "计算机科技",
+      "cost": [
+        0,
+        400,
+        600
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          1
+        ]
+      ],
+      "description": "每级增加1个舰队派遣名额。",
+      "atlas": 7
+    },
+    "Astrophysics_Tech": {
+      "id": "Astrophysics_Tech",
+      "name": "天体物理科技",
+      "cost": [
+        4000,
+        8000,
+        6000
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          3
+        ],
+        [
+          "Espionage_Tech",
+          4
+        ],
+        [
+          "Impulse_Drive",
+          3
+        ]
+      ],
+      "description": "每2级增加1个殖民名额；探索舰队上限为等级的平方根，向下取整。",
+      "atlas": 14
+    },
+    "Combustion_Drive": {
+      "id": "Combustion_Drive",
+      "name": "燃烧引擎",
+      "cost": [
+        400,
+        0,
+        600
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          1
+        ],
+        [
+          "Energy_Tech",
+          1
+        ]
+      ],
+      "description": "适用舰船速度每级提高10%",
+      "atlas": 2
+    },
+    "Impulse_Drive": {
+      "id": "Impulse_Drive",
+      "name": "脉冲引擎",
+      "cost": [
+        2000,
+        4000,
+        600
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          2
+        ],
+        [
+          "Energy_Tech",
+          1
+        ]
+      ],
+      "description": "适用舰船速度每级提高20%",
+      "atlas": 8
+    },
+    "Hyperspace_Drive": {
+      "id": "Hyperspace_Drive",
+      "name": "超空间引擎",
+      "cost": [
+        10000,
+        20000,
+        6000
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          7
+        ],
+        [
+          "Hyperspace_Tech",
+          3
+        ]
+      ],
+      "description": "适用舰船速度每级提高30%",
+      "atlas": 15
+    },
+    "Weapons_Tech": {
+      "id": "Weapons_Tech",
+      "name": "武器科技",
+      "cost": [
+        800,
+        200,
+        0
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          4
+        ]
+      ],
+      "description": "攻击力每级提高10%",
+      "atlas": 8
+    },
+    "Shielding_Tech": {
+      "id": "Shielding_Tech",
+      "name": "护盾科技",
+      "cost": [
+        200,
+        600,
+        0
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          6
+        ],
+        [
+          "Energy_Tech",
+          3
+        ]
+      ],
+      "description": "护盾每级提高10%",
+      "atlas": 9
+    },
+    "Strength_Tech": {
+      "id": "Strength_Tech",
+      "name": "强度科技",
+      "cost": [
+        1000,
+        0,
+        0
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          2
+        ]
+      ],
+      "description": "舰体强度每级提高10%",
+      "atlas": 7
+    },
+    "Intergalactic_Network": {
+      "id": "Intergalactic_Network",
+      "name": "星际研究网络",
+      "cost": [
+        240000,
+        400000,
+        160000
+      ],
+      "factor": 2,
+      "req": [
+        [
+          "Research_Lab",
+          10
+        ],
+        [
+          "Computer_Tech",
+          8
+        ],
+        [
+          "Hyperspace_Tech",
+          8
+        ]
+      ],
+      "atlas": 10,
+      "description": "每级连接另一颗行星上满足该项科技要求的研究实验室。"
+    },
+    "Graviton_Tech": {
+      "id": "Graviton_Tech",
+      "name": "引力子科技",
+      "cost": [
+        0,
+        0,
+        0
+      ],
+      "factor": 3,
+      "energy": 300000,
+      "req": [
+        [
+          "Research_Lab",
+          12
+        ]
+      ],
+      "atlas": 15,
+      "description": "研究需要300000能源，解锁死星。"
+    }
+  },
+  "ships": [
+    {
+      "id": "Light_Fighter",
+      "name": "轻型战机",
+      "type": "combat",
+      "cost": [
+        3000,
+        1000,
+        0
+      ],
+      "strength": 400,
+      "shield": 10,
+      "attack": 50,
+      "speed": 12500,
+      "cargo": 50,
+      "fuel": 20,
+      "req": [
+        [
+          "Shipyard",
+          1
+        ],
+        [
+          "Combustion_Drive",
+          1
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 0,
+      "weapons": [
+        {
+          "kind": "laser",
+          "name": "轻型激光炮",
+          "technology": "Laser_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Heavy_Fighter",
+      "name": "重型战机",
+      "type": "combat",
+      "cost": [
+        6000,
+        4000,
+        0
+      ],
+      "strength": 1000,
+      "shield": 25,
+      "attack": 150,
+      "speed": 10000,
+      "cargo": 100,
+      "fuel": 75,
+      "req": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Strength_Tech",
+          2
+        ],
+        [
+          "Impulse_Drive",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5,
+        "Cargo_Ship": 3
+      },
+      "atlas": 1,
+      "weapons": [
+        {
+          "kind": "laser",
+          "name": "重型激光炮",
+          "technology": "Laser_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Cruiser",
+      "name": "巡洋舰",
+      "type": "combat",
+      "cost": [
+        20000,
+        7000,
+        2000
+      ],
+      "strength": 2700,
+      "shield": 50,
+      "attack": 400,
+      "speed": 15000,
+      "cargo": 800,
+      "fuel": 300,
+      "req": [
+        [
+          "Shipyard",
+          5
+        ],
+        [
+          "Impulse_Drive",
+          4
+        ],
+        [
+          "Ion_Tech",
+          2
+        ]
+      ],
+      "rapid": {
+        "Light_Fighter": 6,
+        "Rocket_Launcher": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 2,
+      "weapons": [
+        {
+          "kind": "ion",
+          "name": "离子炮",
+          "technology": "Ion_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Battleship",
+      "name": "战列舰",
+      "type": "combat",
+      "cost": [
+        45000,
+        15000,
+        0
+      ],
+      "strength": 6000,
+      "shield": 200,
+      "attack": 1000,
+      "speed": 10000,
+      "cargo": 1500,
+      "fuel": 250,
+      "req": [
+        [
+          "Shipyard",
+          7
+        ],
+        [
+          "Hyperspace_Drive",
+          4
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 3,
+      "weapons": [
+        {
+          "kind": "shell",
+          "name": "重型舰炮",
+          "technology": "Weapons_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Dreadnought",
+      "name": "无畏舰",
+      "type": "combat",
+      "cost": [
+        30000,
+        40000,
+        15000
+      ],
+      "strength": 7000,
+      "shield": 400,
+      "attack": 700,
+      "speed": 10000,
+      "cargo": 750,
+      "fuel": 250,
+      "req": [
+        [
+          "Shipyard",
+          8
+        ],
+        [
+          "Hyperspace_Drive",
+          5
+        ],
+        [
+          "Laser_Tech",
+          12
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ]
+      ],
+      "rapid": {
+        "Battleship": 10,
+        "Cruiser": 4,
+        "Heavy_Fighter": 4,
+        "Large_Cargo_Ship": 3,
+        "Cargo_Ship": 3,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 4,
+      "weapons": [
+        {
+          "kind": "laser",
+          "name": "前置双激光炮",
+          "technology": "Laser_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Bomber",
+      "name": "行星轰炸机",
+      "type": "combat",
+      "cost": [
+        50000,
+        25000,
+        15000
+      ],
+      "strength": 7500,
+      "shield": 500,
+      "attack": 1000,
+      "speed": 4000,
+      "cargo": 500,
+      "fuel": 1000,
+      "req": [
+        [
+          "Shipyard",
+          8
+        ],
+        [
+          "Impulse_Drive",
+          6
+        ],
+        [
+          "Plasma_Tech",
+          5
+        ]
+      ],
+      "rapid": {
+        "Rocket_Launcher": 20,
+        "Light_Laser": 20,
+        "Heavy_Laser": 10,
+        "Ion_Cannon": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 5,
+      "weapons": [
+        {
+          "kind": "plasma_bomb",
+          "name": "等离子炸弹",
+          "technology": "Plasma_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Destroyer",
+      "name": "驱逐舰",
+      "type": "combat",
+      "cost": [
+        60000,
+        50000,
+        15000
+      ],
+      "strength": 11000,
+      "shield": 500,
+      "attack": 2000,
+      "speed": 5000,
+      "cargo": 2000,
+      "fuel": 1000,
+      "req": [
+        [
+          "Shipyard",
+          9
+        ],
+        [
+          "Hyperspace_Tech",
+          5
+        ],
+        [
+          "Hyperspace_Drive",
+          6
+        ]
+      ],
+      "rapid": {
+        "Dreadnought": 2,
+        "Light_Laser": 10,
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 6,
+      "weapons": [
+        {
+          "kind": "plasma",
+          "name": "双等离子大炮",
+          "technology": "Plasma_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Cargo_Ship",
+      "name": "轻型运输舰",
+      "type": "civilian",
+      "cost": [
+        2000,
+        2000,
+        0
+      ],
+      "strength": 400,
+      "shield": 10,
+      "attack": 5,
+      "speed": 5000,
+      "cargo": 5000,
+      "fuel": 10,
+      "req": [
+        [
+          "Shipyard",
+          2
+        ],
+        [
+          "Combustion_Drive",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 7,
+      "weapons": [
+        {
+          "kind": "shell",
+          "name": "自卫机炮",
+          "technology": "Weapons_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Large_Cargo_Ship",
+      "name": "重型运输舰",
+      "type": "civilian",
+      "cost": [
+        6000,
+        6000,
+        0
+      ],
+      "strength": 1200,
+      "shield": 25,
+      "attack": 5,
+      "speed": 7500,
+      "cargo": 25000,
+      "fuel": 50,
+      "req": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 8,
+      "weapons": [
+        {
+          "kind": "shell",
+          "name": "自卫机炮",
+          "technology": "Weapons_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Colony_Ship",
+      "name": "殖民舰",
+      "type": "civilian",
+      "cost": [
+        10000,
+        20000,
+        10000
+      ],
+      "strength": 3000,
+      "shield": 100,
+      "attack": 50,
+      "speed": 2500,
+      "cargo": 7500,
+      "fuel": 1000,
+      "req": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Impulse_Drive",
+          3
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 9,
+      "weapons": [
+        {
+          "kind": "shell",
+          "name": "自卫炮",
+          "technology": "Weapons_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Recycler",
+      "name": "回收舰",
+      "type": "civilian",
+      "cost": [
+        10000,
+        6000,
+        2000
+      ],
+      "strength": 1600,
+      "shield": 10,
+      "attack": 1,
+      "speed": 2000,
+      "cargo": 20000,
+      "fuel": 300,
+      "req": [
+        [
+          "Shipyard",
+          4
+        ],
+        [
+          "Combustion_Drive",
+          6
+        ],
+        [
+          "Shielding_Tech",
+          2
+        ]
+      ],
+      "rapid": {
+        "Probe": 5,
+        "Solar_Satellite": 5
+      },
+      "atlas": 10,
+      "weapons": [
+        {
+          "kind": "shell",
+          "name": "自卫机炮",
+          "technology": "Weapons_Tech"
+        }
+      ]
+    },
+    {
+      "id": "Probe",
+      "name": "探测器",
+      "type": "civilian",
+      "cost": [
+        6000,
+        4000,
+        0
+      ],
+      "strength": 100,
+      "shield": 0,
+      "attack": 0,
+      "speed": 10000000,
+      "cargo": 5,
+      "fuel": 1,
+      "req": [
+        [
+          "Shipyard",
+          3
+        ],
+        [
+          "Combustion_Drive",
+          3
+        ],
+        [
+          "Espionage_Tech",
+          2
+        ]
+      ],
+      "rapid": {},
+      "atlas": 11,
+      "weapons": [
+        {
+          "kind": "none",
+          "name": "无",
+          "technology": null
+        }
+      ]
+    },
+    {
+      "id": "Solar_Satellite",
+      "name": "太阳能卫星",
+      "type": "civilian",
+      "cost": [
+        0,
+        2000,
+        500
+      ],
+      "strength": 200,
+      "shield": 0,
+      "attack": 0,
+      "speed": 0,
+      "cargo": 0,
+      "fuel": 0,
+      "req": [
+        [
+          "Shipyard",
+          1
+        ]
+      ],
+      "rapid": {},
+      "atlas": 12,
+      "weapons": [
+        {
+          "kind": "none",
+          "name": "无",
+          "technology": null
+        }
+      ]
+    }
+  ],
+  "buildingNames": {
+    "Metal_Mine": "金属开采综合体",
+    "Crystal_Mine": "晶体开采综合体",
+    "Gas_Mine": "气体开采综合体",
+    "Solar_Plant": "太阳能电站",
+    "Metal_Storage": "金属仓库",
+    "Crystal_Storage": "晶体仓库",
+    "Gas_Storage": "气体仓库",
+    "Robotics_Facility": "机器人工厂",
+    "Shipyard": "太空电梯",
+    "Research_Lab": "研究实验室",
+    "Radar_Facility": "雷达站",
+    "Fusion_Reactor": "聚变反应堆",
+    "Nanite_Factory": "纳米工厂",
+    "Alliance_Depot": "联盟设施",
+    "Moon_Base": "月球基地",
+    "Wormhole_Generator": "虫洞发生器",
+    "Command_Center": "主基地",
+    "The_EU_X_Radar": "月球雷达",
+    "Terraformer": "地形改造器",
+    "Missile_Silo": "行星保障中心"
+  }
+}

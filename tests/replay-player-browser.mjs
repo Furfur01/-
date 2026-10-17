@@ -1,0 +1,83 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {once} from 'node:events';
+import {createWorld,createPlayer,ensureSystemNpcs,act,advance} from '../game/engine.mjs';
+import {playwright,freePort} from './three-battle-harness.mjs';
+
+const out=path.resolve('output/playwright/replay-player');fs.mkdirSync(out,{recursive:true});
+const now=Date.now(),start=now-700000,world=createWorld(start),player=createPlayer(world,'历史回放验收',start,()=>.5),home=world.planets[player.home];
+ensureSystemNpcs(world,...home.position.slice(0,2));
+const target=Object.values(world.planets).find(p=>p.npcType==='cargo'&&p.position[1]===home.position[1]);
+home.ships={Battleship:3,Cruiser:4,Light_Fighter:10};home.resources=[1e8,1e8,1e8];
+act(world,player,{type:'dispatch',planet:home.id,target:target.id,position:target.position,task:'attack',ships:{...home.ships}},start);
+world.missions[0].end=start;advance(world,now);
+const report=player.reports.find(r=>r.type==='battle');assert(report);
+const before=JSON.stringify(report),save=path.join(out,'universe.json'),session=path.join(out,'session.json');
+fs.writeFileSync(save,JSON.stringify(world));fs.writeFileSync(session,JSON.stringify({cookie:`empire=${player.id}`}));
+const port=await freePort(),base=`http://127.0.0.1:${port}`;
+const server=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:String(port),EMPIRE_SAVE_FILE:save,EMPIRE_SESSION_FILE:session},windowsHide:true,stdio:['ignore','pipe','pipe']});
+const errors=[],writes=[],entries=[];server.stderr.on('data',d=>errors.push(String(d)));await once(server.stdout,'data');server.stdout.resume();
+let browser;
+try{
+ browser=await playwright().chromium.launch({channel:'chrome',headless:true,args:['--use-angle=d3d11']});
+ const page=await browser.newPage({viewport:{width:1600,height:1000}});
+ page.on('pageerror',e=>errors.push(e.stack));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ page.on('request',r=>{if(r.method()==='POST'&&/\/api\/(?:battles|replay|battle-trial)/.test(r.url()))writes.push(r.url());});
+ const record=await fetch(base+'/api/replay/'+report.id,{headers:{'X-Empire-Client':'galactic-command'}}).then(r=>r.json());
+ await page.goto(base+'/#reports');await page.waitForFunction(()=>window.CommandApp?.scene?.renderer?.ready&&CommandApp.scene.map);
+ const expectPlayer=async()=>{
+  const frame=await (await page.locator('.battle-frame').elementHandle()).contentFrame();
+  await frame.waitForFunction(id=>window.flightController?.report?.id===id&&flightController.playTime>.1,report.id);
+  assert.match(frame.url(),/battlefield-three\.html\?.*replay=/);
+  assert.equal(await page.evaluate(()=>CommandApp.scene.active),false,'current star map must be inactive during historical playback');
+  assert.equal(await page.evaluate(()=>!!CommandApp.scene.combat.replay),false,'no parallel map replay');
+  assert.equal(await frame.evaluate(()=>flightController.overview),true,'open on both fleets, not a live single-ship camera');
+  assert.equal(await frame.locator('#native-claim').isVisible(),false);
+  assert.equal(await frame.locator('#native-release').isVisible(),false);
+  assert.match(await frame.locator('#native-status').innerText(),/历史回放/);
+  assert.equal(await frame.evaluate(()=>GalacticDemo.renderer.gl.getError()),0);
+  return frame;
+ };
+ await page.locator(`[data-report="${report.id}"]`).click();await page.locator(`[data-replay="${report.id}"]`).click();
+ let frame=await expectPlayer();entries.push('report dialog');
+ await frame.locator('#native-pause').click();
+ const paused=await frame.evaluate(()=>flightController.playTime);await page.waitForTimeout(220);
+ assert.equal(await frame.evaluate(()=>flightController.playTime),paused);
+ const sample=record.record.frames[Math.floor(record.record.frames.length*.45)];
+ await frame.locator('#native-seek').fill(String(sample.tick*.05));
+ const sampled=await frame.evaluate(()=>({time:flightController.playTime,rows:flightController.rows.map(r=>flightController.row(r[0]))}));
+ assert.equal(sampled.time,sample.tick*.05);
+ for(const row of sample.ships){const actual=sampled.rows.find(r=>r[0]===row[0]);for(let i=1;i<=7;i++)assert.ok(Math.abs(actual[i]-row[i])<1e-7,'seek matches the stored pose and damage');}
+ await frame.locator('#native-speed').selectOption('4');
+ await frame.locator('#native-pause').click();await frame.waitForFunction(t=>flightController.playTime>t+.5,sampled.time);
+ await frame.locator('#native-pause').click();
+ // End exactly on the saved survivor counts, then replay from the beginning.
+ await frame.locator('#native-seek').fill(String(Number(report.duration.toFixed(2))));
+ assert.equal(await frame.evaluate(()=>flightController.paused),true);
+ assert.equal(await frame.locator('#native-pause').innerText(),'重新播放');
+ const survivors=await frame.evaluate(()=>{const c=flightController,out={attacker:{},defender:{}};for(const m of c.metadata)if(c.rows[m.id]?.[6]>0)out[m.side][m.type]=(out[m.side][m.type]||0)+1;return out;});
+ assert.deepEqual(survivors,report.survivors);
+ await frame.locator('#native-pause').click();await frame.waitForFunction(()=>flightController.playTime>0&&flightController.playTime<2&&!flightController.paused);
+ assert.equal(await frame.evaluate(()=>flightController.overview),true);
+ // Crossing a recorded fire event must actually produce a visual effect.
+ const shot=record.record.events.find(e=>e.type==='fire');assert(shot);
+ await frame.locator('#native-speed').selectOption('1');
+ await frame.locator('#native-seek').fill(String(Number(Math.max(0,shot.tick*.05-.2).toFixed(2))));
+ await frame.waitForFunction(()=>{const p=GalacticDemo.state.flight;return p.beams.length+p.projectiles.length+p.weaponImpacts.length>0;});
+ await page.screenshot({path:path.join(out,'historical-fire.png')});
+ await frame.locator('#native-leave').click();
+ await page.locator(`[data-open-replay="${report.id}"]`).click();frame=await expectPlayer();entries.push('history lobby');await frame.locator('#native-leave').click();
+ await page.evaluate(key=>{CommandApp.go('system',{keepCamera:true});CommandApp.scene.enterPlanet(key);},target.position.join(':'));
+ await page.locator(`[data-map-replay="${report.id}"]`).click();frame=await expectPlayer();entries.push('planet report');await frame.locator('#native-leave').click();
+ await page.goto(base+'/?replay='+report.id);frame=await expectPlayer();entries.push('main-page link');
+ await page.goto(base+'/opendesign/mockups/galactic-command/battlefield-three.html?replay='+report.id);
+ await page.waitForFunction(id=>window.flightController?.report?.id===id&&flightController.playTime>.1,report.id);
+ assert.match(page.url(),/battlefield-three\.html\?replay=/);entries.push('standalone link');
+ const after=await fetch(base+'/api/replay/'+report.id,{headers:{'X-Empire-Client':'galactic-command'}}).then(r=>r.json());
+ assert.equal(JSON.stringify(after.record),JSON.stringify(record.record),'playback never mutates the recording');
+ assert.equal(JSON.stringify(report),before);assert.deepEqual(writes,[]);assert.deepEqual(errors,[]);
+ fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({passed:true,entries,pause:true,seekMatchesRecord:true,survivors,restart:true,fireEffects:true,writes,errors},null,2));
+ console.log('All five replay entrances use historical playback; pause, recorded poses, damage, speed, restart and firing verified.');
+}finally{await browser?.close();const exited=once(server,'exit');server.kill();await exited;}

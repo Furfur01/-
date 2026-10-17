@@ -17,7 +17,9 @@ buildings.Shipyard.description='地面电梯向轨道船坞运送物资，在空
 for(const [id,storageId,name]of [['Metal_Mine','Metal_Storage','金属开采综合体'],['Crystal_Mine','Crystal_Storage','晶体开采综合体'],['Gas_Mine','Gas_Storage','气体开采综合体']]){
   buildings[id].name=name;
   buildings[id].integratedStorage=storageId;
-  buildings[id].description+=' 采集与仓储统一升级；没有对应矿产的星球仅提供进口资源仓储。';
+  buildings[id].costGrowthAfterLevel=10;
+  buildings[id].costGrowthAfterFactor=1.25;
+  buildings[id].description+=' 采集与仓储统一升级；专产星的优势矿产产量×3，辅助矿产产量×0.1；三类综合体都能开采和仓储。';
   buildings[storageId].mergedInto=id;
 }
 buildings.The_EU_X_Radar = {id:'The_EU_X_Radar',name:'月球雷达',cost:[20000,40000,20000],factor:2,req:[['Moon_Base',2]],atlas:10,moon:true,description:'扫描目标星球的舰队动向。'};
@@ -26,7 +28,7 @@ buildings.Terraformer={id:'Terraformer',name:'地形改造器',cost:[0,50000,100
 buildings.Missile_Silo={id:'Missile_Silo',name:'行星保障中心',cost:[20000,20000,1000],factor:2,req:[['Shipyard',1]],atlas:13,description:'维修与后勤调度中心，保留防务仓储功能；每级提供10个导弹储位，星际导弹占2位。'};
 for(const b of Object.values(buildings))b.factor=({Metal_Mine:1.5,Solar_Plant:1.5,Crystal_Mine:1.6,Fusion_Reactor:1.8})[b.id]||2;
 tech.Computer_Tech.description='每级增加1个舰队派遣名额。';
-tech.Astrophysics_Tech.description='每2级增加1个殖民名额；探索舰队上限为等级的平方根，向下取整。';
+tech.Astrophysics_Tech.description='每级增加10个殖民名额，总上限为1+10×等级（含母星，不含月球）；首次成功殖民取得整个恒星系归属。探索舰队上限为等级的平方根，向下取整。';
 tech.Intergalactic_Network={id:'Intergalactic_Network',name:'星际研究网络',cost:[240000,400000,160000],factor:2,req:[['Research_Lab',10],['Computer_Tech',8],['Hyperspace_Tech',8]],atlas:10,description:'每级连接另一颗行星上满足该项科技要求的研究实验室。'};
 tech.Graviton_Tech={id:'Graviton_Tech',name:'引力子科技',cost:[0,0,0],factor:3,energy:300000,req:[['Research_Lab',12]],atlas:15,description:'研究需要300000能源，解锁死星。'};
 const unitOrder=['Light_Fighter','Heavy_Fighter','Cruiser','Battleship','Dreadnought','Bomber','Destroyer','Cargo_Ship','Large_Cargo_Ship','Colony_Ship','Recycler','Probe','Solar_Satellite','Rocket_Launcher','Light_Laser','Plasma_Cannon'];
@@ -40,6 +42,8 @@ units.Destroyer.rapid={Dreadnought:2,Light_Laser:10};
 units.Death_Star={id:'Death_Star',name:'死星',type:'combat',cost:[5000000,4000000,1000000],strength:900000,shield:50000,attack:200000,speed:200,cargo:1000000,fuel:1000,req:[['Shipyard',12],['Hyperspace_Drive',7],['Hyperspace_Tech',6]],rapid:{Dreadnought:15,Large_Cargo_Ship:250,Colony_Ship:250,Solar_Satellite:1250,Light_Fighter:200,Rocket_Launcher:20,Cargo_Ship:250,Cruiser:33},atlas:17};
 units.Guardian={id:'Guardian',name:'守护者',type:'combat',cost:[1500000,1500000,500000],strength:250000,shield:100000,attack:5000,speed:1000,cargo:10000,fuel:1000,req:[['Shipyard',12],['Shielding_Tech',10],['Hyperspace_Tech',7]],rapid:{Dreadnought:2,Destroyer:2,Death_Star:10},atlas:18,parts:5};
 units.Death_Star.req.push(['Graviton_Tech',1]);
+// Temporarily outside the playable fleet; retain definitions for existing saves and replays.
+for(const id of ['Death_Star','Guardian'])units[id].fleetAvailable=false;
 units.Interceptor_Missile={id:'Interceptor_Missile',name:'拦截导弹',type:'defense',missile:true,cost:[8000,0,2000],strength:1,shield:0,attack:0,speed:0,cargo:0,fuel:0,req:[['Missile_Silo',2]],rapid:{},atlas:13};
 units.Interplanetary_Missile={id:'Interplanetary_Missile',name:'星际导弹',type:'defense',missile:true,cost:[12500,2500,10000],strength:1,shield:0,attack:12000,speed:0,cargo:0,fuel:0,req:[['Missile_Silo',4],['Impulse_Drive',1]],rapid:{},atlas:13};
 for(const u of Object.values(units))if(['civilian','combat'].includes(u.type)&&!['Probe','Solar_Satellite'].includes(u.id)){u.rapid.Probe=5;u.rapid.Solar_Satellite=u.id==='Death_Star'?1250:5;}
@@ -72,7 +76,7 @@ const armaments={
   Interplanetary_Missile:[weapon('missile','星际导弹','Weapons_Tech')]
 };
 for(const unit of Object.values(units))unit.weapons=armaments[unit.id]||[weapon('none','无',null)];
-export const missionNames={attack:'攻击',spy:'侦察',recycle:'回收',transport:'运输',deploy:'驻扎',colonize:'殖民',explore:'银河中心探索',mine:'小行星采矿',destroyMoon:'摧毁月球'};
+export const missionNames={attack:'攻击',spy:'侦察',recycle:'回收',transport:'运输',deploy:'驻扎',colonize:'殖民',explore:'银心黑洞探险',mine:'小行星采矿',destroyMoon:'摧毁月球'};
 export const capacities=[10000,20000,40000,75000,140000,255000,470000,865000,1590000,2920000,5350000,9810000,18000000,33000000,60500000];
-export const rules={economySpeed:6,baseProduction:[20,10,0],moonStep:100000,moonCap:0.2,debrisRate:0.3,explorationHourSeconds:60,explorationSlot:16,explorationCargoCap:2000000,explorationStrengthCap:10000000,explorationShipRewardCap:500000,recharge:false,researchSpeed:60,constructionSpeed:90};
+export const rules={economySpeed:30,fusionFuelSpeed:6,baseProduction:[20,10,0],moonStep:100000,moonCap:0.2,debrisRate:0.3,explorationHourSeconds:60,explorationSeconds:1800,explorationSlot:16,explorationResourceMin:10000,explorationCargoCap:2000000,explorationStrengthCap:10000000,explorationShipRewardCap:500000,recharge:false,researchSpeed:60,constructionSpeed:90};
 export const publicCatalog={buildings,tech,units,missionNames,rules,planetTypes,surfaceLayout,shipArchive:shipArchive(units)};

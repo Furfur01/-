@@ -1,11 +1,13 @@
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import isolatedBrowserUrl from './isolated-browser-url.cjs';
+const testBase=await isolatedBrowserUrl();
 const require=createRequire(import.meta.url),{chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const source=fs.readFileSync('opendesign/mockups/planet-construction-review/aurora-lod.js','utf8');
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=d3d11']});
 try{
- const page=await browser.newPage();await page.goto('http://127.0.0.1:8289');await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
+ const page=await browser.newPage();await page.goto(testBase);await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
  const result=await page.evaluate(source=>{
   const canvas=CommandApp.scene.frame.contentWindow.document.querySelector('#world'),gl=canvas.getContext('webgl');
   function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}

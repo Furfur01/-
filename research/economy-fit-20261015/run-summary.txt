@@ -1,0 +1,222 @@
+{
+  "crystal_fit": {
+    "free_parameters": {
+      "intercept": 29.32291177993967,
+      "amplitude": 80.03733627428628,
+      "growth": 1.0999645385718018
+    },
+    "fixed_growth_parameters": {
+      "intercept": 29.44496008731813,
+      "amplitude": 80.00573338261673,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "test_levels": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "train": {
+      "n": 12,
+      "mae": 0.2782785917707133,
+      "max_abs_error": 0.6161420036987693,
+      "mape_pct": 0.043683902803102505,
+      "max_relative_error_pct": 0.3086696097445338
+    },
+    "train_fixed_growth": {
+      "n": 12,
+      "mae": 0.2923845588747227,
+      "max_abs_error": 0.587637346649899,
+      "mape_pct": 0.0527732733729364,
+      "max_relative_error_pct": 0.38569812666369374
+    },
+    "holdout": {
+      "n": 7,
+      "mae": 0.4770937703638083,
+      "max_abs_error": 1.1574027585447766,
+      "mape_pct": 0.0073476923742766456,
+      "max_relative_error_pct": 0.016764234625503718
+    },
+    "holdout_fixed_growth": {
+      "n": 7,
+      "mae": 0.5228779941801674,
+      "max_abs_error": 1.2996799151051164,
+      "mape_pct": 0.007220887484152226,
+      "max_relative_error_pct": 0.01617523229751234
+    }
+  },
+  "metal_bonus_fit": {
+    "free_parameters": {
+      "intercept": 65.74076600544916,
+      "amplitude": 131.98468009283792,
+      "growth": 1.1000050540360304
+    },
+    "fixed_growth_parameters": {
+      "intercept": 65.68259433104981,
+      "amplitude": 131.99437129122285,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "test_levels": [
+      17,
+      18,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "train": {
+      "n": 16,
+      "mae": 0.25158217243111736,
+      "max_abs_error": 0.5784178040607912,
+      "mape_pct": 0.017495521684221072,
+      "max_relative_error_pct": 0.05127817411886448
+    },
+    "train_fixed_growth": {
+      "n": 16,
+      "mae": 0.25858807990793053,
+      "max_abs_error": 0.573868872186722,
+      "mape_pct": 0.01879091955525369,
+      "max_relative_error_pct": 0.05857689507348408
+    },
+    "holdout": {
+      "n": 15,
+      "mae": 1.4441836168836744,
+      "max_abs_error": 10.878093227584031,
+      "mape_pct": 0.0026620997941607474,
+      "max_relative_error_pct": 0.015729789501393997
+    },
+    "holdout_fixed_growth": {
+      "n": 15,
+      "mae": 1.834558440817515,
+      "max_abs_error": 6.36905101017328,
+      "mape_pct": 0.004175265098832811,
+      "max_relative_error_pct": 0.009209686809782637
+    }
+  },
+  "gas_early_fit": {
+    "free_parameters": {
+      "intercept": -1.1543531542809935,
+      "amplitude": 72.9042389202149,
+      "growth": 1.0996185479098637
+    },
+    "fixed_growth_parameters": {
+      "intercept": -0.776228180826113,
+      "amplitude": 72.71314863568642,
+      "growth": 1.1
+    },
+    "train_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "test_levels": [
+      8,
+      9,
+      10,
+      11,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "train": {
+      "n": 7,
+      "mae": 0.1527738837929178,
+      "max_abs_error": 0.35046731427968325,
+      "mape_pct": 0.04565215796462581,
+      "max_relative_error_pct": 0.12085079802747699
+    },
+    "train_fixed_growth": {
+      "n": 7,
+      "mae": 0.1950253751597586,
+      "max_abs_error": 0.4326256785301439,
+      "mape_pct": 0.08630961337072215,
+      "max_relative_error_pct": 0.26358901066957163
+    },
+    "holdout": {
+      "n": 11,
+      "mae": 410.3014992802306,
+      "max_abs_error": 848.3024899527518,
+      "mape_pct": 13.502728343160571,
+      "max_relative_error_pct": 40.269729776563175
+    },
+    "holdout_fixed_growth": {
+      "n": 11,
+      "mae": 422.39434003586376,
+      "max_abs_error": 890.7778470568937,
+      "mape_pct": 13.691517703818324,
+      "max_relative_error_pct": 40.333390299748686
+    }
+  },
+  "building_coefficient": {
+    "fit_k": 0.3594665516373701,
+    "simple_k": 0.36,
+    "training_count": 49,
+    "training_rule": "three mines, target level >=7; median, all rows retained; no outcome-based exclusion",
+    "conditions": "10% commander discount removed; assumes unknown nanite effect absent or constant. Server speed absorbed into k.",
+    "regular_observation_tolerance": "abs(error)<=max(2 seconds, 1% of observed)"
+  },
+  "solar_check": {
+    "metrics": {
+      "n": 26,
+      "mae": 0.0,
+      "max_abs_error": 0.0,
+      "mape_pct": 0.0,
+      "max_relative_error_pct": 0.0
+    },
+    "nonmatches": []
+  }
+}
+Construction: 121 rows; regular pass: 96 / 100
+Other building holdout: {'n': 31, 'mae': 0.6189493087557557, 'max_abs_error': 1.5714285714286689, 'mape_pct': 0.12918879850415801, 'max_relative_error_pct': 0.9870129870129751}

@@ -32,6 +32,53 @@ async function loadFleetAssets({ base = "three-flight-assets/", signal, includeB
   return includeBattleModels ? mergeFleetAssets(data, vertices, extra, extraVertices) : { fleet: { ...data, vertices }, assets: { ...extra, vertices: extraVertices } };
 }
 
+// game/pilot-controls.mjs
+function cockpitClass(profile = {}) {
+  if (profile.role === "fighter" || !profile.role && !(profile.length >= 10)) return "fighter";
+  return profile.length >= 50 ? "bastion" : "horizon";
+}
+function pilotHandling(profile) {
+  const kind = cockpitClass(profile);
+  return { kind, turn: Math.min(profile.turn || 0.45, kind === "fighter" ? 3 : kind === "bastion" ? 0.22 : 0.38), acceleration: kind === "fighter" ? 0.7 : kind === "bastion" ? 0.12 : 0.22, braking: kind === "fighter" ? 1 : kind === "bastion" ? 0.18 : 0.3 };
+}
+function pilotKeys(keys, profile) {
+  const axis = (positive, negative) => (keys.has(positive) ? 1 : 0) - (keys.has(negative) ? 1 : 0), small = cockpitClass(profile) === "fighter";
+  return { throttle: axis("KeyW", "KeyS"), yaw: small ? axis("ArrowRight", "ArrowLeft") : axis("KeyD", "KeyA"), pitch: small ? axis("KeyQ", "KeyE") + axis("ArrowUp", "ArrowDown") : 0, roll: small ? axis("KeyD", "KeyA") : 0 };
+}
+function cabinPose(kind) {
+  return { eye: kind === "bastion" ? [0, 3.75, 2] : kind === "horizon" ? [0, 3.8, -1] : [0, 0, 0], yaw: 0, pitch: 0 };
+}
+function walkCabin(pose, keys, dt, obstacles = []) {
+  const axis = (a, b) => (keys.has(a) ? 1 : 0) - (keys.has(b) ? 1 : 0), f = axis("KeyW", "KeyS"), r = axis("KeyD", "KeyA"), speed = (keys.has("ShiftLeft") ? 5 : 2.8) * dt / Math.max(1, Math.hypot(f, r));
+  if (!f && !r) return pose;
+  const dx = (Math.sin(pose.yaw) * f + Math.cos(pose.yaw) * r) * speed, dz = (-Math.cos(pose.yaw) * f + Math.sin(pose.yaw) * r) * speed;
+  const blocked = (x2, z2) => Math.abs(x2) > 15 || z2 < -7.7 || z2 > 32.5 || obstacles.some((o) => Math.abs(x2 - o.x) < o.rx + 0.45 && Math.abs(z2 - o.z) < o.rz + 0.45);
+  if (!blocked(pose.eye[0] + dx, pose.eye[2])) pose.eye[0] += dx;
+  if (!blocked(pose.eye[0], pose.eye[2] + dz)) pose.eye[2] += dz;
+  const [x, , z] = pose.eye;
+  const deck = Math.abs(x) < 5 && z > 2.2 && z < 8.2 ? 1.7 : Math.abs(x) < 2 && z >= -4.8 && z <= 2.2 ? Math.min(1.7, (z + 4.8) / 7 * 1.7) : Math.abs(x) > 10.7 && z > 16 ? 2.05 : 0;
+  pose.eye[1] += (deck + 1.8 - pose.eye[1]) * (1 - Math.exp(-dt * 7));
+  return pose;
+}
+
+// game/bridge-layout.mjs
+function bridgeDisplays(kind) {
+  const offset = kind === "bastion" ? 0 : -3;
+  return [
+    { id: "operations", title: "OPERATIONS / \u4F5C\u6218\u63A7\u5236", pos: [-2.7, 2.35, -3.25 + offset], size: [2.8, 1.7], rotation: [-0.25, 0.14, 0], height: 560 },
+    { id: "contacts", title: "TARGET LINK / \u76EE\u6807\u94FE\u8DEF", pos: [2.7, 2.35, -3.25 + offset], size: [2.8, 1.7], rotation: [-0.25, -0.14, 0], height: 560 },
+    { id: "helm", title: "HELM / \u822A\u884C\u4E0E\u8230\u4F53", pos: [0, 1.95, -3.05 + offset], size: [2.12, 1.32], rotation: [-0.35, 0, 0] }
+  ];
+}
+function bridgeHologram(kind) {
+  return { pos: [0, 1.25, kind === "bastion" ? -6 : -9], radius: 2.1, baseRadius: 2.28 };
+}
+var bridgeConsoleObstacles = [...bridgeDisplays("bastion").map((d) => ({ x: d.pos[0], z: d.pos[2], rx: d.size[0] / 2 + 0.1, rz: 0.65 })), { x: 0, z: bridgeHologram("bastion").pos[2], rx: 2.28, rz: 2.28 }];
+
+// game/bridge-obstacles.mjs
+var commandChair = { x: 0, z: 3.25, rx: 0.55, rz: 0.6 };
+var bridgeObstacles = [...bridgeConsoleObstacles, commandChair, { "x": -5.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": -8.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": -11.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": -10.4, "z": 3.7, "rx": 1.625, "rz": 0.6 }, { "x": -7.4, "z": 9.05, "rx": 1.625, "rz": 0.6 }, { "x": -10.4, "z": 14.399999999999999, "rx": 1.625, "rz": 0.6 }, { "x": -7.4, "z": 19.749999999999996, "rx": 1.625, "rz": 0.6 }, { "x": -13, "z": 19, "rx": 1.3, "rz": 0.6 }, { "x": -13, "z": 24.5, "rx": 1.3, "rz": 0.6 }, { "x": -13, "z": 30, "rx": 1.3, "rz": 0.6 }, { "x": 5.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": 8.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": 11.2, "z": -7.1, "rx": 1.35, "rz": 0.6 }, { "x": 10.4, "z": 3.7, "rx": 1.625, "rz": 0.6 }, { "x": 7.4, "z": 9.05, "rx": 1.625, "rz": 0.6 }, { "x": 10.4, "z": 14.399999999999999, "rx": 1.625, "rz": 0.6 }, { "x": 7.4, "z": 19.749999999999996, "rx": 1.625, "rz": 0.6 }, { "x": 13, "z": 19, "rx": 1.3, "rz": 0.6 }, { "x": 13, "z": 24.5, "rx": 1.3, "rz": 0.6 }, { "x": 13, "z": 30, "rx": 1.3, "rz": 0.6 }];
+
 // game/ship-missiles.mjs
 function missileTargetValid(q, flight) {
   const t = q.target;
@@ -42,34 +89,34 @@ function missileTargetValid(q, flight) {
   return t.hp > 0 && flight.targets.includes(t);
 }
 function missileGuidance(q, dt) {
-  const sub = (a2, b2) => a2.map((v, i) => v - b2[i]), dot = (a2, b2) => a2.reduce((s, v, i) => s + v * b2[i], 0), norm = (a2) => {
+  const sub2 = (a2, b2) => a2.map((v, i) => v - b2[i]), dot2 = (a2, b2) => a2.reduce((s, v, i) => s + v * b2[i], 0), norm = (a2) => {
     const n = Math.hypot(...a2) || 1;
     return a2.map((v) => v / n);
   };
-  const r = sub(q.target.pos, q.pos), velocity = q.target.velocity || [0, 0, 0], distance = Math.hypot(...r), speed = q.hostile ? 230 : 460;
-  const a = dot(velocity, velocity) - speed * speed, b = 2 * dot(r, velocity), c = dot(r, r), disc = b * b - 4 * a * c;
+  const r = sub2(q.target.pos, q.pos), velocity = q.target.velocity || [0, 0, 0], distance = Math.hypot(...r), speed = q.hostile ? 230 : 460;
+  const a = dot2(velocity, velocity) - speed * speed, b = 2 * dot2(r, velocity), c = dot2(r, r), disc = b * b - 4 * a * c;
   const roots = Math.abs(a) < 1e-8 ? b < 0 ? [-c / b] : [] : disc >= 0 ? [(-b - Math.sqrt(disc)) / (2 * a), (-b + Math.sqrt(disc)) / (2 * a)] : [];
   const times = roots.filter((t) => t > 0), lead = times.length ? Math.min(2, Math.min(...times)) : 0;
-  const desired = norm(r.map((v, i) => v + velocity[i] * lead)), current = norm(q.velocity), cos = Math.max(-1, Math.min(1, dot(current, desired))), angle = Math.acos(cos), turn = Math.min(angle, dt * 5);
+  const desired = norm(r.map((v, i) => v + velocity[i] * lead)), current = norm(q.velocity), cos = Math.max(-1, Math.min(1, dot2(current, desired))), angle3 = Math.acos(cos), turn = Math.min(angle3, dt * 5);
   let direction;
-  if (angle < 1e-6) direction = desired;
-  else if (Math.PI - angle < 1e-4) {
+  if (angle3 < 1e-6) direction = desired;
+  else if (Math.PI - angle3 < 1e-4) {
     const axis = norm(Math.abs(current[1]) < 0.9 ? [current[2], 0, -current[0]] : [0, -current[2], current[1]]);
     direction = current.map((v, i) => v * Math.cos(turn) + axis[i] * Math.sin(turn));
   } else {
-    const u = turn / angle;
-    direction = norm(current.map((v, i) => (v * Math.sin((1 - u) * angle) + desired[i] * Math.sin(u * angle)) / Math.sin(angle)));
+    const u = turn / angle3;
+    direction = norm(current.map((v, i) => (v * Math.sin((1 - u) * angle3) + desired[i] * Math.sin(u * angle3)) / Math.sin(angle3)));
   }
-  const acceleration = Math.min(speed, 70 + q.age * 300), approach = Math.min(acceleration, Math.max(65, Math.hypot(...velocity) + distance * 4)), thrust = approach * Math.max(0.35, Math.cos(angle));
+  const acceleration = Math.min(speed, 70 + q.age * 300), approach = Math.min(acceleration, Math.max(65, Math.hypot(...velocity) + distance * 4)), thrust = approach * Math.max(0.35, Math.cos(angle3));
   q.velocity = direction.map((v) => v * thrust);
   q.diverging = distance < 35 && q.lastDistance !== void 0 && distance > q.lastDistance + 0.02 ? (q.diverging || 0) + dt : 0;
   q.lastDistance = distance;
   return q.diverging < 0.6;
 }
 function segmentEllipsoidHit(start, end, center, half) {
-  const p = start.map((v, i) => (v - center[i]) / half[i]), d = end.map((v, i) => (v - start[i]) / half[i]), dot = (a2, b) => a2.reduce((s, v, i) => s + v * b[i], 0);
-  const a = dot(d, d), u = a ? Math.max(0, Math.min(1, -dot(p, d) / a)) : 0;
-  return dot(p.map((v, i) => v + d[i] * u), p.map((v, i) => v + d[i] * u)) <= 1;
+  const p = start.map((v, i) => (v - center[i]) / half[i]), d = end.map((v, i) => (v - start[i]) / half[i]), dot2 = (a2, b) => a2.reduce((s, v, i) => s + v * b[i], 0);
+  const a = dot2(d, d), u = a ? Math.max(0, Math.min(1, -dot2(p, d) / a)) : 0;
+  return dot2(p.map((v, i) => v + d[i] * u), p.map((v, i) => v + d[i] * u)) <= 1;
 }
 function orbitDrag(yaw, pitch, dx, dy) {
   return { yaw: yaw - dx * 6e-3, pitch: Math.max(-0.26, Math.min(0.75, pitch - dy * 4e-3)) };
@@ -107,8 +154,8 @@ function slewJoint(t, d, dt) {
   const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), clamp2 = (v, a, b) => Math.max(a, Math.min(b, v));
   const yaw = Math.atan2(d[2], -d[0]), pitch = Math.atan2(d[1], Math.hypot(d[0], d[2]));
   const center = t.role === "main" ? 0 : Math.sign(t.mount[2]) * Math.PI / 2, half = t.role === "main" ? 1.22 : 1.4;
-  const angle = wrap(yaw - center), goal = center + clamp2(angle, -half, half);
-  t.inArc = Math.abs(angle) <= half && pitch >= 0 && pitch <= 0.7;
+  const angle3 = wrap(yaw - center), goal = center + clamp2(angle3, -half, half);
+  t.inArc = Math.abs(angle3) <= half && pitch >= 0 && pitch <= 0.7;
   t.yaw += clamp2(wrap(goal - t.yaw), -dt * 0.8, dt * 0.8);
   t.pitch += clamp2(clamp2(pitch, 0, 0.7) - t.pitch, -dt * 0.6, dt * 0.6);
   t.aligned = t.inArc && Math.abs(wrap(yaw - t.yaw)) < 0.018 && Math.abs(pitch - t.pitch) < 0.015;
@@ -145,57 +192,227 @@ function specialBlastPhase(age) {
   return { collapse: Math.max(0, 1 - age / 0.38), wave: Math.max(0, Math.min(1, (age - 0.28) / 1.1)), fade: Math.max(0, 1 - Math.max(0, age - 1) / 4.2) };
 }
 
-// game/ship-propulsion.mjs
-var pair = (x, y, z, r) => [[-x, y, z, r], [x, y, z, r]];
-var enginePorts = {
-  Light_Fighter: [...pair(2.1, -0.97, 6.6, 0.21), ...pair(3.8, -0.22, 6.7, 0.4)],
-  Heavy_Fighter: pair(0.755, 0.44375, 2.07, 0.28),
-  Cruiser: [...pair(1.9, -0.3, 5.94, 0.28), [0, -0.28, 6.05, 0.28]],
-  Battleship: [...pair(1.09, 0.08, 7.21, 0.31), [0, -0.22, 6.87, 0.18]],
-  Bomber: [...pair(1.18, 0.07, 6.01, 0.27), ...pair(0.45, -0.2, 6.07, 0.19)],
-  Dreadnought: [...pair(1.525, 0.375, 4.265, 0.46), [0, 0.05, 4.065, 0.4]],
-  Destroyer: [...[-1, 1].map((s) => [s * 3.31 * Math.cos(0.16) - s * 0.5 * Math.sin(0.16), -3.31 * Math.sin(0.16) - 0.5 * Math.cos(0.16), 6.34, 0.3]), [0, 1.27, 6.91, 0.23]],
-  Interceptor: [...pair(0.81, 0.44, 6.64, 0.34), ...pair(0.53, -2.03, 6.34, 0.22)],
-  Devourer_Interceptor: [...pair(2.85, -0.38, 6.13, 0.3), [0, -0.14, 7.04, 0.29]],
-  Titanenergetic_Frigate: pair(1.2, -0.63, 4.9, 0.18),
-  Iron_Behemoth: [[0, 1.14, 6.94, 0.43]]
-};
-function plumeEnvelope(throttle, boost, time, pulse, index = 0) {
-  const power = Math.max(0, Math.min(1, throttle / 100));
-  const flicker = 1 + Math.sin(time * pulse + index * 1.7) * 0.045 + Math.sin(time * 37 + index) * 0.018;
-  return { length: (0.28 + power * 18 + (boost ? 12 : 0)) * flicker, width: 0.8 + power * 0.2 + (boost ? 0.12 : 0), alpha: 0.24 + power * 0.56 + (boost ? 0.18 : 0) };
+// scripts/three-flight/ground-cloud-shader.js
+var groundCloudShader = `
+float cloudHash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
+float cloudNoise(vec3 p){
+ vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(mix(cloudHash(i),cloudHash(i+vec3(1,0,0)),f.x),mix(cloudHash(i+vec3(0,1,0)),cloudHash(i+vec3(1,1,0)),f.x),f.y),mix(mix(cloudHash(i+vec3(0,0,1)),cloudHash(i+vec3(1,0,1)),f.x),mix(cloudHash(i+vec3(0,1,1)),cloudHash(i+vec3(1,1,1)),f.x),f.y),f.z);
 }
-function plumeMeshData() {
-  const data = [], planes = 3, rings = 16;
-  const vertex2 = (i, j, side) => {
-    const x = i / rings, a = j / planes * Math.PI, r = Math.pow(1 - x, 0.8);
-    return [x, side * r * Math.cos(a), side * r * Math.sin(a), 0, -Math.sin(a), Math.cos(a), 0.3, 0.7, 1, 1, 0, 0, side];
-  };
-  for (let i = 0; i < rings; i++) for (let j = 0; j < planes; j++) {
-    const a = vertex2(i, j, -1), b = vertex2(i, j, 1), c = vertex2(i + 1, j, 1), d = vertex2(i + 1, j, -1);
-    data.push(...a, ...b, ...c, ...a, ...c, ...d);
+float cloudDensity(vec3 p,float age,float height,float seed){
+ // Curl around the cap's rim: material rises inside, rolls out, then down.
+ float radial=length(p.xz),dy=p.y-height,theta=atan(dy,radial-.57);
+ float roll=age*.75,ringDistance=length(vec2(radial-.57,dy));
+ vec3 flow=vec3(p.x,p.y-age*.16,p.z);
+ flow.y=height+sin(theta+roll)*ringDistance;
+ flow.xz*=max(.1,.57+cos(theta+roll)*ringDistance)/max(radial,.01);
+ flow+=vec3(seed*.71,seed*.29,-seed*.43);
+ float noise=cloudNoise(flow*4.)*.58+cloudNoise(flow*8.3+3.7)*.28+cloudNoise(flow*17.1)*.14;
+ float disruption=(noise-.5)*.78;
+ float mature=smoothstep(.3,2.2,age),diffusion=smoothstep(6.,18.,age);
+ float cap=length(vec3(p.x,(p.y-height)/mix(.85,.47,mature),p.z));
+ cap=1.-smoothstep(.66,1.12+diffusion*.2,cap+disruption);
+ float f=clamp(p.y/max(height,.1),0.,1.);
+ vec2 bend=vec2(sin(p.y*3.+seed+age*.3),cos(p.y*2.-seed))*.06*f;
+ float width=.17+.12*f+.04*sin(f*8.-age*.8);
+ float column=(1.-smoothstep(width*.5,width+.11, length(p.xz-bend)+disruption*.22))*smoothstep(-.05,.15,p.y)*(1.-smoothstep(height*.8,height*1.06,p.y));
+ column*=mature*(1.-diffusion*.8);
+ float density=max(cap,column)*smoothstep(.2+diffusion*.14,.68,noise);
+ return density*smoothstep(0.,.09,p.y);
+}
+vec4 groundCloud(vec3 entry,vec3 eye,float age,float height,float seed){
+ vec3 ray=normalize(entry-eye),safe=ray+mix(vec3(-.00001),vec3(.00001),step(vec3(0.),ray));
+ vec3 t0=(-vec3(1.)-eye)/safe,t1=(vec3(1.)-eye)/safe;
+ vec3 lo=min(t0,t1),hi=max(t0,t1);
+ float near=max(0.,max(lo.x,max(lo.y,lo.z))),far=min(hi.x,min(hi.y,hi.z));
+ if(far<=near)return vec4(0.);
+ float stepSize=(far-near)/48.,jitter=.25+.5*cloudHash(vec3(gl_FragCoord.xy,seed));
+ vec3 sum=vec3(0.);float alpha=0.;
+ for(int i=0;i<48;i++){
+  vec3 q=eye+ray*(near+(float(i)+jitter)*stepSize);
+  vec3 p=vec3(q.x*1.6,(q.y+1.)*.5*(height+.95),q.z*1.6);
+  float density=cloudDensity(p,age,height,seed);
+  if(density>.008){
+   float lightDensity=cloudDensity(p+vec3(-.13,.23,.09),age,height,seed);
+   float lighting=clamp(.52+(density-lightDensity)*3.2,.12,1.);
+   vec3 smoke=mix(vec3(.11,.12,.13),vec3(.64,.62,.59),lighting);
+   float heat=exp(-max(0.,age-.18)*1.5)*(.6+density*.9);
+   vec3 fire=mix(vec3(1.5,.17,.015),vec3(4.,2.6,.65),clamp(density*2.,0.,1.));
+   vec3 color=mix(smoke,fire,clamp(heat,0.,1.));
+   float a=1.-exp(-density*stepSize*9.*uOpacity);
+   sum+=(1.-alpha)*a*color;alpha+=(1.-alpha)*a;
+   if(alpha>.98)break;
   }
-  return data;
+ }
+ return vec4(sum/max(alpha,.001),alpha);
 }
+`;
 
-// game/ship-main-effects.mjs
-function mainGunGlow(visual, distance, height, fov2) {
-  if (!visual?.capital) return 3;
-  const projected = visual.radius * height / (Math.max(1, distance) * Math.tan(fov2 * 0.5));
-  return Math.max(visual.glow * Math.max(0.12, Math.min(1, 1400 / Math.max(1, distance))), Math.min(110, projected * 3.5));
-}
-
-// game/flight-camera.mjs
-function speedFovOffset(speed, maxSpeed, capital) {
-  const smooth = (x) => {
-    x = Math.max(0, Math.min(1, x));
-    return x * x * (3 - 2 * x);
+// game/ground-blast.mjs
+var GROUND_BLAST_LIFETIME = 18;
+function groundBlastPhase(age) {
+  const t = Math.max(0, age), rise = Math.max(0, t - 0.45), spread = Math.max(0, t - 6);
+  const fade = Math.max(0, Math.min(1, (GROUND_BLAST_LIFETIME - t) / 8));
+  return {
+    radius: 12 + 43 * (1 - Math.exp(-t * 0.8)) + spread * 3,
+    height: 9 + 119 * (1 - Math.exp(-rise * 0.4)) + spread * 1.4,
+    heat: Math.exp(-Math.max(0, t - 0.2) * 1.5),
+    flash: Math.exp(-t * 7),
+    shockRadius: 8 + 150 * (1 - Math.exp(-t * 1.1)),
+    shockOpacity: Math.max(0, 1 - t / 3.2) ** 2,
+    opacity: Math.min(1, t * 12) * fade * fade,
+    spread
   };
-  const ratio = Math.max(0, speed) / Math.max(1, maxSpeed);
-  return 9 * smooth(ratio) + 8 * smooth((ratio - 1) / (capital ? 0.65 : 1.2));
 }
-function smoothSpeedFov(current, target, dt) {
-  return current + (target - current) * (1 - Math.exp(-Math.max(0, dt) * 3.5));
+
+// game/fortress-layout.mjs
+var FORTRESS = { radius: 81.36, spacing: 108, vertexRadius: 59.04, centerHeight: 43.2, vertexHeight: 33.12, scale: 0.72, smallScale: 0.2, smallVertexRadius: 16.4, smallCenterHeight: 12, smallVertexHeight: 9.2, orbitScale: 1.3 };
+var directions = [[1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]];
+function fortressSocket(module, socket) {
+  const vertex2 = socket - 1, a = vertex2 * Math.PI / 3;
+  return { x: module.x + (socket ? Math.cos(a) * FORTRESS.vertexRadius : 0), y: module.y + (socket ? FORTRESS.vertexHeight : FORTRESS.centerHeight), z: module.z + (socket ? Math.sin(a) * FORTRESS.vertexRadius : 0) };
+}
+function fortressConnections(modules) {
+  const cells = new Map(modules.map((m) => [`${m.q}:${m.r}`, m])), links = [];
+  for (const m of modules) for (const [dq, dr] of directions.slice(0, 3)) {
+    const other = cells.get(`${m.q + dq}:${m.r + dr}`);
+    if (other) links.push([m, other]);
+  }
+  return links;
+}
+
+// scripts/three-flight/fortress-models.js
+function createFortressGeometry(Geometry, scale = 1, largeSockets = false) {
+  const g = new Geometry(), stone = [0.44, 0.48, 0.5], armor = [0.62, 0.65, 0.65], edge = [0.75, 0.75, 0.69], dark = [0.16, 0.22, 0.25], steel = [0.29, 0.36, 0.39], cyan = [0.3, 0.78, 0.91], yellow = [0.86, 0.64, 0.23];
+  const hex = (cx, cz, bottom, top, rb, rt, color) => {
+    for (let k = 0; k < 6; k++) {
+      const a = k * Math.PI / 3, b = (k + 1) * Math.PI / 3, p = (r, y, t) => [cx + Math.cos(t) * r, y, cz + Math.sin(t) * r];
+      g.quad(p(rb, bottom, a), p(rt, top, a), p(rt, top, b), p(rb, bottom, b), color);
+      g.tri([cx, top, cz], p(rt, top, b), p(rt, top, a), color);
+    }
+  };
+  const part = (rad, tan, y, size, a, color = armor, emission = 0) => g.box(size, [Math.cos(a) * rad - Math.sin(a) * tan, y, Math.sin(a) * rad + Math.cos(a) * tan], color, 0, [0, -a, 0], emission);
+  hex(0, 0, -20, 5, 113, 113, stone);
+  hex(0, 0, 5, 31, 113, 102, armor);
+  hex(0, 0, 31, 35, 104, 104, dark);
+  hex(0, 0, 35, 38, 105, 103, edge);
+  hex(0, 0, 38, 39, 99, 99, steel);
+  hex(0, 0, 39, 53, 35, 30, armor);
+  hex(0, 0, 53, 57, 32, 32, dark);
+  hex(0, 0, 57, 60, 33, 33, edge);
+  for (let k = 0; k < 6; k++) {
+    const a = k * Math.PI / 3, side = a + Math.PI / 6;
+    hex(Math.cos(a) * 82, Math.sin(a) * 82, 37, 43, 23, 20, armor);
+    hex(Math.cos(a) * 82, Math.sin(a) * 82, 43, 46, 21, 21, edge);
+    part(93, 0, 18, [3, 23, 21], side, dark);
+    part(95, 0, 17, [2, 19, 15], side, steel);
+    part(96, 0, 17, [1, 17, 0.6], side, dark);
+    for (const t of [-12, 12]) {
+      part(94, t, 18, [8, 29, 4], side, stone);
+      part(98, t, 19, [1, 19, 1.2], side, cyan, 1);
+    }
+    part(96, 0, 32, [5, 4, 30], side, edge);
+    part(98, 0, 29, [1, 1, 10], side, yellow);
+    for (const t of [-37, -24, 24, 37]) {
+      part(93, t, 17, [10, 29, 4], side, stone);
+      part(96, t, 26, [6, 7, 5], side, edge);
+      for (const y of [9, 15, 21]) part(98, t, y, [0.7, 1.1, 3], side, dark);
+    }
+    for (const t of [-31, 31]) for (const y of [12, 23]) {
+      part(94, t, y, [2, 8, 8], side, steel);
+      part(95.2, t, y, [0.7, 6.5, 6.5], side, armor);
+      for (const bolt of [-2, 2]) part(95.7, t + bolt, y + 2, [0.6, 0.7, 0.7], side, dark);
+    }
+    for (const t of [-27, 27]) {
+      part(89, t, 41, [5, 7, 26], side, armor);
+      part(89, t, 45, [6, 1.5, 27], side, edge);
+      part(92, t, 41, [1, 1.2, 15], side, cyan, 1);
+      part(64, t, 41, [13, 5, 13], side, stone);
+      for (let j = -4; j <= 4; j += 2) part(64 + j, t, 44, [1, 1, 11], side, dark);
+    }
+    part(57, 0, 39.5, [43, 1, 14], side, dark);
+    for (const t of [-8, 8]) part(57, t, 40, [42, 0.8, 0.7], side, edge);
+    for (let j = 0; j < 5; j++) part(36 + j * 4, 13, 60.2, [2, 0.4, 3], a, yellow);
+    part(94, 0, 48, [4, 5, 4], a, steel);
+    part(94, 0, 51, [3, 1, 3], a, cyan, 1);
+  }
+  const bridge = new Geometry();
+  hex(0, 0, -31, -20, 74, 113, steel);
+  for (let k = 0; k < 6; k++) {
+    const a = k * Math.PI / 3, b = (k + 1) * Math.PI / 3;
+    g.tri([0, -31, 0], [Math.cos(a) * 74, -31, Math.sin(a) * 74], [Math.cos(b) * 74, -31, Math.sin(b) * 74], dark);
+    part(48, 0, -31, [15, 1, 5], a, cyan, 1);
+    if (largeSockets) hex(Math.cos(a) * 82, Math.sin(a) * 82, 43, 46, 24 / scale, 24 / scale, edge);
+  }
+  bridge.box([1, 17, 23], [0.5, 22, 0], stone);
+  bridge.box([1, 3, 25], [0.5, 32, 0], edge);
+  bridge.box([1, 1, 16], [0.5, 34, 0], dark);
+  for (const z of [-11, 11]) {
+    bridge.box([1, 6, 2], [0.5, 36, z], armor);
+    bridge.box([1, 0.6, 0.5], [0.5, 39.3, z], cyan, 0, [0, 0, 0], 1);
+  }
+  const wreck = new Geometry(), ash = [0.19, 0.19, 0.18], burnt = [0.28, 0.27, 0.24], fracture = [0.39, 0.38, 0.33], metal = [0.12, 0.15, 0.16];
+  for (let k = 0; k < 6; k++) {
+    const a = k * Math.PI / 3, b = (k + 1) * Math.PI / 3, p = (r, y, t) => [Math.cos(t) * r, y, Math.sin(t) * r];
+    wreck.quad(p(113, -20, a), p(106, 10, a), p(106, 10, b), p(113, -20, b), burnt);
+    wreck.tri([0, 8, 0], p(106, 10, b), p(106, 10, a), ash);
+    for (let j = 0; j < 3; j++) {
+      const t = a + (j + 0.5) * Math.PI / 9, r = 91, h = 10 + (k * 13 + j * 7) % 17;
+      if ((k + j) % 3 === 0) continue;
+      wreck.box([7, h, 21], [Math.cos(t) * r, 10 + h / 2, Math.sin(t) * r], fracture, 0, [0.12, -t, 0.12]);
+      wreck.box([1, h + 7, 1], [Math.cos(t) * 88, 10 + h / 2, Math.sin(t) * 88], metal, 0, [0.15, -t, 0.22]);
+    }
+  }
+  for (let i = 0; i < 64; i++) {
+    const a = i * 2.399963, r = 16 + Math.sqrt(i * 37 % 101) * 8.3, size = 5 + i * 11 % 14;
+    wreck.box([size, 3 + i % 7, size * 0.7], [Math.cos(a) * r, 12 + i % 3 * 2, Math.sin(a) * r], i % 3 ? burnt : fracture, 0, [i * 0.23, a, 0.15 + i % 4 * 0.17]);
+  }
+  wreck.box([40, 7, 34], [-6, 20, 3], fracture, 0, [0.3, 0.4, -0.2]);
+  wreck.box([24, 10, 22], [13, 15, -10], metal, 0, [0.1, 0.8, 0.4]);
+  const brokenBridge = new Geometry();
+  brokenBridge.box([1, 10, 23], [0.5, 17, 0], burnt);
+  for (let i = 0; i < 5; i++) brokenBridge.box([0.13, 3, 18], [0.1 + i * 0.2, 23, (i % 2 * 2 - 1) * 3], fracture, 0, [0.12, 0, (i % 2 ? 1 : -1) * 0.15]);
+  for (const mesh of [g, wreck]) for (let i = 0; i < mesh.data.length; i += 13) for (let axis = 0; axis < 3; axis++) mesh.data[i + axis] *= scale;
+  for (const mesh of [bridge, brokenBridge]) for (let i = 0; i < mesh.data.length; i += 13) {
+    mesh.data[i + 1] *= scale;
+    mesh.data[i + 2] *= scale;
+  }
+  return { module: g.upload(), bridge: bridge.upload(), wreck: wreck.upload(), brokenBridge: brokenBridge.upload() };
+}
+
+// game/planet-defense.mjs
+var isShieldGenerator = (type) => type === "Small_Shield_Dome" || type === "Large_Shield_Dome";
+function fortressState(environment, metadata, rows) {
+  const modules = environment?.fortress?.modules || [], occupants = /* @__PURE__ */ new Map(), sockets = /* @__PURE__ */ new Map(), fields = /* @__PURE__ */ new Map();
+  for (const m of metadata) {
+    if (!m.profile.ground) continue;
+    const row = rows[m.id];
+    if (!row) continue;
+    const slot = m.fortressSlot?.module ?? modules.reduce((best, cell) => Math.hypot(cell.x - row[1], cell.z - row[3]) < best.distance ? { index: cell.index, distance: Math.hypot(cell.x - row[1], cell.z - row[3]) } : best, { index: -1, distance: Infinity }).index;
+    const count = occupants.get(slot) || { total: 0, alive: 0 };
+    count.total++;
+    if (row[6] > 0) count.alive++;
+    occupants.set(slot, count);
+    if (environment.fortress.version >= 2) {
+      const module = modules[slot], socket = m.fortressSlot?.socket ?? module?.sockets.reduce((best, s, i) => {
+        const p = fortressSocket(module, i), distance = Math.hypot(p.x - row[1], p.z - row[3]);
+        return s && distance < best.distance ? { index: i, distance } : best;
+      }, { index: -1, distance: Infinity }).index;
+      const key = `${slot}:${socket}`, residents = sockets.get(key) || { total: 0, alive: 0 };
+      residents.total++;
+      if (row[6] > 0) residents.alive++;
+      sockets.set(key, residents);
+    }
+    if (isShieldGenerator(m.type) && row[6] > 0 && row[7] > 0) {
+      const field = fields.get(m.side) || { side: m.side, owner: m.owner, charge: 0, capacity: 0 };
+      field.charge += row[7];
+      field.capacity += m.maxShield;
+      fields.set(m.side, field);
+    }
+  }
+  const destroyed = new Set([...occupants].filter(([, n]) => n.total > 0 && !n.alive).map(([index]) => index));
+  const destroyedSockets = new Set([...sockets].filter(([, n]) => n.total > 0 && !n.alive).map(([key]) => key));
+  return { destroyed, destroyedSockets, fields: [...fields.values()] };
 }
 
 // node_modules/three/build/three.core.js
@@ -1031,8 +1248,8 @@ var Vector2 = class _Vector2 {
    * @return {number} The angle in radians.
    */
   angle() {
-    const angle = Math.atan2(-this.y, -this.x) + Math.PI;
-    return angle;
+    const angle3 = Math.atan2(-this.y, -this.x) + Math.PI;
+    return angle3;
   }
   /**
    * Returns the angle between the given vector and this instance in radians.
@@ -1169,8 +1386,8 @@ var Vector2 = class _Vector2 {
    * @param {number} angle - The angle to rotate, in radians.
    * @return {Vector2} A reference to this vector.
    */
-  rotateAround(center, angle) {
-    const c = Math.cos(angle), s = Math.sin(angle);
+  rotateAround(center, angle3) {
+    const c = Math.cos(angle3), s = Math.sin(angle3);
     const x = this.x - center.x;
     const y = this.y - center.y;
     this.x = x * c - y * s + center.x;
@@ -1226,17 +1443,17 @@ var Quaternion = class {
     let x0 = src0[srcOffset0 + 0], y0 = src0[srcOffset0 + 1], z0 = src0[srcOffset0 + 2], w0 = src0[srcOffset0 + 3];
     let x1 = src1[srcOffset1 + 0], y1 = src1[srcOffset1 + 1], z1 = src1[srcOffset1 + 2], w1 = src1[srcOffset1 + 3];
     if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
-      let dot = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1;
-      if (dot < 0) {
+      let dot2 = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1;
+      if (dot2 < 0) {
         x1 = -x1;
         y1 = -y1;
         z1 = -z1;
         w1 = -w1;
-        dot = -dot;
+        dot2 = -dot2;
       }
       let s = 1 - t;
-      if (dot < 0.9995) {
-        const theta = Math.acos(dot);
+      if (dot2 < 0.9995) {
+        const theta = Math.acos(dot2);
         const sin = Math.sin(theta);
         s = Math.sin(s * theta) / sin;
         t = Math.sin(t * theta) / sin;
@@ -1448,8 +1665,8 @@ var Quaternion = class {
    * @param {number} angle - The angle in radians.
    * @return {Quaternion} A reference to this quaternion.
    */
-  setFromAxisAngle(axis, angle) {
-    const halfAngle = angle / 2, s = Math.sin(halfAngle);
+  setFromAxisAngle(axis, angle3) {
+    const halfAngle = angle3 / 2, s = Math.sin(halfAngle);
     this._x = axis.x * s;
     this._y = axis.y * s;
     this._z = axis.z * s;
@@ -1542,9 +1759,9 @@ var Quaternion = class {
    * @return {Quaternion} A reference to this quaternion.
    */
   rotateTowards(q, step) {
-    const angle = this.angleTo(q);
-    if (angle === 0) return this;
-    const t = Math.min(1, step / angle);
+    const angle3 = this.angleTo(q);
+    if (angle3 === 0) return this;
+    const t = Math.min(1, step / angle3);
     this.slerp(q, t);
     return this;
   }
@@ -1676,17 +1893,17 @@ var Quaternion = class {
    */
   slerp(qb, t) {
     let x = qb._x, y = qb._y, z = qb._z, w = qb._w;
-    let dot = this.dot(qb);
-    if (dot < 0) {
+    let dot2 = this.dot(qb);
+    if (dot2 < 0) {
       x = -x;
       y = -y;
       z = -z;
       w = -w;
-      dot = -dot;
+      dot2 = -dot2;
     }
     let s = 1 - t;
-    if (dot < 0.9995) {
-      const theta = Math.acos(dot);
+    if (dot2 < 0.9995) {
+      const theta = Math.acos(dot2);
       const sin = Math.sin(theta);
       s = Math.sin(s * theta) / sin;
       t = Math.sin(t * theta) / sin;
@@ -2084,8 +2301,8 @@ var Vector3 = class _Vector3 {
    * @param {number} angle - The angle in radians.
    * @return {Vector3} A reference to this vector.
    */
-  applyAxisAngle(axis, angle) {
-    return this.applyQuaternion(_quaternion$5.setFromAxisAngle(axis, angle));
+  applyAxisAngle(axis, angle3) {
+    return this.applyQuaternion(_quaternion$5.setFromAxisAngle(axis, angle3));
   }
   /**
    * Multiplies this vector with the given 3x3 matrix.
@@ -4194,14 +4411,14 @@ var Vector4 = class _Vector4 {
    * @return {Vector4} A reference to this vector.
    */
   setAxisAngleFromRotationMatrix(m) {
-    let angle, x, y, z;
+    let angle3, x, y, z;
     const epsilon = 0.01, epsilon2 = 0.1, te = m.elements, m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10];
     if (Math.abs(m12 - m21) < epsilon && Math.abs(m13 - m31) < epsilon && Math.abs(m23 - m32) < epsilon) {
       if (Math.abs(m12 + m21) < epsilon2 && Math.abs(m13 + m31) < epsilon2 && Math.abs(m23 + m32) < epsilon2 && Math.abs(m11 + m22 + m33 - 3) < epsilon2) {
         this.set(1, 0, 0, 0);
         return this;
       }
-      angle = Math.PI;
+      angle3 = Math.PI;
       const xx = (m11 + 1) / 2;
       const yy = (m22 + 1) / 2;
       const zz = (m33 + 1) / 2;
@@ -4239,7 +4456,7 @@ var Vector4 = class _Vector4 {
           y = yz / z;
         }
       }
-      this.set(x, y, z, angle);
+      this.set(x, y, z, angle3);
       return this;
     }
     let s = Math.sqrt((m32 - m23) * (m32 - m23) + (m13 - m31) * (m13 - m31) + (m21 - m12) * (m21 - m12));
@@ -5624,9 +5841,9 @@ var Matrix4 = class _Matrix4 {
    * @param {number} angle - The rotation in radians.
    * @return {Matrix4} A reference to this matrix.
    */
-  makeRotationAxis(axis, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
+  makeRotationAxis(axis, angle3) {
+    const c = Math.cos(angle3);
+    const s = Math.sin(angle3);
     const t = 1 - c;
     const x = axis.x, y = axis.y, z = axis.z;
     const tx = t * x, ty = t * y;
@@ -6517,8 +6734,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {Vector3} axis - The (normalized) axis vector.
    * @param {number} angle - The angle in radians.
    */
-  setRotationFromAxisAngle(axis, angle) {
-    this.quaternion.setFromAxisAngle(axis, angle);
+  setRotationFromAxisAngle(axis, angle3) {
+    this.quaternion.setFromAxisAngle(axis, angle3);
   }
   /**
    * Sets the given rotation represented as Euler angles to the 3D object.
@@ -6552,8 +6769,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {Object3D} A reference to this instance.
    */
-  rotateOnAxis(axis, angle) {
-    _q1.setFromAxisAngle(axis, angle);
+  rotateOnAxis(axis, angle3) {
+    _q1.setFromAxisAngle(axis, angle3);
     this.quaternion.multiply(_q1);
     return this;
   }
@@ -6564,8 +6781,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {Object3D} A reference to this instance.
    */
-  rotateOnWorldAxis(axis, angle) {
-    _q1.setFromAxisAngle(axis, angle);
+  rotateOnWorldAxis(axis, angle3) {
+    _q1.setFromAxisAngle(axis, angle3);
     this.quaternion.premultiply(_q1);
     return this;
   }
@@ -6575,8 +6792,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {Object3D} A reference to this instance.
    */
-  rotateX(angle) {
-    return this.rotateOnAxis(_xAxis, angle);
+  rotateX(angle3) {
+    return this.rotateOnAxis(_xAxis, angle3);
   }
   /**
    * Rotates the 3D object around its Y axis in local space.
@@ -6584,8 +6801,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {Object3D} A reference to this instance.
    */
-  rotateY(angle) {
-    return this.rotateOnAxis(_yAxis, angle);
+  rotateY(angle3) {
+    return this.rotateOnAxis(_yAxis, angle3);
   }
   /**
    * Rotates the 3D object around its Z axis in local space.
@@ -6593,8 +6810,8 @@ var Object3D = class _Object3D extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {Object3D} A reference to this instance.
    */
-  rotateZ(angle) {
-    return this.rotateOnAxis(_zAxis, angle);
+  rotateZ(angle3) {
+    return this.rotateOnAxis(_zAxis, angle3);
   }
   /**
    * Translate the 3D object by a distance along the given axis in local space.
@@ -10140,8 +10357,8 @@ var BufferGeometry = class _BufferGeometry extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {BufferGeometry} A reference to this instance.
    */
-  rotateX(angle) {
-    _m1.makeRotationX(angle);
+  rotateX(angle3) {
+    _m1.makeRotationX(angle3);
     this.applyMatrix4(_m1);
     return this;
   }
@@ -10153,8 +10370,8 @@ var BufferGeometry = class _BufferGeometry extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {BufferGeometry} A reference to this instance.
    */
-  rotateY(angle) {
-    _m1.makeRotationY(angle);
+  rotateY(angle3) {
+    _m1.makeRotationY(angle3);
     this.applyMatrix4(_m1);
     return this;
   }
@@ -10166,8 +10383,8 @@ var BufferGeometry = class _BufferGeometry extends EventDispatcher {
    * @param {number} angle - The angle in radians.
    * @return {BufferGeometry} A reference to this instance.
    */
-  rotateZ(angle) {
-    _m1.makeRotationZ(angle);
+  rotateZ(angle3) {
+    _m1.makeRotationZ(angle3);
     this.applyMatrix4(_m1);
     return this;
   }
@@ -12278,13 +12495,13 @@ var Mesh = class extends Object3D {
   }
 };
 function checkIntersection$1(object, material2, raycaster, ray, pA, pB, pC, point) {
-  let intersect;
+  let intersect2;
   if (material2.side === BackSide) {
-    intersect = ray.intersectTriangle(pC, pB, pA, true, point);
+    intersect2 = ray.intersectTriangle(pC, pB, pA, true, point);
   } else {
-    intersect = ray.intersectTriangle(pA, pB, pC, material2.side === FrontSide, point);
+    intersect2 = ray.intersectTriangle(pA, pB, pC, material2.side === FrontSide, point);
   }
-  if (intersect === null) return null;
+  if (intersect2 === null) return null;
   _intersectionPointWorld.copy(point);
   _intersectionPointWorld.applyMatrix4(object.matrixWorld);
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
@@ -12517,10 +12734,10 @@ var InstancedMesh = class extends Mesh {
       _mesh$1.matrixWorld = _instanceWorldMatrix;
       _mesh$1.raycast(raycaster, _instanceIntersects);
       for (let i = 0, l = _instanceIntersects.length; i < l; i++) {
-        const intersect = _instanceIntersects[i];
-        intersect.instanceId = instanceId;
-        intersect.object = this;
-        intersects.push(intersect);
+        const intersect2 = _instanceIntersects[i];
+        intersect2.instanceId = instanceId;
+        intersect2.object = this;
+        intersects.push(intersect2);
       }
       _instanceIntersects.length = 0;
     }
@@ -13129,32 +13346,32 @@ var Line = class extends Object3D {
       for (let i = start, l = end - 1; i < l; i += step) {
         const a = index.getX(i);
         const b = index.getX(i + 1);
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, i);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, i);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
       if (this.isLineLoop) {
         const a = index.getX(end - 1);
         const b = index.getX(start);
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, end - 1);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, end - 1);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
     } else {
       const start = Math.max(0, drawRange.start);
       const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
       for (let i = start, l = end - 1; i < l; i += step) {
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, i, i + 1, i);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, i, i + 1, i);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
       if (this.isLineLoop) {
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, end - 1, start, end - 1);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, end - 1, start, end - 1);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
     }
@@ -13620,6 +13837,256 @@ var BoxGeometry = class _BoxGeometry extends BufferGeometry {
     return new _BoxGeometry(data.width, data.height, data.depth, data.widthSegments, data.heightSegments, data.depthSegments);
   }
 };
+var CircleGeometry = class _CircleGeometry extends BufferGeometry {
+  /**
+   * Constructs a new circle geometry.
+   *
+   * @param {number} [radius=1] - Radius of the circle.
+   * @param {number} [segments=32] - Number of segments (triangles), minimum = `3`.
+   * @param {number} [thetaStart=0] - Start angle for first segment in radians.
+   * @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta,
+   * of the circular sector in radians. The default value results in a complete circle.
+   */
+  constructor(radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2) {
+    super();
+    this.type = "CircleGeometry";
+    this.parameters = {
+      radius,
+      segments,
+      thetaStart,
+      thetaLength
+    };
+    segments = Math.max(3, segments);
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
+    const vertex2 = new Vector3();
+    const uv = new Vector2();
+    vertices.push(0, 0, 0);
+    normals.push(0, 0, 1);
+    uvs.push(0.5, 0.5);
+    for (let s = 0, i = 3; s <= segments; s++, i += 3) {
+      const segment = thetaStart + s / segments * thetaLength;
+      vertex2.x = radius * Math.cos(segment);
+      vertex2.y = radius * Math.sin(segment);
+      vertices.push(vertex2.x, vertex2.y, vertex2.z);
+      normals.push(0, 0, 1);
+      uv.x = (vertices[i] / radius + 1) / 2;
+      uv.y = (vertices[i + 1] / radius + 1) / 2;
+      uvs.push(uv.x, uv.y);
+    }
+    for (let i = 1; i <= segments; i++) {
+      indices.push(i, i + 1, 0);
+    }
+    this.setIndex(indices);
+    this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+    this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+    this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  }
+  copy(source) {
+    super.copy(source);
+    this.parameters = Object.assign({}, source.parameters);
+    return this;
+  }
+  /**
+   * Factory method for creating an instance of this class from the given
+   * JSON object.
+   *
+   * @param {Object} data - A JSON object representing the serialized geometry.
+   * @return {CircleGeometry} A new instance.
+   */
+  static fromJSON(data) {
+    return new _CircleGeometry(data.radius, data.segments, data.thetaStart, data.thetaLength);
+  }
+};
+var CylinderGeometry = class _CylinderGeometry extends BufferGeometry {
+  /**
+   * Constructs a new cylinder geometry.
+   *
+   * @param {number} [radiusTop=1] - Radius of the cylinder at the top.
+   * @param {number} [radiusBottom=1] - Radius of the cylinder at the bottom.
+   * @param {number} [height=1] - Height of the cylinder.
+   * @param {number} [radialSegments=32] - Number of segmented faces around the circumference of the cylinder.
+   * @param {number} [heightSegments=1] - Number of rows of faces along the height of the cylinder.
+   * @param {boolean} [openEnded=false] - Whether the base of the cylinder is open or capped.
+   * @param {number} [thetaStart=0] - Start angle for first segment, in radians.
+   * @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta, of the circular sector, in radians.
+   * The default value results in a complete cylinder.
+   */
+  constructor(radiusTop = 1, radiusBottom = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2) {
+    super();
+    this.type = "CylinderGeometry";
+    this.parameters = {
+      radiusTop,
+      radiusBottom,
+      height,
+      radialSegments,
+      heightSegments,
+      openEnded,
+      thetaStart,
+      thetaLength
+    };
+    const scope = this;
+    radialSegments = Math.floor(radialSegments);
+    heightSegments = Math.floor(heightSegments);
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
+    let index = 0;
+    const indexArray = [];
+    const halfHeight = height / 2;
+    let groupStart = 0;
+    generateTorso();
+    if (openEnded === false) {
+      if (radiusTop > 0) generateCap(true);
+      if (radiusBottom > 0) generateCap(false);
+    }
+    this.setIndex(indices);
+    this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+    this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+    this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+    function generateTorso() {
+      const normal = new Vector3();
+      const vertex2 = new Vector3();
+      let groupCount = 0;
+      const slope = (radiusBottom - radiusTop) / height;
+      for (let y = 0; y <= heightSegments; y++) {
+        const indexRow = [];
+        const v = y / heightSegments;
+        const radius = v * (radiusBottom - radiusTop) + radiusTop;
+        for (let x = 0; x <= radialSegments; x++) {
+          const u = x / radialSegments;
+          const theta = u * thetaLength + thetaStart;
+          const sinTheta = Math.sin(theta);
+          const cosTheta = Math.cos(theta);
+          vertex2.x = radius * sinTheta;
+          vertex2.y = -v * height + halfHeight;
+          vertex2.z = radius * cosTheta;
+          vertices.push(vertex2.x, vertex2.y, vertex2.z);
+          normal.set(sinTheta, slope, cosTheta).normalize();
+          normals.push(normal.x, normal.y, normal.z);
+          uvs.push(u, 1 - v);
+          indexRow.push(index++);
+        }
+        indexArray.push(indexRow);
+      }
+      for (let x = 0; x < radialSegments; x++) {
+        for (let y = 0; y < heightSegments; y++) {
+          const a = indexArray[y][x];
+          const b = indexArray[y + 1][x];
+          const c = indexArray[y + 1][x + 1];
+          const d = indexArray[y][x + 1];
+          if (radiusTop > 0 || y !== 0) {
+            indices.push(a, b, d);
+            groupCount += 3;
+          }
+          if (radiusBottom > 0 || y !== heightSegments - 1) {
+            indices.push(b, c, d);
+            groupCount += 3;
+          }
+        }
+      }
+      scope.addGroup(groupStart, groupCount, 0);
+      groupStart += groupCount;
+    }
+    function generateCap(top) {
+      const centerIndexStart = index;
+      const uv = new Vector2();
+      const vertex2 = new Vector3();
+      let groupCount = 0;
+      const radius = top === true ? radiusTop : radiusBottom;
+      const sign = top === true ? 1 : -1;
+      for (let x = 1; x <= radialSegments; x++) {
+        vertices.push(0, halfHeight * sign, 0);
+        normals.push(0, sign, 0);
+        uvs.push(0.5, 0.5);
+        index++;
+      }
+      const centerIndexEnd = index;
+      for (let x = 0; x <= radialSegments; x++) {
+        const u = x / radialSegments;
+        const theta = u * thetaLength + thetaStart;
+        const cosTheta = Math.cos(theta);
+        const sinTheta = Math.sin(theta);
+        vertex2.x = radius * sinTheta;
+        vertex2.y = halfHeight * sign;
+        vertex2.z = radius * cosTheta;
+        vertices.push(vertex2.x, vertex2.y, vertex2.z);
+        normals.push(0, sign, 0);
+        uv.x = cosTheta * 0.5 + 0.5;
+        uv.y = sinTheta * 0.5 * sign + 0.5;
+        uvs.push(uv.x, uv.y);
+        index++;
+      }
+      for (let x = 0; x < radialSegments; x++) {
+        const c = centerIndexStart + x;
+        const i = centerIndexEnd + x;
+        if (top === true) {
+          indices.push(i, i + 1, c);
+        } else {
+          indices.push(i + 1, i, c);
+        }
+        groupCount += 3;
+      }
+      scope.addGroup(groupStart, groupCount, top === true ? 1 : 2);
+      groupStart += groupCount;
+    }
+  }
+  copy(source) {
+    super.copy(source);
+    this.parameters = Object.assign({}, source.parameters);
+    return this;
+  }
+  /**
+   * Factory method for creating an instance of this class from the given
+   * JSON object.
+   *
+   * @param {Object} data - A JSON object representing the serialized geometry.
+   * @return {CylinderGeometry} A new instance.
+   */
+  static fromJSON(data) {
+    return new _CylinderGeometry(data.radiusTop, data.radiusBottom, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength);
+  }
+};
+var ConeGeometry = class _ConeGeometry extends CylinderGeometry {
+  /**
+   * Constructs a new cone geometry.
+   *
+   * @param {number} [radius=1] - Radius of the cone base.
+   * @param {number} [height=1] - Height of the cone.
+   * @param {number} [radialSegments=32] - Number of segmented faces around the circumference of the cone.
+   * @param {number} [heightSegments=1] - Number of rows of faces along the height of the cone.
+   * @param {boolean} [openEnded=false] - Whether the base of the cone is open or capped.
+   * @param {number} [thetaStart=0] - Start angle for first segment, in radians.
+   * @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta, of the circular sector, in radians.
+   * The default value results in a complete cone.
+   */
+  constructor(radius = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2) {
+    super(0, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
+    this.type = "ConeGeometry";
+    this.parameters = {
+      radius,
+      height,
+      radialSegments,
+      heightSegments,
+      openEnded,
+      thetaStart,
+      thetaLength
+    };
+  }
+  /**
+   * Factory method for creating an instance of this class from the given
+   * JSON object.
+   *
+   * @param {Object} data - A JSON object representing the serialized geometry.
+   * @return {ConeGeometry} A new instance.
+   */
+  static fromJSON(data) {
+    return new _ConeGeometry(data.radius, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength);
+  }
+};
 var PlaneGeometry = class _PlaneGeometry extends BufferGeometry {
   /**
    * Constructs a new plane geometry.
@@ -13689,6 +14156,94 @@ var PlaneGeometry = class _PlaneGeometry extends BufferGeometry {
    */
   static fromJSON(data) {
     return new _PlaneGeometry(data.width, data.height, data.widthSegments, data.heightSegments);
+  }
+};
+var SphereGeometry = class _SphereGeometry extends BufferGeometry {
+  /**
+   * Constructs a new sphere geometry.
+   *
+   * @param {number} [radius=1] - The sphere radius.
+   * @param {number} [widthSegments=32] - The number of horizontal segments. Minimum value is `3`.
+   * @param {number} [heightSegments=16] - The number of vertical segments. Minimum value is `2`.
+   * @param {number} [phiStart=0] - The horizontal starting angle in radians.
+   * @param {number} [phiLength=Math.PI*2] - The horizontal sweep angle size.
+   * @param {number} [thetaStart=0] - The vertical starting angle in radians.
+   * @param {number} [thetaLength=Math.PI] - The vertical sweep angle size.
+   */
+  constructor(radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI) {
+    super();
+    this.type = "SphereGeometry";
+    this.parameters = {
+      radius,
+      widthSegments,
+      heightSegments,
+      phiStart,
+      phiLength,
+      thetaStart,
+      thetaLength
+    };
+    widthSegments = Math.max(3, Math.floor(widthSegments));
+    heightSegments = Math.max(2, Math.floor(heightSegments));
+    const thetaEnd = Math.min(thetaStart + thetaLength, Math.PI);
+    let index = 0;
+    const grid = [];
+    const vertex2 = new Vector3();
+    const normal = new Vector3();
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
+    for (let iy = 0; iy <= heightSegments; iy++) {
+      const verticesRow = [];
+      const v = iy / heightSegments;
+      let uOffset = 0;
+      if (iy === 0 && thetaStart === 0) {
+        uOffset = 0.5 / widthSegments;
+      } else if (iy === heightSegments && thetaEnd === Math.PI) {
+        uOffset = -0.5 / widthSegments;
+      }
+      for (let ix = 0; ix <= widthSegments; ix++) {
+        const u = ix / widthSegments;
+        vertex2.x = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+        vertex2.y = radius * Math.cos(thetaStart + v * thetaLength);
+        vertex2.z = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+        vertices.push(vertex2.x, vertex2.y, vertex2.z);
+        normal.copy(vertex2).normalize();
+        normals.push(normal.x, normal.y, normal.z);
+        uvs.push(u + uOffset, 1 - v);
+        verticesRow.push(index++);
+      }
+      grid.push(verticesRow);
+    }
+    for (let iy = 0; iy < heightSegments; iy++) {
+      for (let ix = 0; ix < widthSegments; ix++) {
+        const a = grid[iy][ix + 1];
+        const b = grid[iy][ix];
+        const c = grid[iy + 1][ix];
+        const d = grid[iy + 1][ix + 1];
+        if (iy !== 0 || thetaStart > 0) indices.push(a, b, d);
+        if (iy !== heightSegments - 1 || thetaEnd < Math.PI) indices.push(b, c, d);
+      }
+    }
+    this.setIndex(indices);
+    this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+    this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+    this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  }
+  copy(source) {
+    super.copy(source);
+    this.parameters = Object.assign({}, source.parameters);
+    return this;
+  }
+  /**
+   * Factory method for creating an instance of this class from the given
+   * JSON object.
+   *
+   * @param {Object} data - A JSON object representing the serialized geometry.
+   * @return {SphereGeometry} A new instance.
+   */
+  static fromJSON(data) {
+    return new _SphereGeometry(data.radius, data.widthSegments, data.heightSegments, data.phiStart, data.phiLength, data.thetaStart, data.thetaLength);
   }
 };
 function cloneUniforms(src) {
@@ -16113,6 +16668,145 @@ PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
   ]
 ];
 var _controlInterpolantsResultBuffer = new Float32Array(1);
+var _matrix = /* @__PURE__ */ new Matrix4();
+var Raycaster = class {
+  /**
+   * Constructs a new raycaster.
+   *
+   * @param {Vector3} origin - The origin vector where the ray casts from.
+   * @param {Vector3} direction - The (normalized) direction vector that gives direction to the ray.
+   * @param {number} [near=0] - All results returned are further away than near. Near can't be negative.
+   * @param {number} [far=Infinity] - All results returned are closer than far. Far can't be lower than near.
+   */
+  constructor(origin, direction, near = 0, far = Infinity) {
+    this.ray = new Ray(origin, direction);
+    this.near = near;
+    this.far = far;
+    this.camera = null;
+    this.layers = new Layers();
+    this.params = {
+      Mesh: {},
+      Line: { threshold: 1 },
+      LOD: {},
+      Points: { threshold: 1 },
+      Sprite: {}
+    };
+  }
+  /**
+   * Updates the ray with a new origin and direction by copying the values from the arguments.
+   *
+   * @param {Vector3} origin - The origin vector where the ray casts from.
+   * @param {Vector3} direction - The (normalized) direction vector that gives direction to the ray.
+   */
+  set(origin, direction) {
+    this.ray.set(origin, direction);
+  }
+  /**
+   * Uses the given coordinates and camera to compute a new origin and direction for the internal ray.
+   *
+   * @param {Vector2} coords - 2D coordinates of the mouse, in normalized device coordinates (NDC).
+   * X and Y components should be between `-1` and `1`.
+   * @param {Camera} camera - The camera from which the ray should originate.
+   */
+  setFromCamera(coords, camera) {
+    if (camera.isPerspectiveCamera) {
+      this.ray.origin.setFromMatrixPosition(camera.matrixWorld);
+      this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();
+      this.camera = camera;
+    } else if (camera.isOrthographicCamera) {
+      this.ray.origin.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far)).unproject(camera);
+      this.ray.direction.set(0, 0, -1).transformDirection(camera.matrixWorld);
+      this.camera = camera;
+    } else {
+      error("Raycaster: Unsupported camera type: " + camera.type);
+    }
+  }
+  /**
+   * Uses the given WebXR controller to compute a new origin and direction for the internal ray.
+   *
+   * @param {WebXRController} controller - The controller to copy the position and direction from.
+   * @return {Raycaster} A reference to this raycaster.
+   */
+  setFromXRController(controller) {
+    _matrix.identity().extractRotation(controller.matrixWorld);
+    this.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+    this.ray.direction.set(0, 0, -1).applyMatrix4(_matrix);
+    return this;
+  }
+  /**
+   * The intersection point of a raycaster intersection test.
+   * @typedef {Object} Raycaster~Intersection
+   * @property {number} distance - The distance from the ray's origin to the intersection point.
+   * @property {number} distanceToRay -  Some 3D objects e.g. {@link Points} provide the distance of the
+   * intersection to the nearest point on the ray. For other objects it will be `undefined`.
+   * @property {Vector3} point - The intersection point, in world coordinates.
+   * @property {Object} face - The face that has been intersected.
+   * @property {number} faceIndex - The face index.
+   * @property {Object3D} object - The 3D object that has been intersected.
+   * @property {Vector2} uv - U,V coordinates at point of intersection.
+   * @property {Vector2} uv1 - Second set of U,V coordinates at point of intersection.
+   * @property {Vector3} normal - Interpolated normal vector at point of intersection.
+   * @property {number} instanceId - The index number of the instance where the ray
+   * intersects the {@link InstancedMesh}.
+   */
+  /**
+   * Checks all intersection between the ray and the object with or without the
+   * descendants. Intersections are returned sorted by distance, closest first.
+   *
+   * `Raycaster` delegates to the `raycast()` method of the passed 3D object, when
+   * evaluating whether the ray intersects the object or not. This allows meshes to respond
+   * differently to ray casting than lines or points.
+   *
+   * Note that for meshes, faces must be pointed towards the origin of the ray in order
+   * to be detected; intersections of the ray passing through the back of a face will not
+   * be detected. To raycast against both faces of an object, you'll want to set  {@link Material#side}
+   * to `THREE.DoubleSide`.
+   *
+   * @param {Object3D} object - The 3D object to check for intersection with the ray.
+   * @param {boolean} [recursive=true] - If set to `true`, it also checks all descendants.
+   * Otherwise it only checks intersection with the object.
+   * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
+   * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
+   */
+  intersectObject(object, recursive = true, intersects = []) {
+    intersect(object, this, intersects, recursive);
+    intersects.sort(ascSort);
+    return intersects;
+  }
+  /**
+   * Checks all intersection between the ray and the objects with or without
+   * the descendants. Intersections are returned sorted by distance, closest first.
+   *
+   * @param {Array<Object3D>} objects - The 3D objects to check for intersection with the ray.
+   * @param {boolean} [recursive=true] - If set to `true`, it also checks all descendants.
+   * Otherwise it only checks intersection with the object.
+   * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
+   * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
+   */
+  intersectObjects(objects, recursive = true, intersects = []) {
+    for (let i = 0, l = objects.length; i < l; i++) {
+      intersect(objects[i], this, intersects, recursive);
+    }
+    intersects.sort(ascSort);
+    return intersects;
+  }
+};
+function ascSort(a, b) {
+  return a.distance - b.distance;
+}
+function intersect(object, raycaster, intersects, recursive) {
+  let propagate = true;
+  if (object.layers.test(raycaster.layers)) {
+    const result = object.raycast(raycaster, intersects);
+    if (result === false) propagate = false;
+  }
+  if (propagate === true && recursive === true) {
+    const children = object.children;
+    for (let i = 0, l = children.length; i < l; i++) {
+      intersect(children[i], raycaster, intersects, true);
+    }
+  }
+}
 var Matrix2 = class _Matrix2 {
   static {
     _Matrix2.prototype.isMatrix2 = true;
@@ -27750,6 +28444,1980 @@ function createVisualShaderMaterial(vertexShader, fragmentShader, uniforms, opti
   return new Material2({ vertexShader, fragmentShader, uniforms, side: DoubleSide, toneMapped: false, ...settings });
 }
 
+// scripts/three-flight/cockpit-models.js
+var buildBastion = (() => {
+  const TAU = Math.PI * 2;
+  const clamp2 = (x, a, b) => Math.max(a, Math.min(b, x));
+  const mix = (a, b, t) => a + (b - a) * t;
+  const V = {
+    add: (a, b) => a.map((v, i) => v + b[i]),
+    sub: (a, b) => a.map((v, i) => v - b[i]),
+    scale: (a, s) => a.map((v) => v * s),
+    dot: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+    cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+    length: (a) => Math.hypot(...a),
+    norm: (a) => {
+      let l = Math.hypot(...a) || 1;
+      return a.map((v) => v / l);
+    }
+  };
+  const M = {
+    identity: () => new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
+    mul: (a, b) => {
+      const c = new Float32Array(16);
+      for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) c[j * 4 + i] = a[i] * b[j * 4] + a[4 + i] * b[j * 4 + 1] + a[8 + i] * b[j * 4 + 2] + a[12 + i] * b[j * 4 + 3];
+      return c;
+    },
+    translate: (x, y, z) => new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]),
+    scale: (x, y = x, z = x) => new Float32Array([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1]),
+    rx: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1]);
+    },
+    ry: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
+    },
+    rz: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    },
+    compose: (pos = [0, 0, 0], rot = [0, 0, 0], scale = [1, 1, 1]) => M.mul(M.translate(...pos), M.mul(M.ry(rot[1]), M.mul(M.rx(rot[0]), M.mul(M.rz(rot[2]), M.scale(...scale))))),
+    transform: (m, p) => [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]],
+    perspective: (fov2, aspect2, near, far, offset = 0) => {
+      let f = 1 / Math.tan(fov2 / 2), nf = 1 / (near - far);
+      return new Float32Array([f / aspect2, 0, 0, 0, 0, f, 0, 0, offset, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
+    },
+    lookAt: (eye, target, up = [0, 1, 0]) => {
+      let z = V.norm(V.sub(eye, target)), x = V.norm(V.cross(up, z)), y = V.cross(z, x);
+      return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -V.dot(x, eye), -V.dot(y, eye), -V.dot(z, eye), 1]);
+    },
+    camera: (pos, forward, up) => {
+      let z = V.scale(forward, -1), x = V.norm(V.cross(up, z)), y = V.cross(z, x);
+      return new Float32Array([...x, 0, ...y, 0, ...z, 0, ...pos, 1]);
+    }
+  };
+  function seeded(seed = 123) {
+    return () => {
+      seed = Math.imul(1664525, seed) + 1013904223 | 0;
+      return (seed >>> 0) / 4294967296;
+    };
+  }
+  function rgb(hex) {
+    return [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
+  }
+  const C2 = { hull: rgb(11908267), light: rgb(13750469), shade: rgb(8555147), dark: rgb(2503482), inner: rgb(1121571), steel: rgb(6187886), red: rgb(7553595), window: rgb(14867393), blue: rgb(8900063) };
+  class Geometry {
+    constructor() {
+      this.data = [];
+    }
+    vertex(p, n, c, e, tag, uv) {
+      this.data.push(...p, ...n, ...c, e, tag, ...uv);
+    }
+    tri(a, b, c, color = C2.hull, emission = 0, tag = 0, normals = null, uvs = null) {
+      const n = V.norm(V.cross(V.sub(b, a), V.sub(c, a)));
+      [a, b, c].forEach((p, i) => this.vertex(p, normals ? normals[i] : n, color, emission, tag, uvs ? uvs[i] : [0, 0]));
+      return this;
+    }
+    quad(a, b, c, d, color, emission = 0, tag = 0) {
+      this.tri(a, b, c, color, emission, tag, null, [[0, 0], [1, 0], [1, 1]]);
+      this.tri(a, c, d, color, emission, tag, null, [[0, 0], [1, 1], [0, 1]]);
+      return this;
+    }
+    box(size, pos, color = C2.hull, tag = 0, rotation = [0, 0, 0], emission = 0) {
+      const [x, y, z] = size.map((n) => n / 2), mat = M.compose(pos, rotation);
+      const p = [[-x, -y, -z], [x, -y, -z], [x, y, -z], [-x, y, -z], [-x, -y, z], [x, -y, z], [x, y, z], [-x, y, z]].map((p2) => M.transform(mat, p2));
+      [[0, 3, 2, 1], [4, 5, 6, 7], [0, 4, 7, 3], [1, 2, 6, 5], [0, 1, 5, 4], [3, 7, 6, 2]].forEach((f) => this.quad(...f.map((i) => p[i]), color, emission, tag));
+      return this;
+    }
+    hull(sections, pos = [0, 0, 0], color = C2.hull, tag = 0) {
+      const rings = sections.map(([x, w, h]) => {
+        const c = Math.min(w, h) * 0.2;
+        return [[h / 2, -w / 2 + c], [h / 2, w / 2 - c], [h / 2 - c, w / 2], [-h / 2 + c, w / 2], [-h / 2, w / 2 - c], [-h / 2, -w / 2 + c], [-h / 2 + c, -w / 2], [h / 2 - c, -w / 2]].map(([y, z]) => [x + pos[0], y + pos[1], z + pos[2]]);
+      });
+      for (let i = 0; i < rings.length - 1; i++) for (let j = 0; j < 8; j++) {
+        let k = (j + 1) % 8;
+        this.quad(rings[i][j], rings[i][k], rings[i + 1][k], rings[i + 1][j], color, 0, tag);
+      }
+      for (let i = 1; i < 7; i++) {
+        this.tri(rings[0][0], rings[0][i + 1], rings[0][i], color, 0, tag);
+        let r = rings.at(-1);
+        this.tri(r[0], r[i], r[i + 1], color, 0, tag);
+      }
+      return this;
+    }
+    chamfer(size, pos, color = C2.hull, tag = 0) {
+      let [x, y, z] = size, b = Math.min(x, y, z) * 0.18;
+      return this.hull([[-x / 2, z - b * 2, y - b * 2], [-x / 2 + b, z, y], [x / 2 - b, z, y], [x / 2, z - b * 2, y - b * 2]], pos, color, tag);
+    }
+    cylinder(r, len, pos, color = C2.steel, segments = 14, tag = 0, emission = 0, r2 = r) {
+      let [x, y, z] = pos;
+      for (let i = 0; i < segments; i++) {
+        let a = TAU * i / segments, b = TAU * (i + 1) / segments;
+        const p = [x - len / 2, y + Math.sin(a) * r, z + Math.cos(a) * r], q = [x - len / 2, y + Math.sin(b) * r, z + Math.cos(b) * r], s = [x + len / 2, y + Math.sin(b) * r2, z + Math.cos(b) * r2], t = [x + len / 2, y + Math.sin(a) * r2, z + Math.cos(a) * r2];
+        this.quad(p, q, s, t, color, emission, tag);
+        this.tri([x - len / 2, y, z], q, p, color, emission, tag);
+        this.tri([x + len / 2, y, z], t, s, color, emission, tag);
+      }
+      return this;
+    }
+    beam(a, b, width, depth, color = C2.dark) {
+      const dir = V.sub(b, a), len = V.length(dir), unit = V.norm(dir), ref = Math.abs(unit[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0], right = V.norm(V.cross(unit, ref)), up = V.cross(right, unit);
+      const p = [];
+      [a, b].forEach((p0) => [[-1, -1], [-1, 1], [1, 1], [1, -1]].forEach(([u, v]) => p.push(V.add(p0, V.add(V.scale(right, u * width / 2), V.scale(up, v * depth / 2))))));
+      [[0, 1, 2, 3], [4, 7, 6, 5], [0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]].forEach((f) => this.quad(...f.map((i) => p[i]), color));
+      return this;
+    }
+    sphere(radius = 1, cols = 56, rows = 28) {
+      const point = (i, j) => {
+        let a = i / cols * TAU, b = j / rows * Math.PI;
+        return [Math.sin(b) * Math.cos(a), Math.cos(b), Math.sin(b) * Math.sin(a)];
+      };
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        let n = [point(i, j), point(i + 1, j), point(i + 1, j + 1), point(i, j + 1)], p = n.map((v) => V.scale(v, radius));
+        this.tri(p[0], p[1], p[2], C2.hull, 0, 0, [n[0], n[1], n[2]]);
+        this.tri(p[0], p[2], p[3], C2.hull, 0, 0, [n[0], n[2], n[3]]);
+      }
+      return this;
+    }
+    upload(gl) {
+      let data = new Float32Array(this.data), buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+      let lines = [];
+      for (let t = 0; t < data.length; t += 39) {
+        for (let [a, b] of [[0, 1], [1, 2], [2, 0]]) {
+          lines.push(...data.slice(t + a * 13, t + a * 13 + 13));
+          lines.push(...data.slice(t + b * 13, t + b * 13 + 13));
+        }
+      }
+      let lineBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
+      return { buffer, count: data.length / 13, lineBuffer, lineCount: lines.length / 13 };
+    }
+  }
+  class InteriorBuilder {
+    constructor(spec) {
+      this.spec = spec;
+      this.groups = {};
+      for (const k of ["floor", "walls", "roof", "furniture", "trim", "crew", "glass", "screens", "labels", "holo"]) this.groups[k] = new Geometry();
+      this.group = "furniture";
+      this.obstacles = [];
+      this.P = { floor: rgb(2634813), panel: rgb(7569802), pale: rgb(12042433), dark: rgb(1516334), black: rgb(528150), metal: rgb(4610150), seat: rgb(2702665), edge: rgb(9478310), accent: rgb(spec.accent), white: rgb(14870239), amber: rgb(14526567) };
+    }
+    use(k) {
+      this.group = k;
+      return this;
+    }
+    get g() {
+      return this.groups[this.group];
+    }
+    solid(size, pos, c = this.P.panel, rot = [0, 0, 0], bevel = 0.055, em = 0) {
+      let [w, h, d] = size, b = Math.min(bevel, w * 0.24, h * 0.24, d * 0.24);
+      if (Math.min(w, h, d) <= 0) return;
+      const mat = M.compose(pos, rot), g = this.g;
+      const ring = (y, W, D) => {
+        const k = Math.min(b, W * 0.2, D * 0.2);
+        return [[-W / 2 + k, y, -D / 2], [W / 2 - k, y, -D / 2], [W / 2, y, -D / 2 + k], [W / 2, y, D / 2 - k], [W / 2 - k, y, D / 2], [-W / 2 + k, y, D / 2], [-W / 2, y, D / 2 - k], [-W / 2, y, -D / 2 + k]].map((v) => M.transform(mat, v));
+      };
+      const rings = [ring(-h / 2, w - 2 * b, d - 2 * b), ring(-h / 2 + b, w, d), ring(h / 2 - b, w, d), ring(h / 2, w - 2 * b, d - 2 * b)];
+      for (let k = 0; k < 3; k++) for (let i = 0; i < 8; i++) g.quad(rings[k][i], rings[k][(i + 1) % 8], rings[k + 1][(i + 1) % 8], rings[k + 1][i], c, em);
+      for (let i = 1; i < 7; i++) {
+        g.tri(rings[0][0], rings[0][i + 1], rings[0][i], c, em);
+        g.tri(rings[3][0], rings[3][i], rings[3][i + 1], c, em);
+      }
+      return this;
+    }
+    box(size, pos, c = this.P.panel, em = 0, rot = [0, 0, 0]) {
+      this.g.box(size, pos, c, 0, rot, em);
+      return this;
+    }
+    beam(a, b, w, c = this.P.metal, em = 0, depth = w) {
+      let start = this.g.data.length;
+      this.g.beam(a, b, w, depth, c);
+      if (em) for (let i = start + 9; i < this.g.data.length; i += 13) this.g.data[i] = em;
+      return this;
+    }
+    cylinder(r, h, pos, c = this.P.metal, n = 24, em = 0, rTop = r) {
+      let [x, y, z] = pos, g = this.g;
+      for (let i = 0; i < n; i++) {
+        let a = i / n * TAU, b = (i + 1) / n * TAU, p = [x + Math.cos(a) * r, y, z + Math.sin(a) * r], q = [x + Math.cos(b) * r, y, z + Math.sin(b) * r], u = [x + Math.cos(a) * rTop, y + h, z + Math.sin(a) * rTop], v = [x + Math.cos(b) * rTop, y + h, z + Math.sin(b) * rTop];
+        g.quad(p, u, v, q, c, em);
+        g.tri([x, y + h, z], v, u, c, em);
+        g.tri([x, y, z], p, q, c, em);
+      }
+      return this;
+    }
+    ring(r0, r1, y, h, x = 0, z = 0, c = this.P.accent, em = 0, a0 = 0, a1 = TAU, n = 72) {
+      for (let i = 0; i < n; i++) {
+        let a = a0 + (a1 - a0) * i / n, b = a0 + (a1 - a0) * (i + 1) / n, p = (r, Y, A) => [x + Math.cos(A) * r, Y, z + Math.sin(A) * r], g = this.g;
+        g.quad(p(r0, y, a), p(r0, y, b), p(r1, y, b), p(r1, y, a), c, em);
+        g.quad(p(r0, y + h, a), p(r1, y + h, a), p(r1, y + h, b), p(r0, y + h, b), c, em);
+        g.quad(p(r1, y, a), p(r1, y, b), p(r1, y + h, b), p(r1, y + h, a), c, em);
+        g.quad(p(r0, y, b), p(r0, y, a), p(r0, y + h, a), p(r0, y + h, b), c, em);
+      }
+      return this;
+    }
+    sphere(pos, r, c = this.P.accent, em = 0) {
+      let g = this.g;
+      const at = (a, b) => [pos[0] + r * Math.sin(b) * Math.cos(a), pos[1] + r * Math.cos(b), pos[2] + r * Math.sin(b) * Math.sin(a)];
+      for (let j = 0; j < 10; j++) for (let i = 0; i < 16; i++) g.quad(at(i / 16 * TAU, j / 10 * Math.PI), at((i + 1) / 16 * TAU, j / 10 * Math.PI), at((i + 1) / 16 * TAU, (j + 1) / 10 * Math.PI), at(i / 16 * TAU, (j + 1) / 10 * Math.PI), c, em);
+      return this;
+    }
+    plane(pos, w, h, rot, c, em = 0) {
+      let m = M.compose(pos, rot), ps = [[-w / 2, -h / 2, 0], [w / 2, -h / 2, 0], [w / 2, h / 2, 0], [-w / 2, h / 2, 0]].map((p) => M.transform(m, p));
+      this.g.quad(...ps, c, em);
+      return this;
+    }
+    panel(pos, w, h, rot = [-0.3, 0, 0], tile = 0) {
+      let old = this.group, P = this.P, m = M.compose(pos, rot), at = (p) => M.transform(m, p);
+      this.use("furniture").solid([w + 0.16, h + 0.16, 0.12], pos, P.dark, rot, 0.05);
+      this.box([w + 0.06, h + 0.06, 0.026], at([0, 0, 0.069]), P.black, 0, rot);
+      this.use("screens");
+      let ps = [[-w / 2, -h / 2, 0.088], [w / 2, -h / 2, 0.088], [w / 2, h / 2, 0.088], [-w / 2, h / 2, 0.088]].map(at);
+      let u0 = tile % 4 / 4 + 4e-3, u1 = (tile % 4 + 1) / 4 - 4e-3, v0 = 1 - (Math.floor(tile / 4) + 1) / 2 + 9e-3, v1 = 1 - Math.floor(tile / 4) / 2 - 9e-3;
+      this.g.tri(ps[0], ps[1], ps[2], P.accent, 1, 0, null, [[u0, v0], [u1, v0], [u1, v1]]);
+      this.g.tri(ps[0], ps[2], ps[3], P.accent, 1, 0, null, [[u0, v0], [u1, v1], [u0, v1]]);
+      this.use("trim");
+      for (let s of [-1, 1]) this.box([0.025, 0.025, 0.025], at([s * (w / 2 + 0.05), h / 2 + 0.055, 0.072]), P.edge, 0.1, rot);
+      this.box([w * 0.2, 0.014, 0.018], at([-w * 0.32, -h / 2 - 0.055, 0.07]), P.accent, 0.8, rot);
+      this.use(old);
+      return this;
+    }
+    label(pos, w, h, rot, tile = 0) {
+      let old = this.group;
+      this.use("labels");
+      let m = M.compose(pos, rot), ps = [[-w / 2, -h / 2, 0], [w / 2, -h / 2, 0], [w / 2, h / 2, 0], [-w / 2, h / 2, 0]].map((p) => M.transform(m, p)), u0 = tile % 4 / 4 + 4e-3, u1 = (tile % 4 + 1) / 4 - 4e-3, v0 = 1 - (Math.floor(tile / 4) + 1) / 4 + 6e-3, v1 = 1 - Math.floor(tile / 4) / 4 - 6e-3;
+      this.g.tri(ps[0], ps[1], ps[2], this.P.white, 1, 0, null, [[u0, v0], [u1, v0], [u1, v1]]);
+      this.g.tri(ps[0], ps[2], ps[3], this.P.white, 1, 0, null, [[u0, v0], [u1, v1], [u0, v1]]);
+      this.use(old);
+      return this;
+    }
+    chair(x, y, z, yaw = 0, scale = 1, command = false) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0], [scale, scale, scale]), s = (sz, p, c, rx = 0) => this.solid(sz.map((v) => v * scale), M.transform(m, p), c, [rx, yaw, 0], 0.05 * scale);
+      this.use("furniture");
+      s([0.54, 0.12, 0.57], [0, 0.51, 0], P.dark);
+      s([0.46, 0.12, 0.49], [0, 0.59, -0.02], P.seat);
+      s([0.53, 0.82, 0.17], [0, 0.99, 0.23], P.dark, -0.09);
+      s([0.42, 0.67, 0.085], [0, 1.03, 0.125], P.seat, -0.09);
+      s([0.4, 0.22, 0.16], [0, 1.53, 0.24], P.dark);
+      s([0.32, 0.16, 0.07], [0, 1.55, 0.145], P.seat);
+      s([0.16, 0.45, 0.16], [0, 0.25, 0.04], P.metal);
+      for (let sgn of [-1, 1]) {
+        s([0.095, 0.25, 0.11], [sgn * 0.35, 0.66, 0.08], P.metal);
+        s([0.13, 0.11, 0.54], [sgn * 0.35, 0.81, -0.04], P.dark);
+        s([0.018, 0.025, 0.22], [sgn * 0.35, 0.877, -0.12], P.accent);
+        s([0.055, 0.025, 0.05], [sgn * 0.35, 0.88, -0.28], P.amber);
+      }
+      for (let a = 0; a < 5; a++) {
+        let q = a / 5 * TAU;
+        this.beam(M.transform(m, [0, 0.09, 0.04]), M.transform(m, [Math.sin(q) * 0.42, 0.09, Math.cos(q) * 0.42]), 0.065 * scale, P.metal);
+      }
+      if (command) {
+        s([0.64, 1.18, 0.12], [0, 1.09, 0.39], P.metal);
+        s([0.54, 0.045, 0.022], [0, 1.58, 0.466], P.accent);
+      }
+      this.use(old);
+      return this;
+    }
+    person(x, y, z, yaw = 0, seated = true) {
+      let old = this.group;
+      this.use("crew");
+      let P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p), uniform = rgb(4280410), boots = rgb(1450795), head = rgb(9474438);
+      this.solid([0.39, 0.5, 0.25], at([0, seated ? 1.05 : 1.21, 0]), uniform, [0.04, yaw, 0], 0.075);
+      this.sphere(at([0, seated ? 1.49 : 1.66, -0.015]), 0.135, head);
+      this.solid([0.41, 0.075, 0.26], at([0, seated ? 1.28 : 1.45, 0]), P.dark, [0, yaw, 0], 0.025);
+      for (let s of [-1, 1]) {
+        let shoulder = [s * 0.22, seated ? 1.2 : 1.4, 0], elbow = [s * 0.25, seated ? 0.91 : 1.12, -0.1], hand = [s * 0.25, seated ? 0.89 : 0.92, seated ? -0.36 : -0.07];
+        this.beam(at(shoulder), at(elbow), 0.12, uniform);
+        this.beam(at(elbow), at(hand), 0.1, uniform);
+        this.sphere(at(hand), 0.055, head);
+        if (seated) {
+          this.beam(at([s * 0.13, 0.78, 0]), at([s * 0.14, 0.61, -0.4]), 0.16, uniform);
+          this.beam(at([s * 0.14, 0.61, -0.4]), at([s * 0.14, 0.15, -0.45]), 0.12, uniform);
+          this.solid([0.17, 0.13, 0.3], at([s * 0.14, 0.09, -0.51]), boots, [0, yaw, 0]);
+        } else {
+          this.beam(at([s * 0.11, 0.96, 0]), at([s * 0.15, 0.17, -0.02]), 0.15, uniform);
+          this.solid([0.17, 0.14, 0.31], at([s * 0.15, 0.08, -0.1]), boots, [0, yaw, 0]);
+        }
+      }
+      this.box([0.08, 0.043, 0.013], at([0.095, seated ? 1.18 : 1.34, -0.133]), P.accent, 0.6, [0, yaw, 0]);
+      this.use(old);
+      return this;
+    }
+    station(x, y, z, yaw = 0, tile = 0, crew = false, w = 2.2) {
+      let P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p), old = this.group;
+      this.use("furniture");
+      this.solid([w, 0.19, 1.05], at([0, 0.91, 0]), P.panel, [0, yaw, 0], 0.1);
+      for (let s of [-1, 1]) this.solid([0.21, 0.87, 0.72], at([s * (w / 2 - 0.2), 0.43, 0.06]), P.dark, [0, yaw, 0], 0.06);
+      this.solid([w * 0.91, 0.08, 0.68], at([0, 1.055, 0.09]), P.black, [-0.07, yaw, 0], 0.03);
+      this.panel(at([0, 1.34, -0.33]), w * 0.7, 0.51, [-0.38, yaw, 0], tile);
+      for (let i = 0; i < 10; i++) this.box([0.09, 0.015, 0.045], at([-0.51 + i * 0.115, 1.105, 0.31]), i < 3 ? P.accent : P.edge, i < 3 ? 0.7 : 0, [0, yaw, 0]);
+      for (let s of [-1, 1]) {
+        this.box([0.085, 0.018, 0.065], at([s * (w / 2 - 0.23), 1.106, 0.2]), P.amber, 0.65, [0, yaw, 0]);
+        this.box([0.055, 0.075, 0.055], at([s * (w / 2 - 0.23), 1.14, 0.35]), P.dark, 0, [0, yaw, 0]);
+      }
+      let cp = at([0, 0, 1.05]);
+      this.chair(...cp, yaw);
+      if (crew) this.person(...cp, yaw, true);
+      this.obstacles.push({ x, z, rx: w / 2, rz: 0.6 });
+      this.use(old);
+      return this;
+    }
+    rail(a, b, y, color = this.P.metal, glass = false) {
+      let old = this.group;
+      this.use("trim");
+      let len = V.length(V.sub(b, a)), n = Math.ceil(len / 2.4);
+      for (let i = 0; i <= n; i++) {
+        let p = a.map((v, k) => mix(v, b[k], i / n));
+        this.beam([p[0], y, p[2]], [p[0], y + 1.05, p[2]], 0.047, color);
+      }
+      this.beam([a[0], y + 1.04, a[2]], [b[0], y + 1.04, b[2]], 0.07, color);
+      this.beam([a[0], y + 0.17, a[2]], [b[0], y + 0.17, b[2]], 0.037, color);
+      if (glass) {
+        this.use("glass");
+        this.g.quad([a[0], y + 0.2, a[2]], [b[0], y + 0.2, b[2]], [b[0], y + 0.97, b[2]], [a[0], y + 0.97, a[2]], this.P.accent, 0.1);
+      }
+      this.use(old);
+      return this;
+    }
+    stairs(x, z, w, count, rise, run, y0 = 0) {
+      let old = this.group;
+      this.use("floor");
+      for (let i = 0; i < count; i++) {
+        this.solid([w, (i + 1) * rise, run + 0.012], [x, y0 + (i + 1) * rise / 2, z + i * run], this.P.floor, [0, 0, 0], 0.02);
+        this.box([w - 0.14, 0.021, 0.04], [x, y0 + (i + 1) * rise + 0.012, z + i * run - run * 0.36], this.P.accent, 0.7);
+      }
+      this.use(old);
+      return this;
+    }
+    tiles(w, z0, z1, y = 0, step = 1.8) {
+      let old = this.group;
+      this.use("floor");
+      this.box([w, 0.24, z1 - z0], [0, y - 0.12, (z0 + z1) / 2], this.P.dark);
+      for (let x = -w / 2 + step / 2; x < w / 2; x += step) for (let z = z0 + step / 2; z < z1; z += step) {
+        this.box([Math.min(step - 0.045, w / 2 - x + step / 2 - 0.05), 0.022, Math.min(step - 0.045, z1 - z + step / 2 - 0.05)], [x, y + 0.011, z], this.P.floor);
+        if ((Math.round((x + w / 2) / step) + Math.round((z - z0) / step)) % 3 === 0) {
+          this.box([0.07, 6e-3, 0.18], [x - step * 0.34, y + 0.026, z - step * 0.33], this.P.metal);
+        }
+      }
+      this.use(old);
+      return this;
+    }
+    door(x, y, z, w, h, yaw = 0) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p);
+      this.use("walls");
+      this.solid([w + 0.75, h + 0.48, 0.32], at([0, h / 2, 0]), P.dark, [0, yaw, 0], 0.1);
+      for (let s of [-1, 1]) {
+        this.solid([w / 2 - 0.035, h - 0.15, 0.11], at([s * w / 4, h / 2, 0.21]), P.metal, [0, yaw, 0], 0.065);
+        this.solid([w * 0.27, h * 0.61, 0.042], at([s * w * 0.26, h * 0.5, 0.286]), P.panel, [0, yaw, 0], 0.045);
+        this.box([0.024, h * 0.84, 0.032], at([s * (w / 2 + 0.13), h / 2, 0.21]), P.accent, 0.95, [0, yaw, 0]);
+      }
+      this.label(at([0, h + 0.12, 0.22]), w, 0.28, [0, yaw, 0], 3);
+      this.label(at([0, h * 0.65, 0.312]), w * 0.56, 0.31, [0, yaw, 0], 8);
+      this.use(old);
+      return this;
+    }
+    cabinet(x, y, z, yaw = 0) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p);
+      this.use("furniture");
+      this.solid([1.25, 2.25, 0.65], at([0, 1.125, 0]), P.dark, [0, yaw, 0], 0.075);
+      this.solid([1.1, 2.09, 0.05], at([0, 1.14, 0.34]), P.panel, [0, yaw, 0], 0.035);
+      for (let i = 0; i < 8; i++) this.box([0.8, 0.045, 0.025], at([0, 0.48 + i * 0.083, 0.381]), P.black, 0, [0, yaw, 0]);
+      this.panel(at([0, 1.66, 0.41]), 0.72, 0.31, [0, yaw, 0], 2);
+      this.box([0.045, 0.45, 0.048], at([0.44, 1.28, 0.4]), P.metal, 0, [0, yaw, 0]);
+      this.use(old);
+      return this;
+    }
+    window(a, b, bottom, top) {
+      let old = this.group, P = this.P;
+      this.use("walls");
+      this.beam([a[0], bottom - 0.1, a[1]], [b[0], bottom - 0.1, b[1]], 0.34, P.metal, 0, 0.38);
+      this.beam([a[0], top + 0.1, a[1]], [b[0], top + 0.1, b[1]], 0.4, P.panel, 0, 0.4);
+      this.beam([a[0], bottom, a[1]], [a[0], top, a[1]], 0.19, P.dark, 0, 0.3);
+      this.beam([a[0], bottom, a[1]], [a[0], top, a[1]], 0.047, P.edge, 0, 0.33);
+      this.use("glass");
+      this.g.quad([a[0], bottom, a[1]], [b[0], bottom, b[1]], [b[0], top, b[1]], [a[0], top, a[1]], P.accent, 0);
+      this.use(old);
+      return this;
+    }
+    holo(x, y, z, r = 1) {
+      let old = this.group, P = this.P;
+      this.use("holo");
+      for (let j = 1; j < 6; j++) {
+        let a = j / 6 * Math.PI, rr = Math.sin(a) * r, yy = y + Math.cos(a) * r;
+        this.ring(rr - 0.012, rr + 0.012, yy, 0.012, x, z, P.accent, 1, 0, TAU, 64);
+      }
+      for (let k = 0; k < 6; k++) {
+        let a = k / 6 * Math.PI;
+        for (let i = 0; i < 60; i++) {
+          let p = i / 60 * TAU, q = (i + 1) / 60 * TAU;
+          this.beam([x + Math.cos(a) * Math.cos(p) * r, y + Math.sin(p) * r, z + Math.sin(a) * Math.cos(p) * r], [x + Math.cos(a) * Math.cos(q) * r, y + Math.sin(q) * r, z + Math.sin(a) * Math.cos(q) * r], 0.012, P.accent, 1);
+        }
+      }
+      this.ring(r * 1.15, r * 1.15 + 0.025, y - r * 0.45, 0.016, x, z, P.accent, 1);
+      const rnd = seeded(870);
+      for (let i = 0; i < 23; i++) {
+        let a = rnd() * TAU, b = rnd() * Math.PI, rr = r * (0.65 + rnd() * 0.45);
+        this.sphere([x + Math.cos(a) * Math.sin(b) * rr, y + Math.cos(b) * rr, z + Math.sin(a) * Math.sin(b) * rr], r * 0.028, i % 4 === 0 ? P.amber : P.white, 0.9);
+      }
+      this.use(old);
+      return this;
+    }
+    table(x, y, z, r = 1.5, globe = true) {
+      let old = this.group, P = this.P;
+      this.use("furniture");
+      this.cylinder(r * 0.72, 0.55, [x, y, z], P.dark, 8);
+      this.cylinder(r, 0.22, [x, y + 0.55, z], P.metal, 8);
+      this.cylinder(r * 0.91, 0.035, [x, y + 0.786, z], P.black, 48);
+      this.ring(r * 0.78, r * 0.8, y + 0.83, 0.014, x, z, P.accent, 0.7);
+      this.ring(r * 0.96, r * 0.98, y + 0.76, 0.025, x, z, P.accent, 0.9);
+      for (let i = 0; i < 8; i++) {
+        let a = i / 8 * TAU;
+        this.panel([x + Math.sin(a) * r * 0.85, y + 0.9, z + Math.cos(a) * r * 0.85], r * 0.44, r * 0.22, [-1.08, a, 0], i % 8);
+      }
+      if (globe) this.holo(x, y + 1.5, z, r * 0.43);
+      this.use(old);
+      return this;
+    }
+  }
+  function buildRoom() {
+    const b = new InteriorBuilder({ accent: 9155261 });
+    const P = b.P;
+    Object.assign(P, { floor: rgb(3753294), panel: rgb(4281184), pale: rgb(8491932), dark: rgb(1385519), black: rgb(462615), metal: rgb(6452352), seat: rgb(2108986), edge: rgb(9018532), accent: rgb(8567239), white: rgb(14933968), amber: rgb(14070662) });
+    b.tiles(32, -8.5, 34, 0, 2);
+    b.use("floor").solid([10, 1.7, 6], [0, 0.85, 5.2], P.floor, [0, 0, 0], 0.12);
+    for (let s of [-1, 1]) {
+      b.solid([2.95, 1, 5.8], [s * 3.5, 0.5, 0.35], P.floor, [0, 0, 0], 0.1);
+      b.solid([9.1, 1.15, 11.6], [s * 10.15, 0.575, -2.4], P.dark, [0, 0, 0], 0.08);
+    }
+    b.stairs(0, -4.8, 3.6, 8, 1.7 / 8, 0.6);
+    b.stairs(0, 8.4, 5.1, 6, 0.2, 0.54, 0.5);
+    b.window([-14, -8.55], [14, -8.55], 1.14, 7.75);
+    b.use("walls").solid([30, 1.52, 0.64], [0, 8.65, -8.55], P.dark, [0, 0, 0], 0.1);
+    b.use("trim").beam([-13.8, 7.74, -8.15], [13.8, 7.74, -8.15], 0.036, P.white, 0.78);
+    for (let s of [-1, 1]) {
+      b.window([s * 14, -8.55], [s * 16, -3.5], 1.14, 7.75);
+      b.use("walls").solid([0.65, 9.45, 37.5], [s * 16, 4.7, 15.3], P.dark, [0, 0, 0], 0.1);
+      b.solid([2.2, 3.9, 0.42], [s * 10.6, 3.07, -7.9], P.panel, [0, -s * 0.27, 0], 0.14);
+      b.solid([1.83, 3.54, 0.08], [s * 10.54, 3.1, -7.59], P.dark, [0, -s * 0.27, 0], 0.04);
+      b.label([s * 10.5, 3.1, -7.48], 1.4, 0.8, [0, -s * 0.27, 0], s < 0 ? 0 : 9);
+      b.beam([s * 10.2, 1, -8.5], [s * 13.2, 7.75, -8.5], 0.28, P.metal, 0, 0.45);
+      b.beam([s * 10.2, 1, -8.37], [s * 13.2, 7.75, -8.37], 0.055, P.edge, 0, 0.1);
+      b.use("walls").solid([15, 1.07, 0.58], [s * 7.5, 0.55, -8.4], P.panel, [0, 0, 0], 0.08);
+      b.use("trim").beam([s * 1.92, 0.055, -7.9], [s * 1.92, 0.055, -4.6], 0.032, P.white, 0.68);
+      for (let j = 0; j < 3; j++) b.station(s * (5.2 + j * 3), 1.15, -7.1, -s * 0.045, j % 2 === 0 ? 2 : 3, true, 2.7);
+      for (let j = 0; j < 4; j++) b.station(s * (j % 2 === 0 ? 10.4 : 7.4), 0.1, 3.7 + j * 5.35, -s * 0.25, (j + 4) % 8, j !== 2, 3.25);
+      b.use("floor").solid([4.3, 2.05, 17.7], [s * 12.9, 1.025, 24.8], P.floor, [0, 0, 0], 0.08);
+      for (let z of [19, 24.5, 30]) b.station(s * 13, 2.05, z, -s * Math.PI / 2, 4, true, 2.6);
+      b.rail([s * 10.66, 0, 16.1], [s * 10.66, 0, 33], 2.05, P.metal, true);
+      b.stairs(s * 12.8, 11.4, 3.6, 8, 2.05 / 8, 0.54);
+      for (let j = 0; j < 6; j++) {
+        const z = 1 + j * 5.5;
+        b.use("walls").solid([0.22, 6.4, 5.14], [s * 15.61, 4.54, z], P.panel, [0, 0, 0], 0.1);
+        b.solid([0.32, 1.8, 4.96], [s * 15.45, 1, z], P.dark, [0, 0, 0], 0.04);
+        b.beam([s * 15.46, 0.05, z - 2.68], [s * 15.46, 7.4, z - 2.68], 0.27, P.metal);
+        b.beam([s * 15.46, 7.4, z - 2.68], [s * 12.4, 9.18, z - 2.68], 0.3, P.metal);
+        b.use("trim").beam([s * 15.29, 7.3, z - 2.6], [s * 12.35, 9.1, z - 2.6], 0.035, P.white, 0.78);
+        if (j % 2 === 0) b.panel([s * 15.36, 4.5, z], 3.9, 1.6, [0, -s * Math.PI / 2, 0], j + 2);
+        b.use("trim").beam([s * 15.31, 2.3, z - 2.1], [s * 15.31, 2.3, z + 2.1], 0.028, P.accent, 0.45);
+      }
+    }
+    b.use("roof").solid([32, 0.55, 43.1], [0, 9.38, 12.75], P.dark, [0, 0, 0], 0.1);
+    for (let z of [-7.8, -1, 7, 15, 23, 31]) {
+      b.solid([30.7, 0.35, 0.58], [0, 8.88, z], P.panel, [0, 0, 0], 0.07);
+      for (let s of [-1, 1]) {
+        b.box([11.7, 0.045, 0.09], [s * 7.65, 8.675, z + 0.2], P.white, 0.78);
+        b.solid([0.28, 0.22, 3.3], [s * 8.1, 8.99, z + 1.9], P.metal, [0, 0, 0], 0.03);
+        b.box([0.035, 0.025, 2.8], [s * 8.06, 8.86, z + 1.9], P.amber, 0.74);
+      }
+    }
+    b.use("roof").solid([5.8, 0.28, 42], [0, 9.01, 12.3], P.panel, [0, 0, 0], 0.08);
+    for (let z of [-4, 4, 12, 20, 28]) {
+      b.solid([4.8, 0.05, 6.2], [0, 8.835, z], P.dark, [0, 0, 0], 0.08);
+      for (let s of [-1, 1]) b.box([0.022, 0.012, 4.3], [s * 2.15, 8.8, z], P.metal, 0);
+    }
+    b.chair(0, 1.7, 3.25, 0, 1.26, true);
+    b.use("floor").solid([6.8, 0.5, 22], [0, 0.25, 21.8], P.floor, [0, 0, 0], 0.08);
+    for (let s of [-1, 1]) {
+      b.use("trim").beam([s * 3.3, 0.523, 11.2], [s * 3.3, 0.523, 32.3], 0.025, P.white, 0.65);
+      b.person(s * 4.75, 0, 18.5, s * 0.6, false);
+      b.cabinet(s * 8, 0, 31, Math.PI);
+    }
+    b.label([0, 0.525, 26], 3.9, 1, [-Math.PI / 2, 0, 0], 6);
+    b.use("walls").solid([32, 9.6, 0.65], [0, 4.75, 34], P.dark, [0, 0, 0], 0.1);
+    b.door(0, 0.5, 33.56, 3.6, 5.6, Math.PI);
+    for (let s of [-1, 1]) {
+      b.use("walls").solid([9.4, 6.7, 0.22], [s * 9.3, 4.6, 33.55], P.panel, [0, 0, 0], 0.11);
+      b.panel([s * 9.3, 4.3, 33.37], 7.5, 2.9, [0, Math.PI, 0], s < 0 ? 4 : 3);
+      b.label([s * 9.3, 7.5, 33.35], 5.1, 0.55, [0, Math.PI, 0], s < 0 ? 10 : 14);
+    }
+    b.label([0, 7.5, 33.52], 4.7, 0.57, [0, Math.PI, 0], 2);
+    return { groups: b.groups, obstacles: b.obstacles };
+  }
+  return buildRoom;
+})();
+var buildHorizon = (() => {
+  const TAU = Math.PI * 2;
+  const clamp2 = (x, a, b) => Math.max(a, Math.min(b, x));
+  const mix = (a, b, t) => a + (b - a) * t;
+  const V = {
+    add: (a, b) => a.map((v, i) => v + b[i]),
+    sub: (a, b) => a.map((v, i) => v - b[i]),
+    scale: (a, s) => a.map((v) => v * s),
+    dot: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+    cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+    length: (a) => Math.hypot(...a),
+    norm: (a) => {
+      let l = Math.hypot(...a) || 1;
+      return a.map((v) => v / l);
+    }
+  };
+  const M = {
+    identity: () => new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
+    mul: (a, b) => {
+      const c = new Float32Array(16);
+      for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) c[j * 4 + i] = a[i] * b[j * 4] + a[4 + i] * b[j * 4 + 1] + a[8 + i] * b[j * 4 + 2] + a[12 + i] * b[j * 4 + 3];
+      return c;
+    },
+    translate: (x, y, z) => new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]),
+    scale: (x, y = x, z = x) => new Float32Array([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1]),
+    rx: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1]);
+    },
+    ry: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
+    },
+    rz: (a) => {
+      let c = Math.cos(a), s = Math.sin(a);
+      return new Float32Array([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    },
+    compose: (pos = [0, 0, 0], rot = [0, 0, 0], scale = [1, 1, 1]) => M.mul(M.translate(...pos), M.mul(M.ry(rot[1]), M.mul(M.rx(rot[0]), M.mul(M.rz(rot[2]), M.scale(...scale))))),
+    transform: (m, p) => [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]],
+    perspective: (fov2, aspect2, near, far, offset = 0) => {
+      let f = 1 / Math.tan(fov2 / 2), nf = 1 / (near - far);
+      return new Float32Array([f / aspect2, 0, 0, 0, 0, f, 0, 0, offset, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
+    },
+    lookAt: (eye, target, up = [0, 1, 0]) => {
+      let z = V.norm(V.sub(eye, target)), x = V.norm(V.cross(up, z)), y = V.cross(z, x);
+      return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -V.dot(x, eye), -V.dot(y, eye), -V.dot(z, eye), 1]);
+    },
+    camera: (pos, forward, up) => {
+      let z = V.scale(forward, -1), x = V.norm(V.cross(up, z)), y = V.cross(z, x);
+      return new Float32Array([...x, 0, ...y, 0, ...z, 0, ...pos, 1]);
+    }
+  };
+  function seeded(seed = 123) {
+    return () => {
+      seed = Math.imul(1664525, seed) + 1013904223 | 0;
+      return (seed >>> 0) / 4294967296;
+    };
+  }
+  function rgb(hex) {
+    return [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
+  }
+  const C2 = { hull: rgb(11908267), light: rgb(13750469), shade: rgb(8555147), dark: rgb(2503482), inner: rgb(1121571), steel: rgb(6187886), red: rgb(7553595), window: rgb(14867393), blue: rgb(8900063) };
+  class Geometry {
+    constructor() {
+      this.data = [];
+    }
+    vertex(p, n, c, e, tag, uv) {
+      this.data.push(...p, ...n, ...c, e, tag, ...uv);
+    }
+    tri(a, b, c, color = C2.hull, emission = 0, tag = 0, normals = null, uvs = null) {
+      const n = V.norm(V.cross(V.sub(b, a), V.sub(c, a)));
+      [a, b, c].forEach((p, i) => this.vertex(p, normals ? normals[i] : n, color, emission, tag, uvs ? uvs[i] : [0, 0]));
+      return this;
+    }
+    quad(a, b, c, d, color, emission = 0, tag = 0) {
+      this.tri(a, b, c, color, emission, tag, null, [[0, 0], [1, 0], [1, 1]]);
+      this.tri(a, c, d, color, emission, tag, null, [[0, 0], [1, 1], [0, 1]]);
+      return this;
+    }
+    box(size, pos, color = C2.hull, tag = 0, rotation = [0, 0, 0], emission = 0) {
+      const [x, y, z] = size.map((n) => n / 2), mat = M.compose(pos, rotation);
+      const p = [[-x, -y, -z], [x, -y, -z], [x, y, -z], [-x, y, -z], [-x, -y, z], [x, -y, z], [x, y, z], [-x, y, z]].map((p2) => M.transform(mat, p2));
+      [[0, 3, 2, 1], [4, 5, 6, 7], [0, 4, 7, 3], [1, 2, 6, 5], [0, 1, 5, 4], [3, 7, 6, 2]].forEach((f) => this.quad(...f.map((i) => p[i]), color, emission, tag));
+      return this;
+    }
+    hull(sections, pos = [0, 0, 0], color = C2.hull, tag = 0) {
+      const rings = sections.map(([x, w, h]) => {
+        const c = Math.min(w, h) * 0.2;
+        return [[h / 2, -w / 2 + c], [h / 2, w / 2 - c], [h / 2 - c, w / 2], [-h / 2 + c, w / 2], [-h / 2, w / 2 - c], [-h / 2, -w / 2 + c], [-h / 2 + c, -w / 2], [h / 2 - c, -w / 2]].map(([y, z]) => [x + pos[0], y + pos[1], z + pos[2]]);
+      });
+      for (let i = 0; i < rings.length - 1; i++) for (let j = 0; j < 8; j++) {
+        let k = (j + 1) % 8;
+        this.quad(rings[i][j], rings[i][k], rings[i + 1][k], rings[i + 1][j], color, 0, tag);
+      }
+      for (let i = 1; i < 7; i++) {
+        this.tri(rings[0][0], rings[0][i + 1], rings[0][i], color, 0, tag);
+        let r = rings.at(-1);
+        this.tri(r[0], r[i], r[i + 1], color, 0, tag);
+      }
+      return this;
+    }
+    chamfer(size, pos, color = C2.hull, tag = 0) {
+      let [x, y, z] = size, b = Math.min(x, y, z) * 0.18;
+      return this.hull([[-x / 2, z - b * 2, y - b * 2], [-x / 2 + b, z, y], [x / 2 - b, z, y], [x / 2, z - b * 2, y - b * 2]], pos, color, tag);
+    }
+    cylinder(r, len, pos, color = C2.steel, segments = 14, tag = 0, emission = 0, r2 = r) {
+      let [x, y, z] = pos;
+      for (let i = 0; i < segments; i++) {
+        let a = TAU * i / segments, b = TAU * (i + 1) / segments;
+        const p = [x - len / 2, y + Math.sin(a) * r, z + Math.cos(a) * r], q = [x - len / 2, y + Math.sin(b) * r, z + Math.cos(b) * r], s = [x + len / 2, y + Math.sin(b) * r2, z + Math.cos(b) * r2], t = [x + len / 2, y + Math.sin(a) * r2, z + Math.cos(a) * r2];
+        this.quad(p, q, s, t, color, emission, tag);
+        this.tri([x - len / 2, y, z], q, p, color, emission, tag);
+        this.tri([x + len / 2, y, z], t, s, color, emission, tag);
+      }
+      return this;
+    }
+    beam(a, b, width, depth, color = C2.dark) {
+      const dir = V.sub(b, a), len = V.length(dir), unit = V.norm(dir), ref = Math.abs(unit[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0], right = V.norm(V.cross(unit, ref)), up = V.cross(right, unit);
+      const p = [];
+      [a, b].forEach((p0) => [[-1, -1], [-1, 1], [1, 1], [1, -1]].forEach(([u, v]) => p.push(V.add(p0, V.add(V.scale(right, u * width / 2), V.scale(up, v * depth / 2))))));
+      [[0, 1, 2, 3], [4, 7, 6, 5], [0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]].forEach((f) => this.quad(...f.map((i) => p[i]), color));
+      return this;
+    }
+    sphere(radius = 1, cols = 56, rows = 28) {
+      const point = (i, j) => {
+        let a = i / cols * TAU, b = j / rows * Math.PI;
+        return [Math.sin(b) * Math.cos(a), Math.cos(b), Math.sin(b) * Math.sin(a)];
+      };
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        let n = [point(i, j), point(i + 1, j), point(i + 1, j + 1), point(i, j + 1)], p = n.map((v) => V.scale(v, radius));
+        this.tri(p[0], p[1], p[2], C2.hull, 0, 0, [n[0], n[1], n[2]]);
+        this.tri(p[0], p[2], p[3], C2.hull, 0, 0, [n[0], n[2], n[3]]);
+      }
+      return this;
+    }
+    upload(gl) {
+      let data = new Float32Array(this.data), buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+      let lines = [];
+      for (let t = 0; t < data.length; t += 39) {
+        for (let [a, b] of [[0, 1], [1, 2], [2, 0]]) {
+          lines.push(...data.slice(t + a * 13, t + a * 13 + 13));
+          lines.push(...data.slice(t + b * 13, t + b * 13 + 13));
+        }
+      }
+      let lineBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
+      return { buffer, count: data.length / 13, lineBuffer, lineCount: lines.length / 13 };
+    }
+  }
+  const INTERIOR_SPECS = [
+    { id: 0, name: "\u6E38\u96BC \xB7 \u5355\u5EA7\u9A7E\u9A76\u8231", short: "\u5355\u5EA7\u6218\u673A", en: "PEREGRINE / FLIGHT DECK", code: "HF\u201301", dim: "3.6 \xD7 5.8 \xD7 3.0 m", desc: "\u5305\u8986\u5F0F\u5EA7\u8231 \xB7 \u53CC\u4FA7\u64CD\u7EB5\u53F0 \xB7 \u88C5\u7532\u8231\u76D6", w: 3.6, d: 5.8, h: 3, front: -3.8, back: 2, eye: [0, 1.48, 0.6], target: [0, 1.45, -4], scale: 1, accent: 7458530, ship: 3, views: [["\u9A7E\u9A76\u5E2D", [0, 1.48, 0.6], [0, 1.45, -4]], ["\u4FA7\u63A7\u53F0", [0.65, 1.6, 0.85], [-0.85, 0.65, -1.15]], ["\u8231\u540E\u56DE\u671B", [0, 1.85, -2.05], [0, 1.15, 1.5]], ["\u8231\u76D6\u7ED3\u6784", [0, 0.95, 0.2], [0.3, 2.6, -0.85]]] },
+    { id: 1, name: "\u7384\u6B66 \xB7 \u91CD\u578B\u6218\u8230\u8230\u6865", short: "\u91CD\u578B\u6218\u8230", en: "BASTION / CAPITAL BRIDGE", code: "BB\u201301", dim: "24 \xD7 28 \xD7 7.5 m", desc: "\u5206\u5C42\u6307\u6325\u7532\u677F \xB7 \u53CC\u8237\u64CD\u4F5C\u5E2D \xB7 \u524D\u5411\u5168\u666F\u8237\u7A97", w: 24, d: 28, h: 7.5, front: -18, back: 10, eye: [0, 3.1, 7.25], target: [0, 2.65, -16], scale: 1, accent: 7063259, ship: 4, views: [["\u6307\u6325\u5E2D", [0, 3.1, 7.25], [0, 2.65, -16]], ["\u5DE6\u8237\u5168\u666F", [-8.5, 3.7, 5.6], [1, 1.7, -8]], ["\u6218\u672F\u684C", [2.6, 2.45, 0.1], [0, 1.4, -3]], ["\u540E\u8231\u56DE\u671B", [0, 2.05, -12.8], [0, 2.2, 8.6]]] },
+    { id: 2, name: "\u5929\u7A79 \xB7 \u5B87\u5B99\u5821\u5792\u65D7\u8230", short: "\u5B87\u5B99\u5821\u5792", en: "EMPYREAN / FORTRESS COMMAND", code: "FC\u201301", dim: "64 \xD7 70 \xD7 22 m", desc: "\u4E2D\u592E\u6307\u6325\u957F\u5ECA \xB7 \u4E0B\u6C89\u5F0F\u4F5C\u6218\u533A \xB7 \u53CC\u5C42\u4FA7\u5ECA", w: 64, d: 70, h: 22, front: -45, back: 25, eye: [0, 6.4, 19.1], target: [0, 5.7, -36], scale: 1, accent: 14202490, ship: 4, views: [["\u65D7\u8230\u6307\u6325\u5E2D", [0, 6.4, 19.1], [0, 5.7, -36]], ["\u4E0A\u5C42\u4FA7\u5ECA", [-23, 10, 10], [0, 3.4, -11]], ["\u4E2D\u592E\u661F\u56FE", [7, 5.5, -5], [0, 4.1, -13]], ["\u5927\u5385\u56DE\u671B", [0, 4, -33], [0, 6.5, 21]]] },
+    { id: 3, name: "\u6DF1\u6F5C \xB7 \u88C5\u7532\u6218\u672F\u8231", short: "\u81EA\u7531\u8BBE\u8BA1 A", en: "ABYSS / ARMOURED CITADEL", code: "CONCEPT\u2013A", dim: "18 \xD7 23 \xD7 6 m", desc: "\u5C01\u95ED\u5F0F\u88C5\u7532\u8231 \xB7 \u516B\u89D2\u4F5C\u6218\u684C \xB7 \u5D4C\u5165\u5F0F\u6001\u52BF\u5899", w: 18, d: 23, h: 6, front: -14, back: 9, eye: [0, 2.9, 6.7], target: [0, 2.2, -10], scale: 1, accent: 14324848, ship: 4, views: [["\u6218\u672F\u6307\u6325\u5E2D", [0, 2.9, 6.7], [0, 2.2, -10]], ["\u4FA7\u5411\u89C2\u5BDF", [-6.6, 2.8, 3.6], [1, 1.3, -3]], ["\u4F5C\u6218\u684C", [2.6, 2.5, 0.3], [0, 1.6, -3.3]], ["\u8231\u540E\u56DE\u671B", [0, 2.25, -9], [0, 2.2, 7.8]]] },
+    { id: 4, name: "\u8FDC\u773A \xB7 \u73AF\u666F\u63A2\u7D22\u8230\u6865", short: "\u81EA\u7531\u8BBE\u8BA1 B", en: "HORIZON / PANORAMIC BRIDGE", code: "CONCEPT\u2013B", dim: "\u76F4\u5F84 28 m \xB7 \u9AD8 9 m", desc: "\u73AF\u5F62\u5168\u666F\u8237\u7A97 \xB7 \u5F27\u9762\u5BFC\u822A\u5E2D \xB7 \u4E2D\u592E\u89C2\u6D4B\u5E73\u53F0", w: 28, d: 28, h: 9, front: -14, back: 14, eye: [0, 2.9, 8], target: [0, 2.3, -12], scale: 1, accent: 7846602, ship: 4, views: [["\u89C2\u6D4B\u6307\u6325\u5E2D", [0, 2.9, 8], [0, 2.3, -12]], ["\u5F27\u5F62\u5BFC\u822A\u5E2D", [-7.6, 2.4, 1.5], [0, 1.5, -6]], ["\u4E2D\u592E\u661F\u56FE", [2.9, 2.3, 0], [0, 1.1, -2]], ["\u5168\u666F\u56DE\u671B", [0, 2.5, -10], [0, 2.5, 9]]] }
+  ];
+  class InteriorBuilder {
+    constructor(spec) {
+      this.spec = spec;
+      this.groups = {};
+      for (const k of ["floor", "walls", "roof", "furniture", "trim", "crew", "glass", "screens", "labels", "holo"]) this.groups[k] = new Geometry();
+      this.group = "furniture";
+      this.obstacles = [];
+      this.P = { floor: rgb(2634813), panel: rgb(7569802), pale: rgb(12042433), dark: rgb(1516334), black: rgb(528150), metal: rgb(4610150), seat: rgb(2702665), edge: rgb(9478310), accent: rgb(spec.accent), white: rgb(14870239), amber: rgb(14526567) };
+    }
+    use(k) {
+      this.group = k;
+      return this;
+    }
+    get g() {
+      return this.groups[this.group];
+    }
+    solid(size, pos, c = this.P.panel, rot = [0, 0, 0], bevel = 0.055, em = 0) {
+      let [w, h, d] = size, b = Math.min(bevel, w * 0.24, h * 0.24, d * 0.24);
+      if (Math.min(w, h, d) <= 0) return;
+      const mat = M.compose(pos, rot), g = this.g;
+      const ring = (y, W, D) => {
+        const k = Math.min(b, W * 0.2, D * 0.2);
+        return [[-W / 2 + k, y, -D / 2], [W / 2 - k, y, -D / 2], [W / 2, y, -D / 2 + k], [W / 2, y, D / 2 - k], [W / 2 - k, y, D / 2], [-W / 2 + k, y, D / 2], [-W / 2, y, D / 2 - k], [-W / 2, y, -D / 2 + k]].map((v) => M.transform(mat, v));
+      };
+      const rings = [ring(-h / 2, w - 2 * b, d - 2 * b), ring(-h / 2 + b, w, d), ring(h / 2 - b, w, d), ring(h / 2, w - 2 * b, d - 2 * b)];
+      for (let k = 0; k < 3; k++) for (let i = 0; i < 8; i++) g.quad(rings[k][i], rings[k][(i + 1) % 8], rings[k + 1][(i + 1) % 8], rings[k + 1][i], c, em);
+      for (let i = 1; i < 7; i++) {
+        g.tri(rings[0][0], rings[0][i + 1], rings[0][i], c, em);
+        g.tri(rings[3][0], rings[3][i], rings[3][i + 1], c, em);
+      }
+      return this;
+    }
+    box(size, pos, c = this.P.panel, em = 0, rot = [0, 0, 0]) {
+      this.g.box(size, pos, c, 0, rot, em);
+      return this;
+    }
+    beam(a, b, w, c = this.P.metal, em = 0, depth = w) {
+      let start = this.g.data.length;
+      this.g.beam(a, b, w, depth, c);
+      if (em) for (let i = start + 9; i < this.g.data.length; i += 13) this.g.data[i] = em;
+      return this;
+    }
+    cylinder(r, h, pos, c = this.P.metal, n = 24, em = 0, rTop = r) {
+      let [x, y, z] = pos, g = this.g;
+      for (let i = 0; i < n; i++) {
+        let a = i / n * TAU, b = (i + 1) / n * TAU, p = [x + Math.cos(a) * r, y, z + Math.sin(a) * r], q = [x + Math.cos(b) * r, y, z + Math.sin(b) * r], u = [x + Math.cos(a) * rTop, y + h, z + Math.sin(a) * rTop], v = [x + Math.cos(b) * rTop, y + h, z + Math.sin(b) * rTop];
+        g.quad(p, u, v, q, c, em);
+        g.tri([x, y + h, z], v, u, c, em);
+        g.tri([x, y, z], p, q, c, em);
+      }
+      return this;
+    }
+    ring(r0, r1, y, h, x = 0, z = 0, c = this.P.accent, em = 0, a0 = 0, a1 = TAU, n = 72) {
+      for (let i = 0; i < n; i++) {
+        let a = a0 + (a1 - a0) * i / n, b = a0 + (a1 - a0) * (i + 1) / n, p = (r, Y, A) => [x + Math.cos(A) * r, Y, z + Math.sin(A) * r], g = this.g;
+        g.quad(p(r0, y, a), p(r0, y, b), p(r1, y, b), p(r1, y, a), c, em);
+        g.quad(p(r0, y + h, a), p(r1, y + h, a), p(r1, y + h, b), p(r0, y + h, b), c, em);
+        g.quad(p(r1, y, a), p(r1, y, b), p(r1, y + h, b), p(r1, y + h, a), c, em);
+        g.quad(p(r0, y, b), p(r0, y, a), p(r0, y + h, a), p(r0, y + h, b), c, em);
+      }
+      return this;
+    }
+    sphere(pos, r, c = this.P.accent, em = 0) {
+      let g = this.g;
+      const at = (a, b) => [pos[0] + r * Math.sin(b) * Math.cos(a), pos[1] + r * Math.cos(b), pos[2] + r * Math.sin(b) * Math.sin(a)];
+      for (let j = 0; j < 10; j++) for (let i = 0; i < 16; i++) g.quad(at(i / 16 * TAU, j / 10 * Math.PI), at((i + 1) / 16 * TAU, j / 10 * Math.PI), at((i + 1) / 16 * TAU, (j + 1) / 10 * Math.PI), at(i / 16 * TAU, (j + 1) / 10 * Math.PI), c, em);
+      return this;
+    }
+    plane(pos, w, h, rot, c, em = 0) {
+      let m = M.compose(pos, rot), ps = [[-w / 2, -h / 2, 0], [w / 2, -h / 2, 0], [w / 2, h / 2, 0], [-w / 2, h / 2, 0]].map((p) => M.transform(m, p));
+      this.g.quad(...ps, c, em);
+      return this;
+    }
+    panel(pos, w, h, rot = [-0.3, 0, 0], tile = 0) {
+      let old = this.group, P = this.P, m = M.compose(pos, rot), at = (p) => M.transform(m, p);
+      this.use("furniture").solid([w + 0.16, h + 0.16, 0.12], pos, P.dark, rot, 0.05);
+      this.box([w + 0.06, h + 0.06, 0.026], at([0, 0, 0.069]), P.black, 0, rot);
+      this.use("screens");
+      let ps = [[-w / 2, -h / 2, 0.088], [w / 2, -h / 2, 0.088], [w / 2, h / 2, 0.088], [-w / 2, h / 2, 0.088]].map(at);
+      let u0 = tile % 4 / 4 + 4e-3, u1 = (tile % 4 + 1) / 4 - 4e-3, v0 = 1 - (Math.floor(tile / 4) + 1) / 2 + 9e-3, v1 = 1 - Math.floor(tile / 4) / 2 - 9e-3;
+      this.g.tri(ps[0], ps[1], ps[2], P.accent, 1, 0, null, [[u0, v0], [u1, v0], [u1, v1]]);
+      this.g.tri(ps[0], ps[2], ps[3], P.accent, 1, 0, null, [[u0, v0], [u1, v1], [u0, v1]]);
+      this.use("trim");
+      for (let s of [-1, 1]) this.box([0.025, 0.025, 0.025], at([s * (w / 2 + 0.05), h / 2 + 0.055, 0.072]), P.edge, 0.1, rot);
+      this.box([w * 0.2, 0.014, 0.018], at([-w * 0.32, -h / 2 - 0.055, 0.07]), P.accent, 0.8, rot);
+      this.use(old);
+      return this;
+    }
+    label(pos, w, h, rot, tile = 0) {
+      let old = this.group;
+      this.use("labels");
+      let m = M.compose(pos, rot), ps = [[-w / 2, -h / 2, 0], [w / 2, -h / 2, 0], [w / 2, h / 2, 0], [-w / 2, h / 2, 0]].map((p) => M.transform(m, p)), u0 = tile % 4 / 4 + 4e-3, u1 = (tile % 4 + 1) / 4 - 4e-3, v0 = 1 - (Math.floor(tile / 4) + 1) / 4 + 6e-3, v1 = 1 - Math.floor(tile / 4) / 4 - 6e-3;
+      this.g.tri(ps[0], ps[1], ps[2], this.P.white, 1, 0, null, [[u0, v0], [u1, v0], [u1, v1]]);
+      this.g.tri(ps[0], ps[2], ps[3], this.P.white, 1, 0, null, [[u0, v0], [u1, v1], [u0, v1]]);
+      this.use(old);
+      return this;
+    }
+    chair(x, y, z, yaw = 0, scale = 1, command = false) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0], [scale, scale, scale]), s = (sz, p, c, rx = 0) => this.solid(sz.map((v) => v * scale), M.transform(m, p), c, [rx, yaw, 0], 0.05 * scale);
+      this.use("furniture");
+      s([0.54, 0.12, 0.57], [0, 0.51, 0], P.dark);
+      s([0.46, 0.12, 0.49], [0, 0.59, -0.02], P.seat);
+      s([0.53, 0.82, 0.17], [0, 0.99, 0.23], P.dark, -0.09);
+      s([0.42, 0.67, 0.085], [0, 1.03, 0.125], P.seat, -0.09);
+      s([0.4, 0.22, 0.16], [0, 1.53, 0.24], P.dark);
+      s([0.32, 0.16, 0.07], [0, 1.55, 0.145], P.seat);
+      s([0.16, 0.45, 0.16], [0, 0.25, 0.04], P.metal);
+      for (let sgn of [-1, 1]) {
+        s([0.095, 0.25, 0.11], [sgn * 0.35, 0.66, 0.08], P.metal);
+        s([0.13, 0.11, 0.54], [sgn * 0.35, 0.81, -0.04], P.dark);
+        s([0.018, 0.025, 0.22], [sgn * 0.35, 0.877, -0.12], P.accent);
+        s([0.055, 0.025, 0.05], [sgn * 0.35, 0.88, -0.28], P.amber);
+      }
+      for (let a = 0; a < 5; a++) {
+        let q = a / 5 * TAU;
+        this.beam(M.transform(m, [0, 0.09, 0.04]), M.transform(m, [Math.sin(q) * 0.42, 0.09, Math.cos(q) * 0.42]), 0.065 * scale, P.metal);
+      }
+      if (command) {
+        s([0.64, 1.18, 0.12], [0, 1.09, 0.39], P.metal);
+        s([0.54, 0.045, 0.022], [0, 1.58, 0.466], P.accent);
+      }
+      this.use(old);
+      return this;
+    }
+    person(x, y, z, yaw = 0, seated = true) {
+      let old = this.group;
+      this.use("crew");
+      let P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p), uniform = rgb(4280410), boots = rgb(1450795), head = rgb(9474438);
+      this.solid([0.39, 0.5, 0.25], at([0, seated ? 1.05 : 1.21, 0]), uniform, [0.04, yaw, 0], 0.075);
+      this.sphere(at([0, seated ? 1.49 : 1.66, -0.015]), 0.135, head);
+      this.solid([0.41, 0.075, 0.26], at([0, seated ? 1.28 : 1.45, 0]), P.dark, [0, yaw, 0], 0.025);
+      for (let s of [-1, 1]) {
+        let shoulder = [s * 0.22, seated ? 1.2 : 1.4, 0], elbow = [s * 0.25, seated ? 0.91 : 1.12, -0.1], hand = [s * 0.25, seated ? 0.89 : 0.92, seated ? -0.36 : -0.07];
+        this.beam(at(shoulder), at(elbow), 0.12, uniform);
+        this.beam(at(elbow), at(hand), 0.1, uniform);
+        this.sphere(at(hand), 0.055, head);
+        if (seated) {
+          this.beam(at([s * 0.13, 0.78, 0]), at([s * 0.14, 0.61, -0.4]), 0.16, uniform);
+          this.beam(at([s * 0.14, 0.61, -0.4]), at([s * 0.14, 0.15, -0.45]), 0.12, uniform);
+          this.solid([0.17, 0.13, 0.3], at([s * 0.14, 0.09, -0.51]), boots, [0, yaw, 0]);
+        } else {
+          this.beam(at([s * 0.11, 0.96, 0]), at([s * 0.15, 0.17, -0.02]), 0.15, uniform);
+          this.solid([0.17, 0.14, 0.31], at([s * 0.15, 0.08, -0.1]), boots, [0, yaw, 0]);
+        }
+      }
+      this.box([0.08, 0.043, 0.013], at([0.095, seated ? 1.18 : 1.34, -0.133]), P.accent, 0.6, [0, yaw, 0]);
+      this.use(old);
+      return this;
+    }
+    station(x, y, z, yaw = 0, tile = 0, crew = false, w = 2.2) {
+      let P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p), old = this.group;
+      this.use("furniture");
+      this.solid([w, 0.19, 1.05], at([0, 0.91, 0]), P.panel, [0, yaw, 0], 0.1);
+      for (let s of [-1, 1]) this.solid([0.21, 0.87, 0.72], at([s * (w / 2 - 0.2), 0.43, 0.06]), P.dark, [0, yaw, 0], 0.06);
+      this.solid([w * 0.91, 0.08, 0.68], at([0, 1.055, 0.09]), P.black, [-0.07, yaw, 0], 0.03);
+      this.panel(at([0, 1.34, -0.33]), w * 0.7, 0.51, [-0.38, yaw, 0], tile);
+      for (let i = 0; i < 10; i++) this.box([0.09, 0.015, 0.045], at([-0.51 + i * 0.115, 1.105, 0.31]), i < 3 ? P.accent : P.edge, i < 3 ? 0.7 : 0, [0, yaw, 0]);
+      for (let s of [-1, 1]) {
+        this.box([0.085, 0.018, 0.065], at([s * (w / 2 - 0.23), 1.106, 0.2]), P.amber, 0.65, [0, yaw, 0]);
+        this.box([0.055, 0.075, 0.055], at([s * (w / 2 - 0.23), 1.14, 0.35]), P.dark, 0, [0, yaw, 0]);
+      }
+      let cp = at([0, 0, 1.05]);
+      this.chair(...cp, yaw);
+      if (crew) this.person(...cp, yaw, true);
+      this.obstacles.push({ x, z, rx: w / 2, rz: 0.6 });
+      this.use(old);
+      return this;
+    }
+    rail(a, b, y, color = this.P.metal, glass = false) {
+      let old = this.group;
+      this.use("trim");
+      let len = V.length(V.sub(b, a)), n = Math.ceil(len / 2.4);
+      for (let i = 0; i <= n; i++) {
+        let p = a.map((v, k) => mix(v, b[k], i / n));
+        this.beam([p[0], y, p[2]], [p[0], y + 1.05, p[2]], 0.047, color);
+      }
+      this.beam([a[0], y + 1.04, a[2]], [b[0], y + 1.04, b[2]], 0.07, color);
+      this.beam([a[0], y + 0.17, a[2]], [b[0], y + 0.17, b[2]], 0.037, color);
+      if (glass) {
+        this.use("glass");
+        this.g.quad([a[0], y + 0.2, a[2]], [b[0], y + 0.2, b[2]], [b[0], y + 0.97, b[2]], [a[0], y + 0.97, a[2]], this.P.accent, 0.1);
+      }
+      this.use(old);
+      return this;
+    }
+    stairs(x, z, w, count, rise, run, y0 = 0) {
+      let old = this.group;
+      this.use("floor");
+      for (let i = 0; i < count; i++) {
+        this.solid([w, (i + 1) * rise, run + 0.012], [x, y0 + (i + 1) * rise / 2, z + i * run], this.P.floor, [0, 0, 0], 0.02);
+        this.box([w - 0.14, 0.021, 0.04], [x, y0 + (i + 1) * rise + 0.012, z + i * run - run * 0.36], this.P.accent, 0.7);
+      }
+      this.use(old);
+      return this;
+    }
+    tiles(w, z0, z1, y = 0, step = 1.8) {
+      let old = this.group;
+      this.use("floor");
+      this.box([w, 0.24, z1 - z0], [0, y - 0.12, (z0 + z1) / 2], this.P.dark);
+      for (let x = -w / 2 + step / 2; x < w / 2; x += step) for (let z = z0 + step / 2; z < z1; z += step) {
+        this.box([Math.min(step - 0.045, w / 2 - x + step / 2 - 0.05), 0.022, Math.min(step - 0.045, z1 - z + step / 2 - 0.05)], [x, y + 0.011, z], this.P.floor);
+        if ((Math.round((x + w / 2) / step) + Math.round((z - z0) / step)) % 3 === 0) {
+          this.box([0.07, 6e-3, 0.18], [x - step * 0.34, y + 0.026, z - step * 0.33], this.P.metal);
+        }
+      }
+      this.use(old);
+      return this;
+    }
+    door(x, y, z, w, h, yaw = 0) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p);
+      this.use("walls");
+      this.solid([w + 0.75, h + 0.48, 0.32], at([0, h / 2, 0]), P.dark, [0, yaw, 0], 0.1);
+      for (let s of [-1, 1]) {
+        this.solid([w / 2 - 0.035, h - 0.15, 0.11], at([s * w / 4, h / 2, 0.21]), P.metal, [0, yaw, 0], 0.065);
+        this.solid([w * 0.27, h * 0.61, 0.042], at([s * w * 0.26, h * 0.5, 0.286]), P.panel, [0, yaw, 0], 0.045);
+        this.box([0.024, h * 0.84, 0.032], at([s * (w / 2 + 0.13), h / 2, 0.21]), P.accent, 0.95, [0, yaw, 0]);
+      }
+      this.label(at([0, h + 0.12, 0.22]), w, 0.28, [0, yaw, 0], 3);
+      this.label(at([0, h * 0.65, 0.312]), w * 0.56, 0.31, [0, yaw, 0], 8);
+      this.use(old);
+      return this;
+    }
+    cabinet(x, y, z, yaw = 0) {
+      let old = this.group, P = this.P, m = M.compose([x, y, z], [0, yaw, 0]), at = (p) => M.transform(m, p);
+      this.use("furniture");
+      this.solid([1.25, 2.25, 0.65], at([0, 1.125, 0]), P.dark, [0, yaw, 0], 0.075);
+      this.solid([1.1, 2.09, 0.05], at([0, 1.14, 0.34]), P.panel, [0, yaw, 0], 0.035);
+      for (let i = 0; i < 8; i++) this.box([0.8, 0.045, 0.025], at([0, 0.48 + i * 0.083, 0.381]), P.black, 0, [0, yaw, 0]);
+      this.panel(at([0, 1.66, 0.41]), 0.72, 0.31, [0, yaw, 0], 2);
+      this.box([0.045, 0.45, 0.048], at([0.44, 1.28, 0.4]), P.metal, 0, [0, yaw, 0]);
+      this.use(old);
+      return this;
+    }
+    window(a, b, bottom, top) {
+      let old = this.group, P = this.P;
+      this.use("walls");
+      this.beam([a[0], bottom - 0.1, a[1]], [b[0], bottom - 0.1, b[1]], 0.34, P.metal, 0, 0.38);
+      this.beam([a[0], top + 0.1, a[1]], [b[0], top + 0.1, b[1]], 0.4, P.panel, 0, 0.4);
+      this.beam([a[0], bottom, a[1]], [a[0], top, a[1]], 0.19, P.dark, 0, 0.3);
+      this.beam([a[0], bottom, a[1]], [a[0], top, a[1]], 0.047, P.edge, 0, 0.33);
+      this.use("glass");
+      this.g.quad([a[0], bottom, a[1]], [b[0], bottom, b[1]], [b[0], top, b[1]], [a[0], top, a[1]], P.accent, 0);
+      this.use(old);
+      return this;
+    }
+    holo(x, y, z, r = 1) {
+      let old = this.group, P = this.P;
+      this.use("holo");
+      for (let j = 1; j < 6; j++) {
+        let a = j / 6 * Math.PI, rr = Math.sin(a) * r, yy = y + Math.cos(a) * r;
+        this.ring(rr - 0.012, rr + 0.012, yy, 0.012, x, z, P.accent, 1, 0, TAU, 64);
+      }
+      for (let k = 0; k < 6; k++) {
+        let a = k / 6 * Math.PI;
+        for (let i = 0; i < 60; i++) {
+          let p = i / 60 * TAU, q = (i + 1) / 60 * TAU;
+          this.beam([x + Math.cos(a) * Math.cos(p) * r, y + Math.sin(p) * r, z + Math.sin(a) * Math.cos(p) * r], [x + Math.cos(a) * Math.cos(q) * r, y + Math.sin(q) * r, z + Math.sin(a) * Math.cos(q) * r], 0.012, P.accent, 1);
+        }
+      }
+      this.ring(r * 1.15, r * 1.15 + 0.025, y - r * 0.45, 0.016, x, z, P.accent, 1);
+      const rnd = seeded(870);
+      for (let i = 0; i < 23; i++) {
+        let a = rnd() * TAU, b = rnd() * Math.PI, rr = r * (0.65 + rnd() * 0.45);
+        this.sphere([x + Math.cos(a) * Math.sin(b) * rr, y + Math.cos(b) * rr, z + Math.sin(a) * Math.sin(b) * rr], r * 0.028, i % 4 === 0 ? P.amber : P.white, 0.9);
+      }
+      this.use(old);
+      return this;
+    }
+    table(x, y, z, r = 1.5, globe = true) {
+      let old = this.group, P = this.P;
+      this.use("furniture");
+      this.cylinder(r * 0.72, 0.55, [x, y, z], P.dark, 8);
+      this.cylinder(r, 0.22, [x, y + 0.55, z], P.metal, 8);
+      this.cylinder(r * 0.91, 0.035, [x, y + 0.786, z], P.black, 48);
+      this.ring(r * 0.78, r * 0.8, y + 0.83, 0.014, x, z, P.accent, 0.7);
+      this.ring(r * 0.96, r * 0.98, y + 0.76, 0.025, x, z, P.accent, 0.9);
+      for (let i = 0; i < 8; i++) {
+        let a = i / 8 * TAU;
+        this.panel([x + Math.sin(a) * r * 0.85, y + 0.9, z + Math.cos(a) * r * 0.85], r * 0.44, r * 0.22, [-1.08, a, 0], i % 8);
+      }
+      if (globe) this.holo(x, y + 1.5, z, r * 0.43);
+      this.use(old);
+      return this;
+    }
+  }
+  function buildInterior(id) {
+    const s = INTERIOR_SPECS[id], b = new InteriorBuilder(s), P = b.P;
+    if (id === 0) {
+      b.tiles(3.6, -3.8, 2, 0, 0.6);
+      b.use("walls").solid([3.6, 1.08, 0.22], [0, 0.54, -3.66], P.dark);
+      b.solid([3.6, 3, 0.22], [0, 1.5, 1.93], P.panel);
+      for (let side of [-1, 1]) {
+        b.solid([0.2, 1.3, 5.6], [side * 1.74, 0.65, -0.9], P.dark);
+        b.solid([0.2, 2.1, 1.1], [side * 1.72, 1.8, 1.28], P.panel);
+        b.window([side * 1.66, -3.3], [side * 1.74, -0.6], 1.19, 2.6);
+        b.window([side * 1.74, -0.6], [side * 1.7, 1.02], 1.18, 2.58);
+        b.use("roof").beam([side * 1.72, 0.95, -2.7], [side * 0.78, 2.7, -1.9], 0.1, P.metal);
+        b.beam([side * 0.78, 2.7, -1.9], [side * 0.88, 2.7, 1.15], 0.08, P.metal);
+        b.use("trim").beam([side * 1.58, 0.35, -3.25], [side * 1.58, 0.35, 1.6], 0.024, P.accent, 0.8);
+      }
+      b.window([-1.66, -3.3], [0, -3.75], 1.13, 2.6);
+      b.window([0, -3.75], [1.66, -3.3], 1.13, 2.6);
+      b.use("roof").solid([1.95, 0.16, 3.6], [0, 2.85, -0.35], P.dark);
+      for (let x of [-0.75, 0.75]) b.box([0.03, 0.02, 2], [x, 2.756, -0.25], P.white, 0.9);
+      b.use("furniture").solid([3.24, 0.38, 0.65], [0, 0.78, -2.52], P.dark);
+      for (let i = 0; i < 3; i++) b.panel([(i - 1) * 0.83, 1.02, -2.29], 0.72, 0.45, [-0.35, 0, 0], i);
+      for (let side of [-1, 1]) {
+        b.solid([0.62, 0.64, 2.2], [side * 1.12, 0.52, -0.71], P.metal);
+        b.solid([0.52, 0.09, 2.05], [side * 1.12, 0.9, -0.72], P.black);
+        b.panel([side * 1.12, 0.99, -1.48], 0.38, 0.62, [-1.2, 0, 0], side < 0 ? 3 : 2);
+        for (let i = 0; i < 7; i++) b.box([0.045, 0.026, 0.07], [side * 1.12 + (i % 2 - 0.5) * 0.14, 0.957, -0.6 + Math.floor(i / 2) * 0.19], i % 3 === 0 ? P.amber : P.accent, 0.6);
+        b.cylinder(0.045, 0.16, [side * 0.94, 1, -0.32], P.dark, 12);
+        b.solid([0.08, 0.17, 0.1], [side * 0.94, 1.18, -0.3], P.dark, [0.18, 0, side * 0.15]);
+      }
+      b.use("glass");
+      for (let side of [-1, 1]) {
+        b.g.quad([side * 1.74, 2.6, -1.9], [side * 0.9, 2.77, -1.9], [side * 0.9, 2.77, 1.15], [side * 1.74, 2.6, 1.15], P.accent);
+        b.g.quad([side * 1.66, 2.6, -3.3], [0, 2.6, -3.75], [side * 0.9, 2.77, -1.9], [side * 1.74, 2.6, -1.9], P.accent);
+      }
+      b.chair(0, 0, 0.78, 0, 1.12, true);
+      b.door(0, 0, 1.76, 1.12, 2.3, Math.PI);
+      b.label([0, 2.59, -2.7], 1.2, 0.16, [0, 0, 0], 0);
+      b.use("furniture").box([0.62, 0.1, 0.43], [0, 0.14, -0.86], P.dark);
+      for (let side of [-1, 1]) b.solid([0.21, 0.07, 0.34], [side * 0.19, 0.29, -0.83], P.metal, [-0.4, 0, 0]);
+    }
+    if (id === 1) {
+      b.tiles(24, -18, 10, 0, 1.8);
+      b.use("floor").solid([10, 1.1, 4.8], [0, 0.55, 7.6], P.floor, [0, 0, 0], 0.13);
+      b.stairs(0, 3.28, 4.6, 5, 0.22, 0.4);
+      for (let side of [-1, 1]) {
+        b.rail([side * 2.65, 0, 5.4], [side * 2.65, 0, 9.8], 1.1, P.metal, true);
+        b.rail([side * 2.7, 0, 5.23], [side * 4.85, 0, 5.23], 1.1, P.metal, true);
+        b.use("trim").box([0.034, 0.02, 17], [side * 2.4, 0.039, -4.85], P.accent, 0.9);
+        b.box([0.055, 0.02, 4.2], [side * 4.55, 1.117, 7.55], P.accent, 0.8);
+        b.use("walls").solid([0.45, 7.5, 24], [side * 12, 3.65, -2], P.dark);
+        for (let z of [-10.6, -4.6, 1.4, 7.4]) {
+          b.solid([0.2, 4.7, 5.45], [side * 11.7, 3.15, z], P.panel);
+          b.solid([0.24, 0.75, 5.1], [side * 11.55, 1.05, z], P.metal);
+          b.beam([side * 11.55, 0.2, z - 2.75], [side * 11.55, 6.9, z - 2.75], 0.24, P.dark);
+          b.use("trim").beam([side * 11.36, 5.63, z - 2.25], [side * 11.36, 5.63, z + 2.2], 0.035, P.white, 0.9);
+          b.use("walls");
+        }
+        b.window([side * 10, -18], [side * 12, -13], 1.5, 6.5);
+        for (let j = 0; j < 3; j++) {
+          let z = -8.2 + j * 5.15;
+          b.station(side * 6.1, 0, z, side * -0.15, j * 2 + (side > 0 ? 1 : 0), j !== 1, 2.6);
+        }
+        b.station(side * 3.6, 0, -13.4, side * -0.12, 0, true, 2.45);
+        b.cabinet(side * 10.85, 0, 5.2, side === 1 ? -Math.PI / 2 : Math.PI / 2);
+        b.cabinet(side * 10.85, 0, 7.3, side === 1 ? -Math.PI / 2 : Math.PI / 2);
+        b.person(side * 9.15, 0, 1.2, side === 1 ? -Math.PI / 2 : Math.PI / 2, false);
+      }
+      for (let i = 0; i < 5; i++) b.window([-10 + i * 4, -18], [-6 + i * 4, -18], 1.5, 6.5);
+      b.use("walls").solid([24, 1.3, 0.48], [0, 0.62, -18], P.metal);
+      b.solid([24, 7.5, 0.5], [0, 3.65, 10], P.panel);
+      b.door(0, 1.1, 9.64, 3, 4.2, Math.PI);
+      for (let x of [-7.2, 7.2]) {
+        b.panel([x, 3.9, 9.7], 4.2, 1.95, [0, Math.PI, 0], 5);
+        b.label([x, 6.1, 9.65], 4, 0.45, [0, Math.PI, 0], x < 0 ? 4 : 5);
+      }
+      b.use("roof").solid([24, 0.45, 28], [0, 7.45, -4], P.dark);
+      for (let z of [-13, -6, 1, 8]) {
+        b.solid([23, 0.34, 0.48], [0, 6.95, z], P.metal);
+        for (let side of [-1, 1]) {
+          b.beam([side * 11.6, 5.6, z], [side * 9, 7.07, z], 0.28, P.metal);
+          b.box([7.6, 0.04, 0.1], [side * 5.1, 6.745, z], P.white, 0.94);
+          b.solid([2.6, 0.32, 1.2], [side * 6.8, 7.02, z + 2.5], P.panel);
+        }
+      }
+      b.use("roof").box([2.8, 0.16, 23], [0, 7.05, -4], P.metal);
+      for (let z = -14; z < 6; z += 2) b.box([0.9, 0.024, 0.65], [0, 6.957, z], P.dark);
+      b.table(0, 0.02, -3.1, 1.55, true);
+      b.chair(0, 1.1, 8.42, 0, 1.18, true);
+      b.station(-3.65, 1.1, 7.05, 0, 4, false, 1.5);
+      b.station(3.65, 1.1, 7.05, 0, 2, true, 1.5);
+      b.label([0, 6.7, -17.68], 4.2, 0.48, [0, 0, 0], 1);
+      b.label([0, 0.048, 1.25], 3.6, 1, [-Math.PI / 2, 0, 0], 6);
+      for (let side of [-1, 1]) b.label([side * 10.1, 3.65, -15], 1.65, 0.6, [0, -side * 0.55, 0], side < 0 ? 4 : 5);
+    }
+    if (id === 2) {
+      P.panel = rgb(8948359);
+      P.pale = rgb(12894902);
+      P.floor = rgb(3160126);
+      P.metal = rgb(5529188);
+      b.tiles(64, -45, 25, 0, 3.2);
+      b.use("floor").solid([8, 2.15, 44], [0, 1.075, -10], P.floor, [0, 0, 0], 0.16);
+      b.solid([16, 4.55, 14], [0, 2.275, 18], P.floor, [0, 0, 0], 0.22);
+      b.stairs(0, 8, 8, 8, 0.3, 0.5, 2.15);
+      b.stairs(0, -35.8, 8, 7, 2.15 / 7, 0.47, 0);
+      for (let side of [-1, 1]) {
+        b.use("trim").beam([side * 3.84, 2.21, -31], [side * 3.84, 2.21, 9], 0.048, P.accent, 0.95);
+        b.rail([side * 4.25, 0, -30], [side * 4.25, 0, 7.5], 2.15, P.metal, true);
+        b.rail([side * 7.8, 0, 11.5], [side * 7.8, 0, 24], 4.55, P.metal, true);
+        b.use("floor").solid([9.5, 0.62, 51], [side * 27.25, 7.12, -1], P.metal, [0, 0, 0], 0.15);
+        b.rail([side * 22.55, 0, -26.2], [side * 22.55, 0, 24], 7.44, P.pale, true);
+        b.use("trim").beam([side * 22.51, 7.3, -26], [side * 22.51, 7.3, 24], 0.09, P.accent, 0.95);
+        b.use("walls").solid([0.7, 22, 61], [side * 32, 10.85, -5.5], P.dark);
+        for (let z of [-24, -10, 4, 18]) {
+          b.use("walls").solid([0.25, 5.9, 12.6], [side * 31.47, 3.18, z], P.panel);
+          b.solid([0.38, 10.5, 12.4], [side * 31.5, 14.3, z], P.panel);
+          b.beam([side * 31, 0.1, z - 6.6], [side * 31, 18.2, z - 6.6], 0.65, P.metal);
+          b.beam([side * 31, 18.2, z - 6.6], [side * 24, 21.2, z - 6.6], 0.6, P.metal);
+          b.use("trim").beam([side * 30.95, 18.25, z - 6.65], [side * 24, 21.2, z - 6.65], 0.06, P.accent, 0.9);
+          b.panel([side * 31.03, 12.4, z], 8.8, 3.2, [0, side === 1 ? -Math.PI / 2 : Math.PI / 2, 0], 5);
+        }
+        b.window([side * 26, -45], [side * 32, -34], 3.4, 18.2);
+        for (let row = 0; row < 4; row++) {
+          let z = -24 + row * 9.3;
+          for (let col = 0; col < 2; col++) {
+            let x = side * (9.5 + col * 8);
+            b.station(x, 0, z, side * -0.1, (row * 2 + col) % 8, row % 2 === 0 || col === 1, 3.1);
+          }
+          b.station(side * 27.4, 7.44, z + 3, side === 1 ? -0.4 : 0.4, (row + 4) % 8, row % 2 === 0, 2.65);
+        }
+        for (let z of [-23, -5, 13]) {
+          b.use("walls").solid([0.9, 6.6, 1], [side * 25, 3.3, z], P.metal);
+          b.use("trim").box([0.94, 0.08, 1.04], [side * 25, 6.35, z], P.accent, 0.8);
+        }
+        b.stairs(side * 18.6, 12.8, 4, 15, 7.44 / 15, 0.73, 0);
+        b.rail([side * 20.65, 0, 12.6], [side * 20.65, 0, 23.4], 0, P.metal, false);
+        b.cabinet(side * 30, 7.44, 20, Math.PI);
+        b.person(side * 22.9, 7.44, 3, side === 1 ? -Math.PI / 2 : Math.PI / 2, false);
+      }
+      for (let i = 0; i < 5; i++) b.window([-26 + i * 52 / 5, -45], [-26 + (i + 1) * 52 / 5, -45], 3.4, 18.2);
+      b.use("walls").solid([64, 3.2, 0.65], [0, 1.5, -45], P.metal);
+      b.solid([64, 22, 0.75], [0, 10.85, 25], P.dark);
+      for (let side of [-1, 1]) {
+        b.solid([19, 17, 0.2], [side * 19.6, 11.3, 24.52], P.panel);
+        b.panel([side * 19.6, 13.7, 24.33], 13, 5.2, [0, Math.PI, 0], 5);
+        b.label([side * 19.5, 18.8, 24.3], 13, 1.2, [0, Math.PI, 0], side < 0 ? 10 : 11);
+      }
+      b.door(0, 4.55, 24.42, 6.5, 8.1, Math.PI);
+      b.label([0, 19.5, 24.4], 13, 1.3, [0, Math.PI, 0], 2);
+      b.use("roof").solid([64, 0.8, 70], [0, 21.9, -10], P.dark);
+      for (let z of [-32, -16, 0, 16]) {
+        b.solid([49, 0.75, 0.85], [0, 20.75, z], P.metal);
+        for (let side of [-1, 1]) {
+          b.beam([side * 30, 17.8, z], [side * 24, 20.75, z], 0.7, P.metal);
+          b.box([17, 0.08, 0.2], [side * 13.5, 20.31, z], P.white, 0.95);
+          b.box([2, 0.08, 0.2], [side * 3, 20.31, z], P.accent, 1);
+        }
+      }
+      b.use("roof").box([5, 0.5, 61], [0, 21.13, -10], P.metal);
+      for (let z = -32; z < 15; z += 5) b.box([3.8, 0.05, 1.5], [0, 20.845, z], P.panel);
+      b.ring(5.7, 6.1, 17.9, 0.5, 0, -13, P.metal, 0);
+      b.ring(5.77, 5.85, 17.82, 0.07, 0, -13, P.accent, 1);
+      for (let side of [-1, 1]) b.beam([side * 4, 18.1, -13], [side * 5.5, 21, -13], 0.22, P.metal);
+      b.table(0, 2.15, -13, 3.65, true);
+      b.table(-14.5, 0, -32.5, 2.3, false);
+      b.table(14.5, 0, -32.5, 2.3, false);
+      b.chair(0, 4.55, 21.7, 0, 1.5, true);
+      for (let side of [-1, 1]) {
+        b.station(side * 5.3, 4.55, 17.8, side * -0.1, side < 0 ? 4 : 1, true, 2.4);
+        b.person(side * 7, 4.55, 23, 0, false);
+      }
+      b.label([0, 19.45, -44.5], 15, 1.45, [0, 0, 0], 2);
+      b.label([0, 2.19, -3.8], 6, 1.5, [-Math.PI / 2, 0, 0], 6);
+      b.label([0, 4.59, 15.4], 7, 1.5, [-Math.PI / 2, 0, 0], 12);
+    }
+    if (id === 3) {
+      P.panel = rgb(4346202);
+      P.floor = rgb(2700347);
+      P.accent = rgb(13997161);
+      b.tiles(18, -14, 9, 0, 1.7);
+      b.use("floor").solid([8, 0.9, 4], [0, 0.45, 7], P.floor, [0, 0, 0], 0.12);
+      b.stairs(0, 3.5, 4, 5, 0.18, 0.32);
+      b.use("walls").solid([18, 6, 0.6], [0, 3, -14], P.dark);
+      b.solid([18, 6, 0.6], [0, 3, 9], P.panel);
+      b.door(0, 0.9, 8.61, 2.7, 3.7, Math.PI);
+      for (let side of [-1, 1]) {
+        b.use("walls").solid([0.5, 6, 23], [side * 9, 3, -2.5], P.dark);
+        for (let z = -11; z < 8; z += 4.5) {
+          b.solid([0.16, 4.6, 3.96], [side * 8.68, 2.8, z], P.panel);
+          b.beam([side * 8.4, 0.2, z - 2], [side * 8.4, 4.5, z - 2], 0.35, P.metal);
+          b.beam([side * 8.4, 4.5, z - 2], [side * 6.7, 5.6, z - 2], 0.34, P.metal);
+          b.use("trim").beam([side * 8.31, 1.1, z - 1.7], [side * 8.31, 1.1, z + 1.7], 0.035, P.accent, 0.9);
+          b.use("walls");
+        }
+        b.cabinet(side * 7.85, 0, 6.8, Math.PI);
+        for (let i = 0; i < 3; i++) b.station(side * 5.35, 0, -8 + i * 4.3, side * -0.35, (i + 2) % 8, i !== 1, 2.25);
+        b.rail([side * 3.85, 0, 5], [side * 3.85, 0, 8.65], 0.9, P.metal, true);
+        b.use("trim").box([0.04, 0.021, 15], [side * 2.7, 0.03, -3.6], P.accent, 0.8);
+      }
+      b.panel([0, 3.7, -13.52], 8.5, 3, [0, 0, 0], 5);
+      b.panel([-6.3, 3.5, -13.52], 3.45, 2.6, [0, 0.08, 0], 2);
+      b.panel([6.3, 3.5, -13.52], 3.45, 2.6, [0, -0.08, 0], 6);
+      b.label([0, 5.5, -13.49], 6, 0.46, [0, 0, 0], 9);
+      b.table(0, 0, -2.9, 2.1, true);
+      b.chair(0, 0.9, 7.6, 0, 1.16, true);
+      b.use("roof").solid([18, 0.5, 23], [0, 6.1, -2.5], P.dark);
+      for (let z of [-10, -5, 0, 5]) {
+        b.solid([14.8, 0.32, 0.45], [0, 5.65, z], P.metal);
+        for (let side of [-1, 1]) b.box([5, 0.04, 0.095], [side * 4.1, 5.464, z], P.white, 0.85);
+      }
+      b.use("roof").ring(2.45, 2.8, 4.75, 0.28, 0, -2.9, P.metal);
+      b.ring(2.52, 2.59, 4.68, 0.025, 0, -2.9, P.accent, 1);
+      for (let side of [-1, 1]) b.beam([side * 2.6, 4.94, -2.9], [side * 3.2, 6, -2.9], 0.15, P.metal);
+      b.label([0, 0.04, 1.4], 4.5, 0.9, [-Math.PI / 2, 0, 0], 13);
+    }
+    if (id === 4) {
+      P.panel = rgb(12437188);
+      P.pale = rgb(13949394);
+      P.dark = rgb(3162443);
+      P.floor = rgb(5399403);
+      P.metal = rgb(8886430);
+      b.use("floor").cylinder(14, 0.3, [0, -0.3, 0], P.dark, 96);
+      b.cylinder(13.7, 0.025, [0, 0, 0], P.floor, 96);
+      b.ring(10.65, 10.7, 0.039, 0.014, 0, 0, P.accent, 0.9);
+      b.ring(5.4, 5.44, 0.04, 0.016, 0, 0, P.pale, 0.1);
+      b.ring(2.9, 2.93, 0.051, 0.02, 0, -2, P.accent, 0.9);
+      for (let i = 0; i < 24; i++) {
+        let a = i / 24 * TAU;
+        b.beam([Math.cos(a) * 5.5, 0.036, Math.sin(a) * 5.5], [Math.cos(a) * 13.6, 0.036, Math.sin(a) * 13.6], 0.028, P.metal);
+      }
+      for (let i = 0; i < 20; i++) {
+        let a = Math.PI * 0.12 + i / 20 * Math.PI * 1.76, c = Math.PI * 0.12 + (i + 1) / 20 * Math.PI * 1.76;
+        let p = [Math.sin(a) * 13.72, Math.cos(a) * 13.72], q = [Math.sin(c) * 13.72, Math.cos(c) * 13.72];
+        b.window(p, q, 0.94, 6.1);
+        b.use("walls").beam([p[0], 0.4, p[1]], [q[0], 0.4, q[1]], 0.9, P.panel, 0, 0.8);
+        if (i % 4 === 0) {
+          b.use("roof").beam([p[0], 6.07, p[1]], [Math.sin(a) * 5, 8.45, Math.cos(a) * 5], 0.16, P.metal);
+          b.use("trim").beam([Math.sin(a) * 13.5, 6.2, Math.cos(a) * 13.5], [Math.sin(a) * 5, 8.36, Math.cos(a) * 5], 0.026, P.white, 0.95);
+        }
+      }
+      b.use("glass");
+      for (let i = 0; i < 64; i++) {
+        let a = i / 64 * TAU, c = (i + 1) / 64 * TAU;
+        b.g.quad([Math.cos(a) * 13.72, 6.12, Math.sin(a) * 13.72], [Math.cos(c) * 13.72, 6.12, Math.sin(c) * 13.72], [Math.cos(c) * 4.75, 8.5, Math.sin(c) * 4.75], [Math.cos(a) * 4.75, 8.5, Math.sin(a) * 4.75], P.accent);
+      }
+      b.use("roof").ring(4.7, 5.25, 8.27, 0.28, 0, 0, P.panel);
+      b.ring(4.85, 4.9, 8.23, 0.025, 0, 0, P.accent, 1);
+      b.use("glass");
+      for (let i = 0; i < 64; i++) {
+        let a = i / 64 * TAU, c = (i + 1) / 64 * TAU;
+        b.g.tri([0, 8.82, 0], [Math.cos(a) * 4.75, 8.5, Math.sin(a) * 4.75], [Math.cos(c) * 4.75, 8.5, Math.sin(c) * 4.75], P.accent);
+      }
+      b.use("walls").solid([9.8, 6.8, 0.4], [0, 3.4, 12.83], P.panel);
+      b.door(0, 0, 12.55, 2.4, 3.8, Math.PI);
+      for (let side of [-1, 1]) {
+        b.panel([side * 3.45, 2.95, 12.51], 2.2, 1.45, [0, Math.PI, 0], side < 0 ? 2 : 6);
+        b.cabinet(side * 5.3, 0, 10.3, side > 0 ? -0.5 : 0.5);
+      }
+      b.use("furniture").ring(8.4, 9.6, 0.62, 0.48, 0, 0, P.panel, 0, Math.PI * 1.13, Math.PI * 1.87, 44);
+      b.ring(8.55, 9.42, 1.12, 0.06, 0, 0, P.black, 0, Math.PI * 1.13, Math.PI * 1.87, 44);
+      for (let i = 0; i < 7; i++) {
+        if (i === 3) continue;
+        let a = Math.PI * 1.2 + i / 6 * Math.PI * 0.6, x = Math.cos(a) * 9, z = Math.sin(a) * 9, yaw = Math.atan2(-x, -z);
+        b.panel([x, 1.58, z], 1.4, 0.65, [-0.36, yaw, 0], i % 8);
+        let cx = Math.cos(a) * 7.7, cz = Math.sin(a) * 7.7;
+        b.chair(cx, 0, cz, yaw);
+        if (i % 2 === 0) b.person(cx, 0, cz, yaw, true);
+      }
+      for (let side of [-1, 1]) {
+        b.station(side * 8.3, 0, 2.8, side * -0.9, 3, true, 2.6);
+        b.use("furniture").solid([1.8, 0.8, 2], [side * 6.25, 0.4, 7.9], P.panel, [0, side * 0.25, 0], 0.17);
+        b.panel([side * 6.25, 1.02, 7.7], 1.4, 0.85, [-1, side * 0.25, 0], 2);
+      }
+      b.use("floor").cylinder(2.55, 0.83, [0, 0, 8], P.panel, 64);
+      b.cylinder(2.42, 0.026, [0, 0.83, 8], P.floor, 64);
+      b.ring(2.47, 2.5, 0.66, 0.045, 0, 8, P.accent, 1);
+      b.stairs(0, 4.66, 2.5, 4, 0.83 / 4, 0.3);
+      b.chair(0, 0.85, 8.7, 0, 1.2, true);
+      b.label([0, 6.3, 12.53], 5, 0.57, [0, Math.PI, 0], 14);
+      b.label([0, 0.053, 2], 3.6, 0.8, [-Math.PI / 2, 0, 0], 15);
+    }
+    if (id === 1 || id === 2) {
+      const flag = id === 2, base = flag ? 4.23 : 0.9, z = flag ? 15.65 : 4.7, cw = flag ? 1.9 : 1.45, cx = flag ? 2.4 : 1.7;
+      for (let side of [-1, 1]) {
+        let rot = [0, side * -0.13, 0];
+        b.use("furniture").solid([cw, 0.87, 0.87], [side * cx, base + 0.435, z + 0.12], P.dark, rot, 0.11);
+        b.solid([cw + 0.13, 0.15, 1.02], [side * cx, base + 0.95, z], P.metal, rot, 0.085);
+        b.solid([cw - 0.09, 0.04, 0.89], [side * cx, base + 1.045, z], P.black, rot, 0.02);
+        b.panel([side * cx, base + 1.38, z - 0.27], cw - 0.2, 0.56, [-0.4, side * -0.13, 0], side < 0 ? 0 : 6);
+        for (let i = 0; i < 8; i++) b.box([0.065, 0.022, 0.075], [side * cx - 0.6 + i * 0.165, base + 1.082, z + 0.3], i % 3 === 0 ? P.amber : P.accent, i % 3 === 0 ? 0.8 : 0.5);
+        b.box([cw * 0.52, 0.034, 0.031], [side * cx, base + 0.65, z + 0.568], P.accent, 0.8);
+        b.use("trim").beam([side * (cx + cw * 0.46), base + 0.1, z + 0.49], [side * (cx + cw * 0.46), base + 0.83, z + 0.49], 0.028, P.edge);
+      }
+      for (let side of [-1, 1]) {
+        let yy = side > 0 ? -Math.PI / 2 : Math.PI / 2;
+        if (!flag) {
+          for (let z2 of [-10.6, -4.6, 1.4]) {
+            b.panel([side * 11.37, 3.2, z2 + 0.3], 3.4, 1.3, [0, yy, 0], z2 < 0 ? 6 : 2);
+            b.use("walls").solid([0.14, 0.45, 4.5], [side * 11.33, 1.82, z2], P.dark);
+            for (let k = 0; k < 14; k++) b.box([0.045, 0.26, 0.05], [side * 11.23, 1.84, z2 - 1.9 + k * 0.28], P.metal);
+            b.beam([side * 11.27, 0.3, z2 - 2.3], [side * 11.27, 5.3, z2 - 2.3], 0.12, P.edge);
+            b.label([side * 11.24, 4.36, z2 + 0.3], 2.7, 0.3, [0, yy, 0], side < 0 ? 4 : 5);
+          }
+        } else {
+          for (let z2 of [-24, -10, 4, 18]) {
+            b.use("walls").solid([0.25, 2.7, 11.3], [side * 31.1, 3.3, z2], P.dark);
+            b.panel([side * 30.92, 3.45, z2], 8.8, 2, [0, yy, 0], z2 < 0 ? 4 : 2);
+            for (let k = 0; k < 9; k++) b.box([0.13, 0.065, 0.65], [side * 30.8, 1.4, z2 - 4.3 + k * 1.04], P.edge);
+            b.beam([side * 30.7, 18.8, z2 - 5.9], [side * 22.4, 7.8, z2 - 5.9], 0.28, P.metal);
+            b.use("trim").beam([side * 30.62, 18.8, z2 - 5.95], [side * 22.32, 7.8, z2 - 5.95], 0.028, P.accent, 0.62);
+          }
+        }
+      }
+      if (flag) {
+        for (let side of [-1, 1]) for (let j = 0; j < 3; j++) b.station(side * (8 + j * 5), 0, -39.5, 0, (j + 2) % 8, j === 1, 3);
+      }
+    }
+    return { spec: s, groups: b.groups, obstacles: b.obstacles };
+  }
+  return () => buildInterior(4);
+})();
+var cabinVertex = `precision highp float;
+attribute vec3 aPosition; attribute vec3 aNormal; attribute vec3 aColor;
+attribute float aEmission; attribute float aTag; attribute vec2 aUV;
+uniform mat4 uModel,uVP;
+varying vec3 vWorld,vNormal,vColor,vLocal;varying float vEmission;varying vec2 vUV;
+void main(){vec4 world=uModel*vec4(aPosition,1.);vWorld=world.xyz;vNormal=mat3(uModel)*aNormal;vColor=aColor;vEmission=aEmission;vLocal=aPosition;vUV=aUV;gl_Position=uVP*world;}`;
+var cabinFragment = `precision highp float;
+varying vec3 vWorld,vNormal,vColor,vLocal;varying float vEmission;varying vec2 vUV;
+uniform vec3 uEye,uLight;uniform float uOpacity,uMode,uRoom,uTime,uLighting;
+uniform sampler2D uTexture,uCity;
+vec3 film(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}
+void main(){
+ vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;vec3 V=normalize(uEye-vWorld),L=normalize(uLight);float ndl=max(dot(N,L),0.);float alpha=uOpacity;vec3 color;
+ if(uMode>1.5&&uMode<3.5){vec4 tex=texture2D(uTexture,vUV);color=tex.rgb*(uMode<2.5?.96:.8);alpha*=tex.a;if(alpha<.005)discard;gl_FragColor=vec4(color,alpha);return;}
+ if(uMode>3.5&&uMode<4.5){float rim=pow(1.-abs(dot(N,V)),3.5);float day=max(.18,dot(N,L)*.6+.5);color=vec3(.16,.47,.85)*day;alpha*=rim*.47;gl_FragColor=vec4(color,alpha);return;}
+ vec3 base=pow(max(vColor,vec3(0.)),vec3(2.2));
+ if(uMode>.5&&uMode<1.5){vec3 n=normalize(vLocal);vec2 uv=vec2(atan(n.z,n.x)/6.2831853+.5,asin(n.y)/3.14159265+.5);vec3 tex=texture2D(uTexture,uv).rgb;base=pow(tex,vec3(2.2));float edge=pow(1.-max(dot(N,V),0.),4.);vec3 night=texture2D(uCity,uv).rgb;float nightMask=1.-smoothstep(-.08,.21,dot(N,L));color=base*(vec3(.025,.047,.085)+vec3(1.25,1.23,1.17)*ndl)+night*nightMask*.9;float water=smoothstep(.035,.12,tex.b-tex.r);color+=vec3(.27,.43,.57)*pow(max(dot(reflect(-L,N),V),0.),80.)*water*.21;color+=vec3(.05,.22,.47)*edge*(.4+ndl*.5);}
+ else{
+ float hemi=N.y*.5+.5;float spec=pow(max(dot(N,normalize(L+V)),0.),58.);float fresnel=pow(1.-max(dot(N,V),0.),4.);
+ if(uRoom>.5){
+ float windowFill=max(0.,dot(N,normalize(vec3(-.3,.4,-1.))));
+ float ambientOcclusion=.60+.40*smoothstep(-.2,2.5,vWorld.y);
+ color=base*(vec3(.26,.34,.43)*(.60+.5*hemi)*ambientOcclusion+vec3(.79,.86,.94)*ndl*.92+vec3(.20,.29,.35)*windowFill)*uLighting;
+ vec3 overhead=normalize(vec3(0.,8.,5.)-vWorld);color+=base*vec3(.3,.245,.19)*max(0.,dot(N,overhead))*uLighting;
+ color+=vec3(.17,.20,.22)*spec*.48+vec3(.014,.032,.042)*fresnel;
+ float glow=exp(-length((vWorld-vec3(-3.,2.5,-1.3))*vec3(.55,1.,.65))*1.25)+exp(-length((vWorld-vec3(3.,2.5,-1.3))*vec3(.55,1.,.65))*1.25);
+ color+=base*vec3(.10,.25,.30)*glow;
+ }else{color=base*(vec3(.10,.135,.18)+vec3(1.08,1.04,.91)*ndl)+vec3(.25,.29,.32)*spec*.6;}
+ color=mix(color,base*(1.5+vEmission*.7),clamp(vEmission,0.,1.));
+ }
+ color=pow(film(color),vec3(1./2.2));gl_FragColor=vec4(color,alpha);
+}`;
+
+// scripts/three-flight/fighter-console.js
+var fighterDisplays = [
+  { id: "contacts", pos: [-1.38, -0.73, -2.08], size: [0.52, 0.48], rotation: [-0.17, 0.32, 0] },
+  { id: "weapons", pos: [-0.72, -0.77, -2.18], size: [0.6, 0.48], rotation: [-0.17, 0.14, 0] },
+  { id: "radar", pos: [0, -0.76, -2.28], size: [0.66, 0.64], rotation: [-0.17, 0, 0] },
+  { id: "flight", pos: [0.72, -0.77, -2.18], size: [0.6, 0.48], rotation: [-0.17, -0.14, 0] },
+  { id: "systems", pos: [1.38, -0.73, -2.08], size: [0.52, 0.48], rotation: [-0.17, -0.32, 0] }
+];
+function consolePoint(panel, [x, y, z = 0]) {
+  const [pitch, yaw] = panel.rotation, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), yy = y * cp - z * sp, zz = y * sp + z * cp;
+  return [panel.pos[0] + x * cy + zz * sy, panel.pos[1] + yy, panel.pos[2] - x * sy + zz * cy];
+}
+var dot = (a, b) => a.reduce((sum, v, i) => sum + v * b[i], 0);
+var sub = (a, b) => a.map((v, i) => v - b[i]);
+function consoleIntersection(origin, direction, panels = fighterDisplays) {
+  let nearest = null;
+  for (const [index, p] of panels.entries()) {
+    const center = consolePoint(p, [0, 0, 3e-3]), right = sub(consolePoint(p, [1, 0, 3e-3]), center), up = sub(consolePoint(p, [0, 1, 3e-3]), center), normal = sub(consolePoint(p, [0, 0, 1.003]), center), den = dot(direction, normal);
+    if (den >= -1e-6) continue;
+    const distance = dot(sub(center, origin), normal) / den;
+    if (distance < 0) continue;
+    const delta = sub(origin.map((v2, i) => v2 + direction[i] * distance), center), u = dot(delta, right) / p.size[0] + 0.5, v = 0.5 - dot(delta, up) / p.size[1];
+    if (u < 0 || u > 1 || v < 0 || v > 1 || nearest && distance > nearest.distance) continue;
+    nearest = { index, surface: p.id, u, v, distance };
+  }
+  return nearest;
+}
+var C = { background: "#03111c", line: "#315b70", muted: "#7aa7ba", text: "#cfedf4", cyan: "#82d9f3", gold: "#edc78c", red: "#ff8b7f" };
+var number = (v) => Math.round(v || 0);
+var percent = (v) => Math.max(0, Math.min(100, number(v)));
+var angle = (v) => (Number(v || 0) * 180 / Math.PI).toFixed(1) + "\xB0";
+var weaponLabel = (s) => s?.reason === "unavailable" ? "\u672A\u88C5\u5907" : s?.reason === "cooldown" ? s.cooldown.toFixed(1) + " s" : s?.ready ? "\u5C31\u7EEA" : "\u5F85\u547D";
+var FighterConsole = class {
+  constructor(texture, panels = fighterDisplays) {
+    this.displays = panels.map((p) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 640;
+      canvas.height = p.height || (p.id === "radar" ? 640 : 480);
+      return { ...p, canvas, texture: texture(canvas), hits: [] };
+    });
+  }
+  update(state, time = 0) {
+    if (this.lastTime != null && time >= this.lastTime && time - this.lastTime < 1 / 30 && state?.name === this.state?.name) return;
+    this.lastTime = time;
+    this.state = state;
+    for (const d of this.displays) {
+      d.hits = [];
+      const c = d.canvas.getContext("2d"), h = d.canvas.height;
+      c.fillStyle = C.background;
+      c.fillRect(0, 0, 640, h);
+      c.strokeStyle = C.line;
+      c.lineWidth = 2;
+      c.strokeRect(10, 10, 620, h - 20);
+      const title = d.title || { contacts: "CONTACTS / \u7D22\u654C", weapons: "WEAPON SYSTEMS / \u6B66\u5668", radar: "TACTICAL SCAN / \u96F7\u8FBE", flight: "FLIGHT VECTOR / \u98DE\u884C", systems: "SYSTEM STATUS / \u7CFB\u7EDF" }[d.id];
+      this.text(c, title, 28, 49, 28, C.cyan);
+      this.line(c, 26, 70, 614, 70);
+      if (!state) {
+        this.text(c, "\u7B49\u5F85\u6218\u573A\u94FE\u8DEF", 28, 128, 32);
+        d.texture.needsUpdate = true;
+        continue;
+      }
+      this[d.id](c, d, state, time);
+      d.texture.needsUpdate = true;
+    }
+  }
+  text(c, text, x, y, size = 28, color = C.text, align = "left", maxWidth) {
+    c.fillStyle = color;
+    c.font = `${size}px "Bahnschrift","Microsoft YaHei",sans-serif`;
+    c.textAlign = align;
+    c.fillText(String(text), x, y, maxWidth);
+    c.textAlign = "left";
+  }
+  line(c, x, y, x2, y2) {
+    c.strokeStyle = C.line;
+    c.lineWidth = 1;
+    c.beginPath();
+    c.moveTo(x, y);
+    c.lineTo(x2, y2);
+    c.stroke();
+  }
+  bar(c, value, x, y, w, color = C.cyan) {
+    c.fillStyle = "#173443";
+    c.fillRect(x, y, w, 12);
+    c.fillStyle = color;
+    c.fillRect(x, y, w * percent(value) / 100, 12);
+  }
+  button(c, d, text, x, y, w, action, value, enabled = true) {
+    c.fillStyle = enabled ? "#123141" : "#0b1b25";
+    c.fillRect(x, y, w, 54);
+    c.strokeStyle = enabled ? "#5a8a9e" : "#25404e";
+    c.strokeRect(x, y, w, 54);
+    this.text(c, text, x + w / 2, y + 36, 28, enabled ? C.text : "#526e7c", "center");
+    if (enabled) d.hits.push({ x, y, w, h: 54, action, value });
+  }
+  contacts(c, d, s) {
+    const enemies = s.contacts.filter((v) => v.enemy), selected = enemies.find((v) => v.id === s.target), ordered = [...selected ? [selected] : [], ...enemies.filter((v) => v !== selected)].slice(0, 3);
+    if (!ordered.length) this.text(c, "\u65E0\u654C\u65B9\u63A5\u89E6", 30, 140, 30, C.muted);
+    ordered.forEach((v, i) => {
+      const y = 90 + i * 67;
+      c.fillStyle = v === selected ? "#35242b" : "#0a2130";
+      c.fillRect(24, y, 592, 59);
+      this.text(c, "\u25C7 " + v.name, 38, y + 37, 32, v === selected ? C.gold : C.text, "left", 394);
+      this.text(c, number(v.distance) + " m", 602, y + 37, 28, C.muted, "right");
+      if (!s.replay) d.hits.push({ x: 24, y, w: 592, h: 59, action: "select", value: String(v.id) });
+    });
+    this.button(c, d, "\u4E0B\u4E00\u76EE\u6807 \xB7 T", 25, 301, 275, "target", null, !s.replay && enemies.length > 0);
+    this.button(c, d, s.locked ? "\u89E3\u9664\u9501\u5B9A \xB7 X" : "\u9501\u5B9A\u5BF9\u51C6 \xB7 X", 315, 301, 300, "lock", null, s.manual && enemies.length > 0);
+    this.text(c, s.command || s.solution || "\u9009\u62E9\u76EE\u6807", 30, 399, 28, C.gold, "left", 580);
+    this.text(c, s.replay ? "REPLAY / \u53EA\u8BFB\u8BB0\u5F55" : s.manual ? "MANUAL / \u98DE\u884C\u63A7\u5236" : "AUTO / AI \u9A7E\u9A76", 30, 445, 26, C.muted);
+  }
+  weapons(c, d, s) {
+    this.text(c, s.weaponName || "\u4E3B\u6B66\u5668", 28, 118, 31, C.text, "left", 440);
+    this.text(c, weaponLabel(s.weapon), 608, 118, 28, C.cyan, "right");
+    this.text(c, `\u5C04\u7A0B ${number(s.weapon?.range)} m`, 28, 163, 28, C.muted);
+    this.button(c, d, "\u4E3B\u6B66\u5668\u5F00\u706B \xB7 SPACE", 26, 187, 588, "fire", null, s.manual && s.weapon?.reason !== "unavailable");
+    this.line(c, 26, 264, 614, 264);
+    this.text(c, "\u5BFC\u5F39", 28, 307, 29);
+    this.text(c, weaponLabel(s.missile), 608, 307, 26, s.missile?.reason === "unavailable" ? C.muted : C.gold, "right");
+    this.button(c, d, "\u5BFC\u5F39\u53D1\u5C04 \xB7 R", 26, 335, 588, "missile", null, s.manual && s.missile?.reason !== "unavailable");
+    this.text(c, s.solution || "", 28, 441, 26, C.muted, "left", 580);
+  }
+  radar(c, d, s, time) {
+    const cx = 320, cy = 337, r = 223;
+    c.strokeStyle = C.line;
+    c.lineWidth = 1.5;
+    for (const radius of [r / 3, r * 2 / 3, r]) {
+      c.beginPath();
+      c.arc(cx, cy, radius, 0, Math.PI * 2);
+      c.stroke();
+    }
+    this.line(c, cx - r, cy, cx + r, cy);
+    this.line(c, cx, cy - r, cx, cy + r);
+    const a = time * 0.8;
+    c.strokeStyle = "#62bfd848";
+    c.beginPath();
+    c.moveTo(cx, cy);
+    c.lineTo(cx + Math.sin(a) * r, cy - Math.cos(a) * r);
+    c.stroke();
+    for (const contact of s.contacts) {
+      const dx = contact.pos[0] - s.pos[0], dz = contact.pos[2] - s.pos[2], right = -dx * Math.cos(s.heading) + dz * Math.sin(s.heading), front = dx * Math.sin(s.heading) + dz * Math.cos(s.heading), range = Math.max(s.scanRange, Math.hypot(right, front)), x = cx + right / range * r, y = cy - front / range * r;
+      {
+        c.fillStyle = contact.enemy ? C.red : C.cyan;
+        c.beginPath();
+        c.moveTo(x, y - 7);
+        c.lineTo(x + 6, y + 6);
+        c.lineTo(x - 6, y + 6);
+        c.closePath();
+        c.fill();
+      }
+      if (contact.id === s.target) {
+        c.strokeStyle = C.gold;
+        c.strokeRect(x - 14, y - 14, 28, 28);
+      }
+      if (contact.enemy && !s.replay) d.hits.push({ x: x - 15, y: y - 15, w: 30, h: 30, action: "select", value: String(contact.id) });
+    }
+    c.fillStyle = C.text;
+    c.beginPath();
+    c.moveTo(cx, cy - 12);
+    c.lineTo(cx + 8, cy + 9);
+    c.lineTo(cx, cy + 4);
+    c.lineTo(cx - 8, cy + 9);
+    c.closePath();
+    c.fill();
+    this.text(c, "FRONT", cx, 100, 20, C.muted, "center");
+    this.text(c, number(s.scanRange) + " m", 608, 601, 28, C.cyan, "right");
+    this.text(c, "\u84DD / \u53CB\u65B9\u3000\u7EA2 / \u654C\u65B9", 28, 601, 28, C.muted);
+  }
+  flight(c, d, s) {
+    const rows = [["\u4FEF\u4EF0", angle(s.pitch)], ["\u6EDA\u8F6C", angle(s.roll)], ["\u76F8\u5BF9\u9AD8\u5EA6", number(s.altitude) + " m"], ["\u5782\u76F4\u901F\u5EA6", (Math.sin(s.pitch) * s.speed).toFixed(1) + " m/s"]];
+    rows.forEach(([name, value], i) => {
+      const y = 131 + i * 71;
+      this.text(c, name, 30, y, 28, C.muted);
+      this.text(c, value, 608, y, 34, C.text, "right");
+      this.line(c, 28, y + 20, 612, y + 20);
+    });
+    this.text(c, "Q / E  \u4FEF\u4EF0\u3000 A / D  \u6EDA\u8F6C", 30, 446, 26, C.cyan);
+  }
+  systems(c, d, s) {
+    [["ENG / \u6CB9\u95E8", s.throttle * 100, C.cyan], ["SHD / \u62A4\u76FE", s.shield, C.cyan], ["HULL / \u88C5\u7532", s.hull, C.gold]].forEach(([name, value, color], i) => {
+      const y = 123 + i * 87;
+      this.text(c, name, 30, y, 30, C.muted);
+      this.text(c, percent(value) + "%", 606, y, 32, color, "right");
+      this.bar(c, value, 30, y + 20, 576, color);
+    });
+    this.button(c, d, "\u2212 \u6CB9\u95E8", 26, 360, 280, "slower", null, s.manual);
+    this.button(c, d, "+ \u6CB9\u95E8", 322, 360, 292, "faster", null, s.manual);
+    this.text(c, "W / S   ENGINE THROTTLE", 30, 452, 26, C.muted);
+  }
+  pick(origin, direction) {
+    const hit = consoleIntersection(origin, direction, this.displays);
+    if (!hit) return null;
+    const d = this.displays[hit.index], x = hit.u * d.canvas.width, y = hit.v * d.canvas.height, control = d.hits.find((h) => x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h);
+    return { ...hit, ...control ? { action: control.action, value: control.value } : {} };
+  }
+  layout(project) {
+    return this.displays.map((d) => ({
+      id: d.id,
+      corners: [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]].map(([x, y]) => project(consolePoint(d, [x * d.size[0], y * d.size[1], 3e-3]))),
+      controls: d.hits.map((h) => ({ ...h, point: project(consolePoint(d, [(h.x + h.w / 2) / d.canvas.width * d.size[0] - d.size[0] / 2, d.size[1] / 2 - (h.y + h.h / 2) / d.canvas.height * d.size[1], 3e-3])) }))
+    }));
+  }
+};
+
+// scripts/three-flight/bridge-console.js
+var colors = { cyan: "#8bd9ee", gold: "#edc78c", muted: "#7aa7ba", text: "#cfedf4", red: "#ff8b7f" };
+var pct = (v) => Math.max(0, Math.min(100, Math.round(v || 0)));
+var reason = (w) => w?.reason === "unavailable" ? "\u672A\u88C5\u5907" : w?.reason === "cooldown" ? w.cooldown.toFixed(1) + " s" : w?.ready ? "\u5C31\u7EEA" : "\u5F85\u547D";
+var BridgeDisplays = class extends FighterConsole {
+  operations(c, d, s) {
+    if (s.carrier) {
+      const a = s.carrier, enabled = s.canCommand && !s.commandPending;
+      this.text(c, "\u65E0\u4EBA\u50DA\u673A\u6307\u6325", 28, 118, 32);
+      this.text(c, `${a.active} / ${a.capacity}`, 610, 120, 38, colors.cyan, "right");
+      this.text(c, `\u81EA\u52A8\u8865\u5145 \xB7 ${Math.ceil(a.nextWave || 0)} s`, 28, 164, 28, colors.muted);
+      this.text(c, `\u5168\u519B\u653B\u51FB +${Math.round((a.aura || 0) * 100)}%`, 610, 164, 26, colors.gold, "right");
+      for (const [i, [value, label]] of [["assault", "\u7A81\u51FB \xB7 \u653B\u51FB\u76EE\u6807"], ["guard", "\u62A4\u536B \xB7 \u63A9\u62A4\u6BCD\u8230"]].entries()) this.choice(c, d, label, 26 + i * 305, 190, 283, "mode", value, a.mode === value, enabled);
+      this.text(c, "\u62A4\u822A\u9635\u578B", 28, 288, 28, colors.muted);
+      for (const [i, [value, label]] of [["wedge", "\u6954\u5F62"], ["screen", "\u5C4F\u969C"], ["orbit", "\u73AF\u7ED5"]].entries()) this.choice(c, d, label, 26 + i * 202, 308, 184, "formation", value, a.formation === value, enabled);
+      const target = s.contacts.find((v) => v.id === s.target), cooldown = !a.focusAutomatic && (a.focusCooldown || 0) > 0;
+      this.text(c, target ? "\u76EE\u6807 \xB7 " + target.name : "\u5148\u5728\u53F3\u5C4F\u6216\u5168\u606F\u96F7\u8FBE\u9009\u62E9\u76EE\u6807", 28, 410, 27, colors.text, "left", 580);
+      this.button(c, d, cooldown ? "\u96C6\u706B\u51B7\u5374 " + a.focusCooldown.toFixed(1) + " s" : "\u4E0B\u8FBE\u96C6\u706B\u6307\u4EE4", 26, 435, 588, "focus", null, enabled && !!target?.enemy && !cooldown);
+      this.text(c, s.command || (!s.canCommand ? "\u53EA\u8BFB \xB7 " + (s.replay ? "\u5386\u53F2\u8BB0\u5F55" : "\u8FDB\u5165\u6218\u573A\u540E\u542F\u7528\u6307\u6325") : "\u9635\u578B\u63A7\u5236\u672C\u8230\u50DA\u673A \xB7 \u96C6\u706B\u8054\u52A8\u9644\u8FD1\u53CB\u8230"), 28, 531, 25, colors.gold, "left", 580);
+    } else {
+      this.text(c, s.weaponName || "\u4E3B\u6B66\u5668", 28, 120, 32, colors.text, "left", 420);
+      this.text(c, reason(s.weapon), 610, 120, 28, colors.cyan, "right");
+      this.text(c, `\u6709\u6548\u5C04\u7A0B ${Math.round(s.weapon?.range || 0)} m`, 28, 166, 28, colors.muted);
+      this.button(c, d, "\u4E3B\u6B66\u5668\u5F00\u706B \xB7 SPACE", 26, 191, 588, "fire", null, s.manual && s.weapon?.reason !== "unavailable");
+      this.line(c, 26, 277, 614, 277);
+      this.text(c, "\u5BFC\u5F39 / \u8F85\u52A9\u6B66\u5668", 28, 322, 30);
+      this.text(c, reason(s.missile), 610, 322, 28, colors.cyan, "right");
+      this.button(c, d, "\u5BFC\u5F39\u9F50\u5C04 \xB7 R", 26, 351, 588, "missile", null, s.manual && s.missile?.reason !== "unavailable");
+      this.text(c, s.solution || "\u9009\u62E9\u654C\u65B9\u76EE\u6807", 28, 463, 28, colors.gold, "left", 580);
+      this.text(c, s.command || "\u70AE\u7EC4\u7531\u8230\u8F7D\u706B\u63A7\u8FFD\u8E2A\u76EE\u6807", 28, 531, 25, colors.muted, "left", 580);
+    }
+  }
+  choice(c, d, label, x, y, w, action, value, active, enabled) {
+    this.button(c, d, (active ? "\u25C6 " : "") + label, x, y, w, action, value, enabled);
+    if (active) {
+      c.fillStyle = colors.cyan;
+      c.fillRect(x, y + 52, w, 3);
+    }
+  }
+  contacts(c, d, s) {
+    const enemies = s.contacts.filter((v) => v.enemy), selected = enemies.find((v) => v.id === s.target), list = [...selected ? [selected] : [], ...enemies.filter((v) => v !== selected)].slice(0, 4);
+    if (!list.length) this.text(c, "\u65E0\u654C\u65B9\u63A5\u89E6", 28, 136, 30, colors.muted);
+    list.forEach((v, i) => {
+      const y = 90 + i * 64;
+      c.fillStyle = v === selected ? "#35242b" : "#0a2130";
+      c.fillRect(24, y, 592, 56);
+      this.text(c, "\u25C7 " + v.name, 38, y + 36, 30, v === selected ? colors.gold : colors.text, "left", 390);
+      this.text(c, Math.round(v.distance) + " m", 602, y + 36, 27, colors.muted, "right");
+      d.hits.push({ x: 24, y, w: 592, h: 56, action: "select", value: String(v.id) });
+    });
+    this.button(c, d, "\u4E0B\u4E00\u76EE\u6807 \xB7 T", 26, 366, 281, "target", null, !!enemies.length);
+    this.button(c, d, s.locked ? "\u89E3\u9664\u5BF9\u51C6 \xB7 X" : "\u8230\u824F\u5BF9\u51C6 \xB7 X", 327, 366, 287, "lock", null, s.manual && !!enemies.length);
+    this.text(c, selected ? "\u76EE\u6807\u8230\u4F53  " + pct(selected.hull) + "%" : "\u76EE\u6807\u8230\u4F53  \u2014", 28, 475, 28, colors.muted);
+    this.bar(c, selected?.hull || 0, 290, 462, 324, colors.gold);
+    this.text(c, s.carrier ? "\u7EA2 / \u654C\u8230\u3000\u9752 / \u53CB\u8230\u3000\u91D1 / \u672C\u8230\u50DA\u673A" : "\u70B9\u51FB\u76EE\u6807\u6216\u4E2D\u592E\u5168\u606F\u6807\u8BB0\u9501\u5B9A", 28, 531, 25, colors.cyan, "left", 580);
+  }
+  helm(c, d, s) {
+    this.text(c, Math.round(s.speed) + " m/s", 28, 125, 38);
+    this.text(c, "HDG " + String(Math.round((s.heading * 180 / Math.PI + 360) % 360)).padStart(3, "0"), 610, 123, 30, colors.cyan, "right");
+    for (const [i, [name, value, color]] of [["\u62A4\u76FE", s.shield, colors.cyan], ["\u8230\u4F53", s.hull, colors.gold]].entries()) {
+      const y = 187 + i * 67;
+      this.text(c, name, 28, y, 30, colors.muted);
+      this.bar(c, value, 145, y - 15, 330, color);
+      this.text(c, pct(value) + "%", 610, y, 32, color, "right");
+    }
+    this.text(c, "\u6CB9\u95E8 " + pct(s.throttle * 100) + "%", 28, 321, 30, colors.muted);
+    this.button(c, d, "\u2212", 333, 282, 125, "slower", null, s.manual);
+    this.button(c, d, "+", 479, 282, 135, "faster", null, s.manual);
+    this.button(c, d, s.manual ? "\u4EA4\u8FD8 AI \xB7 G" : "\u63A5\u7BA1\u9A7E\u9A76 \xB7 G", 26, 367, 588, "auto", null, s.canPilot && !s.replay);
+    this.text(c, s.walking ? "\u4E2D\u952E\u73AF\u89C6 \xB7 W/A/S/D \u8230\u6865\u884C\u8D70" : "\u4E2D\u952E\u73AF\u89C6 \xB7 C \u56DE\u6B63", 28, 458, 25, colors.muted);
+  }
+};
+var BridgeConsole = class {
+  constructor(kind) {
+    this.kind = kind;
+    this.group = new Group();
+    this.resources = [];
+    this.markers = /* @__PURE__ */ new Map();
+    this.pickables = [];
+    this.raycaster = new Raycaster();
+    this.displays = new BridgeDisplays((canvas) => this.keep(new CanvasTexture(canvas)), bridgeDisplays(kind));
+    for (const d of this.displays.displays) {
+      const frame = this.box([d.size[0] + 0.18, d.size[1] + 0.18, 0.19], 2439492);
+      frame.position.fromArray(consolePoint(d, [0, 0, -0.1]));
+      frame.rotation.set(d.rotation[0], d.rotation[1], 0, "YXZ");
+      const mesh = new Mesh(this.keep(new PlaneGeometry(...d.size)), this.keep(new MeshBasicMaterial({ map: d.texture, toneMapped: false })));
+      mesh.position.fromArray(consolePoint(d, [0, 0, 3e-3]));
+      mesh.rotation.copy(frame.rotation);
+      this.group.add(mesh);
+      for (const side of [-1, 1]) {
+        const rail = this.box([0.035, d.size[1] - 0.12, 0.025], 6855594);
+        rail.position.fromArray(consolePoint(d, [side * (d.size[0] / 2 + 0.05), 0, 6e-3]));
+        rail.rotation.copy(frame.rotation);
+      }
+      const leg = this.box([0.32, 1.1, 0.42], 1518391);
+      leg.position.set(d.pos[0], d.pos[1] - d.size[1] / 2 - 0.45, d.pos[2] - 0.2);
+    }
+    const hologram = bridgeHologram(kind);
+    this.holo = new Group();
+    this.holo.position.fromArray(hologram.pos);
+    this.group.add(this.holo);
+    this.radius = hologram.radius;
+    const cylinder = (r, h, y, color) => {
+      const mesh = new Mesh(this.keep(new CylinderGeometry(r, r * 0.88, h, 48)), this.keep(new MeshBasicMaterial({ color })));
+      mesh.position.y = y;
+      this.holo.add(mesh);
+      return mesh;
+    };
+    cylinder(1.62, 0.9, -0.42, 1518649);
+    cylinder(2.28, 0.18, 0.08, 4217961);
+    cylinder(2.13, 0.04, 0.19, 399396);
+    this.grid = new Group();
+    this.grid.position.y = 1.6;
+    this.holo.add(this.grid);
+    for (const r of [0.52, 1.05, 1.57, 2.1]) this.ring(r, 0, 5541285, this.grid, 0.52);
+    this.ring(2.23, 0.02, 9758714, this.grid, 0.85);
+    const lines = [];
+    for (let i = -4; i <= 4; i++) {
+      const x = i * 0.5, z = Math.sqrt(Math.max(0, this.radius * this.radius - x * x));
+      lines.push(x, 0, -z, x, 0, z, -z, 0, x, z, 0, x);
+    }
+    this.lineMesh(lines, 4423576, this.grid, 0.3);
+    const sweepGeometry = this.keep(new BufferGeometry().setFromPoints([new Vector3(), new Vector3(2.1, 0, 0)]));
+    this.sweep = new Line(sweepGeometry, this.keep(new LineBasicMaterial({ color: 9037823, transparent: true, opacity: 0.7 })));
+    this.grid.add(this.sweep);
+    const own = new Mesh(this.keep(new ConeGeometry(0.11, 0.32, 3)), this.keep(new MeshBasicMaterial({ color: 12382207, wireframe: true })));
+    own.rotation.x = -Math.PI / 2;
+    own.position.y = 2.1;
+    this.holo.add(own);
+    this.ring(0.19, 1.65, 12382207, this.holo, 0.85);
+    const beams = [];
+    for (let i = 0; i < 8; i++) {
+      const a = i / 8 * Math.PI * 2;
+      beams.push(Math.sin(a) * 0.5, 0.24, Math.cos(a) * 0.5, Math.sin(a) * 2.1, 1.6, Math.cos(a) * 2.1);
+    }
+    this.lineMesh(beams, 6075866, this.holo, 0.14);
+    this.titleCanvas = document.createElement("canvas");
+    this.titleCanvas.width = 1024;
+    this.titleCanvas.height = 128;
+    const texture = this.keep(new CanvasTexture(this.titleCanvas));
+    this.title = new Mesh(this.keep(new PlaneGeometry(3.5, 0.44)), this.keep(new MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false })));
+    this.title.position.set(0, 2.7, 0);
+    this.title.rotation.x = -0.12;
+    this.holo.add(this.title);
+    this.titleTexture = texture;
+    const hitDisk = new Mesh(this.keep(new CircleGeometry(2.3, 48)), this.keep(new MeshBasicMaterial({ visible: false, side: DoubleSide })));
+    hitDisk.rotation.x = -Math.PI / 2;
+    hitDisk.position.y = 0.21;
+    this.holo.add(hitDisk);
+    this.pickables.push(hitDisk);
+  }
+  keep(resource) {
+    this.resources.push(resource);
+    return resource;
+  }
+  box(size, color) {
+    const m = new Mesh(this.keep(new BoxGeometry(...size)), this.keep(new MeshBasicMaterial({ color })));
+    this.group.add(m);
+    return m;
+  }
+  lineMesh(points, color, parent2, opacity = 1) {
+    const g = this.keep(new BufferGeometry());
+    g.setAttribute("position", new Float32BufferAttribute(points, 3));
+    const m = new LineSegments(g, this.keep(new LineBasicMaterial({ color, transparent: true, opacity, depthWrite: false })));
+    parent2.add(m);
+    return m;
+  }
+  ring(radius, y, color, parent2, opacity) {
+    const points = [];
+    for (let i = 0; i < 96; i++) {
+      const a = i / 96 * Math.PI * 2, b = (i + 1) / 96 * Math.PI * 2;
+      points.push(Math.sin(a) * radius, y, Math.cos(a) * radius, Math.sin(b) * radius, y, Math.cos(b) * radius);
+    }
+    return this.lineMesh(points, color, parent2, opacity);
+  }
+  update(s, time) {
+    this.displays.update(s, time);
+    this.sweep.rotation.y = -time * 0.45;
+    if (!s) return;
+    if (this.lastPaint != null && time - this.lastPaint < 0.05 && time >= this.lastPaint) return;
+    this.lastPaint = time;
+    const seen = /* @__PURE__ */ new Set();
+    for (const contact of s.contacts) {
+      seen.add(contact.id);
+      let marker = this.markers.get(contact.id);
+      if (!marker) {
+        const group = new Group(), geometry = new ConeGeometry(0.085, 0.24, 4), material2 = new MeshBasicMaterial({ color: 9165294, wireframe: true, transparent: true, opacity: 0.95 }), icon = new Mesh(geometry, material2);
+        icon.rotation.x = -Math.PI / 2;
+        group.add(icon);
+        const stemG = new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]), stemM = new LineBasicMaterial({ color: 5541285, transparent: true, opacity: 0.6 }), stem = new Line(stemG, stemM);
+        this.holo.add(stem, group);
+        const hit = new Mesh(new SphereGeometry(0.16, 8, 6), new MeshBasicMaterial({ visible: false }));
+        group.add(hit);
+        this.pickables.push(hit);
+        marker = { group, icon, stem, hit, resources: [geometry, material2, stemG, stemM, hit.geometry, hit.material] };
+        this.markers.set(contact.id, marker);
+      }
+      const dx = contact.pos[0] - s.pos[0], dz = contact.pos[2] - s.pos[2], right = -dx * Math.cos(s.heading) + dz * Math.sin(s.heading), front = dx * Math.sin(s.heading) + dz * Math.cos(s.heading), range = Math.max(s.scanRange, Math.hypot(right, front)), x = right / range * 1.97, z = -front / range * 1.97, y = 1.95 + Math.max(-0.14, Math.min(0.8, (contact.pos[1] - s.pos[1]) / s.scanRange * 3));
+      marker.group.position.set(x, y, z);
+      const selected = contact.id === s.target, color = selected ? 16765090 : contact.enemy ? 16745080 : contact.drone ? 15254667 : 9165294;
+      marker.icon.material.color.setHex(color);
+      marker.icon.scale.setScalar(selected ? 1.55 : 1);
+      marker.stem.material.color.setHex(color);
+      marker.stem.geometry.attributes.position.setXYZ(0, x, 1.61, z);
+      marker.stem.geometry.attributes.position.setXYZ(1, x, y, z);
+      marker.stem.geometry.attributes.position.needsUpdate = true;
+      marker.hit.userData = contact.enemy ? { action: "select", value: String(contact.id) } : {};
+    }
+    for (const [id, m] of this.markers) if (!seen.has(id)) {
+      m.group.removeFromParent();
+      m.stem.removeFromParent();
+      m.resources.forEach((r) => r.dispose());
+      this.pickables.splice(this.pickables.indexOf(m.hit), 1);
+      this.markers.delete(id);
+    }
+    const key = [s.carrier ? "\u65D7\u8230\u6218\u672F\u6001\u52BF" : "\u6218\u5217\u8230\u6218\u672F\u6001\u52BF", Math.round(s.scanRange), s.contacts.length].join("|");
+    if (key !== this.titleKey) {
+      this.titleKey = key;
+      const c = this.titleCanvas.getContext("2d");
+      c.clearRect(0, 0, 1024, 128);
+      c.fillStyle = "#a3e5fa";
+      c.textAlign = "center";
+      c.font = '32px "Microsoft YaHei"';
+      c.fillText((s.carrier ? "FLEET COMMAND / \u65D7\u8230\u6001\u52BF" : "TACTICAL DISPLAY / \u6218\u672F\u6001\u52BF") + "  \xB7  " + Math.round(s.scanRange) + " m", 512, 51);
+      c.fillStyle = "#6dacc5";
+      c.font = '24px "Microsoft YaHei"';
+      c.fillText("\u5B9E\u65F6\u63A5\u89E6 " + s.contacts.length + "  \xB7  \u70B9\u51FB\u7EA2\u8272\u6807\u8BB0\u9009\u62E9\u76EE\u6807", 512, 96);
+      this.titleTexture.needsUpdate = true;
+    }
+    this.group.updateMatrixWorld(true);
+  }
+  pick(origin, direction) {
+    const panel = this.displays.pick(origin.toArray(), direction.toArray());
+    this.raycaster.set(origin, direction);
+    const hits = this.raycaster.intersectObjects(this.pickables, false).filter((h) => !panel || h.distance < panel.distance);
+    const score = (h) => {
+      const center = h.object.getWorldPosition(new Vector3());
+      return this.raycaster.ray.distanceSqToPoint(center) / Math.max(0.01, center.distanceToSquared(origin));
+    };
+    const hit = hits.filter((h) => h.object.userData.action).sort((a, b) => score(a) - score(b))[0] || hits[0];
+    return hit ? { surface: "hologram", ...hit.object.userData } : panel;
+  }
+  layout(project) {
+    return [...this.displays.layout(project), { id: "hologram", corners: [], controls: [...this.markers.values()].filter((m) => m.hit.userData.action).map((m) => ({ action: m.hit.userData.action, value: m.hit.userData.value, point: project(m.group.getWorldPosition(new Vector3()).toArray()) })) }];
+  }
+  dispose() {
+    for (const m of this.markers.values()) m.resources.forEach((r) => r.dispose());
+    this.resources.forEach((r) => r.dispose());
+    this.group.clear();
+  }
+};
+
+// scripts/three-flight/cabins.js
+var Cabins = class {
+  constructor(backend) {
+    this.backend = backend;
+    this.rooms = /* @__PURE__ */ new Map();
+    this.camera = new PerspectiveCamera();
+    this.vp = new Matrix4();
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = 1024;
+    this.canvas.height = 512;
+    this.texture = new CanvasTexture(this.canvas);
+    this.labels = document.createElement("canvas");
+    this.labels.width = 1024;
+    this.labels.height = 512;
+    this.labelTexture = new CanvasTexture(this.labels);
+    this.labelAtlas();
+  }
+  labelAtlas() {
+    const c = this.labels.getContext("2d"), names = ["COMMAND", "NAVIGATION", "TACTICAL", "COMMS", "PORT", "STARBOARD", "FLIGHT DECK", "ENGINEERING", "AUTO HELM", "BASTION", "CREW", "SYSTEMS", "OPERATIONS", "DECK 01", "HORIZON", "BRIDGE"];
+    c.clearRect(0, 0, 1024, 512);
+    names.forEach((text, i) => {
+      c.fillStyle = "#b8d5db";
+      c.font = "22px sans-serif";
+      c.textAlign = "center";
+      c.fillText(text, i % 4 * 256 + 128, Math.floor(i / 4) * 128 + 70);
+    });
+    this.labelTexture.needsUpdate = true;
+  }
+  room(kind) {
+    if (this.rooms.has(kind)) return this.rooms.get(kind);
+    const source = kind === "bastion" ? buildBastion() : kind === "horizon" ? buildHorizon() : null, scene = new Scene(), geometries = [], materials = [];
+    const groups = source?.groups || { fighter: this.backend.cockpit, ...Object.fromEntries(this.backend.screens.map((m, i) => ["screen" + i, m])) };
+    for (const [name, group] of Object.entries(groups)) {
+      let vertices = group.data;
+      if (kind === "horizon" && vertices) {
+        const clear = [];
+        for (let i = 0; i < vertices.length; i += 39) {
+          let centrePost = true;
+          for (let j = 0; j < 3; j++) {
+            const o = i + j * 13;
+            if (Math.abs(vertices[o]) > 0.28 || vertices[o + 2] > -13.2 || vertices[o + 1] < 0.8 || vertices[o + 1] > 6.3) centrePost = false;
+          }
+          if (!centrePost) for (let j = 0; j < 39; j++) clear.push(vertices[i + j]);
+        }
+        vertices = clear;
+      }
+      const geometry = group.geometry || geometryFromNative(vertices);
+      if (!group.geometry) geometries.push(geometry);
+      const screen = name.startsWith("screen"), label = name === "labels", glass = name === "glass", holo = name === "holo";
+      const uniforms = Object.fromEntries(Object.entries({ uModel: new Matrix4(), uVP: this.vp, uEye: new Vector3(), uLight: new Vector3(-0.35, 0.8, 0.6), uOpacity: glass ? 0.028 : holo ? 0.36 : 1, uMode: screen ? 2 : label ? 3 : 0, uRoom: kind === "fighter" ? 0 : 1, uTime: 0, uLighting: 1, uTexture: label ? this.labelTexture : this.texture, uCity: this.texture }).map(([k, value]) => [k, { value }]));
+      const material2 = new RawShaderMaterial({ vertexShader: cabinVertex, fragmentShader: cabinFragment, uniforms, side: DoubleSide, transparent: glass || holo || label, depthWrite: !(glass || holo || label), blending: holo ? AdditiveBlending : NormalBlending, toneMapped: false });
+      materials.push(material2);
+      if (kind === "fighter" && screen) uniforms.uTexture.value = this.backend.fighterConsole.displays[Number(name.slice(-1))].texture;
+      const mesh = new Mesh(geometry, material2);
+      mesh.frustumCulled = false;
+      scene.add(mesh);
+    }
+    const console2 = kind === "fighter" ? null : new BridgeConsole(kind);
+    if (console2) scene.add(console2.group);
+    const room = { scene, geometries, materials, console: console2, obstacles: source?.obstacles || [] };
+    this.rooms.set(kind, room);
+    return room;
+  }
+  instruments(data, time) {
+    if (data.kind === "fighter") {
+      this.backend.fighterConsole.update(data.console, time);
+      return;
+    }
+    if (time - (this.lastUpdate ?? -1) < 0.15) return;
+    this.lastUpdate = time;
+    const c = this.canvas.getContext("2d"), row = data.row || [], meta = data.meta || {}, hp = Math.round(100 * (row[6] || 0) / (meta.maxHp || 1)), shield = Math.round(100 * (row[7] || 0) / (meta.maxShield || 1));
+    const tiles = [["HELM", `${Math.round(row[9] || 0)} m/s`, data.auto ? "AUTO / AI" : "MANUAL"], ["DEFENSE", `HULL ${hp}%`, `SHIELD ${shield}%`], ["TACTICAL", `CONTACT ${row[8] >= 0 ? row[8] + 1 : "\u2014"}`, `${data.counts?.join(" : ") || "LIVE FEED"}`], ["PRIMARY", `${(row[10] || 0).toFixed(1)} s`, "WEAPON CYCLE"], ["ENGINEERING", `${Math.round((data.throttle ?? 0) * 100)}%`, "THROTTLE"], ["NAVIGATION", `${Math.round((row[4] || 0) * 180 / Math.PI)}\xB0`, "HEADING"], ["ORDNANCE", `${(row[11] || 0).toFixed(1)} s`, "MISSILE CYCLE"], ["FLEET", `${meta.type || "VESSEL"}`, `T + ${Math.floor(time)} s`]];
+    c.fillStyle = "#07141c";
+    c.fillRect(0, 0, 1024, 512);
+    tiles.forEach(([title, value, detail], i) => {
+      const x = i % 4 * 256, y = Math.floor(i / 4) * 256;
+      c.strokeStyle = "#28505e";
+      c.strokeRect(x + 8, y + 8, 240, 240);
+      c.fillStyle = "#7da6ad";
+      c.font = "18px sans-serif";
+      c.fillText(title, x + 20, y + 40);
+      c.fillStyle = "#d6f5ed";
+      c.font = "24px monospace";
+      c.fillText(value, x + 20, y + 94, 220);
+      c.fillStyle = "#72adbd";
+      c.font = "15px monospace";
+      c.fillText(detail, x + 20, y + 130, 220);
+      for (let j = 0; j < 8; j++) {
+        c.fillStyle = j < Math.round(hp / 12.5) ? "#5fa6a7" : "#132d39";
+        c.fillRect(x + 20 + j * 27, y + 182, 22, 32);
+      }
+    });
+    this.texture.needsUpdate = true;
+  }
+  pickFighterConsole(x, y) {
+    if (this.last?.kind !== "fighter") return null;
+    const origin = this.camera.position, point = new Vector3(x / this.backend.width * 2 - 1, 1 - y / this.backend.height * 2, 0.5).unproject(this.camera), direction = point.sub(origin).normalize();
+    return this.backend.fighterConsole.pick(origin.toArray(), direction.toArray());
+  }
+  fighterConsoleLayout() {
+    if (this.last?.kind !== "fighter") return [];
+    return this.backend.fighterConsole.layout((p) => {
+      const q = new Vector3(...p).project(this.camera);
+      return { x: (q.x + 1) * this.backend.width / 2, y: (1 - q.y) * this.backend.height / 2, visible: q.z >= -1 && q.z <= 1 };
+    });
+  }
+  pickBridgeConsole(x, y) {
+    const console2 = this.rooms.get(this.last?.kind)?.console;
+    if (!console2) return null;
+    const origin = this.camera.position, direction = new Vector3(x / this.backend.width * 2 - 1, 1 - y / this.backend.height * 2, 0.5).unproject(this.camera).sub(origin).normalize();
+    return console2.pick(origin, direction);
+  }
+  bridgeConsoleLayout() {
+    const console2 = this.rooms.get(this.last?.kind)?.console;
+    return console2 ? console2.layout((p) => {
+      const q = new Vector3(...p).project(this.camera);
+      return { x: (q.x + 1) * this.backend.width / 2, y: (1 - q.y) * this.backend.height / 2, visible: q.z >= -1 && q.z <= 1 };
+    }) : [];
+  }
+  draw(data) {
+    const { kind, time = 0, opacity = 1 } = data, room = this.room(kind), pose = data.pose || cabinPose(kind), camera = this.camera;
+    this.instruments(data, time);
+    camera.fov = (data.fov || Math.PI / 3) * 180 / Math.PI;
+    camera.aspect = this.backend.width / this.backend.height;
+    camera.near = 0.035;
+    camera.far = 180;
+    camera.position.fromArray(pose.eye);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(new Vector3(...pose.eye).add(new Vector3(Math.sin(pose.yaw) * Math.cos(pose.pitch), Math.sin(pose.pitch), -Math.cos(pose.yaw) * Math.cos(pose.pitch))));
+    camera.updateProjectionMatrix();
+    camera.updateMatrixWorld();
+    this.vp.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    room.console?.update(data.console, time);
+    for (const material2 of room.materials) {
+      material2.uniforms.uEye.value.copy(camera.position);
+      material2.uniforms.uTime.value = time;
+      material2.uniforms.uOpacity.value = opacity * (material2.transparent ? material2.blending === AdditiveBlending ? 0.36 : material2.uniforms.uMode.value === 3 ? 1 : 0.028 : 1);
+    }
+    this.backend.three.clearDepth();
+    this.backend.three.render(room.scene, camera);
+    this.last = { kind, eye: [...pose.eye], yaw: pose.yaw, pitch: pose.pitch, triangles: this.backend.three.info.render.triangles };
+  }
+  dispose() {
+    for (const room of this.rooms.values()) {
+      room.console?.dispose();
+      room.geometries.forEach((g) => g.dispose());
+      room.materials.forEach((m) => m.dispose());
+      room.scene.clear();
+    }
+    this.rooms.clear();
+    this.texture.dispose();
+    this.labelTexture.dispose();
+  }
+};
+
+// game/ship-propulsion.mjs
+var pair = (x, y, z, r) => [[-x, y, z, r], [x, y, z, r]];
+var enginePorts = {
+  Light_Fighter: [...pair(2.1, -0.97, 6.6, 0.21), ...pair(3.8, -0.22, 6.7, 0.4)],
+  Heavy_Fighter: pair(0.755, 0.44375, 2.07, 0.28),
+  Cruiser: [...pair(1.9, -0.3, 5.94, 0.28), [0, -0.28, 6.05, 0.28]],
+  Battleship: [...pair(1.09, 0.08, 7.21, 0.31), [0, -0.22, 6.87, 0.18]],
+  Bomber: [...pair(1.18, 0.07, 6.01, 0.27), ...pair(0.45, -0.2, 6.07, 0.19)],
+  Dreadnought: [...pair(1.525, 0.375, 4.265, 0.46), [0, 0.05, 4.065, 0.4]],
+  Destroyer: [...[-1, 1].map((s) => [s * 3.31 * Math.cos(0.16) - s * 0.5 * Math.sin(0.16), -3.31 * Math.sin(0.16) - 0.5 * Math.cos(0.16), 6.34, 0.3]), [0, 1.27, 6.91, 0.23]],
+  Interceptor: [...pair(0.81, 0.44, 6.64, 0.34), ...pair(0.53, -2.03, 6.34, 0.22)],
+  Devourer_Interceptor: [...pair(2.85, -0.38, 6.13, 0.3), [0, -0.14, 7.04, 0.29]],
+  Titanenergetic_Frigate: pair(1.2, -0.63, 4.9, 0.18),
+  Iron_Behemoth: [[0, 1.14, 6.94, 0.43]]
+};
+function plumeEnvelope(throttle, boost, time, pulse, index = 0) {
+  const power = Math.max(0, Math.min(1, throttle / 100));
+  const flicker = 1 + Math.sin(time * pulse + index * 1.7) * 0.045 + Math.sin(time * 37 + index) * 0.018;
+  return { length: (0.28 + power * 18 + (boost ? 12 : 0)) * flicker, width: 0.8 + power * 0.2 + (boost ? 0.12 : 0), alpha: 0.24 + power * 0.56 + (boost ? 0.18 : 0) };
+}
+function plumeMeshData() {
+  const data = [], planes = 3, rings = 16;
+  const vertex2 = (i, j, side) => {
+    const x = i / rings, a = j / planes * Math.PI, r = Math.pow(1 - x, 0.8);
+    return [x, side * r * Math.cos(a), side * r * Math.sin(a), 0, -Math.sin(a), Math.cos(a), 0.3, 0.7, 1, 1, 0, 0, side];
+  };
+  for (let i = 0; i < rings; i++) for (let j = 0; j < planes; j++) {
+    const a = vertex2(i, j, -1), b = vertex2(i, j, 1), c = vertex2(i + 1, j, 1), d = vertex2(i + 1, j, -1);
+    data.push(...a, ...b, ...c, ...a, ...c, ...d);
+  }
+  return data;
+}
+
+// game/ship-main-effects.mjs
+function mainGunGlow(visual, distance, height, fov2) {
+  if (!visual?.capital) return 3;
+  const projected = visual.radius * height / (Math.max(1, distance) * Math.tan(fov2 * 0.5));
+  return Math.max(visual.glow * Math.max(0.12, Math.min(1, 1400 / Math.max(1, distance))), Math.min(110, projected * 3.5));
+}
+
+// game/flight-camera.mjs
+function speedFovOffset(speed, maxSpeed, capital) {
+  const smooth = (x) => {
+    x = Math.max(0, Math.min(1, x));
+    return x * x * (3 - 2 * x);
+  };
+  const ratio = Math.max(0, speed) / Math.max(1, maxSpeed);
+  return 9 * smooth(ratio) + 8 * smooth((ratio - 1) / (capital ? 0.65 : 1.2));
+}
+function smoothSpeedFov(current, target, dt) {
+  return current + (target - current) * (1 - Math.exp(-Math.max(0, dt) * 3.5));
+}
+
 // scripts/three-flight/backend.js
 function createGeometry(source) {
   const data = source instanceof Float32Array ? source : new Float32Array(source);
@@ -27774,13 +30442,26 @@ var MAIN_DEFAULTS = {
   uShellOffset: 0,
   uImpact: [0, 0, 0, 0],
   uShield: [1, 0],
-  uTexture: null
+  uTexture: null,
+  uTeamColor: [0.086, 0.545, 0.922]
 };
-var fleetVertex = `attribute vec3 aPosition,aNormal,aColor;uniform mat4 vp;varying vec3 color;
+var fleetVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aTag,aEmission;uniform vec3 teamColor;uniform mat4 vp;varying vec3 color;
 void main(){vec3 normal=normalize(mat3(instanceMatrix)*aNormal);
 float light=.68+.72*max(0.,dot(normal,normalize(vec3(-.5,.9,.7))))+.2*max(0.,dot(normal,normalize(vec3(.8,-.1,-.7))));
-color=pow(aColor,vec3(.85))*light;gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
+vec3 base=abs(aTag-77.)<.1?teamColor:aColor;color=pow(base,vec3(.85))*mix(light,1.2,clamp(aEmission,0.,1.));gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
 var fleetFragment = "varying vec3 color;uniform vec3 tint;void main(){gl_FragColor=vec4(color*tint,1.);}";
+var fortressVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aEmission;uniform mat4 vp;
+varying vec3 color,localPosition,surfaceNormal;varying float emission;
+void main(){surfaceNormal=normalize(mat3(instanceMatrix)*aNormal);localPosition=aPosition;color=aColor;emission=aEmission;gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
+var fortressFragment = `varying vec3 color,localPosition,surfaceNormal;varying float emission;uniform vec3 tint;
+float grain(vec3 p){return fract(sin(dot(p,vec3(17.13,93.71,41.37)))*43758.5453);}
+void main(){vec3 n=normalize(surfaceNormal);float key=max(0.,dot(n,normalize(vec3(-.5,.9,.7))));
+float noise=grain(floor(localPosition*3.));float stain=grain(floor(localPosition*vec3(.18,.06,.18)));
+float seams=step(.35,mod(localPosition.y+1.,9.));
+float weather=(.86+.1*noise+.06*stain)*mix(.78,1.,seams);
+vec3 light=vec3(.22,.27,.32)+vec3(.76,.71,.61)*key;
+vec3 shaded=color*light*weather;shaded=mix(shaded,color,emission*.75);
+gl_FragColor=vec4(shaded*tint,1.);}`;
 var ribbonVertex = "attribute vec3 p,c;attribute vec2 texcoord;attribute float a;uniform mat4 vp;varying vec3 color;varying vec2 tex;varying float alpha;void main(){color=c;tex=texcoord;alpha=a;gl_Position=vp*vec4(p,1.);}";
 var ribbonFragment = "varying vec3 color;varying vec2 tex;varying float alpha;void main(){float edge=abs(tex.y);float core=exp(-edge*edge*110.);float halo=exp(-edge*edge*5.)*.7;float cap=smoothstep(0.,.025,tex.x)*smoothstep(0.,.025,1.-tex.x);gl_FragColor=vec4(mix(color,vec3(1.,.96,.87),core*.7),(core+halo)*alpha*cap);}";
 var skyVertex = "attribute vec2 skyPosition;varying vec2 screenUV;void main(){screenUV=skyPosition;gl_Position=vec4(skyPosition,1.,1.);}";
@@ -27965,6 +30646,7 @@ var ThreeRenderBackend = class {
       uTime: this.time || 0,
       uExposure: opts.exposure ?? 1,
       uTint: opts.tint || [1, 1, 1],
+      uTeamColor: opts.teamColor || [0.086, 0.545, 0.922],
       uNearFade: opts.nearFade || 0,
       uFighter: opts.fighter ? 1 : 0,
       uShellOffset: opts.shellOffset || 0,
@@ -28027,13 +30709,13 @@ var ThreeRenderBackend = class {
   drawImpacts(data) {
     this._dynamic("impact", data, 10, [["p", 3, 0], ["c", 3, 3], ["texcoord", 2, 6], ["fx", 2, 8]], { vp: new Float32Array(this.relativeVP()) }, "mesh", { blend: true, depthWrite: false, depthTest: true, front: false });
   }
-  drawInstances(key, { type, index, high = false, matrices, count, ids, tint = [1, 1, 1] }) {
+  drawInstances(key, { type, index, geometry, high = false, matrices, count, ids, tint = [1, 1, 1], teamColor = [0.086, 0.545, 0.922] }) {
     count ??= ids.length;
     if (!count) return;
     const id = key + ":" + (high ? "high" : "low");
     let batch = this.instanceBatches.get(id);
-    let entry = this.shipMeshes[index];
-    if (!high) {
+    let entry = geometry || this.shipMeshes[index];
+    if (!high && !geometry) {
       const name = type || this.assets?.ships?.find((s) => s.id === key.split(":").at(-1))?.id;
       const asset = this.assets?.ships?.find((s) => s.id === (name || this.assets.ships[index]?.id));
       if (asset) {
@@ -28051,7 +30733,7 @@ var ThreeRenderBackend = class {
         batch.mesh.dispose();
         batch.mesh.material.dispose();
       }
-      const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count))), mat = material(fleetVertex, fleetFragment, { vp: IDENTITY, tint });
+      const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count))), mat = material(geometry ? fortressVertex : fleetVertex, geometry ? fortressFragment : fleetFragment, { vp: IDENTITY, tint, teamColor });
       const mesh = new InstancedMesh(entry.geometry, mat, capacity);
       mesh.instanceMatrix.setUsage(DynamicDrawUsage);
       mesh.frustumCulled = false;
@@ -28070,6 +30752,7 @@ var ThreeRenderBackend = class {
     batch.mesh.instanceMatrix.needsUpdate = true;
     batch.mesh.material.uniforms.vp.value = new Float32Array(this.relativeVP());
     batch.mesh.material.uniforms.tint.value = tint;
+    batch.mesh.material.uniforms.teamColor.value = teamColor;
     batch.ids = Array.from(ids).slice(0, count);
     batch.idToSlot.clear();
     batch.ids.forEach((shipId, slot) => batch.idToSlot.set(shipId, slot));
@@ -28246,7 +30929,7 @@ function createGalaxyRender(fleet, assets) {
   function rgb(hex) {
     return [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
   }
-  const C = { hull: rgb(11908267), light: rgb(13750469), shade: rgb(8555147), dark: rgb(2503482), inner: rgb(1121571), steel: rgb(6187886), red: rgb(7553595), window: rgb(14867393), blue: rgb(8900063) };
+  const C2 = { hull: rgb(11908267), light: rgb(13750469), shade: rgb(8555147), dark: rgb(2503482), inner: rgb(1121571), steel: rgb(6187886), red: rgb(7553595), window: rgb(14867393), blue: rgb(8900063) };
   class Geometry {
     constructor() {
       this.data = [];
@@ -28254,7 +30937,7 @@ function createGalaxyRender(fleet, assets) {
     vertex(p, n, c, e, tag, uv) {
       this.data.push(...p, ...n, ...c, e, tag, ...uv);
     }
-    tri(a, b, c, color = C.hull, emission = 0, tag = 0, normals = null, uvs = null) {
+    tri(a, b, c, color = C2.hull, emission = 0, tag = 0, normals = null, uvs = null) {
       const n = V.norm(V.cross(V.sub(b, a), V.sub(c, a)));
       [a, b, c].forEach((p, i) => this.vertex(p, normals ? normals[i] : n, color, emission, tag, uvs ? uvs[i] : [0, 0]));
       return this;
@@ -28264,13 +30947,13 @@ function createGalaxyRender(fleet, assets) {
       this.tri(a, c, d, color, emission, tag, null, [[0, 0], [1, 1], [0, 1]]);
       return this;
     }
-    box(size, pos, color = C.hull, tag = 0, rotation = [0, 0, 0], emission = 0) {
+    box(size, pos, color = C2.hull, tag = 0, rotation = [0, 0, 0], emission = 0) {
       const [x, y, z] = size.map((n) => n / 2), mat = M.compose(pos, rotation);
       const p = [[-x, -y, -z], [x, -y, -z], [x, y, -z], [-x, y, -z], [-x, -y, z], [x, -y, z], [x, y, z], [-x, y, z]].map((p2) => M.transform(mat, p2));
       [[0, 3, 2, 1], [4, 5, 6, 7], [0, 4, 7, 3], [1, 2, 6, 5], [0, 1, 5, 4], [3, 7, 6, 2]].forEach((f) => this.quad(...f.map((i) => p[i]), color, emission, tag));
       return this;
     }
-    hull(sections, pos = [0, 0, 0], color = C.hull, tag = 0) {
+    hull(sections, pos = [0, 0, 0], color = C2.hull, tag = 0) {
       const rings = sections.map(([x, w, h]) => {
         const c = Math.min(w, h) * 0.2;
         return [[h / 2, -w / 2 + c], [h / 2, w / 2 - c], [h / 2 - c, w / 2], [-h / 2 + c, w / 2], [-h / 2, w / 2 - c], [-h / 2, -w / 2 + c], [-h / 2 + c, -w / 2], [h / 2 - c, -w / 2]].map(([y, z]) => [x + pos[0], y + pos[1], z + pos[2]]);
@@ -28286,11 +30969,11 @@ function createGalaxyRender(fleet, assets) {
       }
       return this;
     }
-    chamfer(size, pos, color = C.hull, tag = 0) {
+    chamfer(size, pos, color = C2.hull, tag = 0) {
       let [x, y, z] = size, b = Math.min(x, y, z) * 0.18;
       return this.hull([[-x / 2, z - b * 2, y - b * 2], [-x / 2 + b, z, y], [x / 2 - b, z, y], [x / 2, z - b * 2, y - b * 2]], pos, color, tag);
     }
-    cylinder(r, len, pos, color = C.steel, segments = 14, tag = 0, emission = 0, r2 = r) {
+    cylinder(r, len, pos, color = C2.steel, segments = 14, tag = 0, emission = 0, r2 = r) {
       let [x, y, z] = pos;
       for (let i = 0; i < segments; i++) {
         let a = TAU * i / segments, b = TAU * (i + 1) / segments;
@@ -28301,7 +30984,7 @@ function createGalaxyRender(fleet, assets) {
       }
       return this;
     }
-    beam(a, b, width, depth, color = C.dark) {
+    beam(a, b, width, depth, color = C2.dark) {
       const dir = V.sub(b, a), len = V.length(dir), unit = V.norm(dir), ref = Math.abs(unit[1]) > 0.95 ? [1, 0, 0] : [0, 1, 0], right = V.norm(V.cross(unit, ref)), up = V.cross(right, unit);
       const p = [];
       [a, b].forEach((p0) => [[-1, -1], [-1, 1], [1, 1], [1, -1]].forEach(([u, v]) => p.push(V.add(p0, V.add(V.scale(right, u * width / 2), V.scale(up, v * depth / 2))))));
@@ -28315,8 +30998,8 @@ function createGalaxyRender(fleet, assets) {
       };
       for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
         let n = [point(i, j), point(i + 1, j), point(i + 1, j + 1), point(i, j + 1)], p = n.map((v) => V.scale(v, radius));
-        this.tri(p[0], p[1], p[2], C.hull, 0, 0, [n[0], n[1], n[2]]);
-        this.tri(p[0], p[2], p[3], C.hull, 0, 0, [n[0], n[2], n[3]]);
+        this.tri(p[0], p[1], p[2], C2.hull, 0, 0, [n[0], n[1], n[2]]);
+        this.tri(p[0], p[2], p[3], C2.hull, 0, 0, [n[0], n[2], n[3]]);
       }
       return this;
     }
@@ -28357,7 +31040,7 @@ function createGalaxyRender(fleet, assets) {
     precision highp float;
     varying vec3 vWorld; varying vec3 vNormal; varying vec3 vColor; varying vec3 vLocal;
     varying float vEmission; varying float vTag; varying vec2 vUV;
-    uniform vec3 uEye; uniform vec3 uLight; uniform float uOpacity; uniform float uSelected;
+    uniform vec3 uEye; uniform vec3 uLight; uniform vec3 uTeamColor; uniform float uOpacity; uniform float uSelected;
     uniform float uMode; uniform float uWire; uniform float uTime; uniform float uExposure; uniform sampler2D uTexture; uniform vec3 uTint; uniform float uNearFade; uniform float uFighter; uniform vec4 uImpact; uniform vec2 uShield;
 
 float sceneHash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
@@ -28378,11 +31061,31 @@ vec4 spaceScene(vec3 d,float kind){
  return vec4(.002,.007,.012,.20);
 }
 
+    ${groundCloudShader}
     void main(){
+      if(uMode>11.5&&uMode<12.5){bool inside=all(lessThan(abs(uImpact.xyz),vec3(1.)));if(inside?gl_FrontFacing:!gl_FrontFacing)discard;gl_FragColor=groundCloud(vLocal,uImpact.xyz,uImpact.w,uShield.x,uShield.y);return;}
+      if(uMode>12.5&&uMode<13.5){
+        float radius=length(vLocal.xz),age=uImpact.w;
+        float n=cloudNoise(vec3(vLocal.xz*19.,age*.4));
+        float front=exp(-pow((radius-.82)/(.022+age*.018),2.));
+        float dust=exp(-pow((radius-.70)/(.10+age*.04),2.))*(.5+n*.5);
+        vec3 color=mix(vec3(.48,.40,.30),vec3(2.,1.25,.45),exp(-age*5.));
+        gl_FragColor=vec4(color,(front*.8+dust*.25)*uOpacity);return;
+      }
+      if(uMode>13.5&&uMode<14.5){
+        if(vLocal.y<0.)discard;
+        vec3 n=normalize(vNormal),view=normalize(uEye-vWorld);
+        float rim=pow(1.-abs(dot(n,view)),2.5);
+        float latitude=pow(.5+.5*cos(vLocal.y*95.),28.);
+        float longitude=pow(.5+.5*cos(atan(vLocal.z,vLocal.x)*48.),32.);
+        float grid=max(latitude,longitude)*.045;
+        gl_FragColor=vec4(uTint,(.025+rim*.38+grid)*uOpacity);return;
+      }
       vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;
       vec3 L=normalize(uLight),V=normalize(uEye-vWorld);float diffuse=max(dot(N,L),0.);
       float hemi=dot(N,vec3(0.,1.,0.))*.5+.5;
       vec3 base=vColor;
+      if(abs(vTag-77.)<.1)base=uTeamColor;
       if(uMode>.5&&uMode<1.5){vec3 n=normalize(vLocal);vec2 uv=vec2(atan(n.z,n.x)/6.2831853+.5,asin(n.y)/3.14159265+.5);base=texture2D(uTexture,uv).rgb;}
       float spec=pow(max(dot(reflect(-L,N),V),0.),40.)*.17;
       vec3 lighting=vec3(.13,.17,.2)+vec3(.18,.20,.215)*hemi+vec3(.94,.9,.78)*diffuse;
@@ -28431,6 +31134,14 @@ vec4 spaceScene(vec3 d,float kind){
         float day=max(dot(n,normalize(uLight)),0.);color=surface*(.035+day*1.4)+vec3(.01,.05,.1)*pow(1.-abs(dot(N,V)),4.);
       }
       if(uMode>7.5&&uMode<8.5){float edge=pow(1.-abs(dot(N,V)),3.);color=vec3(.15,.52,1.);alpha=edge*.36*uOpacity;}
+      if(uMode>10.5&&uMode<11.5){
+        vec3 q=normalize(vLocal);float terrain=sceneFbm(q*140.),detail=sceneNoise(q*1900.);
+        vec3 ground=mix(vec3(.12,.17,.15),vec3(.34,.31,.24),smoothstep(.32,.7,terrain));
+        ground*=.85+detail*.25;
+        color=ground*(.3+max(dot(N,normalize(uLight)),0.)*.9);
+        float haze=1.-exp(-length(uEye-vWorld)/11000.);
+        color=mix(color,vec3(.19,.32,.43),haze*.72);
+      }
 
       if(uMode>8.5&&uMode<9.5){
         vec3 q=normalize(vLocal);float n=sceneFbm(q*6.+vec3(uImpact.w*-.7,uImpact.w*.4,0));
@@ -28499,91 +31210,6 @@ vec4 spaceScene(vec3 d,float kind){
     }
     return canvas;
   }
-  function instrumentCanvas(index, time = 0, speed = 128) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 384;
-    canvas.height = 256;
-    const ctx = canvas.getContext("2d");
-    function draw(t, speed2) {
-      const w = 384, h = 256;
-      ctx.fillStyle = "#06121b";
-      ctx.fillRect(0, 0, w, h);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#244452";
-      ctx.strokeRect(6, 6, w - 12, h - 12);
-      ctx.fillStyle = "#50879a";
-      ctx.font = "7px monospace";
-      ctx.fillText(["NAV / PROXIMITY ARRAY", "FLIGHT CONTROL / TELEMETRY", "SYSTEMS / DISTRIBUTION"][index], 15, 19);
-      ctx.fillText("LINK  0" + (index + 1) + "  //  ONLINE", 248, 19);
-      ctx.beginPath();
-      ctx.moveTo(10, 26);
-      ctx.lineTo(374, 26);
-      ctx.stroke();
-      if (index !== 1) {
-        let cx = 190, cy = 134;
-        ctx.strokeStyle = "#376378";
-        for (let r of [24, 49, 73, 92]) {
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, TAU);
-          ctx.stroke();
-        }
-        ctx.strokeStyle = "#24434d";
-        for (let a = 0; a < 8; a++) {
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.lineTo(cx + Math.cos(a / 8 * TAU) * 94, cy + Math.sin(a / 8 * TAU) * 94);
-          ctx.stroke();
-        }
-        ctx.strokeStyle = "#669cac";
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(t * 0.47) * 90, cy + Math.sin(t * 0.47) * 90);
-        ctx.stroke();
-        ctx.fillStyle = "#b1cbbc";
-        [[20, -17], [-37, 24], [50, 52]].forEach(([x, y]) => ctx.fillRect(cx + x, cy + y, 3, 3));
-        ctx.fillStyle = "#5d94a6";
-        ctx.fillText(index === 0 ? "RANGE  08.0 KM" : "SHIELD DISTRIBUTION", 16, 238);
-        ctx.fillText("O2  100%", 298, 238);
-      } else {
-        ctx.strokeStyle = "#244451";
-        for (let x = 35; x < 370; x += 31) {
-          ctx.beginPath();
-          ctx.moveTo(x, 42);
-          ctx.lineTo(x, 210);
-          ctx.stroke();
-        }
-        for (let y = 45; y < 214; y += 27) {
-          ctx.beginPath();
-          ctx.moveTo(15, y);
-          ctx.lineTo(370, y);
-          ctx.stroke();
-        }
-        ctx.strokeStyle = "#699db0";
-        ctx.beginPath();
-        for (let i = 0; i < 170; i++) {
-          let x = 20 + i * 2, y = 147 + Math.sin(i * 0.082 + t) * 12 + Math.sin(i * 0.213 + t * 2) * 4;
-          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-        }
-        ctx.stroke();
-        ctx.fillStyle = "#a0c1c9";
-        ctx.font = "23px monospace";
-        ctx.fillText(String(Math.round(speed2)).padStart(3, "0"), 24, 82);
-        ctx.font = "7px monospace";
-        ctx.fillText("VELOCITY  M/S", 24, 96);
-        ctx.fillText("FLIGHT STABILITY  0.998", 18, 237);
-        ctx.fillText("ENG  NOMINAL", 282, 237);
-      }
-      ctx.fillStyle = "#75a0ad";
-      ctx.font = "6px monospace";
-      for (let i = 0; i < 11; i++) {
-        let y = 48 + i * 13;
-        ctx.fillText((0.02 + i * 7e-3).toFixed(3), 14, y);
-        ctx.fillText((99.2 - i * 0.019).toFixed(2), 348, y);
-      }
-    }
-    draw(time, speed);
-    return { canvas, draw };
-  }
   class Renderer extends ThreeRenderBackend {
     constructor(canvas) {
       super(canvas, { vertexSource, fragmentSource, flatVertex, flatFragment, impactVertex, impactFragment }, assets);
@@ -28597,16 +31223,27 @@ vec4 spaceScene(vec3 d,float kind){
         g.data = fleet.vertices.subarray(s.offset, s.offset + s.floatCount);
         return g.upload();
       });
+      this.defenseMeshes = /* @__PURE__ */ new Map();
+      for (const [index, ship] of fleet.ships.entries()) {
+        const parts = assets.ships.find((a) => a.id === ship.id)?.defenseParts;
+        if (parts?.base) this.defenseMeshes.set(index, Object.fromEntries(Object.entries(parts).map(([part, range]) => {
+          const g = new Geometry();
+          g.data = assets.vertices.subarray(range.offset, range.offset + range.floatCount);
+          return [part, range.floatCount ? g.upload() : null];
+        })));
+      }
+      this.cloudVolume = new Geometry().box([2, 2, 2], [0, 0, 0]).upload();
+      this.groundShock = new Geometry().quad([-1, 0, -1], [-1, 0, 1], [1, 0, 1], [1, 0, -1], C2.hull).upload();
       this.bridgeMesh = this.makeBridge().upload();
       let beam = new Geometry();
-      beam.cylinder(1, 1, [0.5, 0, 0], C.blue, 10, 0, 1);
+      beam.cylinder(1, 1, [0.5, 0, 0], C2.blue, 10, 0, 1);
       this.beamMesh = beam.upload();
       let plume = new Geometry();
       plume.data = plumeMeshData();
       this.plumeMesh = plume.upload();
       let missile = new Geometry();
-      missile.cylinder(0.11, 0.95, [0, 0, 0], C.light, 8);
-      missile.cylinder(0.11, 0.32, [0.63, 0, 0], C.light, 8, 0, 0, 0);
+      missile.cylinder(0.11, 0.95, [0, 0, 0], C2.light, 8);
+      missile.cylinder(0.11, 0.32, [0.63, 0, 0], C2.light, 8, 0, 0, 0);
       this.missileMesh = missile.upload();
       this.moonMesh = new Geometry().sphere(1, 64, 36).upload();
       this.moonTexture = this.texture(makeMoonTexture());
@@ -28623,18 +31260,13 @@ vec4 spaceScene(vec3 d,float kind){
       this.grid = this.makeGrid();
       this.stars = this.makeStars();
       this.cockpit = this.makeCockpit().upload();
-      this.screens = [];
-      this.instruments = [];
-      for (let i = 0; i < 3; i++) {
-        let x = (i - 1) * 1.1, y = i === 1 ? -1.22 : -1.15, z = -2;
-        let g = new Geometry();
-        g.quad([x - 0.44, y - 0.27, z], [x + 0.44, y - 0.27, z], [x + 0.44, y + 0.27, z], [x - 0.44, y + 0.27, z], C.blue);
-        this.screens.push(g.upload());
-        let inst = instrumentCanvas(i);
-        inst.texture = this.texture(inst.canvas);
-        this.instruments.push(inst);
-      }
-      this.lastInstrument = 0;
+      this.fighterConsole = new FighterConsole((canvas2) => this.texture(canvas2));
+      this.screens = fighterDisplays.map((p) => {
+        const g = new Geometry(), [w, h] = p.size;
+        g.quad(...[[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]].map(([x, y]) => consolePoint(p, [x, y, 3e-3])), C2.blue);
+        return g.upload();
+      });
+      this.fighterConsoleFrame = null;
       this.vp = M.identity();
       this.eye = [0, 0, 0];
       this.width = 0;
@@ -28655,6 +31287,63 @@ vec4 spaceScene(vec3 d,float kind){
         for (let k = 0; k < 3; k++) for (let j = 0; j < 3; j++) g.data[i + k * 13 + 3 + j] = n[j];
       }
       return g;
+    }
+    drawFortress(environment, namespace = "", metadata = [], rows = []) {
+      const modules = environment?.fortress?.modules;
+      if (!modules?.length) return;
+      const compact = environment.fortress.version >= 2;
+      this.fortressMeshesByVersion ??= /* @__PURE__ */ new Map();
+      const version = compact ? 2 : 1;
+      if (!this.fortressMeshesByVersion.has(version)) this.fortressMeshesByVersion.set(version, createFortressGeometry(Geometry, compact ? FORTRESS.scale : 1, compact));
+      const meshes = this.fortressMeshesByVersion.get(version), { destroyed, destroyedSockets } = fortressState(environment, metadata, rows);
+      for (const ruined of [false, true]) {
+        const group = modules.filter((m) => destroyed.has(m.index) === ruined), matrices = new Float32Array(group.length * 16);
+        group.forEach((m, i) => matrices.set(M.translate(m.x - this.eye[0], m.y - this.eye[1], m.z - this.eye[2]), i * 16));
+        if (group.length) this.drawInstances(namespace + (ruined ? "fortress-wrecks" : "fortress-modules"), { geometry: ruined ? meshes.wreck : meshes.module, high: true, matrices, ids: group.map((m) => m.index) });
+      }
+      if (compact) {
+        this.smallFortressMeshes ??= createFortressGeometry(Geometry, FORTRESS.smallScale);
+        const sockets = modules.flatMap((m) => m.sockets.flatMap((s, i) => s?.kind === "small" ? [{ module: m, index: i, ...fortressSocket(m, i) }] : []));
+        for (const ruined of [false, true]) {
+          const group = sockets.filter((s) => destroyedSockets.has(`${s.module.index}:${s.index}`) === ruined), matrices = new Float32Array(group.length * 16);
+          group.forEach((s, i) => matrices.set(M.translate(s.x - this.eye[0], s.y + 4 - this.eye[1], s.z - this.eye[2]), i * 16));
+          if (group.length) this.drawInstances(namespace + (ruined ? "fortress-small-wrecks" : "fortress-small-modules"), { geometry: ruined ? this.smallFortressMeshes.wreck : this.smallFortressMeshes.module, high: true, matrices, ids: group.map((s) => s.module.index * 7 + s.index) });
+        }
+      }
+      const allLinks = fortressConnections(modules);
+      for (const ruined of [false, true]) {
+        const links = allLinks.filter(([a, b]) => (destroyed.has(a.index) || destroyed.has(b.index)) === ruined), bridges = new Float32Array(links.length * 16);
+        links.forEach(([a, b], i) => {
+          const d = V.sub([b.x, b.y, b.z], [a.x, a.y, a.z]), len = V.length(d), direction = V.scale(d, 1 / len);
+          const inset = compact ? 65 : 90, start = V.add([a.x, a.y, a.z], V.scale(direction, inset)), end = V.add([b.x, b.y, b.z], V.scale(direction, -inset));
+          const matrix = this.segmentModel(start, end);
+          for (let j = 0; j < 3; j++) matrix[12 + j] -= this.eye[j];
+          bridges.set(matrix, i * 16);
+        });
+        if (links.length) this.drawInstances(namespace + (ruined ? "fortress-broken-links" : "fortress-links"), { geometry: ruined ? meshes.brokenBridge : meshes.bridge, high: true, matrices: bridges, ids: links.map((_, i) => i) });
+      }
+    }
+    drawDefenseField(environment, metadata, rows, owner) {
+      const modules = environment?.fortress?.modules;
+      if (!modules?.length) return;
+      const { fields } = fortressState(environment, metadata, rows);
+      if (!fields.length) return;
+      const x = modules.reduce((n, m) => n + m.x, 0) / modules.length, z = modules.reduce((n, m) => n + m.z, 0) / modules.length;
+      const y = Math.min(...modules.map((m) => m.y)) + 8, radius = Math.max(...modules.map((m) => Math.hypot(m.x - x, m.z - z))) + 150;
+      this.defenseFieldMesh ??= new Geometry().sphere(1, 80, 40).upload();
+      this.setBlend(true, false);
+      for (const field of fields) this.drawMesh(this.defenseFieldMesh, M.compose([x, y, z], [0, 0, 0], [radius, radius * 0.45 + 120, radius]), { mode: 14, tint: field.owner === owner ? [0.12, 0.6, 1] : [1, 0.24, 0.18], opacity: 0.55 + 0.45 * Math.min(1, field.charge / field.capacity) });
+      this.setBlend(false, true);
+    }
+    drawBattlePlanet(environment) {
+      this.battlePlanetMesh ??= new Geometry().sphere(1, 256, 128).upload();
+      const { center } = environment, radius = environment.radius / FORTRESS.orbitScale;
+      this.drawMesh(this.battlePlanetMesh, M.compose(center, [0, 0, 0], [radius, radius, radius]), { mode: 11, light: [-0.4, 0.9, 0.3] });
+      if (!environment.moon) {
+        this.setBlend(true, false);
+        this.drawMesh(this.battlePlanetMesh, M.compose(center, [0, 0, 0], [radius + environment.atmosphere, radius + environment.atmosphere, radius + environment.atmosphere]), { mode: 8, opacity: 0.32 });
+        this.setBlend(false, true);
+      }
     }
     environment(s, time) {
       const kind = s.sceneIndex ?? 0;
@@ -28730,20 +31419,15 @@ vec4 spaceScene(vec3 d,float kind){
         g.beam([s * 2.8, 1.9, -2.57], [s * 1.99, -1.57, -1.92], 0.035, 0.03, trim);
         for (let i = 0; i < 5; i++) g.box([0.065, 0.055, 0.04], [s * (2.16 + i * 0.044), 1.25 - i * 0.5, -2.59 + i * 0.055], inner);
       }
-      g.box([5.8, 0.6, 0.7], [0, -1.74, -1.87], inner);
-      g.beam([-2.6, -1.24, -2.14], [2.6, -1.24, -2.14], 0.24, 0.15, frame);
-      for (let i = 0; i < 3; i++) {
-        let x = (i - 1) * 1.1, y = i === 1 ? -1.22 : -1.15;
-        g.chamfer([1.035, 0.79, 0.2], [x, y, -2.16], frame);
-        g.box([0.94, 0.6, 0.06], [x, y, -2.06], inner);
-        for (let sy of [-1, 1]) for (let sx of [-1, 1]) g.box([0.031, 0.03, 0.018], [x + sx * 0.46, y + sy * 0.315, -2.027], trim);
-        for (let j = 0; j < 3; j++) {
-          g.box([0.055, 0.04, 0.038], [x + 0.49, y + 0.1 - j * 0.1, -2.009], j === 0 ? rgb(10910790) : trim);
-        }
-      }
-      for (let s of [-1, 1]) {
-        g.chamfer([0.42, 0.84, 0.45], [s * 1.95, -1.42, -1.83], inner);
-        g.box([0.21, 0.13, 0.035], [s * 1.94, -1.11, -1.58], frame);
+      g.box([3.7, 0.32, 0.55], [0, -1.24, -2.5], inner);
+      for (const panel of fighterDisplays) {
+        const [w, h] = panel.size, point = (v) => consolePoint(panel, v);
+        g.beam(point([0, -h / 2, -0.08]), [panel.pos[0], -1.28, -2.4], 0.12, 0.12, frame);
+        g.box([w + 0.1, h + 0.12, 0.14], point([0, 0, -0.08]), frame, 0, panel.rotation);
+        g.box([w + 0.028, h + 0.028, 0.025], point([0, 0, -0.016]), inner, 0, panel.rotation);
+        for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.box([0.015, 0.015, 6e-3], point([sx * (w / 2 + 0.03), sy * (h / 2 + 0.034), -4e-3]), trim, 0, panel.rotation);
+        g.box([w * 0.7, 6e-3, 8e-3], point([0, h / 2 + 0.033, -4e-3]), rgb(6460322), 0, panel.rotation, 0.3);
+        g.box([0.045, 9e-3, 8e-3], point([w / 2 - 0.03, -h / 2 - 0.038, -4e-3]), rgb(9030078), 0, panel.rotation, 0.4);
       }
       return g;
     }
@@ -28755,7 +31439,7 @@ vec4 spaceScene(vec3 d,float kind){
         g.beam([side * 6.6, 3, -5.7], [side * 3.75, -2.15, -2.55], 0.24, 0.3, frame);
         g.chamfer([1.65, 0.38, 1.5], [side * 2.82, -1.74, -3.1], frame);
         g.box([1.3, 0.023, 0.83], [side * 2.82, -1.54, -3.1], inner);
-        for (let j = 0; j < 6; j++) g.box([0.055, 0.028, 0.45], [side * 2.82 - 0.45 + j * 0.18, -1.519, -3.1], C.blue, 0, [0, 0, 0], 0.65);
+        for (let j = 0; j < 6; j++) g.box([0.055, 0.028, 0.45], [side * 2.82 - 0.45 + j * 0.18, -1.519, -3.1], C2.blue, 0, [0, 0, 0], 0.65);
         g.beam([side * 6, -1.42, -4.4], [side * 3.15, -1.16, -2.54], 0.075, 0.08, trim);
         for (let i = 0; i < 5; i++) g.box([0.055, 0.12, 0.045], [side * 4.43, 1.6 - i * 0.56, -3.7 + i * 0.065], inner);
       }
@@ -28771,6 +31455,32 @@ vec4 spaceScene(vec3 d,float kind){
       }
       return g;
     }
+    drawBow(index, model, opacity = 1) {
+      this.bowMeshes ??= /* @__PURE__ */ new Map();
+      let mesh = this.bowMeshes.get(index);
+      if (!mesh) {
+        const source = this.shipMeshes[index].geometry.getAttribute("aPosition").data.array, b = LAYOUTS[index].bounds, L = LAYOUTS[index].length, data = [];
+        for (let i = 0; i < source.length; i += 39) {
+          if (Math.max(source[i], source[i + 13], source[i + 26]) > b.center[0] + L * 0.04) continue;
+          for (let j = 0; j < 39; j++) data.push(source[i + j]);
+          for (let j = 0; j < 3; j++) {
+            const o = data.length - 39 + j * 13;
+            data[o + 1] = (data[o + 1] - b.center[1]) * 0.38;
+            const n = Math.hypot(data[o + 3], data[o + 4] / 0.38, data[o + 5]);
+            data[o + 3] /= n;
+            data[o + 4] /= 0.38 * n;
+            data[o + 5] /= n;
+          }
+        }
+        let lift = Infinity;
+        for (let i = 0; i < data.length; i += 13) lift = Math.min(lift, L * 0.12 - (L * 0.25 - data[i]) * 0.18 - data[i + 1]);
+        for (let i = 0; i < data.length; i += 13) data[i + 1] += lift;
+        mesh = createGeometry(data);
+        this.bowMeshes.set(index, mesh);
+        this.geometryResources.add(mesh.geometry);
+      }
+      this.drawMesh(mesh, model, { light: [-0.35, 0.9, 0.6], exposure: 1.15, opacity });
+    }
     drawVessel(index, model, opts = {}, turrets = null) {
       this.drawMesh(this.shipMeshes[index], model, { ...opts, fighter: true });
       for (const t of turrets || LAYOUTS[index].joints) {
@@ -28778,6 +31488,32 @@ vec4 spaceScene(vec3 d,float kind){
         this.drawMesh(this.jointMeshes[t.parts[0]], a.yaw, opts);
         this.drawMesh(this.jointMeshes[t.parts[1]], a.barrels, opts);
       }
+    }
+    drawDefense(index, model, yaw = 0, pitch = 0, teamColor = [0.086, 0.545, 0.922]) {
+      const parts = this.defenseMeshes.get(index);
+      if (!parts) {
+        this.drawVessel(index, model);
+        return;
+      }
+      const pivot = assets.ships?.find((a) => a.id === fleet.ships?.[index]?.id)?.defensePivot ?? 3, opts = { teamColor };
+      this.drawMesh(parts.base, model, opts);
+      const turret = M.mul(model, M.ry(yaw)), barrels = M.mul(turret, M.mul(M.translate(0, pivot, 0), M.mul(M.rz(-pitch), M.translate(0, -pivot, 0))));
+      if (parts.turret) this.drawMesh(parts.turret, turret, opts);
+      if (parts.barrels) this.drawMesh(parts.barrels, barrels, opts);
+    }
+    drawMushroomClouds(p) {
+      const clouds = [...p.mushroomClouds || []].sort((a, b) => V.length(V.sub(b.pos, this.eye)) - V.length(V.sub(a.pos, this.eye)));
+      this.setBlend(false);
+      this.setDepthWrite(false);
+      for (const c of clouds) {
+        const phase = groundBlastPhase(c.age), { radius: r, height: h, opacity } = phase, at = c.pos;
+        const drift = phase.spread * 1.8, center = [at[0] + drift, at[1] + (h + r * 0.95) * 0.5, at[2] + drift * 0.35];
+        const size = [r * 1.6, (h + r * 0.95) * 0.5, r * 1.6], eye = this.eye.map((v, i) => (v - center[i]) / size[i]);
+        this.drawMesh(this.cloudVolume, M.compose(center, [0, 0, 0], size), { mode: 12, opacity, impact: [...eye, c.age], shield: [h / r, c.seed] });
+        if (phase.shockOpacity > 1e-3) this.drawMesh(this.groundShock, M.compose([at[0], at[1] + 0.8, at[2]], [0, 0, 0], [phase.shockRadius, 1, phase.shockRadius]), { mode: 13, opacity: phase.shockOpacity, impact: [0, 0, 0, c.age] });
+      }
+      this.setDepthWrite(true);
+      this.setBlend(false);
     }
     segmentModel(a, b, radius = 1) {
       const x = V.norm(V.sub(b, a)), ref = Math.abs(x[1]) > 0.97 ? [0, 0, 1] : [0, 1, 0], z = V.norm(V.cross(x, ref)), y = V.cross(z, x), len = V.length(V.sub(b, a));
@@ -28949,8 +31685,8 @@ vec4 spaceScene(vec3 d,float kind){
       this.setBlend(false);
       this.setDepthWrite(true);
     }
-    drawCombatEffects(p, time, own = this.ownModel) {
-      const layout = LAYOUTS[window.GalacticDemo.state.shipIndex];
+    drawCombatEffects(p, time, own = this.ownModel, index = window.GalacticDemo?.state.shipIndex ?? 0) {
+      const layout = LAYOUTS[index];
       if (p.charging) {
         const glows = [];
         for (let m of layout.main) {
@@ -29005,16 +31741,32 @@ vec4 spaceScene(vec3 d,float kind){
       this.setDepthWrite(true);
       this.drawSpecial(p, time);
       this.drawWeaponImpacts(p);
+      this.drawMushroomClouds(p);
+    }
+    endFrame() {
+      const stats = super.endFrame();
+      if (this.cabinRequest) {
+        this.cabins ??= new Cabins(this);
+        this.cabins.draw(this.cabinRequest);
+      }
+      return stats;
+    }
+    dispose() {
+      this.cabins?.dispose();
+      super.dispose();
     }
     flight(s, time) {
+      this.cabinRequest = null;
+      this.fighterConsoleFrame = null;
       if (globalThis.flightController?.overview) return globalThis.flightController.drawOverview(this, s, time);
       this.begin(time);
+      this.cabinRequest = null;
       const p = s.flight, layout = LAYOUTS[s.shipIndex], a = axes(p), { forward, right, up } = a;
       const shipFrame = M.camera(p.pos, forward, up), own = shipMatrix(p, s.shipIndex);
       this.flightCameraMatrix = shipFrame;
       this.ownModel = own;
       const blend = p.cameraBlend ?? (p.external ? 1 : 0);
-      const bridge = V.scale(layout.bridge, layout.scale), zoom = p.cameraZoom || 1, orbit = p.orbitYaw || 0;
+      const bridge = [0, layout.length * 0.12, layout.length * 0.25], zoom = p.cameraZoom || 1, orbit = p.orbitYaw || 0;
       const c = layout.chase, co = Math.cos(orbit), si = Math.sin(orbit);
       const chase = [(c[0] * co + c[2] * si) * zoom, (c[1] + (p.orbitPitch || 0) * c[2]) * zoom, (-c[0] * si + c[2] * co) * zoom];
       const arc = Math.sin(blend * Math.PI) * layout.length * 0.15;
@@ -29027,6 +31779,13 @@ vec4 spaceScene(vec3 d,float kind){
       eyeLocal[0] += Math.sin(time * 53) * localShake * 0.18;
       eyeLocal[1] += Math.cos(time * 63) * localShake * 0.12;
       let eye = M.transform(shipFrame, eyeLocal), dir = V.add(V.scale(right, dirLocal[0]), V.add(V.scale(up, dirLocal[1]), V.scale(forward, -dirLocal[2])));
+      if (blend < 0.17) {
+        const pose = p.cabinPose, base = !p.profile.capital ? [0, 0, 0] : (p.cabinKind || cockpitClass({ role: "line", length: layout.length })) === "bastion" ? [0, 3.75, 2] : [0, 3.8, -1];
+        if (pose) {
+          eye = V.add(eye, V.add(V.scale(right, pose.eye[0] - base[0]), V.add(V.scale(up, pose.eye[1] - base[1]), V.scale(forward, -pose.eye[2] + base[2]))));
+          dir = V.add(V.scale(forward, Math.cos(pose.yaw) * Math.cos(pose.pitch)), V.add(V.scale(right, Math.sin(pose.yaw) * Math.cos(pose.pitch)), V.scale(up, Math.sin(pose.pitch))));
+        }
+      }
       if (p.detonated) {
         const e = p.detonated, q = Math.min(1, e.age / 0.3), dest = V.add(e.pos, [e.radius * 0.72, e.radius * 0.4, e.radius * 1.35]);
         eye = eye.map((v, i) => mix(v, dest[i], q));
@@ -29060,26 +31819,43 @@ vec4 spaceScene(vec3 d,float kind){
           this.drawShield(t, t.kind, model);
         }
       }
-      const ownOpacity = p.detonated ? 0 : !p.profile.capital ? clamp2((blend - 0.035) / 0.18, 0, 1) : 1;
+      const ownOpacity = p.detonated ? 0 : clamp2((blend - 0.035) / 0.18, 0, 1);
       if (ownOpacity > 1e-3) this.drawVessel(s.shipIndex, own, { light: [-0.5, 0.9, 0.75], opacity: ownOpacity, exposure: 0.83 }, p.joints);
+      if (blend < 0.17 && !p.detonated) this.drawBow(s.shipIndex, own, clamp2(1 - blend / 0.17, 0, 1));
       this.drawShield(p, s.shipIndex, own, ownOpacity);
       if (ownOpacity > 0.05 && blend > 0.04) this.drawExhaust(s.shipIndex, own, p.throttle, p.boostActive, time, ownOpacity);
       this.drawCombatEffects(p, time, own);
       if (globalThis.flightController && !globalThis.flightController.fullDetail) globalThis.flightController.presentation.draw(this, globalThis.flightController, false);
       const interiorAlpha = p.detonated ? 0 : clamp2(1 - blend / 0.17, 0, 1);
-      if (interiorAlpha > 0) {
+      if (interiorAlpha > 0 && p.profile.capital) {
+        this.cabinRequest = { kind: p.cabinKind || cockpitClass({ role: "line", length: layout.length }), console: this.bridgeInstrumentState, pose: p.cabinPose, time, fov: this.fov, opacity: interiorAlpha, row: [0, ...p.pos, Math.PI - p.yaw, p.pitch, p.hull, p.shield, -1, p.speed / 8, p.gunCooldown, p.missileCooldown], meta: { type: fleet.ships[s.shipIndex].id, maxHp: 100, maxShield: 100 }, auto: p.ai, throttle: p.throttle / 100 };
+      }
+      if (interiorAlpha > 0 && !p.profile.capital) {
         const cockpitModel = M.mul(shipFrame, M.translate(...bridge));
         if (blend < 0.02) this.beginOverlay();
         this.drawMesh(!p.profile.capital ? this.cockpit : this.bridgeMesh, cockpitModel, { opacity: interiorAlpha, light: [-0.35, 0.7, 0.6], exposure: 0.7 });
-        if (time - this.lastInstrument > 0.2) {
-          this.lastInstrument = time;
-          this.instruments.forEach((inst) => {
-            inst.draw(time, p.speed);
-            inst.texture.needsUpdate = true;
-          });
-        }
-        for (let i = 0; i < 3; i++) this.drawMesh(this.screens[i], cockpitModel, { mode: 2, texture: this.instruments[i].texture, opacity: interiorAlpha });
+        this.fighterConsoleFrame = cockpitModel;
+        this.fighterConsole.update(this.fighterInstrumentState, time);
+        for (let i = 0; i < this.screens.length; i++) this.drawMesh(this.screens[i], cockpitModel, { mode: 2, texture: this.fighterConsole.displays[i].texture, opacity: interiorAlpha });
       }
+    }
+    pickFighterConsole(x, y) {
+      if (this.cabinRequest) return this.cabins?.pickFighterConsole(x, y) || null;
+      const m = this.fighterConsoleFrame;
+      if (!m) return null;
+      const ray = this.ray(x, y), relative = ray.origin.map((v, i) => v - m[12 + i]), local = (v) => [0, 4, 8].map((j) => v.reduce((a, n, i) => a + n * m[j + i], 0));
+      return this.fighterConsole.pick(local(relative), local(ray.direction));
+    }
+    pickBridgeConsole(x, y) {
+      return this.cabinRequest ? this.cabins?.pickBridgeConsole(x, y) || null : null;
+    }
+    bridgeConsoleLayout() {
+      return this.cabinRequest ? this.cabins?.bridgeConsoleLayout() || [] : [];
+    }
+    fighterConsoleLayout() {
+      if (this.cabinRequest) return this.cabins?.fighterConsoleLayout() || [];
+      const m = this.fighterConsoleFrame;
+      return m ? this.fighterConsole.layout((p) => this.project(M.transform(m, p))) : [];
     }
     ray(x, y) {
       const right = V.norm(V.cross(this.cameraForward, this.cameraUp)), up = V.cross(right, this.cameraForward), tan = Math.tan(this.fov / 2);
@@ -29142,6 +31918,210 @@ function createLifetime(host = globalThis) {
   };
 }
 
+// scripts/three-flight/fighter-hud-art.js
+var reticle = '<svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="173" stroke-dasharray="80 19 2 12 4 22" opacity=".7"/><path d="M200 10v28M200 362v28M9 200h28M363 200h28M39 195v10M361 195v10M195 39h10M195 361h10" stroke-width="1.5"/><path d="M67 161h28M71 194h39M67 227h28M305 161h28M290 194h39M305 227h28" opacity=".55"/><circle cx="200" cy="200" r="16" stroke-dasharray="15 9"/><path d="M193 200h-22M207 200h22M200 193v-15M200 207v15"/><g font-family="Consolas,monospace" font-size="9" fill="#8cc7e0" stroke="none"><text x="47" y="197">0</text><text x="340" y="197">0</text><text x="318" y="163">+10</text><text x="319" y="229">\u221210</text></g></svg>';
+var referenceStyle = "#fighter-flight-hud{--c:#83d8ff;--c2:#42b5ee;--r:#ff625c;--y:#eab96b;--ink:#030e1ae8;--line:#5194b462;position:fixed;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--hud-scale,1));transform-origin:center;z-index:18;pointer-events:none;color:#d6ecf6;font:14px 'Bahnschrift','Segoe UI','Microsoft YaHei',sans-serif;line-height:1.3;letter-spacing:.3px;-webkit-user-select:none;user-select:none}\n\n#fighter-flight-hud *{box-sizing:border-box}\n#fighter-flight-hud h1,#fighter-flight-hud h2,#fighter-flight-hud h3,#fighter-flight-hud p{margin:0}\n#fighter-flight-hud button,#fighter-flight-hud input{pointer-events:auto;font:inherit;color:inherit}\n#fighter-flight-hud button{cursor:pointer;border:0;background:transparent;padding:0}\n#fighter-flight-hud button:hover{color:#f0faff;filter:brightness(1.25)}\n#fighter-flight-hud button:focus-visible{outline:2px solid #bbecff;outline-offset:3px}\n#fighter-flight-hud button:disabled{opacity:.4;cursor:not-allowed;filter:none}\n#fighter-flight-hud svg{overflow:visible}\n#fighter-flight-hud small{font-size:10px;color:#7399b1;letter-spacing:1.5px}\n#fighter-flight-hud strong,#fighter-flight-hud b{font-weight:600}\n#fighter-flight-hud kbd{font:10px 'Consolas',monospace;border:1px solid #6494a169;border-radius:2px;min-width:20px;height:20px;display:inline-grid;place-items:center;padding:0 4px;color:#a2c9db;box-shadow:none}\n#fighter-flight-hud .u-panel:before{content:'';position:absolute;left:9px;right:9px;top:0;height:1px;background:linear-gradient(90deg,#8ad9ff88,transparent 50%,#8ad9ff88)}\n#fighter-flight-hud .u-panel:after{content:'';position:absolute;right:4px;top:16px;bottom:16px;width:2px;background:linear-gradient(#619dc644,transparent 40%);pointer-events:none}\n#fighter-flight-hud .u-panel h2{font-size:13px;font-weight:600;letter-spacing:1.1px;color:#86d1f7;display:flex;align-items:center;justify-content:space-between;margin-bottom:11px!important}\n#fighter-flight-hud .u-panel h2 span{font-size:9px;color:#507d98;letter-spacing:1.5px}\n#fighter-flight-hud .u-bar{height:5px;background:#27475f56;overflow:hidden;position:relative}\n#fighter-flight-hud .u-bar i{height:100%;display:block;background:linear-gradient(90deg,#2586bd,#93ddff);width:70%;transition:width .12s;box-shadow:0 0 12px #3bb4ff44}\n#fighter-flight-hud .u-bar.red i{background:linear-gradient(90deg,#aa3447,#ff7966)}\n#fighter-flight-hud .u-bar.gold i{background:linear-gradient(90deg,#966830,#f1bf6c)}\n#fighter-flight-hud .u-bar.green i{background:linear-gradient(90deg,#227d80,#6ddecb)}\n#fighter-flight-hud .u-bar.segmented{height:8px;mask-image:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px)}\n#fighter-flight-hud .u-pilot-reticle{position:absolute;left:602px;top:242px;width:396px;height:396px;color:#8dcce5;opacity:.8}\n#fighter-flight-hud .u-pilot-reticle svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1}\n#fighter-flight-hud .u-reticle-center{position:absolute;left:780px;top:420px;width:40px;height:40px;opacity:.8}\n#fighter-flight-hud .u-lead-label{position:absolute;left:690px;top:570px;width:220px;text-align:center;font:10px Consolas,monospace;line-height:1.8;color:#87c3df;letter-spacing:1.5px}\n#fighter-flight-hud .u-velocity{position:absolute;left:44px;top:326px;width:120px;height:239px;text-shadow:0 1px 4px #000}\n#fighter-flight-hud .u-velocity .u-caption{font-size:11px;color:#a5d0e4;letter-spacing:2px}\n#fighter-flight-hud .u-speed-number{font:32px Consolas,monospace;color:#e4f6ff;margin-top:4px}\n#fighter-flight-hud .u-speed-unit{font:10px Consolas,monospace;letter-spacing:3px;color:#82b6cc}\n#fighter-flight-hud .u-speed-ruler{position:absolute;left:-5px;top:78px;width:57px;height:147px;border-right:1px solid #5798bcb3;background:repeating-linear-gradient(0deg,transparent 0 13px,#75c9fca3 13px 14px,transparent 14px 15px);mask-image:linear-gradient(90deg,transparent 55%,#000 56%)}\n#fighter-flight-hud .u-throttle-vertical{position:absolute;left:65px;top:80px;width:17px;height:134px;background:#173449;mask-image:repeating-linear-gradient(0deg,#000 0 6px,transparent 6px 9px)}\n#fighter-flight-hud .u-throttle-vertical i{position:absolute;bottom:0;width:100%;height:40%;background:linear-gradient(#b0eaff,#3099d2)}\n#fighter-flight-hud .u-thr-value{position:absolute;left:56px;top:225px;font:11px Consolas,monospace;color:#a5e1ff}\n#fighter-flight-hud .u-pilot-condition{position:absolute;right:52px;top:340px;width:139px;text-shadow:0 1px 4px #000}\n#fighter-flight-hud .u-condition-item{border-left:3px solid #83d3fc;padding-left:13px;margin-bottom:24px}\n#fighter-flight-hud .u-condition-item.gold{border-color:#d4a766}\n#fighter-flight-hud .u-condition-item small{font-size:11px!important;color:#a1cde0!important}\n#fighter-flight-hud .u-condition-item b{display:block;font:27px Consolas,monospace;margin:2px 0 7px}\n#fighter-flight-hud .u-condition-item .u-bar{height:12px;background:#16324499}\n#fighter-flight-hud .u-condition-item.gold b{color:#f1d39c}\n#fighter-flight-hud .u-mini-silhouette{position:absolute;width:45px;height:90px;object-fit:contain;right:-3px;bottom:-48px;opacity:.7}\n#fighter-flight-hud .u-radar-footer{text-align:center;font:10px Consolas,monospace;color:#7fc5e7;letter-spacing:2px}\n";
+
+// scripts/three-flight/fighter-hud.js
+var FighterHUD = class {
+  constructor(actions) {
+    this.actions = actions;
+    this.markers = /* @__PURE__ */ new Map();
+    this.contacts = [];
+    this.style = document.createElement("style");
+    this.style.textContent = referenceStyle + styles;
+    document.head.append(this.style);
+    this.root = document.createElement("section");
+    this.root.id = "fighter-flight-hud";
+    this.root.hidden = true;
+    this.root.setAttribute("aria-label", "\u6218\u6597\u673A\u98DE\u884C\u4EEA\u8868");
+    this.root.innerHTML = `<div class="f-identity"><small>FLIGHT CONTROL / \u6218\u6597\u673A</small><h2 data-value="name"></h2><span data-value="mode"></span></div>
+   <div class="f-heading"><div class="f-heading-ticks"></div><span data-value="heading"></span></div>
+   <section class="f-wing"><h2>\u7F16\u961F\u94FE\u8DEF <small data-value="wingCount"></small></h2><div data-wing></div></section>
+   <div class="u-pilot-reticle">${reticle}</div><div class="f-attitude"><div data-attitude>\u2212 \u2212 \u2212 \u2500\u2500\u2500\u2500\u2500 \u25C7 \u2500\u2500\u2500\u2500\u2500 \u2212 \u2212 \u2212</div><span data-value="pitch"></span></div>
+   <div class="u-lead-label"><span data-value="solution"></span><br><b data-value="range"></b></div>
+   <div class="u-velocity"><div class="u-caption">VELOCITY</div><div class="u-speed-number" data-value="speed"></div><div class="u-speed-unit">M / S</div><div class="u-speed-ruler"></div><div class="u-throttle-vertical"><i data-throttle></i></div><div class="u-thr-value" data-value="throttle"></div></div>
+   <div class="u-pilot-condition"><div class="u-condition-item"><small>SHIELD / \u62A4\u76FE</small><b data-value="shield"></b><div class="u-bar"><i data-bar="shield"></i></div></div><div class="u-condition-item gold"><small>ARMOR / \u88C5\u7532</small><b data-value="hull"></b><div class="u-bar gold"><i data-bar="hull"></i></div></div></div>
+   <footer class="u-pilot-footer"><span>W/S \u6CB9\u95E8\u3000\u2191/\u2193 \u6216 Q/E \u4FEF\u4EF0\u3000\u2190/\u2192 \u504F\u822A\u3000A/D \u6EDA\u8F6C\u3000\u53F3\u952E\u62D6\u52A8\u7784\u51C6</span><button data-action="auto">\u4EA4\u8FD8 AI \xB7 G</button><button data-action="view">\u5207\u6362\u89C6\u89D2 \xB7 V</button><button data-action="exit">\u9000\u51FA \xB7 Esc</button></footer><div class="f-markers"></div>`;
+    document.body.append(this.root);
+    this.values = /* @__PURE__ */ new Map();
+    for (const el of this.root.querySelectorAll("[data-value]")) {
+      const list = this.values.get(el.dataset.value) || [];
+      list.push(el);
+      this.values.set(el.dataset.value, list);
+    }
+    this.root.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-action]");
+      if (b && !b.disabled) {
+        actions[b.dataset.action]?.();
+        b.blur();
+      }
+    });
+  }
+  text(key, value) {
+    for (const el of this.values.get(key) || []) if (el.textContent !== String(value)) el.textContent = value;
+  }
+  update(s) {
+    this.root.hidden = !s?.visible;
+    document.body.classList.toggle("fighter-hud-active", !!s?.visible);
+    if (!s?.visible) return;
+    const scale = Math.min(innerWidth / 1600, innerHeight / 900);
+    this.root.style.setProperty("--hud-scale", scale);
+    this.root.classList.toggle("external", !!s.external);
+    this.root.classList.toggle("console-view", !!s.inspectingConsole);
+    const consoleTop = Number.isFinite(s.consoleTop) && !s.external ? (s.consoleTop - (innerHeight - 900 * scale) / 2) / scale - 20 : 900;
+    this.root.style.setProperty("--console-top", consoleTop + "px");
+    this.state = s;
+    const deg = (r) => (r * 180 / Math.PI).toFixed(1) + "\xB0";
+    for (const [k, v] of Object.entries({ name: s.name, mode: s.replay ? "REPLAY / \u6218\u6597\u8BB0\u5F55" : s.manual ? "MANUAL / \u624B\u52A8\u9A7E\u9A76" : "AUTO / \u81EA\u52A8\u9A7E\u9A76", heading: "HDG " + String(Math.round((s.heading * 180 / Math.PI + 360) % 360)).padStart(3, "0"), speed: Math.round(s.speed), throttle: "THR " + Math.round(s.throttle * 100) + "%", engine: Math.round(s.throttle * 100) + "%", shield: Math.round(s.shield) + "%", hull: Math.round(s.hull) + "%", pitch: deg(s.pitch), roll: deg(s.roll), altitude: Math.round(s.altitude) + " m", climb: (Math.sin(s.pitch) * s.speed).toFixed(1) + " m/s", weaponName: s.weaponName, weaponState: s.weapon.reason === "cooldown" ? s.weapon.cooldown.toFixed(1) + "s" : s.weapon.ready ? "\u5C31\u7EEA" : s.weapon.reason === "unavailable" ? "\u672A\u88C5\u5907" : "\u5F85\u547D", missileState: s.missile.reason === "unavailable" ? "\u672A\u88C5\u5907" : s.missile.reason === "cooldown" ? s.missile.cooldown.toFixed(1) + "s" : s.missile.ready ? "\u5C31\u7EEA" : "\u5F85\u547D", weaponRange: "\u4E3B\u6B66\u5668\u5C04\u7A0B " + s.weapon.range + " m", missileRange: s.missile.reason === "unavailable" ? "\u672A\u88C5\u5907\u5BFC\u5F39" : "\u5BFC\u5F39\u5C04\u7A0B " + s.missile.range + " m", solution: s.solution || "\u9009\u62E9\u76EE\u6807", range: s.weapon.distance == null ? "TARGET / \u2014" : Math.round(s.weapon.distance) + " m", command: s.command || "", scanRange: Math.round(s.scanRange) + " m", wingCount: s.contacts.filter((c) => !c.enemy).length + " \u53CB\u65B9" })) this.text(k, v);
+    for (const el of this.root.querySelectorAll("[data-bar]")) el.style.width = Math.max(0, Math.min(100, el.dataset.bar === "engine" ? s.throttle * 100 : s[el.dataset.bar])) + "%";
+    this.root.querySelector("[data-throttle]").style.height = Math.max(0, Math.min(100, s.throttle * 100)) + "%";
+    this.root.querySelector("[data-attitude]").style.transform = `translateY(${Math.max(-85, Math.min(85, s.pitch * 65))}px) rotate(${-s.roll}rad)`;
+    const auto = this.root.querySelector("[data-action=auto]");
+    auto.textContent = s.manual ? "\u4EA4\u8FD8 AI \xB7 G" : "\u63A5\u7BA1\u9A7E\u9A76 \xB7 G";
+    auto.disabled = !!s.replay;
+    const wing = s.contacts.filter((c) => !c.enemy).sort((a, b) => a.distance - b.distance).slice(0, 4), wingKey = wing.map((c) => c.id + ":" + Math.round(c.distance)).join("|");
+    if (wingKey !== this.wingKey) {
+      this.wingKey = wingKey;
+      this.root.querySelector("[data-wing]").replaceChildren(...wing.length ? wing.map((c) => {
+        const line = document.createElement("p");
+        line.textContent = "\u25C7 " + c.name + "\u3000" + Math.round(c.distance) + " m";
+        return line;
+      }) : [Object.assign(document.createElement("p"), { textContent: "\u65E0\u53CB\u65B9\u7F16\u961F\u63A5\u89E6" })]);
+    }
+    this.drawContacts(s, scale);
+  }
+  drawContacts(s, scale) {
+    const seen = /* @__PURE__ */ new Set(), layer = this.root.querySelector(".f-markers"), ox = (innerWidth - 1600 * scale) / 2, oy = (innerHeight - 900 * scale) / 2;
+    for (const c of s.contacts) {
+      const point = s.project?.(c);
+      if (!point || point.x < 12 || point.x > innerWidth - 12 || point.y < 60 || point.y > innerHeight * 0.71) continue;
+      seen.add(c.id);
+      let el = this.markers.get(c.id);
+      if (!el) {
+        el = document.createElement("button");
+        el.className = "f-contact";
+        el.addEventListener("click", () => this.actions.select?.(String(c.id)));
+        layer.append(el);
+        this.markers.set(c.id, el);
+      }
+      el.classList.toggle("enemy", c.enemy);
+      el.classList.toggle("selected", c.id === s.target);
+      el.disabled = !c.enemy || !!s.replay;
+      el.textContent = (c.enemy ? "\u25C7 " : "\u25B3 ") + c.name + " \xB7 " + Math.round(c.distance) + " m";
+      el.style.left = (point.x - ox) / scale + "px";
+      el.style.top = (point.y - oy) / scale + "px";
+    }
+    for (const [id, el] of this.markers) if (!seen.has(id)) {
+      el.remove();
+      this.markers.delete(id);
+    }
+  }
+  dispose() {
+    this.root.remove();
+    this.style.remove();
+    document.body.classList.remove("fighter-hud-active");
+  }
+};
+var styles = `
+#fighter-flight-hud .u-pilot-reticle{clip-path:inset(0 0 max(0px,calc(610px - var(--console-top,900px))) 0)}#fighter-flight-hud .u-lead-label{transform:translateY(min(0px,calc(var(--console-top,900px) - 599px)))}
+#fighter-flight-hud{z-index:27;line-height:1.3}#fighter-flight-hud .u-pilot-reticle{left:640px;top:290px;width:320px;height:320px}#fighter-flight-hud[hidden]{display:none!important}#fighter-flight-hud.console-view :is(.u-pilot-reticle,.f-attitude,.u-lead-label,.u-velocity,.u-pilot-condition,.f-markers){visibility:hidden}#fighter-flight-hud button{touch-action:manipulation}#fighter-flight-hud .u-pilot-footer{position:absolute;bottom:13px;left:29px;right:29px;display:flex;align-items:center;font-size:11px;gap:18px;color:#89b8cc}#fighter-flight-hud .u-pilot-footer button{font-size:11px!important}#fighter-flight-hud .u-pilot-footer span:first-child{margin-right:auto}#fighter-flight-hud .u-lead-label{top:555px;width:350px;left:625px;letter-spacing:0}
+#fighter-flight-hud .f-identity{position:absolute;top:96px;left:28px;border-left:2px solid #75c8e6;padding:8px 16px;background:linear-gradient(90deg,#061a28c9,transparent)}#fighter-flight-hud .f-identity h2{font-size:21px;letter-spacing:2px;margin:8px 0}#fighter-flight-hud .f-identity span{font:11px Consolas;color:#82c9dc}#fighter-flight-hud .f-heading{position:absolute;left:595px;top:100px;width:410px;text-align:center;color:#a5d8eb;font:16px Consolas;letter-spacing:3px}#fighter-flight-hud .f-heading-ticks{height:21px;margin-bottom:9px;border-bottom:1px solid #5d8f9d;background:repeating-linear-gradient(90deg,transparent 0 15px,#568b9c99 15px 16px)}#fighter-flight-hud .f-wing{position:absolute;top:96px;right:28px;width:272px;padding:12px 16px;background:#051322bc;border-top:1px solid #568ead88;border-bottom:1px solid #568ead44}#fighter-flight-hud .f-wing h2{font-size:12px;letter-spacing:2px;color:#85c6dd;margin-bottom:9px}#fighter-flight-hud .f-wing p{font-size:11px;margin:9px 0;color:#9fcede}#fighter-flight-hud .f-wing small{float:right;letter-spacing:0}
+#fighter-flight-hud .f-attitude{position:absolute;left:650px;top:450px;width:300px;text-align:center;color:#8dcce599;font:11px Consolas}#fighter-flight-hud .f-attitude span{position:absolute;left:275px;top:0;white-space:nowrap}#fighter-flight-hud .f-contact{position:absolute;transform:translate(-50%,-50%);font:10px Consolas,'Microsoft YaHei'!important;color:#82cdeb!important;text-shadow:0 1px 5px #000;white-space:nowrap;padding:6px!important}#fighter-flight-hud .f-contact.enemy{color:#ff8c7e!important}#fighter-flight-hud .f-contact.selected{border:1px solid currentColor;background:#33141655}#fighter-flight-hud .f-contact:disabled{opacity:.8;cursor:default}
+body.fighter-hud-active #map-pilot-hud,body.fighter-hud-active>.topbar,body.fighter-hud-active>.bottom-bar{display:none!important}body.fighter-hud-active #map-combat-bar{top:12px;bottom:auto;z-index:30}body.fighter-hud-active #flight>*:not(#native-battle-bar):not(#flight-notice):not(.scene-controls):not(#death-controls){visibility:hidden!important}body.fighter-hud-active #flight-notice{bottom:auto;top:20%;z-index:32}body.fighter-hud-active .scene-controls{top:12px}body.fighter-hud-active #formation-labels{display:none}
+`;
+
+// scripts/three-flight/bridge-hud.js
+var BridgeHUD = class {
+  constructor(actions) {
+    this.actions = actions;
+    this.style = document.createElement("style");
+    this.style.textContent = styles2;
+    document.head.append(this.style);
+    this.root = document.createElement("section");
+    this.root.id = "bridge-flight-hud";
+    this.root.hidden = true;
+    this.root.innerHTML = '<header><small data-label></small><h2 data-name></h2><span data-mode></span></header><footer><span data-help></span><button data-action="auto">\u63A5\u7BA1\u9A7E\u9A76 \xB7 G</button><button data-action="view">\u5207\u6362\u89C6\u89D2 \xB7 V</button><button data-action="exit">\u9000\u51FA \xB7 Esc</button></footer>';
+    document.body.append(this.root);
+    this.root.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-action]");
+      if (b && !b.disabled) {
+        this.actions[b.dataset.action]?.();
+        b.blur();
+      }
+    });
+  }
+  update(s) {
+    this.root.hidden = !s?.visible;
+    document.body.classList.toggle("bridge-hud-active", !!s?.visible);
+    if (!s?.visible) return;
+    this.state = s;
+    this.root.querySelector("[data-label]").textContent = s.carrier ? "FLEET COMMAND / \u65E0\u4EBA\u50DA\u673A\u6307\u6325" : "BATTLESHIP / \u8230\u6865\u706B\u63A7";
+    this.root.querySelector("[data-name]").textContent = s.name;
+    this.root.querySelector("[data-mode]").textContent = s.replay ? "\u5386\u53F2\u56DE\u653E \xB7 \u6307\u4EE4\u53EA\u8BFB" : s.manual ? "\u624B\u52A8\u9A7E\u9A76" : s.walking ? "AI \u9A7E\u9A76 \xB7 \u8230\u6865\u884C\u8D70" : "AI \u9A7E\u9A76";
+    this.root.querySelector("[data-help]").textContent = s.external ? "V \u8FD4\u56DE\u8230\u6865 \xB7 \u4EEA\u8868\u4E0E\u6307\u6325\u4F4D\u4E8E\u6A21\u578B\u63A7\u5236\u53F0" : s.walking ? "W/A/S/D \u884C\u8D70 \xB7 \u4E2D\u952E\u73AF\u89C6 \xB7 C \u8FD4\u56DE\u6307\u6325\u5E2D" : "W/S \u6CB9\u95E8 \xB7 A/D \u8F6C\u5411 \xB7 T \u9009\u654C \xB7 X \u5BF9\u51C6 \xB7 \u4E2D\u952E\u73AF\u89C6 \xB7 C \u56DE\u6B63";
+    const auto = this.root.querySelector("[data-action=auto]");
+    auto.textContent = s.manual ? "\u4EA4\u8FD8 AI \xB7 G" : "\u63A5\u7BA1\u9A7E\u9A76 \xB7 G";
+    auto.disabled = !!s.replay || !s.canPilot;
+  }
+  dispose() {
+    this.root.remove();
+    this.style.remove();
+    document.body.classList.remove("bridge-hud-active");
+  }
+};
+var styles2 = `#bridge-flight-hud[hidden]{display:none!important}#bridge-flight-hud{position:fixed;inset:0;z-index:27;pointer-events:none;color:#bde4ed;font:12px 'Bahnschrift','Microsoft YaHei',sans-serif}#bridge-flight-hud header{position:absolute;top:90px;left:28px;text-shadow:0 2px 6px #000}#bridge-flight-hud header small{font:10px Consolas;letter-spacing:2px;color:#88b9cc}#bridge-flight-hud h2{font-size:22px;letter-spacing:2px;margin:9px 0}#bridge-flight-hud header span{font-size:11px;color:#9dc2ce}#bridge-flight-hud footer{position:absolute;bottom:16px;left:28px;right:28px;display:flex;align-items:center;gap:24px;color:#8ab1c1;font-size:11px}#bridge-flight-hud footer>span{margin-right:auto}#bridge-flight-hud button{pointer-events:auto;color:#bde4ed;border:0;background:#081923b3;padding:8px 10px;font:inherit;cursor:pointer}#bridge-flight-hud button:hover{background:#254550;color:#fff}#bridge-flight-hud button:disabled{opacity:.4;cursor:default}body.bridge-hud-active #map-pilot-hud,body.bridge-hud-active>.topbar,body.bridge-hud-active>.bottom-bar,body.bridge-hud-active #formation-labels{display:none!important}body.bridge-hud-active #map-combat-bar{top:12px;bottom:auto;z-index:30}body.bridge-hud-active #flight>*:not(#flight-notice):not(.scene-controls):not(#death-controls){visibility:hidden!important}body.bridge-hud-active #flight-notice{top:19%;bottom:auto;z-index:32}body.bridge-hud-active .scene-controls{top:12px}@media(max-width:1300px){#bridge-flight-hud header{top:80px}#bridge-flight-hud h2{font-size:18px}#bridge-flight-hud footer{gap:10px;font-size:10px;left:20px;right:20px}}`;
+
+// game/battle-terrain.mjs
+var PLANET_BATTLE_RADIUS = 12e3;
+function planetBattleEnvironment(planet = {}) {
+  return { kind: "planet", radius: PLANET_BATTLE_RADIUS, center: [700, -12400, 0], atmosphere: 180, biome: planet.biome || "terrestrial", moon: !!planet.moon, ...planet.id ? { planetId: planet.id } : {} };
+}
+function battleViewEnvironment(environment, planet = {}) {
+  if (environment?.kind === "planet") return !environment.planetId && planet.id ? { ...environment, planetId: planet.id } : environment;
+  return { ...planetBattleEnvironment(planet), center: [700, -12800, 0] };
+}
+function surfaceHeight(environment, x, z) {
+  if (environment?.kind !== "planet") return -Infinity;
+  const [cx, cy, cz] = environment.center, r = environment.radius;
+  return cy + Math.sqrt(Math.max(0, r * r - (x - cx) ** 2 - (z - cz) ** 2));
+}
+function terrainBlocks(environment, from, to) {
+  if (!environment) return false;
+  const d = to.map((v, i) => v - from[i]), o = from.map((v, i) => v - environment.center[i]);
+  const length = d.reduce((a, v) => a + v * v, 0), t = Math.max(0, Math.min(1, -o.reduce((a, v, i) => a + v * d[i], 0) / (length || 1)));
+  return o.reduce((a, v, i) => a + (v + d[i] * t) ** 2, 0) < (environment.radius - 1) ** 2;
+}
+
+// game/weapon-solution.mjs
+var angle2 = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+function weaponSolution(environment, s, t, secondary = false) {
+  const p = s.profile, missile = secondary === "missile", turret = secondary === true;
+  const range = turret ? Math.min(800, p.range) : missile ? p.missileRange ?? Math.max(1100, p.range) : p.range;
+  const distance = t ? Math.hypot(s.x - t.x, s.y - t.y, s.z - t.z) : null;
+  const result = (reason2) => ({ range, distance, reason: reason2, ready: reason2 === "ready" });
+  if (!secondary && p.defenseOnly || missile && !p.secondaryMissile) return result("unavailable");
+  if (!t || t.hp <= 0) return result("target");
+  if (distance > range) return result("range");
+  if (terrainBlocks(environment, [s.x, s.y, s.z], [t.x, t.y, t.z])) return result("terrain");
+  const yaw = Math.atan2(t.x - s.x, t.z - s.z), pitch = Math.atan2(t.y - s.y, Math.hypot(t.x - s.x, t.z - s.z));
+  if (p.ground && (Math.abs(angle2(yaw - (s.turretYaw ?? s.yaw))) > 0.18 || Math.abs(pitch - (s.turretPitch ?? 0)) > 0.18)) return result("aim");
+  if (!secondary && p.fixed && (Math.abs(angle2(yaw - s.yaw)) > 0.16 || Math.abs(pitch - s.pitch) > 0.16)) return result("aim");
+  return result("ready");
+}
+function pilotWeaponStatus(environment, meta, row, target, missile = false) {
+  if (!meta || !row) return { reason: "target", ready: false, range: 0, distance: null, cooldown: 0 };
+  const ship = (r) => ({ x: r[1], y: r[2], z: r[3], yaw: r[4], pitch: r[5], hp: r[6], turretYaw: r[13], turretPitch: r[14], profile: meta.profile });
+  const p = meta.profile, primaryMissile = missile && p.missile;
+  const result = weaponSolution(environment, ship(row), target ? ship(target) : null, missile && !primaryMissile ? "missile" : false);
+  const cooldown = row[missile && !primaryMissile ? 11 : 10] || 0;
+  if (result.ready && cooldown > 0) {
+    result.reason = "cooldown";
+    result.ready = false;
+  }
+  return { ...result, cooldown };
+}
+
 // scripts/three-flight/runtime.js
 function startFlightRuntime({ fleet, assets, createController = null }) {
   window.GalacticDemo?.dispose?.();
@@ -29183,6 +32163,87 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   };
   let renderer = null, lastTime = 0, hudAccumulator = 0, toastTimer, noticeTimer, hitTimer, damageTimer, audio = null, lastFocused = null, activePointer = null, mouseDown = false;
   const keys = /* @__PURE__ */ new Set(), rnd = seeded(window.battleBenchmark?.visualSeed ?? 4982);
+  const fighterHUD = new FighterHUD({ select: (id) => {
+    const live = globalThis.flightController;
+    if (!live) {
+      const index2 = Number(id);
+      if (Number.isInteger(index2) && state.flight.targets[index2]?.hp > 0) selectTarget(index2);
+      return;
+    }
+    const meta = live?.metadata?.[Number(id)];
+    if (id === "" || !meta || meta.side === live.metadata[live.selected]?.side || live.rows[meta.id]?.[6] <= 0) return;
+    live.refreshContacts(meta.id);
+    const index = state.flight.targets.findIndex((t) => t.shipId === meta.id);
+    if (index >= 0) selectTarget(index);
+  }, target: () => cycleTarget(), lock: () => alignTarget(), fire: () => fireMain(), missile: () => fireMissile(), auto: () => setAI(!state.flight.ai), view: () => setView(), exit: () => {
+    const leave = $("#native-leave");
+    if (leave) leave.click();
+    else transitionTo("archive");
+  }, slower: () => state.flight.throttle = clamp2(state.flight.throttle - 10, 0, 100), faster: () => state.flight.throttle = clamp2(state.flight.throttle + 10, 0, 100) });
+  const bridgeHUD = new BridgeHUD({ ...fighterHUD.actions, mode: (value) => void globalThis.flightController?.orderCarrier({ mode: value }), formation: (value) => void globalThis.flightController?.orderCarrier({ formation: value }), focus: () => void globalThis.flightController?.orderCarrier({ target: selectedTarget()?.shipId }) });
+  function updateFighterHUD() {
+    const live = globalThis.flightController, p = state.flight, m = live?.metadata?.[live.selected], visible = state.mode === "flight" && m && cockpitClass(m.profile) === "fighter" && !live.overview;
+    const consoleTop = Math.min(...renderer.fighterConsoleLayout().flatMap((d) => d.corners.filter((c) => c.visible).map((c) => c.y)));
+    if (!live && state.mode === "flight" && !p.profile.capital) {
+      const target2 = selectedTarget(), distance = target2 ? V.length(V.sub(target2.pos, p.pos)) : null, c = p.profile;
+      const reason2 = c.primaryKind === "none" ? "unavailable" : p.gunCooldown > 0 || p.charging ? "cooldown" : "ready", missileReason = !LAYOUTS[state.shipIndex].tubes.length ? "unavailable" : p.missileCooldown > 0 ? "cooldown" : !p.missileLock || p.missileLockTime < 0.4 ? "target" : distance > 2200 ? "range" : p.missileStock <= 0 ? "unavailable" : "ready";
+      renderer.fighterInstrumentState = { visible: true, external: p.external, inspectingConsole: !p.external && (p.cabinPose?.pitch || 0) < -0.1, name: SHIPS[state.shipIndex].name + " / \u9776\u573A", manual: !p.ai, heading: Math.PI - p.yaw, pitch: p.pitch, roll: p.roll || 0, speed: p.speed / 8, altitude: p.pos[1], pos: p.pos, throttle: p.throttle / 100, shield: p.shield, hull: p.hull, contacts: p.targets.filter((t) => t.hp > 0).map((t) => ({ id: p.targets.indexOf(t), name: t.name, pos: t.pos, enemy: true, distance: V.length(V.sub(t.pos, p.pos)) })), target: p.targetIndex, locked: p.align, scanRange: 2200, weaponName: c.primaryName, weapon: { reason: reason2, ready: reason2 === "ready", cooldown: p.gunCooldown, range: c.beam ? 1800 : c.projectileSpeed * 12, distance }, missile: { reason: missileReason, ready: missileReason === "ready", cooldown: p.missileCooldown, range: 2200, distance }, solution: "\u9776\u573A\u6F14\u7EC3 \xB7 " + (reason2 === "ready" ? "\u4E3B\u6B66\u5668\u5C31\u7EEA" : "\u4E3B\u6B66\u5668\u51B7\u5374\u4E2D") };
+      fighterHUD.update({ ...renderer.fighterInstrumentState, consoleTop, project: (c2) => {
+        const q = renderer.project(c2.pos);
+        return q.visible ? q : null;
+      } });
+      return;
+    }
+    if (!visible) {
+      fighterHUD.update(null);
+      return;
+    }
+    const row = live.rows[live.selected], target = selectedTarget(), targetRow = live.rows[target?.shipId];
+    if (!row) return;
+    const weapon = pilotWeaponStatus(live.snapshot?.environment || live.replay?.environment, m, row, targetRow), missile = pilotWeaponStatus(live.snapshot?.environment || live.replay?.environment, m, row, targetRow, true);
+    const contacts = live.metadata.filter((c) => c.id !== m.id && live.rows[c.id]?.[6] > 0).map((c) => {
+      const pos = live.row(c.id).slice(1, 4);
+      return { id: c.id, name: (SHIPS[live.indices.get(c.type)]?.name || c.type) + " #" + (c.id + 1), pos, enemy: c.side !== m.side, distance: V.length(V.sub(pos, p.pos)) };
+    });
+    const instrumentState = { visible: true, consoleTop, name: SHIPS[state.shipIndex].name + " #" + (m.id + 1), manual: live.controlled === m.id, replay: !!live.replay, external: p.external, inspectingConsole: !p.external && (p.cabinPose?.pitch || 0) < -0.1, heading: Math.PI - p.yaw, pitch: p.pitch, roll: p.roll || 0, speed: p.speed / 8, altitude: p.pos[1], pos: p.pos, throttle: p.throttle / 100, shield: p.shield, hull: p.hull, contacts, scanRange: Math.max(1e3, m.profile.range * 4), target: target?.shipId, locked: p.align, weapon, missile, weaponName: m.profile.primaryName || "\u4E3B\u6B66\u5668", solution: { target: "\u8BF7\u9009\u62E9\u76EE\u6807", range: "\u76EE\u6807\u8D85\u51FA\u5C04\u7A0B", terrain: "\u5C04\u7EBF\u88AB\u661F\u7403\u906E\u6321", aim: p.align ? "\u6B63\u5728\u8F6C\u5411\u5BF9\u51C6" : "\u6309 X \u9501\u5B9A\u5BF9\u51C6", cooldown: "\u6B66\u5668\u51B7\u5374\u4E2D", unavailable: "\u672A\u88C5\u5907", ready: "\u53EF\u4EE5\u5F00\u706B" }[weapon.reason], project: (c) => {
+      const q = renderer.project(c.pos);
+      return q.visible ? q : null;
+    } };
+    fighterHUD.update(instrumentState);
+    const { project, ...consoleState } = instrumentState;
+    renderer.fighterInstrumentState = consoleState;
+  }
+  function updateBridgeHUD() {
+    const live = globalThis.flightController, p = state.flight, m = live?.metadata?.[live.selected];
+    if (state.mode !== "flight" || !p.profile?.capital || live && (live.overview || !m)) {
+      bridgeHUD.update(null);
+      return;
+    }
+    const target = selectedTarget(), distance = target ? V.length(V.sub(target.pos, p.pos)) : null, c = m?.profile || p.profile;
+    let weapon, missile, contacts;
+    if (live) {
+      const row = live.rows[live.selected], targetRow = live.rows[target?.shipId], environment = live.snapshot?.environment || live.replay?.environment;
+      if (!row || row[6] <= 0) {
+        bridgeHUD.update(null);
+        return;
+      }
+      weapon = pilotWeaponStatus(environment, m, row, targetRow);
+      missile = pilotWeaponStatus(environment, m, row, targetRow, true);
+      contacts = live.metadata.filter((t) => t.id !== m.id && live.rows[t.id]?.[6] > 0).map((t) => {
+        const row2 = live.row(t.id), pos = row2.slice(1, 4);
+        return { id: t.id, name: live.name(t.type) + " #" + (t.id + 1), enemy: t.side !== m.side, drone: t.carrierId === m.id, pos, hull: row2[6] / t.maxHp * 100, distance: V.length(V.sub(pos, p.pos)) };
+      });
+    } else {
+      const reason2 = c.primaryKind === "none" ? "unavailable" : p.gunCooldown > 0 || p.charging ? "cooldown" : "ready", mr = !LAYOUTS[state.shipIndex].tubes.length ? "unavailable" : p.missileCooldown > 0 ? "cooldown" : "ready";
+      weapon = { reason: reason2, ready: reason2 === "ready", cooldown: p.gunCooldown, range: c.beam ? 1800 : c.projectileSpeed * 12, distance };
+      missile = { reason: mr, ready: mr === "ready", cooldown: p.missileCooldown, range: 2200, distance };
+      contacts = p.targets.filter((t) => t.hp > 0).map((t) => ({ id: p.targets.indexOf(t), name: t.name, enemy: true, pos: t.pos, hull: t.hp, distance: V.length(V.sub(t.pos, p.pos)) }));
+    }
+    const carrier = m?.profile.carrier || SHIPS[state.shipIndex].id === "Iron_Behemoth" ? (live?.replay ? live.replayCarriers : live?.snapshot?.carriers)?.find((v) => v.shipId === m?.id) || { active: 0, capacity: 12, nextWave: 0, aura: 0 } : null;
+    const data = { visible: true, name: SHIPS[state.shipIndex].name + (live ? " #" + (m.id + 1) : " / \u9776\u573A"), manual: live ? live.controlled === m.id : !p.ai, canPilot: live ? m.owner === live.owner && !!m.profile.piloted : true, replay: !!live?.replay, external: p.external, walking: !!p.cabinWalk && p.ai, heading: Math.PI - p.yaw, pos: p.pos, speed: p.speed / 8, throttle: p.throttle / 100, shield: p.shield, hull: p.hull, contacts, target: live ? target?.shipId : p.targetIndex, locked: p.align, scanRange: Math.max(carrier ? 2400 : 1e3, (c.range || 450) * 4), weapon, missile, weaponName: c.primaryName, solution: { target: "\u8BF7\u9009\u62E9\u76EE\u6807", range: "\u76EE\u6807\u8D85\u51FA\u5C04\u7A0B", terrain: "\u5C04\u7EBF\u88AB\u661F\u7403\u906E\u6321", aim: p.align ? "\u6B63\u5728\u8F6C\u5411\u5BF9\u51C6" : "\u6309 X \u9501\u5B9A\u5BF9\u51C6", cooldown: "\u6B66\u5668\u51B7\u5374\u4E2D", unavailable: "\u672A\u88C5\u5907", ready: "\u53EF\u4EE5\u5F00\u706B" }[weapon.reason], command: live?.carrierMessage, carrier, canCommand: !!live && !live.replay && live.snapshot?.status === "active" && m.owner === live.owner, commandPending: live?.carrierPending };
+    bridgeHUD.update(data);
+    renderer.bridgeInstrumentState = data;
+  }
   const fmt = (n) => n == null ? "\u5F85\u53D6\u5F97" : Math.round(n).toLocaleString("en-US");
   const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const forward = () => {
@@ -29310,7 +32371,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     $("#director").hidden = !c.capital;
     $("#view-label").textContent = p.external ? c.capital ? "\u8FDB\u5165\u8230\u6865" : "\u8FDB\u5165\u9A7E\u9A76\u8231" : "\u5916\u90E8\u8FFD\u8E2A";
     $("#camera-mode").textContent = p.external ? "\u5916\u90E8\u8FFD\u8E2A" : c.capital ? "\u8230\u6865\u89C6\u89D2" : "\u9A7E\u9A76\u8231";
-    $("#flight-input-copy").textContent = c.capital ? "\u53F3\u952E\u62D6\u52A8\u8F6C\u5411\u3000W / S \u6CB9\u95E8\u3000Space " + c.primaryName + "\u3000R \u5BFC\u5F39\u9F50\u5C04" : "\u53F3\u952E\u62D6\u52A8\u8F6C\u5411\u3000W / S \u6CB9\u95E8\u3000\u5DE6\u952E / Space \u673A\u70AE\u3000R \u5BFC\u5F39";
+    $("#flight-input-copy").textContent = p.cabinWalk ? "W A S D \u8230\u6865\u5DE1\u89C6 \xB7 \u53F3\u952E\u73AF\u89C6 \xB7 C \u8FD4\u56DE\u4F5C\u6218\u5E2D \xB7 G \u63A5\u7BA1" : c.capital ? "W / S \u6CB9\u95E8 \xB7 A / D \u8F6C\u5411 \xB7 T \u9009\u654C \xB7 X \u5BF9\u51C6 \xB7 G AUTO" : "W / S \u6CB9\u95E8 \xB7 A / D \u6EDA\u8F6C \xB7 Q / E \u4FEF\u4EF0 \xB7 \u53F3\u952E\u7784\u51C6 \xB7 \u5DE6\u952E / Space \u673A\u70AE";
     if (c.special) {
       $("#loadout-caption").textContent = c.special === "antimatter" ? "\u65E0\u4EBA\u4E00\u6B21\u6027\u5F39\u4F53 \xB7 \u65E0\u70AE\u5854 \xB7 \u65E0\u9A7E\u9A76\u8231 \xB7 \u8303\u56F4\u4F24\u5BB3\u5FFD\u7565\u62A4\u76FE / \u6536\u5272\u8005\u514D\u75AB" : "\u539F\u521B\u6F14\u7EC3\u914D\u7F6E \xB7 \u53CC\u675F\u76F8\u4F4D\u5207\u5272 \xB7 \u62A4\u76FE\u56DE\u6536 \xB7 2 \u5EA7\u526F\u70AE / 2 \u5EA7\u8FD1\u9632 / 4 \u4E2A\u5BFC\u5F39\u53E3";
       $("#fire-spinal > span:nth-child(2)").innerHTML = c.special === "antimatter" ? "\u81EA\u884C\u7A81\u51FB<small>\u5148\u9501\u5B9A\u76EE\u6807 \xB7 \u5F39\u4F53\u63A5\u8FD1\u5F15\u7206</small>" : "\u76F8\u4F4D\u6536\u5272<small>\u84C4\u80FD 1.1 \u79D2 \xB7 \u6301\u7EED\u5207\u5272</small>";
@@ -29446,7 +32507,6 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     $("#ship-name").textContent = ship.name;
     $("#ship-code").textContent = `${ship.en} / ${ship.serial}`;
     $("#model-class").textContent = `DEEP SPACE / ${ship.code}`;
-    $("#stats-source").textContent = ship.statsSource?.startsWith("https:") ? "\u57FA\u7840\u53C2\u6570\uFF1A\u793E\u533A Wiki \xB7 \u7248\u672C\u5F85\u6838\u5BF9" : ship.statsSource?.startsWith("research/") ? "\u57FA\u7840\u53C2\u6570\uFF1A\u7528\u6237\u622A\u56FE" : "\u57FA\u7840\u53C2\u6570\uFF1A\u5F85\u53D6\u5F97";
     $("#ship-stats").innerHTML = STAT_LABELS.map((label, i) => `<div><dt>${label}</dt><dd>${fmt(ship.stats[i])}</dd></div>`).join("");
     $("#weapon-list").innerHTML = displayWeapons.map(([name, tech, en, level], i) => `<button class="weapon-row" data-weapon="${i + 1}" title="\u67E5\u770B${name}\u5B89\u88C5\u4F4D\u7F6E"><span>${name}</span><span class="weapon-tech">${tech}${level === null ? "" : "<b>Lv." + level + "</b>"}</span></button>`).join("");
     $$(".weapon-row").forEach((b) => {
@@ -29728,6 +32788,8 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       return;
     }
     state.flight.ai = enabled;
+    state.flight.cabinWalk = enabled && LAYOUTS[state.shipIndex].length >= 50;
+    state.flight.cabinPose = cabinPose(state.flight.cabinWalk ? "bastion" : "horizon");
     $("#toggle-ai").setAttribute("aria-pressed", String(enabled));
     $("#ai-label").textContent = enabled ? "\u53D6\u56DE\u63A7\u5236" : "\u81EA\u52A8\u9A7E\u9A76";
     $("#ai-indicator").classList.toggle("visible", enabled);
@@ -29783,10 +32845,10 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       const v = V.sub(q, t.pos), co = Math.cos(t.heading || 0), si = Math.sin(t.heading || 0), b2 = LAYOUTS[t.kind].bounds;
       return [(co * v[0] - si * v[2] - b2.center[0] * t.scale) / (t.scale * b2.half[0]), (v[1] - b2.center[1] * t.scale) / (t.scale * b2.half[1]), (si * v[0] + co * v[2] - b2.center[2] * t.scale) / (t.scale * b2.half[2])];
     };
-    const x = transform(a), d = V.sub(transform(b), x), A = V.dot(d, d), B = 2 * V.dot(x, d), C = V.dot(x, x) - 1;
-    if (C <= 0) return 0;
+    const x = transform(a), d = V.sub(transform(b), x), A = V.dot(d, d), B = 2 * V.dot(x, d), C2 = V.dot(x, x) - 1;
+    if (C2 <= 0) return 0;
     if (A < 1e-12) return null;
-    let discr = B * B - 4 * A * C;
+    let discr = B * B - 4 * A * C2;
     if (discr < 0) return null;
     let f = (-B - Math.sqrt(discr)) / (2 * A);
     return f >= 0 && f <= 1 ? f : null;
@@ -30302,6 +33364,11 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     if (rnd() < dt * 25) burst(end, 4, [0.3, 1, 0.78], 0.6, 25);
   }
   function updateFlight(dt) {
+    const cabin = state.flight;
+    if (cabin.cabinWalk && cabin.ai && !cabin.external) {
+      cabin.cabinPose ??= cabinPose("bastion");
+      walkCabin(cabin.cabinPose, keys, dt, bridgeObstacles);
+    }
     if (globalThis.flightController) return globalThis.flightController.update(dt);
     const p = state.flight, c = p.profile;
     updateSpecial(dt);
@@ -30360,7 +33427,8 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       if (keys.has("KeyW")) p.throttle += dt * 27;
       if (keys.has("KeyS")) p.throttle -= dt * 27;
       p.throttle = clamp2(p.throttle, 0, 100);
-      let turn = (keys.has("KeyD") || keys.has("ArrowRight") ? 1 : 0) - (keys.has("KeyA") || keys.has("ArrowLeft") ? 1 : 0), pitch = (keys.has("ArrowUp") ? 1 : 0) - (keys.has("ArrowDown") ? 1 : 0);
+      const intent = pilotKeys(keys, { role: c.capital ? "line" : "fighter", length: LAYOUTS[state.shipIndex].length });
+      let turn = intent.yaw, pitch = intent.pitch;
       if (turn || pitch) {
         p.align = false;
         p.yawTarget += turn * c.turnRate * dt;
@@ -30372,9 +33440,9 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     p.pitchVelocity = mixExp(p.pitchVelocity, clamp2(pd * c.turnResponse, -c.turnRate * 0.65, c.turnRate * 0.65), c.turnResponse, dt);
     p.yaw += p.yawVelocity * dt;
     p.pitch = clamp2(p.pitch + p.pitchVelocity * dt, -1.3, 1.3);
-    const roll = (keys.has("KeyQ") ? 1 : 0) - (keys.has("KeyE") ? 1 : 0);
-    if (roll) p.roll += roll * dt * (c.capital ? 0.14 : 0.9);
-    else p.roll = mixExp(p.roll, -p.yawVelocity * (c.capital ? 0.13 : 0.22), 2.4, dt);
+    const roll = !c.capital ? (keys.has("KeyD") ? 1 : 0) - (keys.has("KeyA") ? 1 : 0) : 0;
+    if (roll && !p.ai) p.roll += roll * dt * 1.65;
+    if (c.capital) p.roll = 0;
     p.boostActive = keys.has("ShiftLeft") || keys.has("ShiftRight") || p.boost;
     const desiredSpeed = p.throttle / 100 * c.maxSpeed * (p.boostActive ? c.capital ? 1.65 : 2.2 : 1);
     p.speed = mixExp(p.speed, desiredSpeed, c.accel, dt);
@@ -30452,11 +33520,11 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       if (dist) dist.textContent = t.hp > 0 ? (V.length(V.sub(t.pos, p.pos)) * 8e-3).toFixed(1) + " km" : "\u5931\u80FD";
       if (hp) hp.style.transform = `scaleX(${t.hp / 100})`;
     });
-    $$(".mount-dot").forEach((dot, i) => {
+    $$(".mount-dot").forEach((dot2, i) => {
       const t = p.turrets[i];
-      dot.classList.toggle("ready", !!t?.aligned);
-      dot.classList.toggle("firing", !!t && t.cooldown > c.turretCooldown - 0.2);
-      dot.style.display = t ? "" : "none";
+      dot2.classList.toggle("ready", !!t?.aligned);
+      dot2.classList.toggle("firing", !!t && t.cooldown > c.turretCooldown - 0.2);
+      dot2.style.display = t ? "" : "none";
     });
     $("#align-target").classList.toggle("active", p.align);
     $("#align-label").textContent = p.align ? "\u6B63\u5728\u5BF9\u51C6" : "\u8230\u824F\u5BF9\u51C6";
@@ -30569,11 +33637,6 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       $("#autorotate").setAttribute("aria-pressed", String(state.autoRotate));
       tone();
     });
-    listen($("#wireframe"), "click", () => {
-      state.wireframe = !state.wireframe;
-      $("#wireframe").setAttribute("aria-pressed", String(state.wireframe));
-      tone();
-    });
     listen($("#reset-camera"), "click", resetCamera);
     listen($("#deploy"), "click", () => transitionTo("flight"));
     listen($("#exit-flight"), "click", () => transitionTo("archive"));
@@ -30608,7 +33671,16 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     $$(".sound-toggle").forEach((b) => listen(b, "click", toggleSound));
     const canvas = $("#scene");
     listen(canvas, "pointerdown", (e) => {
+      if (e.button === 1) e.preventDefault();
       if (state.helpOpen || state.transition) return;
+      if (e.button === 0 && state.mode === "flight" && !state.flight.external) {
+        const hit = state.flight.profile.capital ? renderer.pickBridgeConsole(e.clientX, e.clientY) : renderer.pickFighterConsole(e.clientX, e.clientY);
+        if (hit) {
+          e.preventDefault();
+          (state.flight.profile.capital ? bridgeHUD : fighterHUD).actions[hit.action]?.(hit.value);
+          return;
+        }
+      }
       if (state.activeTab !== "fleet") setTab("fleet");
       activePointer = { id: e.pointerId, x: e.clientX, y: e.clientY, button: e.button, moved: 0 };
       canvas.setPointerCapture(e.pointerId);
@@ -30630,8 +33702,19 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
         const direction = activePointer.button === 1 ? -1 : 1;
         state.orbit.targetYaw += dx * 6e-3 * direction;
         state.orbit.targetPitch = clamp2(state.orbit.targetPitch + dy * 45e-4 * direction, -0.46, 1.3);
+      } else if (activePointer.button === 1 && !state.flight.external) {
+        const p = state.flight;
+        p.cabinPose ??= cabinPose(p.profile.capital ? p.cabinKind || cockpitClass({ role: "line", length: LAYOUTS[state.shipIndex].length }) : "fighter");
+        p.cabinPose.yaw += dx * 32e-4;
+        p.cabinPose.pitch = clamp2(p.cabinPose.pitch - dy * 32e-4, -1.2, 1.2);
       } else if (activePointer.button === 2) {
         const p = state.flight;
+        if (p.cabinWalk && p.ai) {
+          p.cabinPose.yaw += dx * 32e-4;
+          p.cabinPose.pitch = clamp2(p.cabinPose.pitch - dy * 32e-4, -1.2, 1.2);
+          return;
+        }
+        if (p.profile.capital || globalThis.flightController?.controlled === null) return;
         p.ai = false;
         p.align = false;
         p.yawTarget += dx * 32e-4;
@@ -30724,6 +33807,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
           if (e.code === "Digit2") switchCombatHull(0);
           if (e.code === "Digit3") switchCombatHull(4);
           if (e.code === "KeyC") {
+            state.flight.cabinPose = cabinPose(state.flight.cabinKind || cockpitClass({ role: state.flight.profile.capital ? "line" : "fighter", length: LAYOUTS[state.shipIndex].length }));
             state.flight.orbitYaw = 0;
             state.flight.orbitPitch = 0;
             state.flight.cameraZoom = 1;
@@ -30795,6 +33879,8 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       renderer.endFrame();
       positionHUD();
       updateRenderStats(now);
+      updateFighterHUD();
+      updateBridgeHUD();
     }
     hudAccumulator += dt;
     if (hudAccumulator > 0.065) {
@@ -30809,7 +33895,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   renderShipData();
   setupInstruments();
   bindEvents();
-  addLog("\u8230\u8239\u6863\u6848\u5DF2\u8F7D\u5165 \xB7 \u865A\u62DF\u6F14\u7EC3\u4E0D\u5F71\u54CD\u5B9E\u9645\u6218\u679C");
+  addLog("\u8230\u8239\u6863\u6848\u5DF2\u8F7D\u5165");
   $("#message-dot").classList.remove("visible");
   scheduleFrame(moveNavIndicator);
   try {
@@ -30828,7 +33914,10 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   if (createController) {
     const live = createController({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $, M, V, clamp: clamp2, mix, shortAngle, notice, configureFlight, setView, selectedTarget, renderContacts, shipMatrix, tone, burst, updateCamera, forward, getMouseDown: () => mouseDown });
     globalThis.flightController = live;
-    live.start().catch(failRuntime);
+    live.start().catch((error2) => {
+      error2.battleConnection = true;
+      failRuntime(error2);
+    });
   }
   const ids = ["Destroyer", "Cruiser", "Battleship", "Heavy_Fighter", "Dreadnought"];
   const labels = ["DESTROYER", "CRUISER", "BATTLESHIP", "HEAVY FIGHTER", "DREADNOUGHT"];
@@ -30868,6 +33957,8 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   function dispose() {
     if (lifetime.disposed) return;
     globalThis.flightController?.dispose();
+    fighterHUD.dispose();
+    bridgeHUD.dispose();
     lifetime.dispose();
     keys.clear();
     mouseDown = false;
@@ -30882,8 +33973,22 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     if (lifetime.disposed) return;
     console.error(error2);
     dispose();
-    $("#no-webgl").hidden = false;
+    const panel = $("#no-webgl");
+    panel.hidden = false;
     $("#webgl-error").textContent = String(error2.message || error2);
+    if (error2.battleConnection) {
+      panel.querySelector("h2").textContent = "\u6682\u65F6\u65E0\u6CD5\u8FDB\u5165\u6218\u573A";
+      panel.querySelector("p").textContent = "\u6218\u6597\u8BB0\u5F55\u672A\u80FD\u8BFB\u53D6\u3002\u8FD4\u56DE\u8230\u961F\u540E\u5237\u65B0\u5217\u8868\uFF1B\u5DF2\u7ECF\u7ED3\u675F\u7684\u6218\u6597\u53EF\u4ECE\u5386\u53F2\u6218\u62A5\u89C2\u770B\u56DE\u653E\u3002";
+      const link = $("#legacy-renderer-link");
+      link.textContent = "\u8FD4\u56DE\u8230\u961F";
+      link.href = "./index.html#reports";
+      link.onclick = (e) => {
+        if (parent !== window) {
+          e.preventDefault();
+          parent.postMessage({ type: "battle-exit" }, location.origin);
+        }
+      };
+    }
     document.documentElement.dataset.ready = "error";
   }
   listen(window, "pagehide", dispose);
@@ -30906,25 +34011,143 @@ function projectileContact(from, to, center, radius, previous = center) {
 
 // game/pilot-motion.mjs
 function steerPilot(ship, input, dt) {
-  const turn = ship.profile.turn * dt, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), limit = (v, a, b) => Math.max(a, Math.min(b, v));
+  const handling = pilotHandling(ship.profile), turn = handling.turn * dt, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), limit = (v, a, b) => Math.max(a, Math.min(b, v));
   ship.yaw = wrap(ship.yaw + (input.heading === void 0 ? input.yaw * turn : limit(wrap(input.heading - ship.yaw), -turn, turn)));
-  ship.pitch = limit(ship.pitch + (input.elevation === void 0 ? input.pitch * turn : limit(input.elevation - ship.pitch, -turn, turn)), -1.2, 1.2);
+  if (handling.kind === "fighter" || input.lock) ship.pitch = limit(ship.pitch + (input.elevation === void 0 ? input.pitch * turn : limit(input.elevation - ship.pitch, -turn, turn)), -1.2, 1.2);
+  ship.roll = handling.kind === "fighter" ? wrap((ship.roll || 0) + (input.roll || 0) * 1.65 * dt) : 0;
 }
 function predictPilot(row, profile, input, seconds) {
-  const ship = { x: row[1], y: row[2], z: row[3], yaw: row[4], pitch: row[5], speed: row[9], profile };
+  const ship = { x: row[1], y: row[2], z: row[3], yaw: row[4], pitch: row[5], roll: row[12] || 0, speed: row[9], profile }, handling = pilotHandling(profile);
   const limit = (v, a, b) => Math.max(a, Math.min(b, v));
   for (let left = Math.max(0, Math.min(0.4, seconds)); left > 1e-7; ) {
     const dt = Math.min(0.05, left);
     left -= dt;
     steerPilot(ship, input, dt);
     const desired = input.throttle * profile.speed * (input.boost ? 1.5 : 1);
-    ship.speed += limit(desired - ship.speed, -profile.speed * dt, profile.speed * 0.7 * dt);
+    ship.speed += limit(desired - ship.speed, -profile.speed * handling.braking * dt, profile.speed * handling.acceleration * dt);
     ship.x += Math.sin(ship.yaw) * Math.cos(ship.pitch) * ship.speed * dt;
     ship.y += Math.sin(ship.pitch) * ship.speed * dt;
     ship.z += Math.cos(ship.yaw) * Math.cos(ship.pitch) * ship.speed * dt;
   }
   return ship;
 }
+
+// game/ship-weapon-mounts.mjs
+var pairs = (x, y, zs) => zs.flatMap((z) => [[-x, y, z], [x, y, z]]);
+var shipLengths = { Light_Fighter: 1, Heavy_Fighter: 2, Titanenergetic_Frigate: 5, Cruiser: 10, Battleship: 20, Bomber: 20, Dreadnought: 20, Destroyer: 25, Interceptor: 50, Devourer_Interceptor: 50, Iron_Behemoth: 200 };
+var turretMuzzles = (x, y, z, s) => [-1, 1].map((side) => [x + side * 0.22 * s, y + 0.096 * s, z - 0.905 * s]);
+var shipWeaponLayouts = {
+  Light_Fighter: { role: "\u8F7B\u578B\u6218\u673A", scale: 1, install: false, primary: "\u56FA\u5B9A\u8F7B\u578B\u6FC0\u5149\u70AE", kind: "light_laser", muzzles: pairs(1.79, -1.44, [-2.48]), caliber: 0.052, pointDefense: [] },
+  Heavy_Fighter: { role: "\u91CD\u578B\u6218\u673A", scale: 1, install: false, primary: "\u56FA\u5B9A\u91CD\u578B\u6FC0\u5149\u70AE", kind: "heavy_laser", muzzles: [[1.095, 0.445, -2.335]], caliber: 0.075, pointDefense: [] },
+  Cruiser: { role: "\u79BB\u5B50\u5DE1\u6D0B\u8230", scale: 1, install: false, primary: "\u53CC\u8054\u79BB\u5B50\u70AE", kind: "ion", muzzles: [-1, 1].flatMap((s) => turretMuzzles(s * 1.88, 1.33, -0.59, 0.38)), caliber: 0.07, pointDefense: pairs(1.88, 1.33, [-0.59]), pdScale: 0.38 },
+  Battleship: { role: "\u91CD\u578B\u6218\u5217\u8230", scale: 1, install: false, primary: "\u4F4E\u77EE\u8230\u70AE\u5206\u7EC4\u9F50\u5C04", kind: "shell", muzzles: [...[-1, 1].flatMap((s) => turretMuzzles(s * 1.26, 0.94, -1.43, 0.86)), ...turretMuzzles(0, 1.16, -0.42, 0.66)], caliber: 0.1, pointDefense: pairs(1.45, 1.11, [2.02]), pdScale: 0.6 },
+  Bomber: { role: "\u5BFC\u5F39\u8230", scale: 1, install: false, primary: "\u6FC0\u5149\u5236\u5BFC\u7B49\u79BB\u5B50\u5BFC\u5F39", kind: "missile", muzzles: [], caliber: 0.13, pointDefense: pairs(0.85, 0.65, [0.25]), pdScale: 0.42, missiles: [-1, 1].flatMap((s) => Array.from({ length: 4 }, (_, j) => {
+    const x = s * (1.55 + j * 0.48), y = -0.63;
+    return [x * Math.cos(0.27) + s * y * Math.sin(0.27), -s * x * Math.sin(0.27) + y * Math.cos(0.27), -0.58];
+  })), launchDirection: [0, 0, -1] },
+  Dreadnought: { role: "\u5927\u578B\u6218\u8230", scale: 1, primary: "\u524D\u7F6E\u53CC\u6FC0\u5149\u70AE", kind: "laser", muzzles: pairs(1.48, -0.92, [-6.19]), caliber: 0.11, pointDefense: [...pairs(0.91, 1.035, [-1.7]), ...pairs(1.25, 1.505, [1.3]), ...pairs(0.7, 2.315, [2.65])] },
+  Destroyer: { role: "\u91CD\u578B\u6218\u8230", scale: 1, primary: "\u53CC\u7B49\u79BB\u5B50\u5927\u70AE", kind: "plasma", muzzles: pairs(0.62, -0.33, [-7.25]), caliber: 0.23, pointDefense: [...pairs(0.83, 0.997, [-3.3]), ...pairs(2.6, 0.322, [1.2]), ...pairs(1.8, 0.512, [5.7])] },
+  Interceptor: { "role": "\u6838\u5B50\u70AE\u8230", "scale": 1, "primary": "\u6838\u5B50\u5927\u70AE", "kind": "nuclear", "muzzles": [[0, -0.36, -5.86]], "caliber": 0.33, "pointDefense": [[-0.56, 1.9483, -3], [0.56, 1.9483, -3], [-0.56, 1.8838, -0.1], [0.56, 1.8838, -0.1], [-0.56, 1.802, 4.7], [0.56, 1.802, 4.7], [-0.48, -2.259, -1.7], [0.48, -2.259, -1.7], [-0.48, -2.3317, 1], [0.48, -2.3317, 1], [-0.48, -2.05, 4.9], [0.48, -2.05, 4.9]] },
+  Iron_Behemoth: { role: "\u8D85\u5DE8\u578B\u6307\u6325\u6BCD\u8230", scale: 2.8, primary: "\u65E0\u4E3B\u70AE \xB7 \u8FD1\u9632\u81EA\u536B", kind: null, muzzles: [], caliber: 0, pointDefense: [...pairs(1.65, 1.606, [-4.8]), ...pairs(1.5, 1.271, [-1.2]), ...pairs(1.3, 1.541, [1.1]), ...pairs(0.62, 1.673, [3]), ...pairs(2.2, 0.662, [5.25]), ...pairs(3.53, 0.673, [5.7]), ...pairs(0.5, 2.842, [5.75])] },
+  Devourer_Interceptor: { "role": "\u53CC\u4E3B\u70AE\u622A\u51FB\u8230", "scale": 1, "primary": "\u53CC\u91CD\u578B\u4E3B\u70AE", "kind": "heavy", "muzzles": [[-1.67, -1.05, -7.02], [1.67, -1.05, -7.02]], "caliber": 0.3, "pointDefense": [[-1.67, 0.0547, -4.8], [1.67, 0.0547, -4.8], [-1.67, -0.0534, -1.5], [1.67, -0.0534, -1.5], [-2.85, 0.46, 4.65], [2.85, 0.46, 4.65]] },
+  Titanenergetic_Frigate: { "role": "\u5C0F\u578B\u9AD8\u7EA7\u6218\u673A", "scale": 0.4, "primary": "\u4E2D\u592E\u4E3B\u70AE", "kind": "advanced", "muzzles": [[0, -0.4, -7.01]], "caliber": 0.21, "pointDefense": [[-3.32, 0.8055, 0.1], [3.32, 0.8055, 0.1], [-3.32, 0.628, 1.23], [3.32, 0.628, 1.23]] }
+};
+shipWeaponLayouts.Titanenergetic_Frigate.pointDefense = [];
+shipWeaponLayouts.Titanenergetic_Frigate.primary = "\u4E2D\u592E\u805A\u80FD\u4E3B\u70AE + \u4E24\u4FA7\u5341\u4E8C\u8054\u5BFC\u5F39\u53E3";
+shipWeaponLayouts.Titanenergetic_Frigate.missiles = [-1, 1].flatMap((s) => [-0.3, 0, 0.3].flatMap((dx) => [-0.9, -0.56].map((y) => [s * 3.35 + dx, y, -0.87])));
+shipWeaponLayouts.Titanenergetic_Frigate.launchDirection = [0, 0, -1];
+var spinalMounts = Object.fromEntries(["Destroyer", "Interceptor", "Devourer_Interceptor"].map((id) => [id, { name: shipWeaponLayouts[id].primary, reason: "\u4E3B\u70AE\u5D4C\u5165\u539F\u6709\u7EB5\u5411\u70AE\u8231\uFF0C\u4F9D\u7167\u7528\u6237\u6307\u5B9A\u7684\u6B66\u5668\u914D\u7F6E\u3002" }]));
+Object.assign(shipLengths, { Reaper: 90, Annihilator: 8 });
+Object.assign(shipWeaponLayouts, {
+  Reaper: { role: "RAVEN \u6536\u5272\u8230 \xB7 \u53C2\u8003\u6A21\u578B", install: false, primary: "\u53CC\u675F\u76F8\u4F4D\u6536\u5272", kind: "reaper", muzzles: pairs(2.04, -0.33, [-1.35]), caliber: 0.115, pointDefense: [[-1.3, 1.016081, -0.6], [1.3, 1.016674, -0.6], [-0.44, 1.11925, 3.5], [0.44, 1.11925, 3.5]], pdScale: 0.27, missiles: [[-1.18, 1.003596, -1.6], [-1.18, 1.051833, -1.2], [1.18, 1.010117, -1.6], [1.18, 1.055983, -1.2]], launchDirection: [0, 1, 0] },
+  Annihilator: { role: "\u65E0\u4EBA\u53CD\u7269\u8D28\u81EA\u884C\u5BFC\u5F39", install: false, primary: "\u9501\u5B9A / \u81EA\u884C\u7A81\u51FB", kind: "antimatter", muzzles: [], caliber: 0.3, pointDefense: [] }
+});
+
+// game/devourer-command.mjs
+var DEVOURER = Object.freeze({
+  aura: 0.15,
+  focusRadius: 1e3,
+  lockRange: 2400,
+  focusFraction: 0.35,
+  focusMax: 8,
+  focusSeconds: 6,
+  focusCooldown: 8,
+  initial: 8,
+  wave: 4,
+  interval: 6,
+  capacity: 12,
+  lifetime: 30,
+  swarmShare: 0.8,
+  hull: 35,
+  cooldown: 0.5,
+  guardRadius: 240
+});
+
+// game/spatial-battle.mjs
+function battleMount(s, local = [0, 0, 0], direction = false) {
+  const yaw = s.profile?.ground ? s.turretYaw ?? s.yaw : s.yaw, pitch = s.profile?.ground ? s.turretPitch ?? 0 : s.pitch, pivot = s.profile?.ground && !direction ? s.profile.hardpoints?.pivot ?? 3 : 0;
+  const sy = Math.sin(yaw), cy = Math.cos(yaw), sp = Math.sin(pitch), cp = Math.cos(pitch), [x, ly, lz] = [local[0], local[1] - pivot, local[2]], roll = s.roll || 0, y = ly * Math.cos(roll) + lz * Math.sin(roll), z = lz * Math.cos(roll) - ly * Math.sin(roll);
+  return [-x * sy * cp - y * sy * sp + z * cy, -x * sp + y * cp, -x * cy * cp - y * cy * sp - z * sy].map((v, i) => v + (direction ? 0 : [s.x, s.y + pivot, s.z][i]));
+}
+
+// scripts/three-flight/session-stream.js
+var SessionStream = class extends EventTarget {
+  constructor(url) {
+    super();
+    this.url = url;
+    this.closed = false;
+    this.readyState = 0;
+    this.connect();
+  }
+  async connect() {
+    if (this.closed) return;
+    this.readyState = 0;
+    this.abort = new AbortController();
+    try {
+      const response = await fetch(this.url, { credentials: "same-origin", cache: "no-store", headers: { "X-Empire-Client": "galactic-command", Accept: "text/event-stream" }, signal: this.abort.signal });
+      if (!response.ok) throw Error("\u6218\u573A\u8FDE\u63A5\u5931\u8D25\uFF1A" + response.status);
+      if (this.closed) return;
+      this.readyState = 1;
+      const reader = response.body.getReader(), decoder = new TextDecoder();
+      let pending = "", type = "", data = [];
+      while (!this.closed) {
+        const chunk = await reader.read();
+        if (chunk.done) break;
+        pending += decoder.decode(chunk.value, { stream: true });
+        let end;
+        while ((end = pending.indexOf("\n")) !== -1) {
+          const line = pending.slice(0, end).replace(/\r$/, "");
+          pending = pending.slice(end + 1);
+          if (line === "") {
+            if (data.length) {
+              const event = new MessageEvent(type || "message", { data: data.join("\n") });
+              this.dispatchEvent(event);
+              if (event.type === "message") this.onmessage?.(event);
+            }
+            type = "";
+            data = [];
+            if (this.closed) break;
+          } else if (line.startsWith("event:")) type = line.slice(6).trim();
+          else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
+        }
+      }
+    } catch (error2) {
+      if (this.closed) return;
+      this.readyState = 0;
+      this.onerror?.(error2);
+    }
+    if (!this.closed) {
+      this.readyState = 0;
+      this.retry = setTimeout(() => this.connect(), 1500);
+    }
+  }
+  close() {
+    this.closed = true;
+    this.readyState = 2;
+    clearTimeout(this.retry);
+    this.abort?.abort();
+  }
+};
 
 // game/battle-display.mjs
 function groupBattleShips(metadata) {
@@ -30980,8 +34203,12 @@ function createBattlePresentation({ state, M, V, LAYOUTS, shipMatrix }) {
       this.impacts = [];
       this.flashes = [];
     }
-    environment(r, time) {
+    environment(r, time, environment = globalThis.flightController?.snapshot?.environment || globalThis.flightController?.replay?.environment) {
       r.drawSpaceSky(0.8);
+      if (environment?.kind === "planet") {
+        r.drawBattlePlanet(environment);
+        return;
+      }
       const planet = M.compose([3200, -2500, -5200], [0.1, 0.42, 0.18], [900, 900, 900]);
       r.drawMesh(r.moonMesh, planet, { mode: 7, light: [-0.5, 0.7, 1], exposure: 1.1 });
       r.setBlend(true, false);
@@ -31037,13 +34264,13 @@ function createBattlePresentation({ state, M, V, LAYOUTS, shipMatrix }) {
         if (e.shield || e.dead) {
           let previous;
           for (let i = 0; i <= 24; i++) {
-            const angle = i / 24 * Math.PI * 2, p = V.add(at, V.add(V.scale(right, Math.cos(angle) * radius), V.scale(up, Math.sin(angle) * radius * (e.dead ? 0.45 : 1))));
+            const angle3 = i / 24 * Math.PI * 2, p = V.add(at, V.add(V.scale(right, Math.cos(angle3) * radius), V.scale(up, Math.sin(angle3) * radius * (e.dead ? 0.45 : 1))));
             if (previous) ribbon(previous, p, color, pixelSize(at) * 1.2, alpha * (e.shield ? 0.7 : 0.4));
             previous = p;
           }
         }
         if (e.dead) for (let i = 0; i < 12; i++) {
-          const angle = i * 2.39996, dir = V.add(V.scale(right, Math.cos(angle)), V.scale(up, Math.sin(angle))), tip = V.add(at, V.scale(dir, radius * (0.7 + i % 4 * 0.15)));
+          const angle3 = i * 2.39996, dir = V.add(V.scale(right, Math.cos(angle3)), V.scale(up, Math.sin(angle3))), tip = V.add(at, V.scale(dir, radius * (0.7 + i % 4 * 0.15)));
           ribbon(V.sub(tip, V.scale(dir, e.radius * 0.3)), tip, [1, 0.65, 0.25], 0.15, alpha);
         }
       }
@@ -31110,11 +34337,34 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.meshGroups = /* @__PURE__ */ new Map();
       this.detailIds = /* @__PURE__ */ new Set();
     }
+    name(type) {
+      return type === "Swarm_Fighter" ? "\u8702\u7FA4\u6218\u6597\u673A" : SHIPS[this.indices?.get(type)]?.name || type;
+    }
+    async orderCarrier(order) {
+      const m = this.metadata[this.selected], id = this.selected;
+      if (this.carrierPending || this.replay || this.snapshot?.status !== "active" || !m?.profile.carrier || m.owner !== this.owner || !(this.rows[id]?.[6] > 0)) return;
+      this.carrierPending = true;
+      this.carrierMessage = "\u6B63\u5728\u53D1\u9001\u50DA\u673A\u6307\u4EE4";
+      try {
+        await this.request("/api/battles/" + this.id + "/control", { type: "carrier-order", shipId: id, ...order });
+        this.receive(await this.request("/api/battles/" + this.id));
+        this.carrierMessage = "\u50DA\u673A\u6307\u4EE4\u5DF2\u4E0B\u8FBE";
+      } catch (e) {
+        this.carrierMessage = e.message;
+        notice(e.message);
+      } finally {
+        this.carrierPending = false;
+      }
+    }
     async request(url, body) {
       if (body && this.replayId) throw Error("\u56DE\u653E\u53EA\u8BFB");
-      const r = await fetch(url, { signal: lifetime.signal, credentials: "same-origin", cache: "no-store", ...body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {} });
+      const r = await fetch(url, { signal: lifetime.signal, credentials: "same-origin", cache: "no-store", headers: { "X-Empire-Client": "galactic-command", "Content-Type": "application/json" }, ...body ? { method: "POST", body: JSON.stringify(body) } : {} });
       const data = await r.json();
-      if (!r.ok) throw Error(data.error || "\u65E0\u6CD5\u8FDE\u63A5\u6218\u573A");
+      if (!r.ok) {
+        const error2 = Error(data.error || "\u65E0\u6CD5\u8FDE\u63A5\u6218\u573A");
+        error2.battleConnection = true;
+        throw error2;
+      }
       return data;
     }
     fail(e) {
@@ -31132,7 +34382,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       $(".help-note").textContent = "\u8FD9\u662F\u6B63\u5F0F\u6218\u6597\u3002\u79FB\u52A8\u4E0E\u5C04\u51FB\u5F71\u54CD\u771F\u5B9E\u635F\u5931\uFF1B\u9000\u51FA\u9A7E\u9A76\u4EA4\u8FD8 AI\u3002\u5168\u666F\u4E2D\u62D6\u52A8\u65CB\u8F6C\u3001\u6EDA\u8F6E\u7F29\u653E\uFF0CShift \u62D6\u52A8\u5E73\u79FB\u3002";
       const bar = document.createElement("div");
       bar.id = "native-battle-bar";
-      bar.innerHTML = '<strong id="native-status">\u8FDE\u63A5\u771F\u5B9E\u6218\u573A\u2026</strong><select id="native-formation" aria-label="\u5DF1\u65B9\u7F16\u961F"></select><select id="native-vessel" aria-label="\u7F16\u961F\u5185\u8230\u8239"></select><button id="native-claim">\u4EB2\u81EA\u9A7E\u9A76</button><button id="native-release">\u4EA4\u8FD8 AI</button><button id="native-cinema">\u4EA4\u706B\u89C6\u89D2</button><button id="native-overview">\u8230\u961F\u5168\u666F</button><button id="native-follow">\u8DDF\u968F / \u8230\u6865</button><button id="native-leave">\u8FD4\u56DE\u8230\u961F</button><button id="native-pause" hidden>\u6682\u505C</button><select id="native-speed" hidden><option value="1">1\xD7</option><option value="2">2\xD7</option><option value="4">4\xD7</option></select><input id="native-seek" type="range" min="0" max="600" step=".1" value="0" hidden>';
+      bar.innerHTML = '<strong id="native-status">\u8FDE\u63A5\u771F\u5B9E\u6218\u573A\u2026</strong><select id="native-formation" aria-label="\u5DF1\u65B9\u7F16\u961F"></select><select id="native-vessel" aria-label="\u7F16\u961F\u5185\u8230\u8239"></select><button id="native-claim">\u4EB2\u81EA\u9A7E\u9A76</button><button id="native-release">\u4EA4\u8FD8 AI</button><button id="native-cinema">\u4EA4\u706B\u89C6\u89D2</button><button id="native-ground">\u5730\u9762\u9635\u5730</button><button id="native-overview">\u8230\u961F\u5168\u666F</button><button id="native-follow">\u8DDF\u968F / \u8230\u6865</button><button id="native-leave">\u8FD4\u56DE\u8230\u961F</button><button id="native-pause" hidden>\u6682\u505C</button><select id="native-speed" hidden><option value="1">1\xD7</option><option value="2">2\xD7</option><option value="4">4\xD7</option></select><input id="native-seek" type="range" min="0" max="600" step=".1" value="0" hidden>';
       document.body.append(bar);
       this.labels = document.createElement("div");
       this.labels.id = "formation-labels";
@@ -31156,16 +34406,14 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       $("#native-claim").onclick = () => this.setAI(false);
       $("#native-release").onclick = () => this.setAI(true);
       $("#native-cinema").onclick = () => this.frameBattle();
+      $("#native-ground").onclick = () => this.frameGround();
       $("#native-overview").onclick = () => this.frameBattle(true);
       $("#native-follow").onclick = () => {
         this.overview = false;
         setView();
       };
       $("#native-leave").onclick = () => this.leave();
-      $("#native-pause").onclick = () => {
-        this.paused = !this.paused;
-        $("#native-pause").textContent = this.paused ? "\u7EE7\u7EED" : "\u6682\u505C";
-      };
+      $("#native-pause").onclick = () => this.togglePlayback();
       $("#native-speed").onchange = (e) => this.playSpeed = Number(e.target.value);
       $("#native-seek").oninput = (e) => this.seek(Number(e.target.value));
       const canvas = $("#scene");
@@ -31205,7 +34453,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       }
       this.receive(await this.request("/api/battles/" + this.id));
       if (lifetime.disposed) return;
-      this.stream = new EventSource("/api/battles/" + this.id + "/events");
+      this.stream = new SessionStream("/api/battles/" + this.id + "/events");
       this.stream.onmessage = (e) => {
         if (lifetime.disposed) return;
         try {
@@ -31232,52 +34480,71 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.syncHeader();
     }
     async loadReplay(id) {
-      this.presentation.clear();
-      this.projectileVisuals.clear();
-      this.vesselVisuals.clear();
-      state.flight.shieldHits = [];
-      state.flight.beams = [];
-      state.flight.particles = [];
-      state.flight.projectiles = [];
-      state.flight.weaponImpacts = [];
-      state.flight.specialBlasts = [];
-      const data = await this.request("/api/replay/" + id);
-      if (!data.record) throw Error("\u6B64\u6218\u62A5\u6CA1\u6709\u7A7A\u95F4\u8BB0\u5F55");
-      this.replay = data.record;
+      this.clearVisuals();
+      const data = await this.request("/api/replay/" + encodeURIComponent(id));
+      if (!data.record?.frames?.length || !data.record.metadata?.length) throw Error("\u8FD9\u4EFD\u6218\u62A5\u6CA1\u6709\u53EF\u64AD\u653E\u7684\u7A7A\u95F4\u5F55\u50CF");
+      this.replay = { ...data.record, events: data.record.events || [], environment: battleViewEnvironment(data.record.environment) };
       this.deathTicks = new Map(this.replay.events.filter((e) => e.type === "destroy").map((e) => [e.shipId, e.tick]));
-      this.report = data.report;
-      this.metadata = data.record.metadata;
-      this.rows = data.record.frames[0].ships;
+      this.report = { ...data.report, duration: Number((Number.isFinite(data.report.duration) ? data.report.duration : this.replay.frames.at(-1).tick * 0.05).toFixed(2)) };
+      this.metadata = this.replay.metadata;
+      this.rows = this.replay.frames[0].ships;
       this.previous = this.rows;
+      this.replayAlpha = 1;
       this.playTime = 0;
       this.replayCursor = 0;
+      this.paused = false;
       this.controlled = null;
       clearInterval(this.inputTimer);
       this.prepare();
-      this.frameBattle();
+      this.update(0);
+      this.frameBattle(true);
+      document.body.classList.add("replay-mode");
+      document.title = "\u5386\u53F2\u56DE\u653E \xB7 " + (this.report.title || "\u8230\u961F\u6218\u6597");
+      $(".flight-header>div").textContent = "\u94F6\u6CB3\u5E1D\u56FD / \u5386\u53F2\u56DE\u653E";
+      $(".flight-header>p").textContent = this.report.title || "\u5DF2\u4FDD\u5B58\u7684\u6218\u6597\u8BB0\u5F55";
+      $(".help-note").textContent = "\u89C2\u770B\u5DF2\u4FDD\u5B58\u7684\u8230\u961F\u8F68\u8FF9\u4E0E\u4EA4\u706B\u3002\u62D6\u52A8\u8FDB\u5EA6\u6761\u3001\u8C03\u6574\u500D\u901F\uFF1B\u53EF\u5207\u6362\u8230\u961F\u5168\u666F\u6216\u8DDF\u968F\u53C2\u6218\u8230\u8239\u3002";
+      $("#flight-nav-label").textContent = "\u5386\u53F2\u56DE\u653E";
+      $("#flight").setAttribute("aria-label", "\u5386\u53F2\u6218\u6597\u56DE\u653E");
+      for (const name of ["claim", "release"]) $("#native-" + name).hidden = true;
+      $("#native-leave").textContent = "\u9000\u51FA\u56DE\u653E";
       for (const name of ["pause", "speed", "seek"]) $("#native-" + name).hidden = false;
-      $("#native-seek").max = data.report.duration;
+      $("#native-seek").step = ".05";
+      $("#native-seek").max = this.report.duration;
+      this.syncHeader();
+      notice("\u5386\u53F2\u56DE\u653E \xB7 " + (this.report.targetName || this.report.title || "\u8230\u961F\u6218\u6597"));
+    }
+    togglePlayback() {
+      if (!this.replay) return;
+      if (this.playTime >= this.report.duration) {
+        this.seek(0);
+        this.frameBattle(true);
+        this.paused = false;
+      } else this.paused = !this.paused;
       this.syncHeader();
     }
     clearVisuals() {
       this.presentation.clear();
       this.projectileVisuals.clear();
       this.vesselVisuals.clear();
-      for (const key of ["shieldHits", "beams", "particles", "projectiles", "weaponImpacts", "specialBlasts"]) state.flight[key] = [];
+      for (const key of ["shieldHits", "beams", "particles", "projectiles", "weaponImpacts", "specialBlasts", "mushroomClouds"]) state.flight[key] = [];
     }
     seek(seconds) {
       if (!this.replay) return;
       this.playTime = clamp2(seconds, 0, this.report.duration);
       this.replayCursor = replayEventCursor(this.replay.events, this.playTime * 20);
       this.clearVisuals();
+      for (const e of this.replay.events) if (e.tick <= seconds * 20 && e.tick > seconds * 20 - GROUND_BLAST_LIFETIME * 20) this.groundBlast(e, (seconds * 20 - e.tick) * 0.05);
       this.predicted = null;
       this.collisionRows = null;
       this.update(0);
+      this.syncHeader();
     }
     receive(data) {
+      data = { ...data, environment: battleViewEnvironment(data.environment) };
+      if (this.snapshot && data.tick < this.snapshot.tick) return;
       if (data.trial) {
-        $(".flight-header>p").textContent = "\u9694\u79BB\u7F16\u961F\u6D4B\u8BD5 \xB7 \u6743\u5A01\u6218\u6597\u6A21\u62DF";
-        $(".help-note").textContent = "\u81EA\u9009\u6D4B\u8BD5\u8230\u961F\uFF0C\u4E0D\u5F71\u54CD\u6B63\u5F0F\u8D44\u6E90\u3002\u4E3B\u529B\u4FDD\u6301\u4E09\u7EF4\u6218\u5217\uFF0C\u8F7B\u8230\u8FD1\u8DDD\u79BB\u7F20\u6597\uFF1B\u8FD4\u56DE\u8230\u961F\u53EF\u4FEE\u6539\u53CC\u65B9\u914D\u6BD4\u3002";
+        $(".flight-header>p").textContent = "\u8230\u961F\u6F14\u7EC3";
+        $(".help-note").textContent = "\u4E3B\u529B\u4FDD\u6301\u4E09\u7EF4\u6218\u5217\uFF0C\u8F7B\u8230\u8FD1\u8DDD\u79BB\u7F20\u6597\uFF1B\u8FD4\u56DE\u8230\u961F\u53EF\u4FEE\u6539\u53CC\u65B9\u914D\u6BD4\u3002";
       }
       this.previous = this.rows;
       this.rows = data.ships;
@@ -31289,8 +34556,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         this.metadata = data.metadata;
         this.prepare();
       }
-      this.controlled = this.releasing ? null : data.controls?.[this.owner]?.shipId ?? null;
-      this.seq = Math.max(this.seq, data.controls?.[this.owner]?.seq ?? 0);
+      const control = data.controls?.[this.owner], owned = this.controlRequested && control?.clientId === this.clientId;
+      if (data.tick > (this.controlTick ?? -1) || owned) {
+        this.controlled = this.releasing || !owned ? null : control.shipId;
+      }
+      if (owned) this.seq = Math.max(this.seq, control.seq ?? 0);
       if (this.controlled !== null && this.selected !== this.controlled) this.select(this.controlled, false);
       this.eventSeq = consumeBattleEvents(data.events || [], this.eventSeq, (event) => this.effect(event));
       this.eventSeq = Math.max(this.eventSeq, data.eventSeq || 0);
@@ -31303,6 +34573,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
     prepare() {
       this.fullDetail = this.metadata.length <= 128;
       this.indices = new Map(SHIPS.map((s, i) => [s.id, i]));
+      for (const m of this.metadata) if (m.profile.renderType && this.indices.has(m.profile.renderType)) this.indices.set(m.type, this.indices.get(m.profile.renderType));
       this.types = /* @__PURE__ */ new Map();
       for (const m of this.metadata) if (m.owner === this.owner && m.profile.piloted) {
         if (!this.types.has(m.type)) this.types.set(m.type, []);
@@ -31317,6 +34588,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.buildGroups();
       if (!this.framed) {
         this.frameBattle();
+        if (this.params.get("view") === "ground") this.frameGround();
         this.framed = true;
       }
     }
@@ -31326,15 +34598,16 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.selected = id;
       this.predicted = null;
       const m = this.metadata[id], index = this.indices.get(m.type);
-      const blasts = state.flight.specialBlasts;
+      const blasts = state.flight.specialBlasts, clouds = state.flight.mushroomClouds;
       configureFlight(index, true);
       state.flight.specialBlasts = blasts || [];
+      state.flight.mushroomClouds = clouds || [];
       state.flight.targets = [];
       state.flight.ai = true;
       this.contacts.clear();
       const ids = this.displayGroups.find((g) => g.key === m.formation)?.ids || [id];
       $("#native-formation").value = m.formation;
-      $("#native-vessel").innerHTML = ids.filter((id2) => this.rows[id2]?.[6] > 0).map((id2) => '<option value="' + id2 + '">' + SHIPS[index].name + " #" + (id2 + 1) + "</option>").join("");
+      $("#native-vessel").innerHTML = ids.filter((id2) => this.rows[id2]?.[6] > 0).map((id2) => '<option value="' + id2 + '">' + this.name(m.type) + " #" + (id2 + 1) + "</option>").join("");
       $("#native-vessel").value = id;
       this.applyOwn(true);
       this.refreshContacts();
@@ -31343,7 +34616,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const select = $("#native-formation"), value = select.value;
       select.innerHTML = this.displayGroups.map((g) => {
         const n = g.ids.filter((id) => this.rows[id]?.[6] > 0).length;
-        return '<option value="' + g.key + '" ' + (!n ? "disabled" : "") + ">" + (g.owner === this.owner ? "\u5DF1\u65B9" : "\u654C\u65B9") + " \xB7 " + (SHIPS[this.indices.get(g.type)]?.name || g.type) + " \xB7 " + g.key.split(":").at(-1) + "\u961F \xB7 " + n + " \u8258</option>";
+        return '<option value="' + g.key + '" ' + (!n ? "disabled" : "") + ">" + (g.owner === this.owner ? "\u5DF1\u65B9" : "\u654C\u65B9") + " \xB7 " + this.name(g.type) + " \xB7 " + g.key.split(":").at(-1) + "\u961F \xB7 " + n + " \u8258</option>";
       }).join("");
       if (this.displayGroups.some((g) => g.key === value)) select.value = value;
     }
@@ -31363,6 +34636,25 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const id = this.types.get(type)?.find((id2) => this.rows[id2]?.[6] > 0);
       if (id !== void 0) return this.select(id);
       notice("\u8BE5\u7F16\u961F\u5DF2\u7ECF\u6CA1\u6709\u5B58\u6D3B\u8230\u8239");
+    }
+    frameGround() {
+      const ground = this.metadata.filter((m) => m.profile.ground && this.rows[m.id]?.[6] > 0);
+      if (!ground.length) return this.frameBattle(true);
+      this.overview = true;
+      this.cinematicAnchor = null;
+      this.cinemaComposition = false;
+      this.center = [1, 2, 3].map((i) => ground.reduce((sum, m) => sum + this.rows[m.id][i], 0) / ground.length);
+      this.center[1] += 60;
+      this.distance = Math.max(850, ...ground.map((m) => Math.hypot(this.rows[m.id][1] - this.center[0], this.rows[m.id][3] - this.center[2]) * 2.5));
+      const modules = (this.snapshot?.environment || this.replay?.environment)?.fortress?.modules;
+      if (modules?.length) {
+        this.center = ["x", "y", "z"].map((k) => modules.reduce((sum, m) => sum + m[k], 0) / modules.length);
+        this.center[1] += 35;
+        const radius = Math.max(...modules.map((m) => Math.hypot(m.x - this.center[0], m.z - this.center[2]))) + 120;
+        this.distance = Math.max(650, radius * 2.6) * Math.max(1, renderer.height / renderer.width);
+      }
+      this.overviewPitch = 0.65;
+      this.overviewYaw = -1.15;
     }
     frameBattle(all = false) {
       this.overview = true;
@@ -31398,6 +34690,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (this.replayId || this.replay || lifetime.disposed) return;
       try {
         if (enabled) {
+          this.controlRequested = false;
           if (this.releasePending) return await this.releasePending;
           const shipId = this.controlled;
           this.controlled = null;
@@ -31411,7 +34704,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
             this.releasePending = (async () => {
               if (this.inputPending) await this.inputPending.catch(() => {
               });
-              if (!lifetime.disposed) await this.request("/api/battles/" + this.id + "/control", { type: "release" });
+              if (!lifetime.disposed) await this.request("/api/battles/" + this.id + "/control", { type: "release", clientId: this.clientId });
             })();
             try {
               await this.releasePending;
@@ -31423,18 +34716,24 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         } else {
           if (this.releasePending) await this.releasePending;
           if (lifetime.disposed || this.claiming) return;
+          this.clientId ??= crypto.randomUUID();
+          this.controlRequested = true;
+          const generation = this.controlGeneration = (this.controlGeneration || 0) + 1;
           this.claiming = true;
           this.syncHeader();
           let data;
           try {
-            data = await this.request("/api/battles/" + this.id + "/control", { type: "claim", shipId: this.selected });
+            data = await this.request("/api/battles/" + this.id + "/control", { type: "claim", shipId: this.selected, clientId: this.clientId });
           } finally {
             this.claiming = false;
           }
-          if (lifetime.disposed) return;
-          this.controlGeneration = (this.controlGeneration || 0) + 1;
+          if (lifetime.disposed || generation !== this.controlGeneration || !this.controlRequested) {
+            await this.request("/api/battles/" + this.id + "/control", { type: "release", clientId: this.clientId });
+            return;
+          }
+          this.controlTick = data.tick;
           this.controlled = data.control.shipId;
-          this.seq = data.control.seq;
+          this.seq = Math.max(this.seq, data.control.seq);
           this.predicted = null;
           state.flight.ai = false;
           if (state.flight.external) setView();
@@ -31443,7 +34742,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           state.flight.pitchTarget = state.flight.pitch;
           notice("\u5DF2\u63A5\u7BA1\u53C2\u6218\u8230\u8239 \xB7 \u5C04\u51FB\u4E0E\u635F\u5931\u8BA1\u5165\u771F\u5B9E\u6218\u679C");
         }
-        if (!lifetime.disposed) this.syncHeader();
+        if (!lifetime.disposed) {
+          state.flight.cabinWalk = enabled && cockpitClass(this.metadata[this.selected]?.profile) === "bastion";
+          state.flight.cabinPose = cabinPose(cockpitClass(this.metadata[this.selected]?.profile));
+          this.syncHeader();
+        }
       } catch (e) {
         if (!lifetime.disposed) {
           notice(e.message);
@@ -31471,7 +34774,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         p.yawTarget = Math.atan2(d[0], -d[2]);
         p.pitchTarget = clamp2(Math.atan2(d[1], Math.hypot(d[0], d[2])), -1.2, 1.2);
       }
-      const input = { throttle: p.throttle / 100, yaw: 0, pitch: 0, heading: shortAngle(Math.PI - p.yawTarget), elevation: clamp2(p.pitchTarget, -1.2, 1.2), fire: keys.has("Space") || !p.profile.capital && getMouseDown() || performance.now() < this.fireUntil, missile: keys.has("KeyR") || performance.now() < this.missileUntil, lock: p.align, boost: keys.has("ShiftLeft") || keys.has("ShiftRight") || p.boost };
+      const input = { throttle: p.throttle / 100, yaw: 0, pitch: 0, roll: pilotKeys(keys, this.metadata[this.selected]?.profile).roll, heading: shortAngle(Math.PI - p.yawTarget), elevation: clamp2(p.pitchTarget, -1.2, 1.2), fire: keys.has("Space") || !p.profile.capital && getMouseDown() || performance.now() < this.fireUntil, missile: keys.has("KeyR") || performance.now() < this.missileUntil, lock: p.align, boost: keys.has("ShiftLeft") || keys.has("ShiftRight") || p.boost };
       if (target?.hp > 0) input.target = target.shipId;
       return input;
     }
@@ -31479,16 +34782,25 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (lifetime.disposed || this.busy || this.releasing || this.claiming || this.replayId || this.replay || this.controlled === null || document.hidden) return;
       const shipId = this.controlled, generation = this.controlGeneration || 0, input = this.pilotIntent(), sent = performance.now();
       this.busy = true;
-      const pending = this.request("/api/battles/" + this.id + "/control", { type: "input", shipId, seq: ++this.seq, input });
+      const pending = this.request("/api/battles/" + this.id + "/control", { type: "input", shipId, clientId: this.clientId, seq: ++this.seq, input });
       this.inputPending = pending;
       try {
         await pending;
         if (generation === (this.controlGeneration || 0)) this.inputLatency = Math.min(0.15, (performance.now() - sent) / 2e3);
       } catch (e) {
         if (!lifetime.disposed && generation === (this.controlGeneration || 0) && this.controlled === shipId) {
-          this.controlled = null;
-          state.flight.ai = true;
-          notice(e.message);
+          if (e.message === "\u63A7\u5236\u5E8F\u53F7\u5DF2\u8FC7\u671F") {
+            try {
+              this.receive(await this.request("/api/battles/" + this.id));
+            } catch {
+            }
+          } else {
+            this.controlRequested = false;
+            this.controlled = null;
+            this.predicted = null;
+            state.flight.ai = true;
+            notice(e.message);
+          }
         }
       } finally {
         if (this.inputPending === pending) {
@@ -31501,7 +34813,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const p = state.flight, m = this.metadata[this.selected];
       if (!m) return;
       $("#fire-spinal").hidden = !!m.profile.defenseOnly;
-      if (m.profile.defenseOnly) $("#special-readout").textContent = "\u8D85\u5DE8\u578B\u65D7\u8230 \xB7 200 \u8230\u957F \xB7 \u81EA\u52A8\u81EA\u536B\u70AE / \u8FD1\u9632 \xB7 \u8F85\u52A9\u5BFC\u5F39";
+      if (m.profile.defenseOnly) $("#special-readout").textContent = "\u6307\u6325\u6BCD\u8230 \xB7 \u5168\u519B\u653B\u51FB +15%\uFF08\u4E0D\u53E0\u52A0\uFF09\xB7 \u81EA\u52A8\u8865\u5145\u8702\u7FA4 / \u96C6\u706B\u6307\u4EE4";
       if (m.profile.special === "antimatter") $("#special-readout").textContent = "\u65E0\u4EBA\u81EA\u52A8\u7A81\u51FB \xB7 \u63A5\u8FD1\u5F15\u7206 \xB7 \u4E00\u6B21\u6027\u6D88\u8017 \xB7 \u7A7F\u76FE\u51B2\u51FB / \u6536\u5272\u8005\u514D\u75AB";
       else if (m.profile.special === "reaper") $("#special-readout").textContent = "\u53CC\u675F\u76F8\u4F4D\u6B66\u5668 \xB7 \u6709\u9650\u62A4\u76FE\u56DE\u6536 \xB7 \u514D\u75AB\u6E6E\u706D\u4E4B\u661F";
       const missiles = m.profile.missile || m.profile.secondaryMissile;
@@ -31524,25 +34836,32 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (!this.snapshot && !this.report) return;
       const counts = [0, 0];
       for (let i = 0; i < this.rows.length; i++) if (this.rows[i]?.[6] > 0) counts[this.metadata[i]?.side === "attacker" ? 0 : 1]++;
-      $("#native-status").textContent = (this.replay ? "\u5386\u53F2\u6218\u6597" : this.snapshot?.trial ? "\u7F16\u961F\u6D4B\u8BD5" : "\u771F\u5B9E\u6218\u573A") + " \xB7 " + counts.join(" : ") + " \u8258 \xB7 " + Math.floor(this.replay ? this.playTime : this.snapshot?.elapsed || 0) + " / 600 \u79D2";
+      $("#native-status").textContent = (this.replay ? "\u5386\u53F2\u56DE\u653E \xB7 " + (this.report.targetName || this.report.title || "\u8230\u961F\u6218\u6597") : this.snapshot?.trial ? "\u7F16\u961F\u6D4B\u8BD5" : "\u771F\u5B9E\u6218\u573A") + " \xB7 " + counts.join(" : ") + " \u8258 \xB7 " + Math.floor(this.replay ? this.playTime : this.snapshot?.elapsed || 0) + " / " + (this.replay ? this.report.duration : 600) + " \u79D2" + (this.replay && this.playTime >= this.report.duration ? " \xB7 \u64AD\u653E\u5B8C\u6BD5" : "");
+      if (this.replay) {
+        $("#native-pause").textContent = this.playTime >= this.report.duration ? "\u91CD\u65B0\u64AD\u653E" : this.paused ? "\u7EE7\u7EED" : "\u6682\u505C";
+      }
       $("#native-claim").textContent = this.controlled === this.selected ? "\u9A7E\u9A76\u4E2D" : "\u4EB2\u81EA\u9A7E\u9A76";
       $("#native-claim").disabled = !!this.releasing || !!this.claiming || this.controlled === this.selected || !!this.replay || this.rows[this.selected]?.[6] <= 0 || this.metadata[this.selected]?.owner !== this.owner || !this.metadata[this.selected]?.profile.piloted;
       $("#native-release").disabled = this.controlled === null;
       $("#ai-label").textContent = this.controlled === null ? "\u4EB2\u81EA\u9A7E\u9A76" : "\u4EA4\u8FD8 AI";
       $("#ai-indicator").classList.toggle("visible", this.controlled === null);
-      $("#flight-input-copy").textContent = this.controlled === null ? "\u89C2\u6218\u4E2D \xB7 \u9009\u62E9\u5DF1\u65B9\u7F16\u961F\u540E\u4EB2\u81EA\u9A7E\u9A76" : "\u53F3\u952E\u8F6C\u5411 \xB7 W/S \u6CB9\u95E8 \xB7 Space \u4E3B\u70AE \xB7 R \u5BFC\u5F39 \xB7 V \u8230\u6865/\u8FFD\u8E2A \xB7 G \u4EA4\u8FD8 AI";
-      $("#loadout-caption").textContent = "\u771F\u5B9E\u53C2\u6218\u8230\u8239 \xB7 \u9000\u51FA\u9A7E\u9A76\u4EA4\u8FD8 AI \xB7 \u6218\u6597\u4E0D\u80FD\u64A4\u9000";
+      $("#flight-input-copy").textContent = this.controlled === null ? "\u89C2\u6218\u4E2D \xB7 \u9009\u62E9\u5DF1\u65B9\u7F16\u961F\u540E\u4EB2\u81EA\u9A7E\u9A76" : (cockpitClass(this.metadata[this.selected]?.profile) === "fighter" ? "W/S \u6CB9\u95E8 \xB7 A/D \u6EDA\u8F6C \xB7 Q/E \u4FEF\u4EF0 \xB7 \u53F3\u952E\u7784\u51C6" : "W/S \u6CB9\u95E8 \xB7 A/D \u8F6C\u5411 \xB7 T \u9009\u654C \xB7 X \u5BF9\u51C6") + " \xB7 G AUTO";
+      $("#loadout-caption").textContent = this.replay ? "\u5386\u53F2\u6218\u6597\u5F55\u50CF \xB7 \u67E5\u770B\u53CC\u65B9\u8230\u961F\u4E0E\u4EA4\u706B" : "\u771F\u5B9E\u53C2\u6218\u8230\u8239 \xB7 \u9000\u51FA\u9A7E\u9A76\u4EA4\u8FD8 AI \xB7 \u6218\u6597\u4E0D\u80FD\u64A4\u9000";
+      if (this.replay) $("#flight-input-copy").textContent = "\u5386\u53F2\u56DE\u653E \xB7 \u89C2\u6218\u6A21\u5F0F";
     }
     row(id) {
+      if (this.presentationRow?.[0] === id) return this.presentationRow;
       const n = this.rows[id], o = this.previous[id] || n;
       if (!n) return null;
-      const f = this.replay ? this.replayAlpha : clamp2((performance.now() - this.received) / 200, 0, 1);
-      return [id, mix(o[1], n[1], f), mix(o[2], n[2], f), mix(o[3], n[3], f), o[4] + shortAngle(n[4] - o[4]) * f, mix(o[5], n[5], f), n[6], n[7], n[8], n[9], n[10] || 0, n[11] || 0];
+      const f = this.replay ? this.replayAlpha : clamp2(((this.sampleTime ?? performance.now()) - this.received) / 200, 0, 1);
+      return [id, mix(o[1], n[1], f), mix(o[2], n[2], f), mix(o[3], n[3], f), o[4] + shortAngle(n[4] - o[4]) * f, mix(o[5], n[5], f), n[6], n[7], n[8], n[9], n[10] || 0, n[11] || 0, (o[12] || 0) + shortAngle((n[12] || 0) - (o[12] || 0)) * f, (o[13] ?? o[4]) + shortAngle((n[13] ?? n[4]) - (o[13] ?? o[4])) * f, mix(o[14] || 0, n[14] || 0, f)];
     }
     applyOwn(reset = false) {
       const r = this.controlled === this.selected ? this.rows[this.selected] : this.row(this.selected), m = this.metadata[this.selected], p = state.flight;
       if (!r || !m) return;
       p.pos = r.slice(1, 4);
+      p.roll = r[12] || 0;
+      p.cabinKind = cockpitClass(m.profile);
       p.yaw = Math.PI - r[4];
       p.pitch = r[5];
       p.speed = r[9] * 8;
@@ -31551,7 +34870,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       p.shield = m.maxShield ? r[7] / m.maxShield * 100 : 0;
       p.gunCooldown = r[10];
       p.missileCooldown = r[11];
-      p.profile = { ...COMBAT[state.shipIndex], maxSpeed: m.profile.speed * 8, turnRate: m.profile.turn, mainCooldown: m.profile.cooldown };
+      p.profile = { ...COMBAT[state.shipIndex], maxSpeed: m.profile.speed * 8, turnRate: pilotHandling(m.profile).turn, mainCooldown: m.profile.cooldown };
       p.ai = this.controlled === null;
       p.missileStock = m.profile.missile || m.profile.secondaryMissile ? p.profile.missileCapacity : 0;
       p.missileCooldown = m.profile.missile ? r[10] : r[11];
@@ -31560,12 +34879,13 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         p.pitchTarget = p.pitch;
       } else {
         const now = performance.now(), age = Math.min(0.4, (now - this.received) / 1e3 + (this.inputLatency || 0) + 0.025), input = this.pilotIntent(), authority = predictPilot(r, m.profile, input, age), old = this.predicted;
-        if (!old || V.length(V.sub(old.pos, [authority.x, authority.y, authority.z])) > 100) this.predicted = { pos: [authority.x, authority.y, authority.z], yaw: Math.PI - authority.yaw, pitch: authority.pitch, speed: authority.speed, at: now };
+        if (!old || V.length(V.sub(old.pos, [authority.x, authority.y, authority.z])) > 100) this.predicted = { pos: [authority.x, authority.y, authority.z], yaw: Math.PI - authority.yaw, pitch: authority.pitch, roll: authority.roll, speed: authority.speed, at: now };
         else {
-          const dt = clamp2((now - old.at) / 1e3, 0, 0.05), row = [0, ...old.pos, Math.PI - old.yaw, old.pitch, 0, 0, -1, old.speed ?? r[9]], next = predictPilot(row, m.profile, input, dt);
+          const dt = clamp2((now - old.at) / 1e3, 0, 0.05), row = [0, ...old.pos, Math.PI - old.yaw, old.pitch, 0, 0, -1, old.speed ?? r[9], 0, 0, old.roll || 0], next = predictPilot(row, m.profile, input, dt);
           const angleBlend = 1 - Math.exp(-dt * 3), positionBlend = 1 - Math.exp(-dt * 7);
           old.yaw = Math.PI - next.yaw + shortAngle(next.yaw - authority.yaw) * angleBlend;
           old.pitch = mix(next.pitch, authority.pitch, angleBlend);
+          old.roll = next.roll + shortAngle(authority.roll - next.roll) * angleBlend;
           old.pos = [next.x, next.y, next.z].map((v, i) => mix(v, [authority.x, authority.y, authority.z][i], positionBlend));
           old.speed = next.speed;
           old.at = now;
@@ -31574,6 +34894,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         p.pos = [...predicted.pos];
         p.yaw = predicted.yaw;
         p.pitch = predicted.pitch;
+        p.roll = predicted.roll || 0;
         p.speed = predicted.speed * 8;
         p.velocity = [Math.sin(p.yaw) * Math.cos(p.pitch) * predicted.speed, Math.sin(p.pitch) * predicted.speed, -Math.cos(p.yaw) * Math.cos(p.pitch) * predicted.speed];
       }
@@ -31583,16 +34904,16 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         p.ai = true;
       }
     }
-    refreshContacts() {
+    refreshContacts(requestedTarget) {
       const p = state.flight, own = this.metadata[this.selected];
       if (!own) return;
-      const locked = p.targets[p.targetIndex]?.shipId;
+      const locked = requestedTarget ?? p.targets[p.targetIndex]?.shipId;
       const candidates = this.metadata.filter((m) => m.side !== own.side && this.rows[m.id]?.[6] > 0 && this.indices.has(m.type)).sort((a, b) => V.length(V.sub(this.rows[a.id].slice(1, 4), p.pos)) - V.length(V.sub(this.rows[b.id].slice(1, 4), p.pos))).slice(0, 5);
       if (locked !== void 0 && this.rows[locked]?.[6] > 0 && !candidates.some((m) => m.id === locked)) candidates.unshift(this.metadata[locked]);
       p.targets = candidates.map((m) => {
         let t = this.contacts.get(m.id);
         if (!t) {
-          t = { shipId: m.id, name: SHIPS[this.indices.get(m.type)].name + " #" + (m.id + 1), code: "\u771F\u5B9E\u53C2\u6218\u8230", kind: this.indices.get(m.type), scale: 1, shieldHits: [], maxShield: 100, seed: m.id, respawn: Infinity };
+          t = { shipId: m.id, name: this.name(m.type) + " #" + (m.id + 1), code: "\u771F\u5B9E\u53C2\u6218\u8230", kind: this.indices.get(m.type), scale: 1, shieldHits: [], maxShield: 100, seed: m.id, respawn: Infinity };
           this.contacts.set(m.id, t);
         }
         return t;
@@ -31629,7 +34950,8 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
     muzzle(id, mount = 0, secondary = false) {
       const row = this.row(id), index = this.indices.get(this.metadata[id]?.type), layout = LAYOUTS[index];
       if (!row || !layout) return null;
-      return M.transform(shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: 0 }, index), (secondary ? layout.joints.filter((j) => j.role === "secondary").map((j) => j.mount) : layout.main)[mount] || [0, 0, 0]);
+      if (this.metadata[id]?.profile.ground) return battleMount({ x: row[1], y: row[2], z: row[3], yaw: row[4], pitch: 0, turretYaw: row[13], turretPitch: row[14], profile: this.metadata[id].profile }, this.metadata[id].profile.hardpoints?.main?.[0]);
+      return M.transform(shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index), (secondary ? layout.joints.filter((j) => j.role === "secondary").map((j) => j.mount) : layout.main)[mount] || [0, 0, 0]);
     }
     beamEnd(from, id, fallback) {
       const row = this.row(id);
@@ -31637,9 +34959,20 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const center = row.slice(1, 4), radius = this.metadata[id].profile.radius || 1, k = projectileContact(from, center, center, radius) ?? 1;
       return from.map((v, i) => mix(v, center[i], k));
     }
+    groundBlast(e, age = 0) {
+      const m = this.metadata[e.shipId], source = this.metadata[e.source];
+      if (!m?.profile.ground || source?.type !== "Bomber" || !["hit", "destroy"].includes(e.type) || e.shield && e.type !== "destroy") return;
+      const p = state.flight, clouds = p.mushroomClouds ??= [];
+      if (clouds.some((c) => c.shipId === e.shipId && Math.abs(c.tick - e.tick) < 30)) return;
+      const env = this.snapshot?.environment || this.replay?.environment;
+      if (!env) return;
+      clouds.push({ shipId: e.shipId, tick: e.tick, pos: [e.x, Math.max(surfaceHeight(env, e.x, e.z) + 2, e.y - 4), e.z], age, seed: e.shipId * 1.73 + e.tick * 0.01 });
+      if (clouds.length > 16) clouds.shift();
+    }
     effect(e) {
       if (e.type === "destroy" && e.kind === "antimatter" && e.shipId === e.source) return;
       this.presentation.event(e, this);
+      this.groundBlast(e);
       const p = state.flight;
       if (e.projectileId !== void 0 && e.type !== "fire") {
         this.projectiles = (this.projectiles || []).filter((q) => q.id !== e.projectileId);
@@ -31689,7 +35022,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         if (e.type === "hit" && e.shield && (!small || near)) {
           const row = this.rows[e.shipId], index = this.indices.get(m?.type);
           if (row && index !== void 0) {
-            const vessel = this.visualVessel(e.shipId), model = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: 0 }, index), charge = Math.max(0.1, (this.previous[e.shipId]?.[7] || row[7]) / Math.max(1, m.maxShield) * 100);
+            const vessel = this.visualVessel(e.shipId), model = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index), charge = Math.max(0.1, (this.previous[e.shipId]?.[7] || row[7]) / Math.max(1, m.maxShield) * 100);
             renderer.shieldImpact(vessel, index, model, point, 2, charge);
           }
         }
@@ -31741,6 +35074,10 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const p = state.flight;
       if (this.replay) {
         if (!this.paused) this.playTime = Math.min(this.report.duration, this.playTime + dt * this.playSpeed);
+        if (this.playTime >= this.report.duration && !this.paused) {
+          this.paused = true;
+          this.syncHeader();
+        }
         const tick = this.playTime * 20, frames = this.replay.frames;
         let lo = 0, hi = frames.length - 1;
         while (lo < hi) {
@@ -31749,10 +35086,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           else hi = mid - 1;
         }
         const a = frames[lo], b = frames[Math.min(lo + 1, frames.length - 1)];
+        this.replayCarriers = a.carriers || [];
         this.previous = a.ships;
         this.rows = a.ships.map((row, id) => {
           const next = b.ships[id] || row;
-          const result = [...next.slice(0, 6), ...row.slice(6)];
+          const result = [...next.slice(0, 6), ...row.slice(6, 12), ...next.slice(12)];
           if ((this.deathTicks.get(id) ?? Infinity) <= tick) result[6] = 0;
           return result;
         });
@@ -31769,14 +35107,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         return e.age < 5.3;
       });
       if (this.controlled !== null) {
-        if (keys.has("KeyW")) p.throttle += dt * 27;
-        if (keys.has("KeyS")) p.throttle -= dt * 27;
-        p.throttle = clamp2(p.throttle, 0, 100);
-        const turn = (keys.has("KeyD") || keys.has("ArrowRight") ? 1 : 0) - (keys.has("KeyA") || keys.has("ArrowLeft") ? 1 : 0), pitch = (keys.has("ArrowUp") ? 1 : 0) - (keys.has("ArrowDown") ? 1 : 0);
-        if (turn || pitch) p.align = false;
-        p.yawTarget += turn * p.profile.turnRate * dt;
-        p.pitchTarget = clamp2(p.pitchTarget + pitch * p.profile.turnRate * dt, -1.2, 1.2);
-        p.roll += ((keys.has("KeyQ") ? 1 : 0) - (keys.has("KeyE") ? 1 : 0)) * dt * 0.4;
+        const input = pilotKeys(keys, this.metadata[this.selected].profile);
+        p.throttle = clamp2(p.throttle + dt * 27 * input.throttle, 0, 100);
+        if (input.yaw || input.pitch) p.align = false;
+        p.yawTarget += input.yaw * p.profile.turnRate * dt;
+        p.pitchTarget = clamp2(p.pitchTarget + input.pitch * p.profile.turnRate * dt, -1.2, 1.2);
       }
       if (this.overview && this.cinematicAnchor != null) {
         const anchor = this.row(this.cinematicAnchor);
@@ -31812,6 +35147,16 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           joint.aligned = true;
         }
       }
+      this.updateVisuals(dt, now);
+      document.body.classList.toggle("battle-overview", this.overview);
+    }
+    // Shared by the standalone battlefield and the map; no UI or simulation side effects.
+    updateVisuals(dt, now = performance.now()) {
+      const p = state.flight;
+      p.mushroomClouds = (p.mushroomClouds || []).filter((c) => {
+        c.age += this.replay ? this.paused ? 0 : dt * this.playSpeed : dt;
+        return c.age < GROUND_BLAST_LIFETIME;
+      });
       p.beams = p.beams.filter((b) => {
         b.age += dt;
         if (b.source !== void 0) {
@@ -31840,16 +35185,16 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
             if (visual.trail.length > 50) visual.trail.shift();
             visual.trailAt = now;
           }
-          return { id: q.id, pos, previous: visual.trail.at(-2) || pos, velocity: q.vx === void 0 ? V.scale(dir, q.speed) : [q.vx, q.vy, q.vz], age: (q.age || 0) + age, life: 10, missile: q.missile, trail: visual.trail, ...this.weaponStyle(this.indices.get(this.metadata[q.source]?.type), q.kind, q.secondary), kind: q.kind, hostile: q.side !== this.metadata[this.selected].side };
+          return { id: q.id, pos, previous: visual.trail.at(-2) || pos, velocity: q.vx === void 0 ? V.scale(dir, q.speed) : [q.vx, q.vy, q.vz], age: (q.age || 0) + age, life: 10, missile: q.missile, trail: visual.trail, ...this.weaponStyle(this.indices.get(this.metadata[q.source]?.type), q.kind, q.secondary), kind: q.kind, hostile: q.side !== this.metadata[this.selected]?.side };
         }).sort((a, b) => V.length(V.sub(a.pos, this.overview ? this.center : p.pos)) - V.length(V.sub(b.pos, this.overview ? this.center : p.pos))).slice(0, 600);
         for (const id of this.projectileVisuals.keys()) if (!liveIds.has(id)) this.projectileVisuals.delete(id);
       } else p.projectiles = p.projectiles.filter((q) => {
         if (this.paused) return true;
         const step = dt * this.playSpeed;
         q.age += step;
-        const target2 = this.row(q.target);
-        if (q.missile && target2 && q.age > 0.2) {
-          const speed = Math.min(q.speed || 210, 38 + (q.age - 0.2) * 180), goal = V.scale(V.norm(V.sub(target2.slice(1, 4), q.pos)), speed);
+        const target = this.row(q.target);
+        if (q.missile && target && q.age > 0.2) {
+          const speed = Math.min(q.speed || 210, 38 + (q.age - 0.2) * 180), goal = V.scale(V.norm(V.sub(target.slice(1, 4), q.pos)), speed);
           q.velocity = q.velocity.map((v, i) => mix(v, goal[i], 1 - Math.exp(-step * 4)));
         }
         q.previous = q.pos;
@@ -31860,7 +35205,6 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         }
         return q.age < q.life;
       });
-      document.body.classList.toggle("battle-overview", this.overview);
     }
     buildGroups() {
       this.meshGroups.clear();
@@ -31884,7 +35228,8 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       return v;
     }
     drawNativeShip(r, id) {
-      const row = this.row(id), m = this.metadata[id], index = this.indices.get(m.type), model = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: 0 }, index), v = this.visualVessel(id), target = this.row(row[8]);
+      const row = this.row(id), m = this.metadata[id], index = this.indices.get(m.type), model = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index), v = this.visualVessel(id), target = this.row(row[8]);
+      if (m.profile.modelScale) for (let j = 0; j < 12; j++) model[j] *= m.profile.modelScale;
       if (target) {
         const delta = V.sub(target.slice(1, 4), row.slice(1, 4));
         for (const joint of v.joints || []) {
@@ -31892,7 +35237,8 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           joint.pitch = Math.atan2(delta[1], Math.hypot(delta[0], delta[2]));
         }
       }
-      r.drawVessel(index, model, { light: [-0.5, 0.9, 0.75], exposure: 1 }, v.joints);
+      if (m.profile.ground) r.drawDefense(index, model, row[13] - row[4], row[14], m.owner === this.owner ? [0.086, 0.545, 0.922] : [0.906, 0.294, 0.314]);
+      else r.drawVessel(index, model, { light: [-0.5, 0.9, 0.75], exposure: 1 }, v.joints);
       r.drawShield(v, index, model);
       if (row[9] > 0) r.drawExhaust(index, model, clamp2(row[9] / Math.max(1, m.profile.speed) * 100, 0, 100), false, r.time);
     }
@@ -31900,7 +35246,10 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (!this.rows.length) return;
       const p = state.flight;
       const focal = r.height / (2 * Math.tan(r.fov / 2));
-      const candidates = this.metadata.filter((m) => this.rows[m.id]?.[6] > 0 && this.indices.has(m.type)).map((m) => {
+      const showGround = this.snapshot?.status !== "finished" || !!this.replay;
+      const environment = this.snapshot?.environment || this.replay?.environment;
+      if (showGround && environment?.fortress) r.drawFortress(environment, this.renderNamespace || "", this.metadata, this.rows);
+      const candidates = this.metadata.filter((m) => (showGround || !m.profile.ground) && this.rows[m.id]?.[6] > 0 && this.indices.has(m.type)).map((m) => {
         const d = Math.max(1, V.length(V.sub(this.rows[m.id].slice(1, 4), r.eye)));
         return { id: m.id, d, pixels: m.profile.length * focal / d };
       }).sort((a, b) => b.pixels - a.pixels);
@@ -31912,10 +35261,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         this.highIds = new Set(ids);
         this.drawLabels(r, []);
         this.renderStats = { mode: "three", alive: ids.length, instances: ids.length, groups: 0, detail: ids.length, high: ids.length, quality: 1 };
-        for (const id of ids) if (this.overview || id !== this.selected) this.drawNativeShip(r, id);
+        for (const id of ids) if (id !== this.hiddenVessel && (this.overview || id !== this.selected)) this.drawNativeShip(r, id);
+        if (showGround && environment?.fortress) r.drawDefenseField(environment, this.metadata, this.rows, this.owner);
         return;
       }
-      const near = candidates.filter((v) => v.pixels > (this.fullDetail ? 8 : 65) && v.id !== this.selected).slice(0, this.fullDetail ? 128 : Math.floor(12 * this.quality)).map((v) => v.id);
+      const near = candidates.filter((v) => (this.metadata[v.id].profile.ground || v.pixels > (this.fullDetail ? 8 : 65)) && (this.overview || v.id !== this.selected) && v.id !== this.hiddenVessel).slice(0, this.fullDetail ? 128 : Math.floor(12 * this.quality)).map((v) => v.id);
       this.detailIds = new Set(near);
       this.highIds = /* @__PURE__ */ new Set();
       let triangles = 0;
@@ -31925,7 +35275,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         this.highIds.add(c.id);
         triangles += mesh.count / 3;
       }
-      const display = visibleBattleShips(this.displayGroups, this.rows, { eye: r.eye, height: r.height, fov: r.fov, quality: this.quality, pinned: [this.selected, ...near, ...this.highIds, ...state.flight.targets.slice(0, 1).map((t) => t.shipId)], previous: this.lodLevels });
+      const display = visibleBattleShips(this.displayGroups.filter((g) => showGround || !this.metadata[g.ids[0]].profile.ground), this.rows, { eye: r.eye, height: r.height, fov: r.fov, quality: this.quality, pinned: [this.selected, ...near, ...this.highIds, ...state.flight.targets.slice(0, 1).map((t) => t.shipId)], previous: this.lodLevels });
       this.lodLevels = display.levels;
       this.renderedIds = display.visible;
       this.engineIds = candidates.filter((c) => c.pixels > 3 && display.visible.has(c.id) && r.project(this.rows[c.id].slice(1, 4)).visible).slice(0, Math.floor(120 * this.quality)).map((c) => c.id);
@@ -31936,11 +35286,12 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         const slotIds = [];
         for (const id of g.ids) {
           const row = this.row(id);
-          if (!row || row[6] <= 0 || !display.visible.has(id) || this.detailIds.has(id) || this.highIds.has(id) !== high || !this.overview && id === this.selected) continue;
+          if (!row || id === this.hiddenVessel || row[6] <= 0 || !display.visible.has(id) || this.detailIds.has(id) || this.highIds.has(id) !== high || !this.overview && id === this.selected) continue;
           const index = this.indices.get(this.metadata[id].type);
           if (index === void 0) continue;
-          const matrix = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: 0 }, index);
-          if (!high) {
+          const matrix = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index);
+          if (this.metadata[id].profile.modelScale) for (let j = 0; j < 12; j++) matrix[j] *= this.metadata[id].profile.modelScale;
+          if (!high && !this.snapshot?.environment && !this.replay?.environment) {
             const pixels = this.metadata[id].profile.length * focal / Math.max(1, V.length(V.sub(row.slice(1, 4), r.eye))), scale = Math.max(1, 6 / Math.max(1e-3, pixels));
             for (let j = 0; j < 12; j++) matrix[j] *= scale;
           }
@@ -31949,14 +35300,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           slotIds.push(id);
         }
         if (!count) continue;
-        r.drawFleetInstances(key, this.indices.get(this.metadata[g.ids[0]].type), g.matrices, slotIds, { high, tint: this.metadata[g.ids[0]].owner === this.owner ? [0.87, 0.97, 1] : [1, 0.88, 0.76] });
+        const meta = this.metadata[g.ids[0]], friendly = meta.owner === this.owner;
+        r.drawFleetInstances((this.renderNamespace || "") + key, this.indices.get(meta.type), g.matrices, slotIds, { high, type: meta.profile.renderType || meta.type, tint: meta.profile.ground ? [1, 1, 1] : friendly ? [0.87, 0.97, 1] : [1, 0.88, 0.76], teamColor: friendly ? [0.086, 0.545, 0.922] : [0.906, 0.294, 0.314] });
       }
-      for (const id of near) {
-        const row = this.row(id), index = this.indices.get(this.metadata[id].type);
-        const model = shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: 0 }, index);
-        r.drawVessel(index, model, { light: [-0.5, 0.9, 0.7], exposure: 1.25 });
-        r.drawShield(this.visualVessel(id), index, model);
-      }
+      for (const id of near) this.drawNativeShip(r, id);
+      if (showGround && environment?.fortress) r.drawDefenseField(environment, this.metadata, this.rows, this.owner);
     }
     drawLabels(r, groups) {
       if (performance.now() - (this.labelsAt || 0) < 150) return;
@@ -31966,7 +35314,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         const q = r.project(g.center), key = Math.floor(q.x / 160) + ":" + Math.floor(q.y / 42);
         if (!q.visible || q.x < 30 || q.x > r.width - 160 || q.y < 110 || q.y > r.height - 60 || occupied.some((p) => Math.abs(p.x - q.x) < 155 && Math.abs(p.y - q.y) < 32)) return [];
         occupied.push(q);
-        return ['<button data-group="' + g.key + '" style="left:' + q.x + "px;top:" + q.y + "px;color:" + (g.owner === this.owner ? "#8edce9" : "#ffa88b") + '">' + (g.owner === this.owner ? "\u25C6 " : "\u25C7 ") + (SHIPS[this.indices.get(g.type)]?.name || g.type) + " \xD7 " + g.count + "</button>"];
+        return ['<button data-group="' + g.key + '" style="left:' + q.x + "px;top:" + q.y + "px;color:" + (g.owner === this.owner ? "#8edce9" : "#ffa88b") + '">' + (g.owner === this.owner ? "\u25C6 " : "\u25C7 ") + this.name(g.type) + " \xD7 " + g.count + "</button>"];
       }).slice(0, 40).join("");
     }
     drawOverview(r, s, time) {
@@ -31984,7 +35332,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       r.cameraUp = [0, 1, 0];
       r.projectionShiftX = projection[8];
       r.projectionOffset = projection[9];
-      this.presentation.environment(r, time);
+      this.presentation.environment(r, time, this.snapshot?.environment || this.replay?.environment);
       this.drawFleet(r);
       r.drawCombatEffects(state.flight, time, shipMatrix(state.flight, state.shipIndex));
       if (!this.fullDetail) this.presentation.draw(r, this, false);
@@ -31992,7 +35340,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
     dispose() {
       if (lifetime.disposed) return;
       if (!this.replayId && !this.replay && (this.controlled !== null || this.releasing || this.claiming)) {
-        void fetch("/api/battles/" + this.id + "/control", { method: "POST", credentials: "same-origin", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "release" }) }).catch(() => {
+        void fetch("/api/battles/" + this.id + "/control", { method: "POST", credentials: "same-origin", keepalive: true, headers: { "X-Empire-Client": "galactic-command", "Content-Type": "application/json" }, body: JSON.stringify({ type: "release", clientId: this.clientId }) }).catch(() => {
         });
       }
       this.controlled = null;
@@ -32011,11 +35359,33 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (window.GalacticDemo?.dispose) window.GalacticDemo.dispose();
       else this.dispose();
       if (parent !== window) parent.postMessage({ type: "battle-exit" }, location.origin);
-      else location.assign("/");
+      else location.assign(this.replayId ? "/#reports" : "/");
     }
   }
   return new NativeFleetBattle();
 };
+
+// scripts/three-flight/local-battle.js
+function localBattleTarget(data, planets) {
+  const report = data.report, record = data.record || data;
+  const id = report?.targetId || record.environment?.planetId || data.target;
+  return planets.find((p) => p.id === id) || (!report?.trial && report?.position ? planets.find((p) => !p.moon && p.position?.join(":") === report.position.join(":")) : null);
+}
+async function openLocalBattle(params, signal) {
+  const replay = params.get("replay"), battle = params.get("battle");
+  if (replay) return false;
+  if (!replay && !battle) return false;
+  const get = async (url) => {
+    const r = await fetch(url, { signal, credentials: "same-origin", cache: "no-store", headers: { "X-Empire-Client": "galactic-command" } });
+    if (!r.ok) throw Error("\u65E0\u6CD5\u8BFB\u53D6\u5F53\u5730\u6218\u573A");
+    return r.json();
+  };
+  const [data, map] = await Promise.all([get("/api/" + (replay ? "replay/" + encodeURIComponent(replay) : "battles/" + encodeURIComponent(battle))), get("/api/star-map")]);
+  if (!localBattleTarget(data, map.planets)) return false;
+  const query = new URLSearchParams({ [replay ? "replay" : "battle"]: replay || battle });
+  location.replace("/opendesign/mockups/galactic-command/index.html?" + query);
+  return true;
+}
 
 // scripts/three-flight/entry.js
 var started = performance.now();
@@ -32025,12 +35395,14 @@ var legacy = document.getElementById("legacy-renderer-link");
 if (legacy) legacy.href = (battlefield ? "legacy-webgl/battlefield.html" : "legacy-webgl/hangar.html") + location.search;
 window.addEventListener("pagehide", () => loading.abort(), { once: true });
 try {
-  const { fleet, assets } = await loadFleetAssets({ signal: loading.signal, includeBattleModels: battlefield });
-  window.FlightFleet = fleet;
-  window.BattleFleetAssets = assets;
-  const app = startFlightRuntime({ fleet, assets, createController: battlefield ? createFlightController : null });
-  app.loadedMs = performance.now() - started;
-  document.documentElement.dataset.renderer = "three";
+  if (!battlefield || !await openLocalBattle(new URLSearchParams(location.search), loading.signal)) {
+    const { fleet, assets } = await loadFleetAssets({ signal: loading.signal, includeBattleModels: battlefield });
+    window.FlightFleet = fleet;
+    window.BattleFleetAssets = assets;
+    const app = startFlightRuntime({ fleet, assets, createController: battlefield ? createFlightController : null });
+    app.loadedMs = performance.now() - started;
+    document.documentElement.dataset.renderer = "three";
+  }
 } catch (error2) {
   if (loading.signal.aborted) {
   } else {

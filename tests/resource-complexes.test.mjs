@@ -40,14 +40,14 @@ test('one canonical upgrade changes production and storage together without char
   assert.equal(p.buildQueue.slotId,'D07');assert.deepEqual(p.resources,before.map((v,i)=>v-quote.cost[i]));assert.equal(getCapacity(p)[0],capacities[3]);assert.equal(economy(p).rate[0],rate);
   advance(world,p.buildQueue.end);assert.equal(p.buildings.Metal_Mine,4);assert.equal(getCapacity(p)[0],capacities[4]);assert.ok(economy(p).rate[0]>rate);assert.equal(p.buildings.Metal_Storage,0);
 });
-test('all specialized planets can upgrade imported resource storage without phantom mining or power draw',()=>{
+test('every specialized resource complex upgrade increases production and storage',()=>{
   for(const [biome,native]of [['mercury',0],['mars',1],['gas',2]]){
     const {world,player,p}=fixture();p.biome=biome;p.buildings={Command_Center:1,Solar_Plant:20};
     for(const {id,storageId,resource}of RESOURCE_COMPLEXES){
       const rate=economy(p).rate,demand=economy(p).demand;
       act(world,player,{type:'build',planet:p.id,id},world.at);advance(world,p.buildQueue.end);
       assert.equal(getCapacity(p)[resource],capacities[1]);assert.equal(p.buildings[id],1);
-      if(resource!==native){assert.deepEqual(economy(p).rate,rate);assert.equal(economy(p).demand,demand);}
+      assert.ok(economy(p).rate[resource]>rate[resource]);assert.ok(economy(p).demand>demand);
       const option=snapshot(world,player).planets.find(q=>q.id===p.id).buildOptions[id];assert.equal(option.native,resource===native);
       assert.throws(()=>act(world,player,{type:'build',planet:p.id,id:storageId},world.at),/并入/);
     }

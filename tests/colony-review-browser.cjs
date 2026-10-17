@@ -6,7 +6,7 @@ const assert = require('node:assert/strict');
 // Independent review scene only. Never visit the production game or /api/*.
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'output/playwright/colony-review');
-const base = process.env.COLONY_REVIEW_URL || 'http://127.0.0.1:8289/opendesign/mockups/planet-construction-review/colony-v1.html';
+const base = process.env.COLONY_REVIEW_URL || 'http://127.0.0.1:8389/opendesign/mockups/planet-construction-review/colony-v1.html';
 fs.mkdirSync(output, {recursive:true});
 const result = {startedAt:new Date().toISOString(), url:base, scope:'Independent colony review; global/mining focus switches only, not galaxy navigation.', checks:[], pageErrors:[], apiRequests:[], consoleErrors:[], screenshots:[]};
 const check = (name, detail={}) => result.checks.push({name, passed:true, ...detail});

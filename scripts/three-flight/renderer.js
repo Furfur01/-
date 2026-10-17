@@ -1,3 +1,11 @@
+import {groundCloudShader} from './ground-cloud-shader.js';
+import {groundBlastPhase} from '../../game/ground-blast.mjs';
+import {fortressConnections,fortressSocket,FORTRESS} from '../../game/fortress-layout.mjs';
+import {createFortressGeometry} from './fortress-models.js';
+import {fortressState} from '../../game/planet-defense.mjs';
+import {Cabins} from './cabins.js';
+import {FighterConsole,fighterDisplays,consolePoint} from './fighter-console.js';
+import {cockpitClass} from '../../game/pilot-controls.mjs';
 import {plumeEnvelope,plumeMeshData} from '../../game/ship-propulsion.mjs';
 import {mainGunGlow} from '../../game/ship-main-effects.mjs';
 import {speedFovOffset,smoothSpeedFov} from '../../game/flight-camera.mjs';
@@ -105,7 +113,7 @@ const LAYOUTS=fleet.layouts;
     precision highp float;
     varying vec3 vWorld; varying vec3 vNormal; varying vec3 vColor; varying vec3 vLocal;
     varying float vEmission; varying float vTag; varying vec2 vUV;
-    uniform vec3 uEye; uniform vec3 uLight; uniform float uOpacity; uniform float uSelected;
+    uniform vec3 uEye; uniform vec3 uLight; uniform vec3 uTeamColor; uniform float uOpacity; uniform float uSelected;
     uniform float uMode; uniform float uWire; uniform float uTime; uniform float uExposure; uniform sampler2D uTexture; uniform vec3 uTint; uniform float uNearFade; uniform float uFighter; uniform vec4 uImpact; uniform vec2 uShield;
 
 float sceneHash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
@@ -126,11 +134,31 @@ vec4 spaceScene(vec3 d,float kind){
  return vec4(.002,.007,.012,.20);
 }
 
+    ${groundCloudShader}
     void main(){
+      if(uMode>11.5&&uMode<12.5){bool inside=all(lessThan(abs(uImpact.xyz),vec3(1.)));if(inside?gl_FrontFacing:!gl_FrontFacing)discard;gl_FragColor=groundCloud(vLocal,uImpact.xyz,uImpact.w,uShield.x,uShield.y);return;}
+      if(uMode>12.5&&uMode<13.5){
+        float radius=length(vLocal.xz),age=uImpact.w;
+        float n=cloudNoise(vec3(vLocal.xz*19.,age*.4));
+        float front=exp(-pow((radius-.82)/(.022+age*.018),2.));
+        float dust=exp(-pow((radius-.70)/(.10+age*.04),2.))*(.5+n*.5);
+        vec3 color=mix(vec3(.48,.40,.30),vec3(2.,1.25,.45),exp(-age*5.));
+        gl_FragColor=vec4(color,(front*.8+dust*.25)*uOpacity);return;
+      }
+      if(uMode>13.5&&uMode<14.5){
+        if(vLocal.y<0.)discard;
+        vec3 n=normalize(vNormal),view=normalize(uEye-vWorld);
+        float rim=pow(1.-abs(dot(n,view)),2.5);
+        float latitude=pow(.5+.5*cos(vLocal.y*95.),28.);
+        float longitude=pow(.5+.5*cos(atan(vLocal.z,vLocal.x)*48.),32.);
+        float grid=max(latitude,longitude)*.045;
+        gl_FragColor=vec4(uTint,(.025+rim*.38+grid)*uOpacity);return;
+      }
       vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;
       vec3 L=normalize(uLight),V=normalize(uEye-vWorld);float diffuse=max(dot(N,L),0.);
       float hemi=dot(N,vec3(0.,1.,0.))*.5+.5;
       vec3 base=vColor;
+      if(abs(vTag-77.)<.1)base=uTeamColor;
       if(uMode>.5&&uMode<1.5){vec3 n=normalize(vLocal);vec2 uv=vec2(atan(n.z,n.x)/6.2831853+.5,asin(n.y)/3.14159265+.5);base=texture2D(uTexture,uv).rgb;}
       float spec=pow(max(dot(reflect(-L,N),V),0.),40.)*.17;
       vec3 lighting=vec3(.13,.17,.2)+vec3(.18,.20,.215)*hemi+vec3(.94,.9,.78)*diffuse;
@@ -179,6 +207,14 @@ vec4 spaceScene(vec3 d,float kind){
         float day=max(dot(n,normalize(uLight)),0.);color=surface*(.035+day*1.4)+vec3(.01,.05,.1)*pow(1.-abs(dot(N,V)),4.);
       }
       if(uMode>7.5&&uMode<8.5){float edge=pow(1.-abs(dot(N,V)),3.);color=vec3(.15,.52,1.);alpha=edge*.36*uOpacity;}
+      if(uMode>10.5&&uMode<11.5){
+        vec3 q=normalize(vLocal);float terrain=sceneFbm(q*140.),detail=sceneNoise(q*1900.);
+        vec3 ground=mix(vec3(.12,.17,.15),vec3(.34,.31,.24),smoothstep(.32,.7,terrain));
+        ground*=.85+detail*.25;
+        color=ground*(.3+max(dot(N,normalize(uLight)),0.)*.9);
+        float haze=1.-exp(-length(uEye-vWorld)/11000.);
+        color=mix(color,vec3(.19,.32,.43),haze*.72);
+      }
 
       if(uMode>8.5&&uMode<9.5){
         vec3 q=normalize(vLocal);float n=sceneFbm(q*6.+vec3(uImpact.w*-.7,uImpact.w*.4,0));
@@ -210,34 +246,75 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
     return canvas;
   }
 
-  function instrumentCanvas(index,time=0,speed=128){
-    const canvas=document.createElement('canvas');canvas.width=384;canvas.height=256;const ctx=canvas.getContext('2d');
-    function draw(t,speed){const w=384,h=256;ctx.fillStyle='#06121b';ctx.fillRect(0,0,w,h);ctx.lineWidth=1;ctx.strokeStyle='#244452';ctx.strokeRect(6,6,w-12,h-12);ctx.fillStyle='#50879a';ctx.font='7px monospace';ctx.fillText(['NAV / PROXIMITY ARRAY','FLIGHT CONTROL / TELEMETRY','SYSTEMS / DISTRIBUTION'][index],15,19);ctx.fillText('LINK  0'+(index+1)+'  //  ONLINE',248,19);ctx.beginPath();ctx.moveTo(10,26);ctx.lineTo(374,26);ctx.stroke();
-      if(index!==1){let cx=190,cy=134;ctx.strokeStyle='#376378';for(let r of[24,49,73,92]){ctx.beginPath();ctx.arc(cx,cy,r,0,TAU);ctx.stroke()}ctx.strokeStyle='#24434d';for(let a=0;a<8;a++){ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a/8*TAU)*94,cy+Math.sin(a/8*TAU)*94);ctx.stroke()}ctx.strokeStyle='#669cac';ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(t*.47)*90,cy+Math.sin(t*.47)*90);ctx.stroke();ctx.fillStyle='#b1cbbc';[[20,-17],[-37,24],[50,52]].forEach(([x,y])=>ctx.fillRect(cx+x,cy+y,3,3));ctx.fillStyle='#5d94a6';ctx.fillText(index===0?'RANGE  08.0 KM':'SHIELD DISTRIBUTION',16,238);ctx.fillText('O2  100%',298,238);
-      }else{ctx.strokeStyle='#244451';for(let x=35;x<370;x+=31){ctx.beginPath();ctx.moveTo(x,42);ctx.lineTo(x,210);ctx.stroke()}for(let y=45;y<214;y+=27){ctx.beginPath();ctx.moveTo(15,y);ctx.lineTo(370,y);ctx.stroke()}ctx.strokeStyle='#699db0';ctx.beginPath();for(let i=0;i<170;i++){let x=20+i*2,y=147+Math.sin(i*.082+t)*12+Math.sin(i*.213+t*2)*4;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();ctx.fillStyle='#a0c1c9';ctx.font='23px monospace';ctx.fillText(String(Math.round(speed)).padStart(3,'0'),24,82);ctx.font='7px monospace';ctx.fillText('VELOCITY  M/S',24,96);ctx.fillText('FLIGHT STABILITY  0.998',18,237);ctx.fillText('ENG  NOMINAL',282,237)}
-      ctx.fillStyle='#75a0ad';ctx.font='6px monospace';for(let i=0;i<11;i++){let y=48+i*13;ctx.fillText((.02+i*.007).toFixed(3),14,y);ctx.fillText((99.2-i*.019).toFixed(2),348,y)}
-    }
-    draw(time,speed);return{canvas,draw};
-  }
-
   class Renderer extends ThreeRenderBackend {
     constructor(canvas){
       super(canvas,{vertexSource,fragmentSource,flatVertex,flatFragment,impactVertex,impactFragment},assets);
       this.jointMeshes=fleet.parts.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});this.shipMeshes=fleet.ships.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});
+      this.defenseMeshes=new Map();for(const [index,ship]of fleet.ships.entries()){const parts=assets.ships.find(a=>a.id===ship.id)?.defenseParts;if(parts?.base)this.defenseMeshes.set(index,Object.fromEntries(Object.entries(parts).map(([part,range])=>{const g=new Geometry();g.data=assets.vertices.subarray(range.offset,range.offset+range.floatCount);return [part,range.floatCount?g.upload():null];})));}
+      this.cloudVolume=new Geometry().box([2,2,2],[0,0,0]).upload();
+      this.groundShock=new Geometry().quad([-1,0,-1],[-1,0,1],[1,0,1],[1,0,-1],C.hull).upload();
       this.bridgeMesh=this.makeBridge().upload();
       let beam=new Geometry();beam.cylinder(1,1,[.5,0,0],C.blue,10,0,1);this.beamMesh=beam.upload();let plume=new Geometry();plume.data=plumeMeshData();this.plumeMesh=plume.upload();
       let missile=new Geometry();missile.cylinder(.11,.95,[0,0,0],C.light,8);missile.cylinder(.11,.32,[.63,0,0],C.light,8,0,0,0);this.missileMesh=missile.upload();this.moonMesh=new Geometry().sphere(1,64,36).upload();this.moonTexture=this.texture(makeMoonTexture());
       this.rockMesh=this.makeRock().upload();this.rocks=[];const rockRandom=seeded(8972);
       for(let i=0;i<90;i++){const a=rockRandom()*Math.PI*2,r=550+rockRandom()*3400,size=12+Math.pow(rockRandom(),2)*115;this.rocks.push({pos:[Math.cos(a)*r,(rockRandom()-.5)*700,Math.sin(a)*r],size,rot:[rockRandom()*6,rockRandom()*6,rockRandom()*6]});}
       const ring=new Geometry();ring.data=specialRingData();this.specialRing=ring.upload();
-      this.grid=this.makeGrid();this.stars=this.makeStars();this.cockpit=this.makeCockpit().upload();this.screens=[];this.instruments=[];
-      for(let i=0;i<3;i++){let x=(i-1)*1.1,y=i===1?-1.22:-1.15,z=-2.00;let g=new Geometry();g.quad([x-.44,y-.27,z],[x+.44,y-.27,z],[x+.44,y+.27,z],[x-.44,y+.27,z],C.blue);this.screens.push(g.upload());let inst=instrumentCanvas(i);inst.texture=this.texture(inst.canvas);this.instruments.push(inst)}
-      this.lastInstrument=0;this.vp=M.identity();this.eye=[0,0,0];this.width=0;this.height=0;this.resize();
+      this.grid=this.makeGrid();this.stars=this.makeStars();this.cockpit=this.makeCockpit().upload();
+      this.fighterConsole=new FighterConsole(canvas=>this.texture(canvas));
+      this.screens=fighterDisplays.map(p=>{const g=new Geometry(),[w,h]=p.size;g.quad(...[[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(([x,y])=>consolePoint(p,[x,y,.003])),C.blue);return g.upload();});
+      this.fighterConsoleFrame=null;this.vp=M.identity();this.eye=[0,0,0];this.width=0;this.height=0;this.resize();
     }
     makeRock(){
       const g=new Geometry().sphere(1,12,8);
       for(let i=0;i<g.data.length;i+=13){const p=g.data.slice(i,i+3),r=.83+.13*Math.sin(p[0]*8+p[1]*5)+.12*Math.cos(p[2]*9-p[0]*3);for(let j=0;j<3;j++)g.data[i+j]*=r;g.data[i+6]=.27+r*.08;g.data[i+7]=.25+r*.07;g.data[i+8]=.23+r*.06;}
       for(let i=0;i<g.data.length;i+=39){const a=g.data.slice(i,i+3),b=g.data.slice(i+13,i+16),c=g.data.slice(i+26,i+29),n=V.norm(V.cross(V.sub(b,a),V.sub(c,a)));for(let k=0;k<3;k++)for(let j=0;j<3;j++)g.data[i+k*13+3+j]=n[j];}return g;
+    }
+    drawFortress(environment,namespace='',metadata=[],rows=[]){
+      const modules=environment?.fortress?.modules;if(!modules?.length)return;
+      const compact=environment.fortress.version>=2;
+      this.fortressMeshesByVersion??=new Map();const version=compact?2:1;
+      if(!this.fortressMeshesByVersion.has(version))this.fortressMeshesByVersion.set(version,createFortressGeometry(Geometry,compact?FORTRESS.scale:1,compact));
+      const meshes=this.fortressMeshesByVersion.get(version),{destroyed,destroyedSockets}=fortressState(environment,metadata,rows);
+      for(const ruined of [false,true]){
+       const group=modules.filter(m=>destroyed.has(m.index)===ruined),matrices=new Float32Array(group.length*16);
+       group.forEach((m,i)=>matrices.set(M.translate(m.x-this.eye[0],m.y-this.eye[1],m.z-this.eye[2]),i*16));
+       if(group.length)this.drawInstances(namespace+(ruined?'fortress-wrecks':'fortress-modules'),{geometry:ruined?meshes.wreck:meshes.module,high:true,matrices,ids:group.map(m=>m.index)});
+      }
+      if(compact){
+       this.smallFortressMeshes??=createFortressGeometry(Geometry,FORTRESS.smallScale);
+       const sockets=modules.flatMap(m=>m.sockets.flatMap((s,i)=>s?.kind==='small'?[{module:m,index:i,...fortressSocket(m,i)}]:[]));
+       for(const ruined of [false,true]){
+        const group=sockets.filter(s=>destroyedSockets.has(`${s.module.index}:${s.index}`)===ruined),matrices=new Float32Array(group.length*16);
+        group.forEach((s,i)=>matrices.set(M.translate(s.x-this.eye[0],s.y+4-this.eye[1],s.z-this.eye[2]),i*16));
+        if(group.length)this.drawInstances(namespace+(ruined?'fortress-small-wrecks':'fortress-small-modules'),{geometry:ruined?this.smallFortressMeshes.wreck:this.smallFortressMeshes.module,high:true,matrices,ids:group.map(s=>s.module.index*7+s.index)});
+       }
+      }
+      const allLinks=fortressConnections(modules);
+      for(const ruined of [false,true]){
+       const links=allLinks.filter(([a,b])=>(destroyed.has(a.index)||destroyed.has(b.index))===ruined),bridges=new Float32Array(links.length*16);
+       links.forEach(([a,b],i)=>{
+        const d=V.sub([b.x,b.y,b.z],[a.x,a.y,a.z]),len=V.length(d),direction=V.scale(d,1/len);
+        const inset=compact?65:90,start=V.add([a.x,a.y,a.z],V.scale(direction,inset)),end=V.add([b.x,b.y,b.z],V.scale(direction,-inset));
+        const matrix=this.segmentModel(start,end);for(let j=0;j<3;j++)matrix[12+j]-=this.eye[j];bridges.set(matrix,i*16);
+      });
+       if(links.length)this.drawInstances(namespace+(ruined?'fortress-broken-links':'fortress-links'),{geometry:ruined?meshes.brokenBridge:meshes.bridge,high:true,matrices:bridges,ids:links.map((_,i)=>i)});
+      }
+    }
+    drawDefenseField(environment,metadata,rows,owner){
+      const modules=environment?.fortress?.modules;if(!modules?.length)return;
+      const {fields}=fortressState(environment,metadata,rows);if(!fields.length)return;
+      const x=modules.reduce((n,m)=>n+m.x,0)/modules.length,z=modules.reduce((n,m)=>n+m.z,0)/modules.length;
+      const y=Math.min(...modules.map(m=>m.y))+8,radius=Math.max(...modules.map(m=>Math.hypot(m.x-x,m.z-z)))+150;
+      this.defenseFieldMesh??=new Geometry().sphere(1,80,40).upload();
+      this.setBlend(true,false);
+      for(const field of fields)this.drawMesh(this.defenseFieldMesh,M.compose([x,y,z],[0,0,0],[radius,radius*.45+120,radius]),{mode:14,tint:field.owner===owner?[.12,.6,1]:[1,.24,.18],opacity:.55+.45*Math.min(1,field.charge/field.capacity)});
+      this.setBlend(false,true);
+    }
+    drawBattlePlanet(environment){
+      this.battlePlanetMesh??=new Geometry().sphere(1,256,128).upload();
+      const {center}=environment,radius=environment.radius/FORTRESS.orbitScale;
+      this.drawMesh(this.battlePlanetMesh,M.compose(center,[0,0,0],[radius,radius,radius]),{mode:11,light:[-.4,.9,.3]});
+      if(!environment.moon){this.setBlend(true,false);this.drawMesh(this.battlePlanetMesh,M.compose(center,[0,0,0],[radius+environment.atmosphere,radius+environment.atmosphere,radius+environment.atmosphere]),{mode:8,opacity:.32});this.setBlend(false,true);}
     }
     environment(s,time){
       const kind=s.sceneIndex??0;
@@ -274,9 +351,17 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       // Load-bearing canopy members and small fasteners, all actual 3D geometry.
       g.beam([-2.25,1.48,-2.75],[2.25,1.48,-2.75],.17,.15,frame);g.beam([-2.24,1.38,-2.77],[2.24,1.38,-2.77],.025,.03,trim);
       for(let s of[-1,1]){let a=[s*2.15,1.6,-2.75],b=[s*2.35,-1.42,-2.35];g.beam(a,b,.15,.21,frame);g.beam([s*2.06,1.6,-2.78],[s*2.26,-1.42,-2.38],.026,.05,trim);g.beam([s*2.87,1.9,-2.6],[s*2.05,-1.57,-1.95],.2,.23,frame);g.beam([s*2.8,1.9,-2.57],[s*1.99,-1.57,-1.92],.035,.03,trim);for(let i=0;i<5;i++)g.box([.065,.055,.04],[s*(2.16+i*.044),1.25-i*.5,-2.59+i*.055],inner)}
-      g.box([5.8,.6,.7],[0,-1.74,-1.87],inner);g.beam([-2.6,-1.24,-2.14],[2.6,-1.24,-2.14],.24,.15,frame);
-      for(let i=0;i<3;i++){let x=(i-1)*1.1,y=i===1?-1.22:-1.15;g.chamfer([1.035,.79,.20],[x,y,-2.16],frame);g.box([.94,.60,.06],[x,y,-2.06],inner);for(let sy of[-1,1])for(let sx of[-1,1])g.box([.031,.03,.018],[x+sx*.46,y+sy*.315,-2.027],trim);for(let j=0;j<3;j++){g.box([.055,.04,.038],[x+.49,y+.1-j*.1,-2.009],j===0?rgb(0xa67c46):trim)}}
-      for(let s of[-1,1]){g.chamfer([.42,.84,.45],[s*1.95,-1.42,-1.83],inner);g.box([.21,.13,.035],[s*1.94,-1.11,-1.58],frame)}return g;
+      // A continuous dashboard supports five recessed screens; no duplicate old monitors.
+      g.box([3.7,.32,.55],[0,-1.24,-2.5],inner);
+      for(const panel of fighterDisplays){const [w,h]=panel.size,point=v=>consolePoint(panel,v);
+        g.beam(point([0,-h/2,-.08]),[panel.pos[0],-1.28,-2.4],.12,.12,frame);
+        g.box([w+.10,h+.12,.14],point([0,0,-.08]),frame,0,panel.rotation);
+        g.box([w+.028,h+.028,.025],point([0,0,-.016]),inner,0,panel.rotation);
+        for(const sx of [-1,1])for(const sy of [-1,1])g.box([.015,.015,.006],point([sx*(w/2+.03),sy*(h/2+.034),-.004]),trim,0,panel.rotation);
+        g.box([w*.7,.006,.008],point([0,h/2+.033,-.004]),rgb(0x6293a2),0,panel.rotation,.3);
+        g.box([.045,.009,.008],point([w/2-.03,-h/2-.038,-.004]),rgb(0x89c9be),0,panel.rotation,.4);
+      }
+      return g;
     }
 
     makeBridge(){
@@ -305,11 +390,43 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       }
       return g;
     }
+    drawBow(index,model,opacity=1){
+      this.bowMeshes??=new Map();let mesh=this.bowMeshes.get(index);
+      if(!mesh){const source=this.shipMeshes[index].geometry.getAttribute('aPosition').data.array,b=LAYOUTS[index].bounds,L=LAYOUTS[index].length,data=[];
+        // Retain each ship's real forward hull, paint and wing silhouette. Lower tall
+        // superstructure so the command sightline is never covered by the own ship.
+        for(let i=0;i<source.length;i+=39){if(Math.max(source[i],source[i+13],source[i+26])>b.center[0]+L*.04)continue;for(let j=0;j<39;j++)data.push(source[i+j]);for(let j=0;j<3;j++){const o=data.length-39+j*13;data[o+1]=(data[o+1]-b.center[1])*.38;const n=Math.hypot(data[o+3],data[o+4]/.38,data[o+5]);data[o+3]/=n;data[o+4]/=.38*n;data[o+5]/=n;}}
+        let lift=Infinity;for(let i=0;i<data.length;i+=13)lift=Math.min(lift,L*.12-(L*.25-data[i])*.18-data[i+1]);for(let i=0;i<data.length;i+=13)data[i+1]+=lift;
+        mesh=createGeometry(data);this.bowMeshes.set(index,mesh);this.geometryResources.add(mesh.geometry);
+      }
+      this.drawMesh(mesh,model,{light:[-.35,.9,.6],exposure:1.15,opacity});
+    }
     drawVessel(index,model,opts={},turrets=null){
       this.drawMesh(this.shipMeshes[index],model,{...opts,fighter:true});
       for(const t of turrets||LAYOUTS[index].joints){const a=jointTransforms(M,model,t);this.drawMesh(this.jointMeshes[t.parts[0]],a.yaw,opts);this.drawMesh(this.jointMeshes[t.parts[1]],a.barrels,opts);}
     }
 
+    drawDefense(index,model,yaw=0,pitch=0,teamColor=[.086,.545,.922]){
+      const parts=this.defenseMeshes.get(index);if(!parts){this.drawVessel(index,model);return;}
+      const pivot=assets.ships?.find(a=>a.id===fleet.ships?.[index]?.id)?.defensePivot??3,opts={teamColor};
+      this.drawMesh(parts.base,model,opts);
+      const turret=M.mul(model,M.ry(yaw)),barrels=M.mul(turret,M.mul(M.translate(0,pivot,0),M.mul(M.rz(-pitch),M.translate(0,-pivot,0))));
+      if(parts.turret)this.drawMesh(parts.turret,turret,opts);
+      if(parts.barrels)this.drawMesh(parts.barrels,barrels,opts);
+    }
+    drawMushroomClouds(p){
+      const clouds=[...(p.mushroomClouds||[])].sort((a,b)=>V.length(V.sub(b.pos,this.eye))-V.length(V.sub(a.pos,this.eye)));
+      this.setBlend(false);this.setDepthWrite(false);
+      for(const c of clouds){
+        const phase=groundBlastPhase(c.age),{radius:r,height:h,opacity}=phase,at=c.pos;
+        // Wind gradually stretches the entire volume; the density field itself rolls.
+        const drift=phase.spread*1.8,center=[at[0]+drift,at[1]+(h+r*.95)*.5,at[2]+drift*.35];
+        const size=[r*1.6,(h+r*.95)*.5,r*1.6],eye=this.eye.map((v,i)=>(v-center[i])/size[i]);
+        this.drawMesh(this.cloudVolume,M.compose(center,[0,0,0],size),{mode:12,opacity,impact:[...eye,c.age],shield:[h/r,c.seed]});
+        if(phase.shockOpacity>.001)this.drawMesh(this.groundShock,M.compose([at[0],at[1]+.8,at[2]],[0,0,0],[phase.shockRadius,1,phase.shockRadius]),{mode:13,opacity:phase.shockOpacity,impact:[0,0,0,c.age]});
+      }
+      this.setDepthWrite(true);this.setBlend(false);
+    }
     segmentModel(a,b,radius=1){
       const x=V.norm(V.sub(b,a)),ref=Math.abs(x[1])>.97?[0,0,1]:[0,1,0],z=V.norm(V.cross(x,ref)),y=V.cross(z,x),len=V.length(V.sub(b,a));
       return new Float64Array([x[0]*len,x[1]*len,x[2]*len,0,y[0]*radius,y[1]*radius,y[2]*radius,0,z[0]*radius,z[1]*radius,z[2]*radius,0,...a,1]);
@@ -430,7 +547,7 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       this.drawImpacts(data);
       this.setBlend(false);this.setDepthWrite(true);
     }
-    drawCombatEffects(p,time,own=this.ownModel){const layout=LAYOUTS[window.GalacticDemo.state.shipIndex];
+    drawCombatEffects(p,time,own=this.ownModel,index=window.GalacticDemo?.state.shipIndex??0){const layout=LAYOUTS[index];
       // Weapon beams join the shared impact batch for soft cores and halos.
       if(p.charging){
         const glows=[];for(let m of layout.main){let x=M.transform(own,m);glows.push(...x,...p.profile.weaponColor,(p.profile.visual?.muzzle||22)*(.35+p.charge*.85))}
@@ -466,17 +583,19 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       if(heads.length)this.dynamicFlat(heads,true,1);if(particles.length)this.dynamicFlat(particles,true,1);
       this.setBlend(false);this.setDepthWrite(true);
       this.drawSpecial(p,time);
-      this.drawWeaponImpacts(p);
+      this.drawWeaponImpacts(p);this.drawMushroomClouds(p);
     }
+    endFrame(){const stats=super.endFrame();if(this.cabinRequest){this.cabins??=new Cabins(this);this.cabins.draw(this.cabinRequest);}return stats;}
+    dispose(){this.cabins?.dispose();super.dispose();}
     flight(s,time){
 
-      if(globalThis.flightController?.overview)return globalThis.flightController.drawOverview(this,s,time);
-      this.begin(time);
+      this.cabinRequest=null;this.fighterConsoleFrame=null;if(globalThis.flightController?.overview)return globalThis.flightController.drawOverview(this,s,time);
+      this.begin(time);this.cabinRequest=null;
       const p=s.flight,layout=LAYOUTS[s.shipIndex],a=axes(p),{forward,right,up}=a;
       const shipFrame=M.camera(p.pos,forward,up),own=shipMatrix(p,s.shipIndex);
       this.flightCameraMatrix=shipFrame;this.ownModel=own;
       const blend=p.cameraBlend??(p.external?1:0);
-      const bridge=V.scale(layout.bridge,layout.scale),zoom=p.cameraZoom||1,orbit=p.orbitYaw||0;
+      const bridge=[0,layout.length*.12,layout.length*.25],zoom=p.cameraZoom||1,orbit=p.orbitYaw||0;
       const c=layout.chase,co=Math.cos(orbit),si=Math.sin(orbit);
       const chase=[(c[0]*co+c[2]*si)*zoom,(c[1]+(p.orbitPitch||0)*c[2])*zoom,(-c[0]*si+c[2]*co)*zoom];
       const arc=Math.sin(blend*Math.PI)*layout.length*.15;
@@ -485,6 +604,7 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       const extDir=V.norm(V.sub(focus,chase)),dirLocal=V.norm([extDir[0]*blend,extDir[1]*blend,mix(-1,extDir[2],blend)]);
       const localShake=p.shake||0;eyeLocal[0]+=Math.sin(time*53)*localShake*.18;eyeLocal[1]+=Math.cos(time*63)*localShake*.12;
       let eye=M.transform(shipFrame,eyeLocal),dir=V.add(V.scale(right,dirLocal[0]),V.add(V.scale(up,dirLocal[1]),V.scale(forward,-dirLocal[2])));
+      if(blend<.17){const pose=p.cabinPose,base=!p.profile.capital?[0,0,0]:(p.cabinKind||cockpitClass({role:'line',length:layout.length}))==='bastion'?[0,3.75,2]:[0,3.8,-1];if(pose){eye=V.add(eye,V.add(V.scale(right,pose.eye[0]-base[0]),V.add(V.scale(up,pose.eye[1]-base[1]),V.scale(forward,-pose.eye[2]+base[2]))));dir=V.add(V.scale(forward,Math.cos(pose.yaw)*Math.cos(pose.pitch)),V.add(V.scale(right,Math.sin(pose.yaw)*Math.cos(pose.pitch)),V.scale(up,Math.sin(pose.pitch))));}}
       if(p.detonated){const e=p.detonated,q=Math.min(1,e.age/.3),dest=V.add(e.pos,[e.radius*.72,e.radius*.4,e.radius*1.35]);eye=eye.map((v,i)=>mix(v,dest[i],q));dir=V.norm(V.sub(e.pos,eye));}
       this.eye=eye;this.cameraForward=V.norm(dir);this.cameraUp=up;
       const targetFov=speedFovOffset(p.speed,p.profile.maxSpeed,p.profile.capital);
@@ -499,23 +619,33 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       if(globalThis.flightController)globalThis.flightController.presentation.environment(this,time);else this.environment(s,time);
       if(globalThis.flightController)globalThis.flightController.drawFleet(this);else for(let t of p.targets){if(t.hp>0&&!t.terrainTurret){const model=M.compose(t.pos,[.035,t.heading||.2,-.045],[t.scale,t.scale,t.scale]);this.drawVessel(t.kind,model,{light:[-.3,.65,1],exposure:.85});this.drawShield(t,t.kind,model);}}
       // The camera moves above the real hull toward the bridge. No cut, reset, or dark frame.
-      const ownOpacity=p.detonated?0:!p.profile.capital?clamp((blend-.035)/.18,0,1):1;
+      const ownOpacity=p.detonated?0:clamp((blend-.035)/.18,0,1);
       if(ownOpacity>.001)this.drawVessel(s.shipIndex,own,{light:[-.5,.9,.75],opacity:ownOpacity,exposure:.83},p.joints);
+      if(blend<.17&&!p.detonated)this.drawBow(s.shipIndex,own,clamp(1-blend/.17,0,1));
       this.drawShield(p,s.shipIndex,own,ownOpacity);
       // All exhaust starts inside the measured nozzle surface and follows the ship frame.
       if(ownOpacity>.05&&blend>.04)this.drawExhaust(s.shipIndex,own,p.throttle,p.boostActive,time,ownOpacity);
       this.drawCombatEffects(p,time,own);if(globalThis.flightController&&!globalThis.flightController.fullDetail)globalThis.flightController.presentation.draw(this,globalThis.flightController,false);
       // The interior is fixed to the bridge, never parented to the moving external camera.
       const interiorAlpha=p.detonated?0:clamp(1-blend/.17,0,1);
-      if(interiorAlpha>0){
+      if(interiorAlpha>0&&p.profile.capital){this.cabinRequest={kind:p.cabinKind||cockpitClass({role:"line",length:layout.length}),console:this.bridgeInstrumentState,pose:p.cabinPose,time,fov:this.fov,opacity:interiorAlpha,row:[0,...p.pos,Math.PI-p.yaw,p.pitch,p.hull,p.shield,-1,p.speed/8,p.gunCooldown,p.missileCooldown],meta:{type:fleet.ships[s.shipIndex].id,maxHp:100,maxShield:100},auto:p.ai,throttle:p.throttle/100};}
+      if(interiorAlpha>0&&!p.profile.capital){
         const cockpitModel=M.mul(shipFrame,M.translate(...bridge));
         // Clip-free overlay close to the eye; fade only the interior during the physical pullback.
         if(blend<.02)this.beginOverlay();
         this.drawMesh(!p.profile.capital?this.cockpit:this.bridgeMesh,cockpitModel,{opacity:interiorAlpha,light:[-.35,.7,.6],exposure:.7});
-        if(time-this.lastInstrument>.2){this.lastInstrument=time;this.instruments.forEach(inst=>{inst.draw(time,p.speed);inst.texture.needsUpdate=true})}
-        for(let i=0;i<3;i++)this.drawMesh(this.screens[i],cockpitModel,{mode:2,texture:this.instruments[i].texture,opacity:interiorAlpha});
+        this.fighterConsoleFrame=cockpitModel;this.fighterConsole.update(this.fighterInstrumentState,time);
+        for(let i=0;i<this.screens.length;i++)this.drawMesh(this.screens[i],cockpitModel,{mode:2,texture:this.fighterConsole.displays[i].texture,opacity:interiorAlpha});
       }
     }
+    pickFighterConsole(x,y){
+      if(this.cabinRequest)return this.cabins?.pickFighterConsole(x,y)||null;
+      const m=this.fighterConsoleFrame;if(!m)return null;const ray=this.ray(x,y),relative=ray.origin.map((v,i)=>v-m[12+i]),local=v=>[0,4,8].map(j=>v.reduce((a,n,i)=>a+n*m[j+i],0));
+      return this.fighterConsole.pick(local(relative),local(ray.direction));
+    }
+    pickBridgeConsole(x,y){return this.cabinRequest?this.cabins?.pickBridgeConsole(x,y)||null:null;}
+    bridgeConsoleLayout(){return this.cabinRequest?this.cabins?.bridgeConsoleLayout()||[]:[];}
+    fighterConsoleLayout(){if(this.cabinRequest)return this.cabins?.fighterConsoleLayout()||[];const m=this.fighterConsoleFrame;return m?this.fighterConsole.layout(p=>this.project(M.transform(m,p))):[];}
     ray(x,y){
       const right=V.norm(V.cross(this.cameraForward,this.cameraUp)),up=V.cross(right,this.cameraForward),tan=Math.tan(this.fov/2);
       const nx=x/this.width*2-1,ny=1-y/this.height*2;

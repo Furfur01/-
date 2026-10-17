@@ -1,4 +1,5 @@
 import {combatProfile} from './spatial-profiles.mjs';
+import {DEVOURER} from './devourer-command.mjs';
 
 // Read the same frozen profile and damage shares used by the spatial simulator.
 export function battleStats(unit,technology={}){
@@ -14,5 +15,7 @@ export function battleStats(unit,technology={}){
   splash:p.splashRadius?{radius:p.splashRadius,fraction:p.splashFraction}:null,
   special:p.special,blast:special?{radius:p.blastRadius,peak:attack,arming:2,stagger:8,timeout:20,waveDelay:.28,waveTravel:1.1,falloff:.65}:null,
   reaper:p.special==='reaper'?{shieldReturn:.08,maxShieldPerShot:.08,antimatterImmune:true}:null,
+  carrier:p.carrier?{...DEVOURER,swarmDps:attack*DEVOURER.swarmShare/6,fighterDps:attack*DEVOURER.swarmShare/6/DEVOURER.capacity,
+    fighterHull:DEVOURER.hull*(1+(technology.Strength_Tech||0)*.1),fighterShield:0,buffedDps:attack/6*(1+DEVOURER.aura),temporary:true}:null,
   rapid:unit.rapid||{},economy:{cost:unit.cost,speed:unit.speed,cargo:unit.cargo,fuel:unit.fuel,requirements:unit.req||[]}};
 }

@@ -1,7 +1,7 @@
 # AURORA 行星建造与地貌
 
 正式游戏：`http://127.0.0.1:8289/`  
-独立样板：`http://127.0.0.1:8289/opendesign/mockups/planet-construction-review/`  
+独立样板：`http://127.0.0.1:8389/opendesign/mockups/planet-construction-review/`（`npm run preview:review`，与正式游戏分开端口）
 四类行星图录：`../galactic-command/colony-atlas.html`
 
 ## 正式接入

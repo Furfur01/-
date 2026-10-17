@@ -1,5 +1,5 @@
 {
-  "version": "2b4e86594a26",
+  "version": "ec691b0d51e1",
   "renderer": "three-webgl2",
   "baseline": "legacy-webgl/manifest.json"
 }

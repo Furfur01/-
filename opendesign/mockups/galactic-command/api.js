@@ -16,7 +16,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
     try {
-      const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store', ...options, signal: controller.signal });
+      const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { 'X-Empire-Client': 'galactic-command', ...options.headers }, signal: controller.signal });
       const data = await response.json();
       if (!response.ok || data.error) throw new Error(data.error || '操作失败');
       connected = true;
@@ -112,6 +112,7 @@
 
   const api = {
     init, refresh, action, replay,
+    previewPlan: payload => request('/api/plan-preview', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),
     get state() { return state; },
     get catalog() { return catalog; },
     get planet() { return state?.planets.find(planet => planet.id === selectedPlanet) || state?.planets[0] || null; },

@@ -60,6 +60,18 @@ function controllerFixture(search='?battle=test') {
   return {controller,state};
 }
 
+test('map hull, turrets and effects share the camera sample time throughout a frame',()=>{
+ const {controller:c}=controllerFixture();
+ c.previous=[[0,0,0,0,.1,.2,100,100,-1,110,0,0,.3,.4,.5]];
+ c.rows=[[0,22,6,-4,.9,.8,100,100,-1,110,0,0,1.3,1.4,1.5]];
+ c.received=performance.now()-500;c.sampleTime=c.received+100;
+ const first=c.row(0);assert.deepEqual(first.slice(1,4),[11,3,-2]);
+ assert.equal(first[12],.8);assert.equal(first[14],1);
+ c.sampleTime+=50;assert.deepEqual(c.row(0).slice(1,4),[16.5,4.5,-3]);
+ c.replay=true;c.replayAlpha=.25;assert.deepEqual(c.row(0).slice(1,4),[5.5,1.5,-1]);
+ c.dispose();
+});
+
 test('replay controller rejects writes and never claims or releases control', async () => {
   const {controller}=controllerFixture('?replay=record');
   await assert.rejects(controller.request('/api/battles/test/control',{type:'claim'}),/回放只读/);
@@ -105,4 +117,17 @@ test('fleet instance slots keep authoritative ship IDs across deaths and reinfor
   controller.buildGroups();draws.length=0;controller.drawFleet(renderer);
   assert.deepEqual(draws.at(-1).ids,[0,2,3]);assert.equal(controller.renderedIds.size,3);
   controller.dispose();
+});
+
+test('passive battle viewers never adopt another page control and stale snapshots cannot rewind sequence',async()=>{
+ const {controller}=controllerFixture();controller.owner='owner';controller.selected=8;controller.syncHeader=()=>{};
+ let sent=0;controller.request=async()=>{sent++;return {};};
+ controller.receive({tick:10,ships:[],controls:{owner:{shipId:8,seq:30,clientId:'another-tab'}},events:[]});
+ assert.equal(controller.controlled,null);await controller.sendInput();assert.equal(sent,0);
+ controller.clientId='my-tab';controller.controlRequested=true;
+ controller.receive({tick:12,ships:[],controls:{owner:{shipId:8,seq:40,clientId:'my-tab'}},events:[]});
+ assert.equal(controller.controlled,8);assert.equal(controller.seq,40);
+ controller.receive({tick:11,ships:[],controls:{},events:[]});assert.equal(controller.controlled,8);
+ controller.receive({tick:13,ships:[],controls:{owner:{shipId:8,seq:41,clientId:'another-tab'}},events:[]});assert.equal(controller.controlled,null);
+ controller.dispose();
 });

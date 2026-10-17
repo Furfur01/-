@@ -5,7 +5,7 @@ export function createShipKit(name,colors={}){
   const root=new THREE.Group();root.name=name;
   const palette={armor:0x748899,light:0xa2b1bc,edge:0x576f82,side:0x3a5063,dark:0x202d38,black:0x0c151d,steel:0x647887,red:0x8e3c40,glass:0x72ceda,core:0xa4efff,...colors};
   const materials=Object.fromEntries(Object.entries(palette).map(([key,color])=>[key,new THREE.MeshStandardMaterial({name:key,color,metalness:['steel','edge','side'].includes(key)?.7:.4,roughness:key==='glass'?.22:.43,emissive:['glass','core'].includes(key)?color:0,emissiveIntensity:key==='core'?1.5:key==='glass'?.6:0})]));
-  let part=root;
+  let part=root;const nozzles=[];
   const section=(name,fn)=>{const prev=part;part=new THREE.Group();part.name=name;prev.add(part);fn();const group=part;part=prev;return group;};
   const add=(geometry,material='armor',position=[0,0,0],rotation=[0,0,0])=>{const mesh=new THREE.Mesh(geometry,materials[material]);mesh.position.set(...position);mesh.rotation.set(...rotation);part.add(mesh);return mesh;};
   function plate(points,y,depth,material='armor',bevel=.025){
@@ -42,6 +42,7 @@ export function createShipKit(name,colors={}){
     part=previous;
   }
   function engine(x,y,z,r){
+    nozzles.push({group:part,position:[x,y,z+.172],radius:r*.53});
     cyl(r*.91,1.12,x,y,z-.47,'dark','z',r*.78);cyl(r,.2,x,y,z-.88,'edge','z');
     cyl(r,.34,x,y,z-.06,'steel','z',r*.92);ring(r*.89,.06,x,y,z+.1,'edge');
     cyl(r*.79,.025,x,y,z+.108,'black','z');ring(r*.64,.028,x,y,z+.13,'glass');cyl(r*.53,.025,x,y,z+.125,'core','z');
@@ -50,6 +51,8 @@ export function createShipKit(name,colors={}){
   }
 
   function finish(){
+  root.updateMatrixWorld(true);
+  root.userData.engineNozzles=nozzles.map(n=>({position:new THREE.Vector3(...n.position).applyMatrix4(n.group.matrixWorld).toArray(),direction:new THREE.Vector3(0,0,1).transformDirection(n.group.matrixWorld).toArray(),radius:n.radius}));
   // Merge within named assemblies: keep editable components without hundreds of draw calls.
   for(const group of [...root.children]){
     group.updateMatrixWorld(true);const buckets=new Map();

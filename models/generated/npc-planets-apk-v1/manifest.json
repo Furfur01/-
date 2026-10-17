@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "created": "2026-10-15",
+  "status": "review-only",
+  "coordinateSystem": "Y up, radius approximately 1",
+  "source": "Local APK icons 18,20,19,28,34; original geometry authored in models.js",
+  "models": [
+    {
+      "id": "outpost",
+      "name": "废弃前哨",
+      "ref": 18,
+      "color": "#d3c8b7",
+      "tag": "裂谷 · 残骸",
+      "description": "灰白岩壳被三道深裂谷切开，暗橙核心从破口透出。",
+      "file": "outpost.glb",
+      "bytes": 1395124,
+      "meshes": 5,
+      "triangles": 14896,
+      "finite": true,
+      "size": [
+        2.030592203140259,
+        2.018795967102051,
+        2.118885040283203
+      ],
+      "roundtripVerified": true
+    },
+    {
+      "id": "garrison",
+      "name": "赤铁守备站",
+      "ref": 20,
+      "color": "#f25b4d",
+      "tag": "装甲 · 红色电路",
+      "description": "黑红装甲包覆球面，错层机械板与防御节点构成封闭要塞。",
+      "file": "garrison.glb",
+      "bytes": 1799416,
+      "meshes": 15,
+      "triangles": 24828,
+      "finite": true,
+      "size": [
+        2.054002523422241,
+        2.0652663707733154,
+        2.0954519510269165
+      ],
+      "roundtripVerified": true
+    },
+    {
+      "id": "charon",
+      "name": "卡戎舰队",
+      "ref": 19,
+      "color": "#c492ff",
+      "tag": "放射 · 能量节点",
+      "description": "紫色球壳布满放射节点，长短不一的能量矛改变整个外轮廓。",
+      "file": "charon.glb",
+      "bytes": 1833228,
+      "meshes": 8,
+      "triangles": 24358,
+      "finite": true,
+      "size": [
+        2.5260369777679443,
+        2.43918514251709,
+        2.6703758239746094
+      ],
+      "roundtripVerified": true
+    },
+    {
+      "id": "cargo",
+      "name": "遗落货仓",
+      "ref": 28,
+      "color": "#b2bdd5",
+      "tag": "分瓣 · 开启舱口",
+      "description": "大块分瓣仓壳、赤道运输轨与开启舱门，露出内部货运设施。",
+      "file": "cargo.glb",
+      "bytes": 1452132,
+      "meshes": 10,
+      "triangles": 20052,
+      "finite": true,
+      "size": [
+        2.187439441680908,
+        2.0345993041992188,
+        2.3114532232284546
+      ],
+      "roundtripVerified": true
+    },
+    {
+      "id": "fracture",
+      "name": "苍穹裂隙",
+      "ref": 34,
+      "color": "#63d8ff",
+      "tag": "断壳 · 蓝色裂环",
+      "description": "上下机械壳分离，蓝色能量穿过破碎赤道，圆形接口嵌入装甲。",
+      "file": "fracture.glb",
+      "bytes": 2381396,
+      "meshes": 21,
+      "triangles": 32852,
+      "finite": true,
+      "size": [
+        2.8270784616470337,
+        2.1537604928016663,
+        2.8805025815963745
+      ],
+      "roundtripVerified": true
+    }
+  ]
+}

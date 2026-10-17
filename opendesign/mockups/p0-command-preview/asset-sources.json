@@ -1,0 +1,303 @@
+[
+  {
+    "id": "Energy_Tech",
+    "source": "output/apk-icons/technology/technology_01.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Laser_Tech",
+    "source": "output/apk-icons/technology/technology_02.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Ion_Tech",
+    "source": "output/apk-icons/technology/technology_03.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Hyperspace_Tech",
+    "source": "output/apk-icons/technology/technology_04.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Plasma_Tech",
+    "source": "output/apk-icons/technology/technology_05.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Espionage_Tech",
+    "source": "output/apk-icons/technology/technology_09.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Computer_Tech",
+    "source": "output/apk-icons/technology/technology_10.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Astrophysics_Tech",
+    "source": "output/apk-icons/technology/technology_11.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Combustion_Drive",
+    "source": "output/apk-icons/technology/technology_06.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Impulse_Drive",
+    "source": "output/apk-icons/technology/technology_07.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Hyperspace_Drive",
+    "source": "output/apk-icons/technology/technology_08.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Weapons_Tech",
+    "source": "output/apk-icons/technology/technology_14.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Shielding_Tech",
+    "source": "output/apk-icons/technology/technology_15.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Strength_Tech",
+    "source": "output/apk-icons/technology/technology_16.png",
+    "kind": "Original APK ResearchLad.tfs icon, matched with GameResearchDefine enum"
+  },
+  {
+    "id": "Intergalactic_Network",
+    "source": "opendesign/mockups/galaxy-empire/assets/technologies-v2/Intergalactic_Network.png",
+    "kind": "Existing project supplementary artwork; not an original APK icon"
+  },
+  {
+    "id": "Graviton_Tech",
+    "source": "opendesign/mockups/galaxy-empire/assets/technologies-v2/Graviton_Tech.png",
+    "kind": "Existing project supplementary artwork; not an original APK icon"
+  },
+  {
+    "id": "Light_Fighter",
+    "apkId": 1,
+    "source": "output/apk-icons/fleet/fleet_01.png",
+    "target": "assets/ships/Light_Fighter.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "e580fed5932437b73152e94c51e4d085f07575465999e88eaf3c473618dc1559"
+  },
+  {
+    "id": "Heavy_Fighter",
+    "apkId": 2,
+    "source": "output/apk-icons/fleet/fleet_02.png",
+    "target": "assets/ships/Heavy_Fighter.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "3e708f17c1d7ed5d83f00a572055a82fdefd80c1379ad090834c6b353a504dd6"
+  },
+  {
+    "id": "Cruiser",
+    "apkId": 3,
+    "source": "output/apk-icons/fleet/fleet_03.png",
+    "target": "assets/ships/Cruiser.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "3d48c887f9bab4d8ebcca02109ee57319ae335a22028075f638b303f581366a3"
+  },
+  {
+    "id": "Battleship",
+    "apkId": 4,
+    "source": "output/apk-icons/fleet/fleet_04.png",
+    "target": "assets/ships/Battleship.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "47ecac68344c7f9db0e90e755bc8e663efcf58154089affe41772229f3334e7a"
+  },
+  {
+    "id": "Dreadnought",
+    "apkId": 5,
+    "source": "output/apk-icons/fleet/fleet_05.png",
+    "target": "assets/ships/Dreadnought.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "de4f75e8989173b17c2c92b47c3934f0a0800e7cf882ad0624f76924ac4df729"
+  },
+  {
+    "id": "Bomber",
+    "apkId": 6,
+    "source": "output/apk-icons/fleet/fleet_06.png",
+    "target": "assets/ships/Bomber.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "06e790caeb5a0759e01158a62394dc4e5fa954e1ffc44e11c9b1c5d842746c3f"
+  },
+  {
+    "id": "Destroyer",
+    "apkId": 7,
+    "source": "output/apk-icons/fleet/fleet_07.png",
+    "target": "assets/ships/Destroyer.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "50e2657043f123f1f9af9931c7ed4737028ec993d36f090c19d2cc45ccb4e521"
+  },
+  {
+    "id": "Cargo_Ship",
+    "apkId": 9,
+    "source": "output/apk-icons/fleet/fleet_09.png",
+    "target": "assets/ships/Cargo_Ship.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b"
+  },
+  {
+    "id": "Large_Cargo_Ship",
+    "apkId": 10,
+    "source": "output/apk-icons/fleet/fleet_10.png",
+    "target": "assets/ships/Large_Cargo_Ship.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "f7ff2c0c710201910c42c29f88995f12e773b93241b188864dc8b4155ff69126"
+  },
+  {
+    "id": "Colony_Ship",
+    "apkId": 11,
+    "source": "output/apk-icons/fleet/fleet_11.png",
+    "target": "assets/ships/Colony_Ship.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "97591de09b367666e8bba05904d1d29b4b34f6a659cb4d968bc0ae7ecdbfb814"
+  },
+  {
+    "id": "Recycler",
+    "apkId": 12,
+    "source": "output/apk-icons/fleet/fleet_12.png",
+    "target": "assets/ships/Recycler.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "62cc1cc41c1cd7c45a1527ffa8a3d66e27836368ae7d4f4f14a7816f6f2fe465"
+  },
+  {
+    "id": "Probe",
+    "apkId": 13,
+    "source": "output/apk-icons/fleet/fleet_13.png",
+    "target": "assets/ships/Probe.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "332d64b82df25e0cc94a4bdce067449c5f0931d02f315be3cfdd9dc77f4973c7"
+  },
+  {
+    "id": "Solar_Satellite",
+    "apkId": 14,
+    "source": "output/apk-icons/fleet/fleet_14.png",
+    "target": "assets/ships/Solar_Satellite.png",
+    "kind": "Original APK Fleets.tfs sprite; identity and hash checked against ship archive",
+    "sha256": "77b4f7aae69b9e19cd10ab3f6b6218e928a2f2ea3bd1d9d2a01ef08997168d58"
+  },
+  {
+    "id": "Light_Fighter",
+    "apkId": 1,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Light_Fighter.glb",
+    "revision": "fleet-three-view-01",
+    "sha256": "43f8d6cd4e4e2e514d3435e5f602838a521afa72b16835ea98e352652b6f6818"
+  },
+  {
+    "id": "Heavy_Fighter",
+    "apkId": 2,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Heavy_Fighter.glb",
+    "revision": "preserved approved geometry with corrected identity",
+    "sha256": "578f4a25c239611f58ab757cdbe5fef372297d050e4f0d07be8d031450230ef2"
+  },
+  {
+    "id": "Cruiser",
+    "apkId": 3,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Cruiser.glb",
+    "revision": "fleet-three-view-01",
+    "sha256": "2fd8896af85e6dca52d956e1242079e688977f37089f40d45dfb3e454dbd7329"
+  },
+  {
+    "id": "Battleship",
+    "apkId": 4,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Battleship.glb",
+    "revision": "battleship-sculpted-03",
+    "sha256": "506b8661c24040815080dd90602f48b4c3fff8c192b533b480c070bf4d2c9080"
+  },
+  {
+    "id": "Dreadnought",
+    "apkId": 5,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Dreadnought.glb",
+    "revision": "fleet-sculpted-02",
+    "sha256": "2e013dc49e1d8be1c5448dfe1657066427e7d1a237f3eaaa94770b1f80813126"
+  },
+  {
+    "id": "Bomber",
+    "apkId": 6,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Bomber.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "4c800e3f9e35143704cc976d738ec1eb36320a2ab0f47709ea16fca088f497e6"
+  },
+  {
+    "id": "Destroyer",
+    "apkId": 7,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Destroyer.glb",
+    "revision": "three-view-rebuild-01",
+    "sha256": "31d25837dd98b7772faf63021af14cef739733fcadfa5994e5b4b82698dc3a78"
+  },
+  {
+    "id": "Cargo_Ship",
+    "apkId": 9,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Cargo_Ship.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "033d099c848551d1d2d95252d4ca49086037770f55dc843232bd92c2f4a10d52"
+  },
+  {
+    "id": "Large_Cargo_Ship",
+    "apkId": 10,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Large_Cargo_Ship.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "12838bef23610d17c090c141ea04f2f61ab6ca09240891a8a388546b76cdfe20"
+  },
+  {
+    "id": "Colony_Ship",
+    "apkId": 11,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Colony_Ship.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "ccb0db735443c9e0151163f8b264b5e068db26a1450be7c4f9db3aaef591b811"
+  },
+  {
+    "id": "Recycler",
+    "apkId": 12,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Recycler.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "0f72680c9e031d8c446471129f7275ab73f5559717edf32bc336e7c28a4851ea"
+  },
+  {
+    "id": "Probe",
+    "apkId": 13,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Probe.glb",
+    "revision": "fleet-refinement-01",
+    "sha256": "7ca16b02e7536c7a8e8e9ef9c490de3942642b565dda3796ce027eb312521f51"
+  },
+  {
+    "id": "Solar_Satellite",
+    "apkId": 14,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/models/Solar_Satellite.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "e17a3c9701fecbcbe56c93a86c3dbd2cb5f4877fa147671f15d83d4dfaf3cff5"
+  }
+]

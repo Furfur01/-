@@ -12,7 +12,7 @@ test('published values match entrants and damage budgets, including multi-barrel
   const b=startTrial(w,p,{attacker:{[id]:1},defender:{Battleship:1}},0),s=b.ships[0];
   assert.equal(v.hull,s.hp);assert.equal(v.shield,s.shield);assert.equal(v.attack,s.attack);
   if(v.special==='antimatter'){assert.equal(v.dps,null);assert.equal(v.blast.peak,s.attack);continue;}
-  const weapons=[v.primary,v.secondary,v.missiles].filter(Boolean);assert.ok(Math.abs(weapons.reduce((n,w)=>n+w.dps,0)-s.attack/6)<1e-8);
+  const weapons=[v.primary,v.secondary,v.missiles].filter(Boolean);assert.ok(Math.abs(weapons.reduce((n,w)=>n+w.dps,0)+(v.carrier?.swarmDps||0)-s.attack/6)<1e-8);
   for(const w of weapons)assert.ok(Math.abs(w.perRound*w.count-w.volley)<1e-8);
   if(v.primary){assert.equal(v.primary.range,s.profile.range);assert.equal(v.primary.cooldown,s.profile.cooldown);}
  }

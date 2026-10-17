@@ -1133,7 +1133,7 @@
       "identitySource": "APK enum + Fleets.tfs",
       "modelSource": "APK sprite reconstruction; hidden surfaces interpreted",
       "weaponLayout": {
-        "role": "超巨型非战斗旗舰",
+        "role": "超巨型指挥母舰",
         "scale": 2.8,
         "primary": "无主炮 · 近防自卫",
         "kind": null,
@@ -2501,6 +2501,7 @@
         "Destroyer": 5
       },
       "atlas": 17,
+      "fleetAvailable": false,
       "weapons": [
         {
           "kind": "beam",
@@ -2545,6 +2546,7 @@
       },
       "atlas": 18,
       "parts": 5,
+      "fleetAvailable": false,
       "weapons": [
         {
           "kind": "beam",
@@ -2983,7 +2985,7 @@
     },
     "roles": {
       "Interceptor": "反轻型舰群；主克轻战机和重战机，受驱逐舰与重型特殊舰制约。",
-      "Iron_Behemoth": "超巨型非战斗旗舰；无主炮，小型近防炮拦截导弹与战机；拦截参数待定。",
+      "Iron_Behemoth": "超巨型指挥母舰；锁定目标召集附近友军集火，全军攻击 +15%（不叠加）；定期补充蜂群，支持突击、护卫与编队阵型；无主炮，保留近防自卫。",
       "Devourer_Interceptor": "反高护盾与大型舰；重点克制钛能守卫者，不额外拟造穿盾比例。",
       "Titanenergetic_Frigate": "小型高级战机；中央聚能主炮与两侧十二个导弹口；无炮台；克制参数仍待确认。",
       "Annihilator": "一次性群体打击；不用普通速射模拟爆炸，独立拟定伤害修正。",
@@ -4191,7 +4193,7 @@
         "id": "Iron_Behemoth",
         "apkId": 24,
         "name": "深空吞噬者",
-        "role": "超巨型非战斗旗舰；无主炮，小型近防炮拦截导弹与战机；拦截参数待定。",
+        "role": "超巨型指挥母舰；锁定目标召集附近友军集火，全军攻击 +15%（不叠加）；定期补充蜂群，支持突击、护卫与编队阵型；无主炮，保留近防自卫。",
         "rapid": {},
         "fatal_damage_list": [
           {

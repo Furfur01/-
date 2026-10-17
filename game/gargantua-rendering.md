@@ -1,0 +1,11 @@
+# 卡冈图雅 · 银心黑洞
+
+银河中心 `[0,0,0]` 在总览中只显示「银心」标记，操作与恒星系相同：单击居中选中，保持距离和视角；滚轮逐步放大后才显现黑洞细节；双击使用恒星系的同一靠近距离，拖动自由环绕。侧栏「派舰队探险」沿用既有探索流程。没有工具栏直达近景入口，旧 `#gargantua` 链接也回到普通银河总览。观察不会切换当前殖民地或提交游戏操作。
+
+画面采用实时 Schwarzschild 光线轨道近似：在 GPU 中积分弯曲光线，与薄吸积盘的多次交点产生上下透镜弧像；捕获光线形成黑洞阴影。盘面包含差速旋转的程序化纹理、径向温度变化、轻微多普勒亮度差，另加光子环和多尺度辉光。背景星空沿出射方向采样形成透镜畸变。电影风格参考 [James 等人的 DNGR 论文](https://arxiv.org/abs/1502.03808)，并非原电影的 Kerr/DNGR 渲染器或科研精度复现。
+
+实现位于 `opendesign/mockups/planet-construction-review/aurora-gargantua.js`，接入现有 AURORA WebGL 上下文。黑洞阴影半径 6.5 世界单位，吸积盘处于恒星系尺度，投影半径小于 1.5 像素不绘制，1.5–6 像素渐显；银河总览只绘制点和标记。离屏目标最高 800 像素高，每条光线最多 220 步。缓冲、纹理和程序复用，视口尺寸变化时才重新分配纹理，场景释放时统一销毁。只有靠近银心后才隐藏势力标记，缩回银河时恢复。
+
+构建：`node scripts/build-colony-review.mjs`。`planet.js` 适配层修改后，仍需通过 esbuild 更新 `planet.bundle.js`。
+
+验证：`node --test tests/gargantua.test.mjs tests/aurora-navigation.test.mjs tests/aurora-strategy.test.mjs`；`node tests/gargantua-ui-selfcheck.mjs`；`node tests/black-hole-ui-selfcheck.mjs`。浏览器脚本使用隔离存档，截图在 `output/playwright/gargantua/`。

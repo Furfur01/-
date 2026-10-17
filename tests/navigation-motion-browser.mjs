@@ -1,6 +1,8 @@
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import isolatedBrowserUrl from './isolated-browser-url.cjs';
+const testBase=await isolatedBrowserUrl();
 const require=createRequire(import.meta.url),{chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const out='output/playwright/navigation-motion';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=d3d11']});
@@ -10,7 +12,7 @@ page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m
 const get=()=>page.evaluate(()=>CommandApp.scene.snapshot.navigation);
 async function wheel(delta){await page.mouse.wheel(0,delta);await page.waitForTimeout(140);}
 try{
- await page.goto(process.env.UNIVERSE_TEST_URL||'http://127.0.0.1:8289');await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
+ await page.goto(testBase);await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
  await page.evaluate(()=>{window.__frame=CommandApp.scene.frame;window.__canvas=__frame.contentWindow.document.querySelector('#world');window.__gl=__canvas.getContext('webgl');});
  await page.evaluate(()=>CommandApp.scene.renderer.focusSystem(16));await page.waitForTimeout(1800);
  const box=await page.locator('.aurora-game-frame').boundingBox(),initial=await get();

@@ -13,27 +13,27 @@ function fixture(){
 }
 const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actual} != ${expected}`);
 
-test('specialized planets produce exactly three times their native gross output only',()=>{
+test('specialized planets produce triple primary and ten percent auxiliary gross output',()=>{
   const {p}=fixture(),earth=economy(p);
   assert.equal(earth.ratio,1);
   for(const [biome,index]of [['mercury',0],['mars',1],['gas',2]]){
     p.biome=biome;const specialized=economy(p);
     assert.equal(specialized.ratio,1);
-    specialized.rate.forEach((rate,i)=>close(rate,i===index?earth.rate[i]*3:0));
+    specialized.rate.forEach((rate,i)=>close(rate,earth.rate[i]*(i===index?3:.1)));
     assert.deepEqual(specialized.capacity,earth.capacity);
   }
-  p.buildings={};p.biome='mercury';assert.deepEqual(economy(p).rate,[60*rules.economySpeed,0,0]);
-  p.biome='mars';assert.deepEqual(economy(p).rate,[0,30*rules.economySpeed,0]);
-  p.biome='gas';assert.deepEqual(economy(p).rate,[0,0,0]);
+  p.buildings={};p.biome='mercury';assert.deepEqual(economy(p).rate,[60*rules.economySpeed,rules.economySpeed,0]);
+  p.biome='mars';assert.deepEqual(economy(p).rate,[2*rules.economySpeed,30*rules.economySpeed,0]);
+  p.biome='gas';assert.deepEqual(economy(p).rate,[2*rules.economySpeed,rules.economySpeed,0]);
 });
 
-test('non-native mines consume no energy and native mines still respect energy shortages',()=>{
+test('auxiliary mines draw ten percent power and all mines respect energy shortages',()=>{
   const {p}=fixture();p.buildings.Solar_Plant=1;
   for(const [biome,index]of [['mercury',0],['mars',1],['gas',2]]){
     p.biome=biome;const all=economy(p),native={...p,buildings:{...p.buildings}};
     for(const [i,id]of mines.entries())if(i!==index)delete native.buildings[id];
-    assert.deepEqual(all,economy(native));
-    assert.equal(all.demand,Math.ceil((index===2?20:10)*3*1.1**3));
+    assert.ok(all.demand>economy(native).demand);
+    assert.equal(all.demand,Math.ceil([10,10,20].reduce((sum,n,i)=>sum+n*(i===index?1:.1),0)*3*1.1**3));
     assert.ok(all.ratio>0&&all.ratio<1);
     native.buildings.Solar_Plant=20;assert.ok(all.rate[index]<economy(native).rate[index]);
   }
@@ -41,10 +41,10 @@ test('non-native mines consume no energy and native mines still respect energy s
 
 test('fusion fuel remains unmultiplied even on planets without native gas',()=>{
   const {p}=fixture();p.buildings.Fusion_Reactor=3;
-  const fuel=10*3*1.1**3*rules.economySpeed,earth=economy(p);
+  const fuel=10*3*1.1**3*rules.fusionFuelSpeed,earth=economy(p);
   p.biome='gas';close(economy(p).rate[2],(earth.rate[2]+fuel)*3-fuel);
-  for(const biome of ['mercury','mars']){p.biome=biome;close(economy(p).rate[2],-fuel);}
-  p.resources[2]=0;assert.equal(economy(p).rate[2],0);
+  for(const biome of ['mercury','mars']){p.biome=biome;close(economy(p).rate[2],(earth.rate[2]+fuel)*.1-fuel);}
+  p.resources[2]=0;close(economy(p).rate[2],(earth.rate[2]+fuel)*.1);
   p.moon=true;assert.deepEqual(economy(p).rate,[0,0,0]);assert.equal(economy(p).demand,0);
 });
 
@@ -62,7 +62,7 @@ test('saved specialized planets preserve resources, buildings and legacy queues 
   assert.equal(saved.biome,'mercury');assert.deepEqual(saved.buildQueue,buildQueue);
   const state=snapshot(restored,restored.players[player.id]);
   assert.equal(state.planets.find(x=>x.id===p.id).biome,'mercury');assert.equal(state.map.find(x=>x.id===p.id).biome,'mercury');
-  advance(restored,buildQueue.end);assert.equal(saved.buildings.Gas_Mine,4);assert.equal(economy(saved).rate[2],0);
+  advance(restored,buildQueue.end);assert.equal(saved.buildings.Gas_Mine,4);assert.ok(economy(saved).rate[2]>next[2]);
 });
 
 test('legacy planets default to terrestrial while migration keeps specialized planets and moons',()=>{
@@ -98,8 +98,8 @@ test('visited systems expose fifteen stable random planet types without creating
   const {world,player}=fixture();world.biomeSeed=42;
   const first=localMap(snapshot(world,player,[1,498]),1,498),count=Object.keys(world.planets).length;
   assert.deepEqual(first.map(p=>p.position[2]),Array.from({length:15},(_,i)=>i+1));
-  assert.equal(first.filter(p=>p.npc).length,4);
-  assert.equal(first.filter(p=>p.unoccupied).length,11);
+  assert.equal(first.filter(p=>p.npc).length,5);
+  assert.equal(first.filter(p=>p.unoccupied).length,10);
   for(const p of first){
     assert.ok(Object.hasOwn(planetTypes,p.biome));
     if(p.unoccupied){assert.equal(p.id,null);assert.equal(p.owner,null);assert.equal(p.npc,false);assert.ok(p.name.includes(planetTypes[p.biome].name));assert.ok(!Object.values(world.planets).some(q=>q.position.join(':')===p.position.join(':')));}

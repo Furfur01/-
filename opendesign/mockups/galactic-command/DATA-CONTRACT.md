@@ -58,7 +58,7 @@ const replay = await api.replay(reportId);
 
 `catalog.planetTypes` 定义四类地形与矿产倍率。普通行星 `biome` 由持久化宇宙种子和坐标分配，回访、读档和殖民不会重抽；既有存档类型保留。客户端只能从星图进入所选自有星球，不能提交 `planetType` 改写类型。
 
-野怪皮肤与普通四类地形分开。有效既存 `npcSkin` 优先保留，其次采用旧 `planet_icon`；两者接受 APK 编号 17–34，并保存为数字。无明确编号的野怪只从常规池 17–21 分配，同系四个不同，跨系覆盖五张图；22–34 不随机混入普通野怪。分配使用持久化宇宙种子与银河打乱图池，再按星系和模板轮换，生成后写入 NPC。此为本项目固定分配规则，APK 仅提供资源编号映射，不代表恢复了原版服务端算法。迁移只补皮肤字段，不改变名字、坐标、资源、舰队损伤或驻军；战损、回访和读档不重抽皮肤。
+野怪模型与普通四类地形分开。五种类型以 `npcType` 固定映射：outpost→18、garrison→20、charon→19、cargo→28、fracture→34（苍穹裂隙）。公共资料增加 `npcLevel,npcThreat,npcColor,npcSymbol,npcPatrols`，不泄露当前舰队或资源。`npcSystems` 版本 2 仅为旧系追加第五类，已有资源、战损、坐标与任务保持不变。`/api/star-map` 与正式初始化共用位置规划器，目录读取不产生写入。未归类的旧特殊 NPC 仍保留合法旧皮肤编号。巡逻只是视觉装饰，不是任务或战斗单位。详见 `game/npc-planets.md`。
 
 `buildOptions[id]`：`cost,seconds,downgradeCost,downgradeSeconds,energy`。`researchOptions[id]`：`cost,seconds,energy`。建筑/研究队列为 `{id,level,start,end,planet,cost}`；拆除含 `mode:'downgrade'`。造舰队列为 `{id,count,remaining,each,start,end}`，其中 `end` 是下一艘完成时间，`each` 单位秒，全部完成时间为 `end+(remaining-1)*each*1000`。造舰基础单艘时间沿用 engine：
 
@@ -92,7 +92,7 @@ Math.max(2, Math.ceil((unit.cost[0] + unit.cost[1]) * 1.44 /
 | `chat` | `text,channel` | ≤160 字；`channel:'alliance'` 要求已有联盟 |
 | `purchase` | `resource:0|1|2,size:1|10|100,quantity:1..100` | 消耗已有暗物质；本地无充值 |
 
-任务名从 `catalog.missionNames` 获取：`attack,spy,recycle,transport,deploy,colonize,explore,mine,destroyMoon`。探索/采矿去轨道 16；探索停留 1..天体物理等级，采矿 1..4；每游戏小时目前对应 60 秒。侦察需 Probe，回收/采矿需 Recycler，殖民需 Colony_Ship。运输/驻扎/殖民之外任务的 cargo 必须全零。任务时间/燃料计算由服务端确认；不可用前端展示替代服务端结算。
+任务名从 `catalog.missionNames` 获取：`attack,spy,recycle,transport,deploy,colonize,explore,mine,destroyMoon`。探索/采矿沿用轨道 16 接口；银心黑洞探索抵达后固定停留 `rules.explorationSeconds=1800` 秒，往返另算，忽略客户端 `holdHours`。采矿停留 1..4 游戏小时，每游戏小时对应 60 秒。探索需要天体物理 1 级，名额 `floor(sqrt(等级))` 含返航任务；发现量独立抽取，装载量取发现量与舰队总仓容量的较小值，资源及暗物质均返航入账。探索报告含 `discovered:{resource,amount}`（无发现为 null）、`capacity`、`cargo`、`darkMatter`；资源索引 0/1/2 对应金属/晶体/气体，暗物质为 `darkMatter`。侦察需 Probe，回收/采矿需 Recycler，殖民需 Colony_Ship。运输/驻扎/殖民之外任务的 cargo 必须全零。任务时间/燃料计算由服务端确认；不可用前端展示替代服务端结算。完整规则见 [银心黑洞探险](../../../game/black-hole-exploration.md)。
 
 ## 单位显示映射
 

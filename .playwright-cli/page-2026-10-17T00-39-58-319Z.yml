@@ -1,0 +1,168 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "银河帝国 GALACTIC EMPIRE" [ref=e5] [cursor=pointer]:
+      - /url: "#construction"
+      - generic [ref=e10]:
+        - text: 银河帝国
+        - generic [ref=e11]: GALACTIC EMPIRE
+    - navigation "P1工作区" [ref=e12]:
+      - button "殖民地建设" [ref=e13] [cursor=pointer]
+      - button "行星防务" [ref=e19] [cursor=pointer]
+      - button "舰队行动" [ref=e23] [cursor=pointer]
+      - button "帝国王庭" [ref=e27] [cursor=pointer]
+    - generic [ref=e31]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: 1.65 M
+        - generic [ref=e38]: 金属
+      - generic [ref=e42]:
+        - generic [ref=e43]: 1.03 M
+        - generic [ref=e44]: 晶体
+      - generic [ref=e49]:
+        - generic [ref=e50]: 510.0 K
+        - generic [ref=e51]: 气体
+    - generic [ref=e52]: P1 预览
+  - generic [ref=e54]:
+    - generic [ref=e55]:
+      - text: CONSTRUCTION
+      - heading "建设与发展" [level=1] [ref=e56]
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]: 当前殖民地
+        - combobox "当前示例殖民地" [ref=e60] [cursor=pointer]:
+          - option "曙光 · 1:16:7" [selected]
+          - option "赤炉 · 1:16:3"
+          - option "霜庭 · 1:32:10"
+          - option "远望 · 1:84:13"
+      - generic [ref=e63]: 类地星同系共享库存
+  - main [ref=e64]:
+    - generic [ref=e65]:
+      - complementary [ref=e66]:
+        - generic [ref=e67]:
+          - heading "建设目录" [level=2] [ref=e68]
+          - generic [ref=e69]: 14 处固定设施
+        - textbox "搜索建筑" [ref=e74]:
+          - /placeholder: 搜索设施…
+        - generic [ref=e75]:
+          - button "资源" [ref=e76] [cursor=pointer]
+          - button "工业" [ref=e77] [cursor=pointer]
+          - button "行政" [ref=e78] [cursor=pointer]
+        - generic [ref=e79]:
+          - button "金属开采综合体 已建成 · D07 Lv 10" [pressed] [ref=e80] [cursor=pointer]:
+            - generic [ref=e81]:
+              - generic [ref=e82]: 金属开采综合体
+              - generic [ref=e83]: 已建成 · D07
+            - emphasis [ref=e84]: Lv 10
+          - button "晶体开采综合体 已建成 · D02 Lv 8" [ref=e85] [cursor=pointer]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: 晶体开采综合体
+              - generic [ref=e88]: 已建成 · D02
+            - emphasis [ref=e89]: Lv 8
+          - button "气体开采综合体 已建成 · D09 Lv 6" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]:
+              - generic [ref=e92]: 气体开采综合体
+              - generic [ref=e93]: 已建成 · D09
+            - emphasis [ref=e94]: Lv 6
+          - button "太阳能电站 已建成 · D10 Lv 16" [ref=e95] [cursor=pointer]:
+            - generic [ref=e96]:
+              - generic [ref=e97]: 太阳能电站
+              - generic [ref=e98]: 已建成 · D10
+            - emphasis [ref=e99]: Lv 16
+          - button "聚变反应堆 尚未建设 · D05 —" [ref=e100] [cursor=pointer]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: 聚变反应堆
+              - generic [ref=e103]: 尚未建设 · D05
+            - emphasis [ref=e104]: —
+        - button "管理建设计划 3" [ref=e105] [cursor=pointer]:
+          - text: 管理建设计划
+          - generic [ref=e110]: "3"
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - generic [ref=e117]: COLONY / D07
+            - heading "金属开采综合体" [level=2] [ref=e118]
+          - generic [ref=e119]: Lv 10
+        - paragraph [ref=e120]: 开采金属。 采集与仓储统一升级；专产星的优势矿产产量×3，辅助矿产产量×0.1；三类综合体都能开采和仓储。
+        - generic [ref=e121]:
+          - button "设施预览" [ref=e122] [cursor=pointer]
+          - button "固定建设区" [ref=e126] [cursor=pointer]
+        - generic [ref=e130]:
+          - generic "三维模型，可拖动旋转和滚轮缩放" [ref=e131]
+          - generic: 正在载入模型…
+          - generic:
+            - generic: 拖动旋转 · 滚轮缩放
+            - button "复位模型视角" [ref=e133] [cursor=pointer]
+        - generic [ref=e137]:
+          - generic [ref=e141]:
+            - text: 供电效率
+            - generic [ref=e142]: 100%
+          - generic [ref=e148]:
+            - text: 建设方圆
+            - generic [ref=e149]:
+              - text: "70"
+              - generic [ref=e150]: / 190
+          - generic [ref=e155]:
+            - text: 设施等级
+            - generic [ref=e156]:
+              - text: "10"
+              - generic [ref=e157]: → 11
+        - generic [ref=e158]:
+          - generic [ref=e159]:
+            - generic [ref=e160]: 当前施工
+            - generic [ref=e161]: 建设队列可用
+          - generic [ref=e162]: 工班空闲，可以开始下一项建设
+      - complementary [ref=e166]:
+        - generic [ref=e167]:
+          - heading "升级预览" [level=2] [ref=e168]
+          - generic [ref=e169]: Lv 11
+        - generic [ref=e170]:
+          - generic [ref=e171]: 升级后的变化
+          - generic [ref=e173]:
+            - text: 本星净产量
+            - generic [ref=e174]:
+              - generic [ref=e175]: 23.9 K/h
+              - strong [ref=e178]: 28.8 K/h
+          - generic [ref=e179]:
+            - text: 仓储容量
+            - generic [ref=e180]:
+              - generic [ref=e181]: 5.35 M
+              - strong [ref=e184]: 9.81 M
+          - generic [ref=e185]:
+            - text: 供电效率
+            - generic [ref=e186]:
+              - generic [ref=e187]: 100%
+              - strong [ref=e190]: 100%
+          - generic [ref=e191]: 前置条件
+          - paragraph [ref=e193]: 没有额外前置条件
+          - generic [ref=e196]: 已接入同系共享仓库，使用曙光与赤炉的共同库存。
+        - generic [ref=e197]:
+          - generic [ref=e198]: 建设费用
+          - generic [ref=e200]:
+            - generic [ref=e201]:
+              - generic [ref=e205]: 金属
+              - generic [ref=e206]: 2,882
+            - generic [ref=e207]:
+              - generic [ref=e210]: 晶体
+              - generic [ref=e211]: "720"
+            - generic [ref=e212]:
+              - generic [ref=e216]: 气体
+              - generic [ref=e217]: "0"
+          - generic [ref=e218]:
+            - generic [ref=e222]: 预计工期
+            - generic [ref=e223]: 12秒
+          - button "开始升级" [ref=e224] [cursor=pointer]
+          - button "加入后续计划" [ref=e228] [cursor=pointer]
+          - generic [ref=e233]: 直接升级在开工时扣费 · 后续计划暂不扣费
+  - contentinfo [ref=e234]:
+    - generic [ref=e235]:
+      - text: P1 界面测试
+      - generic [ref=e239]: 独立示例 · 未接入正式存档
+    - generic [ref=e240]:
+      - button "暂停演示" [ref=e241] [cursor=pointer]
+      - generic [ref=e245]:
+        - text: 模拟时间
+        - combobox "演示速度" [ref=e246] [cursor=pointer]:
+          - option "暂停"
+          - option "1×" [selected]
+          - option "20×"
+          - option "60×"
+      - button "重置示例" [ref=e247] [cursor=pointer]

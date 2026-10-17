@@ -13,13 +13,25 @@ const IDENTITY = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
 const MAIN_DEFAULTS = {
   uModel:IDENTITY,uVP:IDENTITY,uEye:[0,0,0],uLight:[-.65,.9,.65],
   uOpacity:1,uSelected:-10,uMode:0,uWire:0,uTime:0,uExposure:1,uTint:[1,1,1],
-  uNearFade:0,uFighter:0,uShellOffset:0,uImpact:[0,0,0,0],uShield:[1,0],uTexture:null,
+  uNearFade:0,uFighter:0,uShellOffset:0,uImpact:[0,0,0,0],uShield:[1,0],uTexture:null,uTeamColor:[.086,.545,.922],
 };
-const fleetVertex = `attribute vec3 aPosition,aNormal,aColor;uniform mat4 vp;varying vec3 color;
+const fleetVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aTag,aEmission;uniform vec3 teamColor;uniform mat4 vp;varying vec3 color;
 void main(){vec3 normal=normalize(mat3(instanceMatrix)*aNormal);
 float light=.68+.72*max(0.,dot(normal,normalize(vec3(-.5,.9,.7))))+.2*max(0.,dot(normal,normalize(vec3(.8,-.1,-.7))));
-color=pow(aColor,vec3(.85))*light;gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
+vec3 base=abs(aTag-77.)<.1?teamColor:aColor;color=pow(base,vec3(.85))*mix(light,1.2,clamp(aEmission,0.,1.));gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
 const fleetFragment = 'varying vec3 color;uniform vec3 tint;void main(){gl_FragColor=vec4(color*tint,1.);}';
+const fortressVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aEmission;uniform mat4 vp;
+varying vec3 color,localPosition,surfaceNormal;varying float emission;
+void main(){surfaceNormal=normalize(mat3(instanceMatrix)*aNormal);localPosition=aPosition;color=aColor;emission=aEmission;gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
+const fortressFragment = `varying vec3 color,localPosition,surfaceNormal;varying float emission;uniform vec3 tint;
+float grain(vec3 p){return fract(sin(dot(p,vec3(17.13,93.71,41.37)))*43758.5453);}
+void main(){vec3 n=normalize(surfaceNormal);float key=max(0.,dot(n,normalize(vec3(-.5,.9,.7))));
+float noise=grain(floor(localPosition*3.));float stain=grain(floor(localPosition*vec3(.18,.06,.18)));
+float seams=step(.35,mod(localPosition.y+1.,9.));
+float weather=(.86+.1*noise+.06*stain)*mix(.78,1.,seams);
+vec3 light=vec3(.22,.27,.32)+vec3(.76,.71,.61)*key;
+vec3 shaded=color*light*weather;shaded=mix(shaded,color,emission*.75);
+gl_FragColor=vec4(shaded*tint,1.);}`;
 const ribbonVertex = 'attribute vec3 p,c;attribute vec2 texcoord;attribute float a;uniform mat4 vp;varying vec3 color;varying vec2 tex;varying float alpha;void main(){color=c;tex=texcoord;alpha=a;gl_Position=vp*vec4(p,1.);}';
 const ribbonFragment = 'varying vec3 color;varying vec2 tex;varying float alpha;void main(){float edge=abs(tex.y);float core=exp(-edge*edge*110.);float halo=exp(-edge*edge*5.)*.7;float cap=smoothstep(0.,.025,tex.x)*smoothstep(0.,.025,1.-tex.x);gl_FragColor=vec4(mix(color,vec3(1.,.96,.87),core*.7),(core+halo)*alpha*cap);}';
 const skyVertex = 'attribute vec2 skyPosition;varying vec2 screenUV;void main(){screenUV=skyPosition;gl_Position=vec4(skyPosition,1.,1.);}';
@@ -131,7 +143,7 @@ export class ThreeRenderBackend {
     const relative=new Float32Array(model);for(let i=0;i<3;i++)relative[12+i]=model[12+i]-this.eye[i];
     const uniforms={uModel:relative,uVP:new Float32Array(this.relativeVP()),uEye:[0,0,0],uLight:opts.light||[-.65,.9,.65],
       uOpacity:opts.opacity??1,uSelected:opts.selected??-10,uMode:opts.mode||0,uWire:opts.wire?1:0,uTime:this.time||0,
-      uExposure:opts.exposure??1,uTint:opts.tint||[1,1,1],uNearFade:opts.nearFade||0,uFighter:opts.fighter?1:0,
+      uExposure:opts.exposure??1,uTint:opts.tint||[1,1,1],uTeamColor:opts.teamColor||[.086,.545,.922],uNearFade:opts.nearFade||0,uFighter:opts.fighter?1:0,
       uShellOffset:opts.shellOffset||0,uImpact:opts.impact||[0,0,0,0],uShield:opts.shield||[1,0],uTexture:opts.texture||this.moonTexture};
     this._queue(mesh.geometry,this._material('main',this._state(opts),!!opts.wire),'mesh',uniforms);
   }
@@ -165,11 +177,11 @@ export class ThreeRenderBackend {
   drawImpacts(data) {
     this._dynamic('impact',data,10,[['p',3,0],['c',3,3],['texcoord',2,6],['fx',2,8]],{vp:new Float32Array(this.relativeVP())},'mesh',{blend:true,depthWrite:false,depthTest:true,front:false});
   }
-  drawInstances(key,{type,index,high=false,matrices,count,ids,tint=[1,1,1]}) {
+  drawInstances(key,{type,index,geometry,high=false,matrices,count,ids,tint=[1,1,1],teamColor=[.086,.545,.922]}) {
     count??=ids.length;if(!count)return;
     const id=key+':'+(high?'high':'low');let batch=this.instanceBatches.get(id);
-    let entry=this.shipMeshes[index];
-    if(!high){
+    let entry=geometry||this.shipMeshes[index];
+    if(!high&&!geometry){
       const name=type||this.assets?.ships?.find(s=>s.id===key.split(':').at(-1))?.id;
       const asset=this.assets?.ships?.find(s=>s.id===(name||this.assets.ships[index]?.id));
       if(asset){entry=this.lowMeshes.get(asset.id);if(!entry){entry=createGeometry(this.assets.vertices.subarray(asset.low.offset,asset.low.offset+asset.low.floatCount));this.lowMeshes.set(asset.id,entry);}}
@@ -177,7 +189,7 @@ export class ThreeRenderBackend {
     if(!entry)return;
     if(!batch||batch.capacity<count||batch.mesh.geometry!==entry.geometry){
       if(batch){batch.mesh.removeFromParent();batch.mesh.dispose();batch.mesh.material.dispose();}
-      const capacity=2**Math.ceil(Math.log2(Math.max(1,count))),mat=material(fleetVertex,fleetFragment,{vp:IDENTITY,tint});
+      const capacity=2**Math.ceil(Math.log2(Math.max(1,count))),mat=material(geometry?fortressVertex:fleetVertex,geometry?fortressFragment:fleetFragment,{vp:IDENTITY,tint,teamColor});
       const mesh=new THREE.InstancedMesh(entry.geometry,mat,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.frustumCulled=false;mesh.matrixAutoUpdate=false;
       batch={mesh,capacity,ids:[],idToSlot:new Map()};this.instanceBatches.set(id,batch);this.scene.add(mesh);this.geometryResources.add(entry.geometry);
     }
@@ -185,6 +197,7 @@ export class ThreeRenderBackend {
     batch.mesh.instanceMatrix.array.set(matrices.subarray?matrices.subarray(0,count*16):matrices.slice(0,count*16));
     batch.mesh.instanceMatrix.clearUpdateRanges();batch.mesh.instanceMatrix.addUpdateRange(0,count*16);batch.mesh.instanceMatrix.needsUpdate=true;
     batch.mesh.material.uniforms.vp.value=new Float32Array(this.relativeVP());batch.mesh.material.uniforms.tint.value=tint;
+    batch.mesh.material.uniforms.teamColor.value=teamColor;
     batch.ids=Array.from(ids).slice(0,count);batch.idToSlot.clear();batch.ids.forEach((shipId,slot)=>batch.idToSlot.set(shipId,slot));
   }
   drawFleetInstances(key,index,matrices,ids,opts={}) {this.drawInstances(key,{...opts,index,matrices,ids,count:ids.length,type:opts.type||key.split(':').at(-1)});}

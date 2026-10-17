@@ -13,7 +13,7 @@ function applyGamePlanet(planet,catalog,now=Date.now()){
  for(const d of districts){
   const i=gameResourceIndex(d),id=gameBuildingIds[d.type],level=planet.buildings[id]||0;
   d.enabled=!planet.moon&&(!d.resource||multipliers[i]>0);
-  d.name=catalog.buildings[id]?.name||d.name;
+  d.name=id==='Command_Center'&&planet.imperialCourt?'帝国王庭':catalog.buildings[id]?.name||d.name;
   const names=d.label?.querySelectorAll('span');if(names?.[1])names[1].textContent=d.name;
   for(const b of d.buildings){
    b.gameId=id;b.name=d.name;b.level=level;b.operationRate=d.resource?ratio:1;
@@ -24,7 +24,7 @@ function applyGamePlanet(planet,catalog,now=Date.now()){
    if(building){b.state=visualLevel>0?'upgrade':'construction';b.progress=clamp((now-q.start)/Math.max(1,q.end-q.start),0,1);}
    else if(d.resource&&visualLevel>0){
     if(!store&&!d.enabled)b.state='paused';
-    else if(planet.resources[i]>=(planet.economy?.capacity?.[i]??Infinity))b.state='full';
+    else if((planet.storage?.resources||planet.resources)[i]>=(planet.storage?.capacity?.[i]??planet.economy?.capacity?.[i]??Infinity))b.state='full';
     else if(!store&&ratio<.999)b.state=ratio>0?'lowpower':'paused';
    }
    if(b.elevator){const head=planet.shipQueue?.[0];b.elevator.gameQueue=head&&gameCatalog.units?.[head.id]?.type!=='defense'?head:null;b.elevator.gameNow=now;}

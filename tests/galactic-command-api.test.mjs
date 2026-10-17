@@ -23,6 +23,16 @@ test('local bridge resumes Local progress without returning its cookie and retai
   try{
     await Promise.race([once(child.stdout,'data'),once(child,'exit').then(()=>{throw new Error(errors);}),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('server startup timeout')),10000);timer.unref();})]);
     const headers={Origin:base,'X-Empire-Client':'galactic-command','Content-Type':'application/json',Cookie:`empire=${browser.id}`};
+    const beforeProbe=fs.readFileSync(file,'utf8');
+    const probe=await fetch(base+'/api/health');
+    assert.equal(probe.status,200);assert.equal(probe.headers.get('set-cookie'),null);
+    assert.equal(probe.headers.get('cache-control'),'no-store');
+    const health=await probe.json();
+    assert.equal(health.service,'galaxy-empire');assert.equal(health.status,'running');
+    assert.equal(health.pid,child.pid);assert.equal(health.port,port);
+    assert.ok(health.uptime>=0);
+    assert.equal((await fetch(base+'/api/health',{method:'POST'})).status,405);
+    assert.equal(fs.readFileSync(file,'utf8'),beforeProbe);
     for(const route of ['/api/session/local','/api/session/godot'])for(const options of [{},{method:'POST'},{method:'POST',headers:{...headers,Origin:'http://foreign.invalid'}},{method:'POST',headers:{...headers,'X-Empire-Client':'foreign'}},{method:'POST',headers:{...headers,'Sec-Fetch-Site':'cross-site'}}]){
       assert.equal((await fetch(base+route,options)).status,403);
     }
@@ -38,11 +48,26 @@ test('local bridge resumes Local progress without returning its cookie and retai
     assert.equal(state.player.name,local.name);assert.equal(state.planets[0].buildings.Command_Center,3);
     assert.equal((await fetch(base+'/api/action',{method:'POST',headers:{...headers,Cookie:cookie},body:JSON.stringify({type:'readAll'})})).status,200);
     assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length);
+    // Simulate the embedded browser dropping cookies on every refresh.
+    for(let i=0;i<5;i++){const response=await fetch(base+'/api/state',{headers:{'X-Empire-Client':'galactic-command','Sec-Fetch-Site':'same-origin'}});const stable=await response.json();assert.equal(stable.player.id,local.id);assert.equal(stable.player.home,local.home);}
+    const stale=await(await fetch(base+'/api/state',{headers})).json();assert.equal(stale.player.id,local.id,'tagged UI keeps disk session even with an obsolete browser cookie');
+    const rejected=await fetch(base+'/api/state',{headers:{Origin:'http://foreign.invalid','X-Empire-Client':'galactic-command'}});assert.equal(rejected.status,403);
+    await fetch(base+'/api/action',{method:'POST',headers:{...headers,Cookie:undefined},body:JSON.stringify({type:'readAll'})});
+    assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length,'cookie loss must not create new commanders');
+    for(const route of ['/api/state','/api/missing','/api/battle-trial','/api/battles/00000000-0000-4000-8000-000000000099','/api/battles/00000000-0000-4000-8000-000000000099/events','/api/replay/missing']){
+      const unauthenticated=await fetch(base+route);assert.equal(unauthenticated.status,401);assert.equal(unauthenticated.headers.get('set-cookie'),null);
+    }
+    await fetch(base+'/api/action',{method:'POST',headers,body:JSON.stringify({type:'readAll'})});
+    assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length,'old battle tabs must not register players on reconnect');
     fs.writeFileSync(session,'{}');
     assert.deepEqual(await(await fetch(base+'/api/session/local',{method:'POST',headers})).json(),{source:'browser',name:browser.name});
-    const created=await fetch(base+'/api/session/local',{method:'POST',headers:{Origin:base,'X-Empire-Client':'galactic-command'}});
-    assert.equal((await created.json()).source,'new');
-    assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length+1);
+    assert.equal(JSON.parse(fs.readFileSync(session)).cookie,`empire=${browser.id}`,'browser recovery must persist the session');
+    const resumed=await fetch(base+'/api/session/local',{method:'POST',headers:{Origin:base,'X-Empire-Client':'galactic-command'}});
+    assert.deepEqual(await resumed.json(),{source:'local',name:browser.name});
+    fs.writeFileSync(session,'{}');
+    const ambiguous=await fetch(base+'/api/session/local',{method:'POST',headers:{Origin:base,'X-Empire-Client':'galactic-command'}});
+    assert.equal(ambiguous.status,409,'a lost session with multiple accounts requires selecting one, never another account');
+    assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length);
     assert.equal((await fetch(base+'/opendesign/index.html')).status,200);
     for(const name of ['/data/session.json','/data/universe.json','/godot/data/session.json'])assert.equal((await fetch(base+name)).status,404);
   }finally{

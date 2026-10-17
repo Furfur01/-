@@ -1,6 +1,7 @@
 import React,{createContext,useContext,useState,useEffect,useRef,useId} from 'react';
 import {X,ChevronLeft,Clock,Lock,ChevronRight,Box,Diamond,Droplet,CircleDot,Zap} from 'lucide-react';
 import originalArt from '../game/original-assets.json';
+import {costAt as getCost} from '../game/economy-costs.mjs';
 
 export {originalArt};
 
@@ -31,7 +32,7 @@ export function Modal({title,children,onClose,wide=false,dossier=false}){
   };window.addEventListener('keydown',onKey);return()=>{window.removeEventListener('keydown',onKey);if(previous?.isConnected)previous.focus();};},[]);
   return <div className={`modal-shade ${dossier?'dossier-shade':''}`} onClick={onClose}><section ref={panel} className={`modal ${wide?'wide':''} ${dossier?'dossier-modal':''}`} role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={e=>e.stopPropagation()}><div className="modal-title"><h2 id={titleId}>{title}</h2><button className="icon-button" onClick={onClose} aria-label="关闭"><X/></button></div><div className="modal-content">{children}</div></section></div>;
 }
-export function getCost(item,level){return item.cost.map(v=>Math.floor(v*(item.factor||2)**(level-1)+1e-7));}
+export {getCost};
 export function getRequirements(item,p,player,catalog){return item.req.map(([id,level])=>({id,level,name:(catalog.buildings[id]||catalog.tech[id])?.name||id,current:catalog.tech[id]?(player.tech[id]||0):(p.buildings[id]||0)}));}
 export function Requirements({list}){return <div className="requirements">{list.map(r=><span className={r.current>=r.level?'met':'unmet'} key={r.id}>{r.current>=r.level?<ChevronRight size={12}/>:<Lock size={12}/>} {r.name} {r.level}</span>)}</div>;}
 export function Duration({seconds}){return <span className="duration"><Clock size={13}/>{timeLeft(Date.now()+seconds*1000)}</span>;}

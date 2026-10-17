@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "stride": 12,
+  "source": "Approved npc-planets-apk-v1 exact geometry, linear base color and emissive attributes",
+  "models": {
+    "outpost": {
+      "name": "废弃前哨",
+      "level": 2,
+      "skin": 18,
+      "file": "outpost.bin",
+      "vertices": 44688,
+      "bytes": 2145024,
+      "meshes": 5,
+      "triangles": 14896,
+      "finite": true,
+      "size": [
+        2.030592203140259,
+        2.018795967102051,
+        2.118885040283203
+      ]
+    },
+    "garrison": {
+      "name": "赤铁守备站",
+      "level": 3,
+      "skin": 20,
+      "file": "garrison.bin",
+      "vertices": 74484,
+      "bytes": 3575232,
+      "meshes": 15,
+      "triangles": 24828,
+      "finite": true,
+      "size": [
+        2.054002523422241,
+        2.0652663707733154,
+        2.0954519510269165
+      ]
+    },
+    "charon": {
+      "name": "卡戎舰队",
+      "level": 4,
+      "skin": 19,
+      "file": "charon.bin",
+      "vertices": 73074,
+      "bytes": 3507552,
+      "meshes": 8,
+      "triangles": 24358,
+      "finite": true,
+      "size": [
+        2.5260369777679443,
+        2.43918514251709,
+        2.6703758239746094
+      ]
+    },
+    "cargo": {
+      "name": "遗落货仓",
+      "level": 1,
+      "skin": 28,
+      "file": "cargo.bin",
+      "vertices": 60156,
+      "bytes": 2887488,
+      "meshes": 10,
+      "triangles": 20052,
+      "finite": true,
+      "size": [
+        2.187439441680908,
+        2.0345993041992188,
+        2.3114532232284546
+      ]
+    },
+    "fracture": {
+      "name": "苍穹裂隙",
+      "level": 5,
+      "skin": 34,
+      "file": "fracture.bin",
+      "vertices": 98556,
+      "bytes": 4730688,
+      "meshes": 21,
+      "triangles": 32852,
+      "finite": true,
+      "size": [
+        2.8270784616470337,
+        2.1537604928016663,
+        2.8805025815963745
+      ]
+    }
+  }
+}

@@ -6,6 +6,7 @@ import {shipPropulsion,plumeEnvelope,plumeMeshData} from '../game/ship-propulsio
 import {publicCatalog} from '../game/catalog.mjs';
 import {createShipModel,disposeShip} from '../opendesign/mockups/galactic-command/ship-models.js';
 const fleet=JSON.parse(fs.readFileSync(new URL('../opendesign/mockups/galactic-command/flight-fleet.json',import.meta.url)));
+const native=JSON.parse(fs.readFileSync(new URL('../opendesign/mockups/galactic-command/battle-fleet.json',import.meta.url)));
 
 test('exhaust has smooth finite normals and no cross-section caps that cut across the flame',()=>{
   const data=plumeMeshData();assert.ok(data.length>0&&data.length%39===0);assert.ok(data.every(Number.isFinite));
@@ -41,5 +42,20 @@ test('throttle and boost increase plume length and brightness without unbounded 
     assert.ok(idle.alpha<cruise.alpha&&cruise.alpha<full.alpha&&full.alpha<boost.alpha);
     assert.ok(boost.alpha<=1&&boost.length<33);
     assert.deepEqual(plumeEnvelope(-10,false,time,9),idle);assert.deepEqual(plumeEnvelope(200,false,time,9),full);
+  }
+});
+
+test('probe and civilian flight assets carry attached aft-facing engine nozzles',()=>{
+  for(const id of ['Probe','Cargo_Ship','Large_Cargo_Ship','Colony_Ship','Recycler']){
+    const layout=native.ships.find(s=>s.id===id).layout;
+    assert(layout.engines.length>=2,id+' needs visible propulsion');
+    if(id==='Probe')assert.equal(layout.engines.length,3);
+    assert.equal(layout.propulsion.drive,shipPropulsion(publicCatalog.shipArchive.find(s=>s.id===id)).drive);
+    const model=createShipModel(id);model.updateMatrixWorld(true);
+    try{for(const e of layout.engines){
+      assert(e.radius>0);assert(Math.hypot(e.direction[0]-1,e.direction[1],e.direction[2])<1e-6,id+' must exhaust opposite its forward axis');
+      const [z,y,nx]=e.position,hit=new Raycaster(new Vector3(-nx,y,z+e.radius*2),new Vector3(0,0,-1)).intersectObject(model,true)[0];
+      assert(hit&&Math.abs(hit.point.z-z)<=e.radius*.03,id+' flame must start at the physical nozzle');
+    }}finally{disposeShip(model);}
   }
 });

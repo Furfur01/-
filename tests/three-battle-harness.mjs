@@ -38,9 +38,11 @@ export function summarizeComparison(results,{full=true}={}){
 
 // The simulation runs once offline. Both renderers receive these exact bytes; no
 // live server simulation, network timing, or per-renderer resimulation is measured.
-export function createFixture({stress=false,seconds=80,fleet=trialPresets[7].fleet}={}){
+export function createFixture({stress=false,seconds=80,fleet=trialPresets[7].fleet,extraFleet=null}={}){
   const now=1767225600000,world=createWorld(now),player=createPlayer(world,'Three.js 对照样本',now);
   const battle=startTrial(world,player,{attacker:fleet,defender:fleet,seed:42},now);
+  // Legacy replay coverage can include retired hulls without re-enabling them in the trial UI.
+  if(extraFleet)for(const side of ['attacker','defender'])addSpatialFleet(battle,{fleet:extraFleet,side,owner:side==='attacker'?player.id:battle.defender,technology:trialTechnology},units);
   battle.id='00000000-0000-4000-8000-000000000100';battle.attacker=fixtureOwner;battle.defender='00000000-0000-4000-8000-000000000043';
   for(const s of battle.ships){s.owner=s.side==='attacker'?battle.attacker:battle.defender;if(stress){s.x*=.3;s.z*=.4;s.hp=s.maxHp*=8;s.shield=s.maxShield*=8;}}
   const frames=[{tick:0,ships:packedShips(battle)}],times=[];
@@ -51,7 +53,7 @@ export function createFixture({stress=false,seconds=80,fleet=trialPresets[7].fle
   if(frames.at(-1).tick!==battle.tick)frames.push({tick:battle.tick,ships:packedShips(battle)});
   const events=battle.events.filter(e=>e.type!=='input'),firstFire=events.find(e=>['shot','beam','projectile','launch','fire'].includes(e.type))??events.find(e=>e.type!=='reinforcement');
   const combatStart=Math.min(Math.max(0,(firstFire?.tick??0)*.05-2),Math.max(0,battle.tick*.05-42));
-  const record={metadata:spatialMetadata(battle),frames,events,boundary:battle.boundary};
+  const record={metadata:spatialMetadata(battle),frames,events,boundary:battle.boundary,environment:battle.environment};
   const replay={version:4,record,report:{id:battle.id,battleId:battle.id,type:'battle',engine:`spatial-v${battle.version}`,trial:true,duration:battle.tick*.05,seed:42,initial:battle.initial,technology:{attacker:trialTechnology,defender:trialTechnology}}};
   const sorted=times.sort((a,b)=>a-b);
   return {replay,manifest:{name:stress?'stress':'normal',preset:fleet===trialPresets[7].fleet?trialPresets[7].name:'regression',ships:battle.ships.length,seed:42,technology:trialTechnology,stress:stress?{xScale:.3,zScale:.4,durability:8}:null,duration:battle.tick*.05,combatStart,snapshotIntervalMs:200,events:events.length,eventTypes:Object.fromEntries([...new Set(events.map(e=>e.type))].map(t=>[t,events.filter(e=>e.type===t).length])),sha256:hash(replay),simulationMs:{mean:times.reduce((a,b)=>a+b,0)/times.length,p95:percentile(sorted,.95),p99:percentile(sorted,.99)}}};

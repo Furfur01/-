@@ -36,7 +36,7 @@ export function fleetFronts(alive){
   return alive.map((ships,side)=>{
     const principals=ships.filter(s=>s.profile.role==='line'||s.profile.role==='station');
     const line=principals.length?principals:ships,sign=side===0?-1:1;
-    return {x:line.reduce((x,s)=>sign<0?Math.max(x,s.x):Math.min(x,s.x),sign<0?-Infinity:Infinity),heavy:principals.length>0};
+    return {x:line.reduce((x,s)=>sign<0?Math.max(x,s.x):Math.min(x,s.x),sign<0?-Infinity:Infinity),heavy:principals.length>0,escorted:ships.some(s=>!['support','ordnance'].includes(s.profile.role))};
   });
 }
 
@@ -46,12 +46,34 @@ export function formationGoal(s,target,fronts){
   const gap=Math.abs(enemy.x-own.x);
   // Let the heavy line engage first. Escorts then make straight harassment approaches on the wings.
   const assembling=escort&&own.heavy&&gap>720;
-  const standOff=p.role==='fighter'?p.range*.68:p.role==='screen'?p.range*.72:p.role==='artillery'?850:p.role==='support'?1100:p.range*.72;
+  const standOff=p.role==='fighter'?p.range*.68:p.role==='screen'?p.range*.72:p.role==='artillery'?850:p.role==='support'&&own.escorted?1100:p.range*.72;
   const depth=Math.max(0,station.depth-(escort?180:p.role==='artillery'?320:p.role==='support'?500:0));
   // Approach the opponent's elevation in a bounded vertical lane, then hold the line.
   // Main hulls keep their stations; escorts make larger climbing/diving approaches.
   const verticalLimit=escort?Math.min(160,station.spacing*2):Math.min(60,station.spacing*.3);
   const elevation=assembling?station.y:station.y+Math.max(-verticalLimit,Math.min(verticalLimit,(target.y-station.y)*(escort?.7:.3)));
   const lateral=escort&&!assembling?target.z+Math.max(-p.range*.4,Math.min(p.range*.4,station.z-target.z)):station.z;
-  return {x:assembling?own.x+sign*(180+depth):enemy.x+sign*(standOff+depth),y:elevation,z:lateral,assembling};
+  const goal={x:assembling?own.x+sign*(180+depth):enemy.x+sign*(standOff+depth),y:elevation,z:lateral,assembling};
+  // A permanent station is a preference, not a reason to hold outside weapon
+  // range forever after the nearby enemy dies or a distant reinforcement arrives.
+  const reach=Math.hypot(goal.x-target.x,goal.y-target.y,goal.z-target.z),range=p.range*.86;
+  if(!assembling&&!(p.role==='support'&&own.escorted)&&reach>range){
+    const cross=Math.hypot(goal.y-target.y,goal.z-target.z),limit=range*.7;
+    if(cross>limit)for(const axis of ['y','z'])goal[axis]=target[axis]+(goal[axis]-target[axis])*limit/cross;
+    const along=Math.sqrt(Math.max(0,range*range-(goal.y-target.y)**2-(goal.z-target.z)**2));
+    goal.x=target.x+Math.max(-along,Math.min(along,goal.x-target.x));
+  }
+  return goal;
+}
+
+// Bombers cross the actual ground target in repeated low-orbit attack passes.
+// A fortress can grow behind the front line, so a fixed front-line standoff is insufficient.
+export function planetBombingGoal(s,target){
+ let run=s.bombingRun;
+ if(!run||run.target!==target.id)run=s.bombingRun={target:target.id,direction:s.x<=target.x?1:-1};
+ const lane=Math.max(-75,Math.min(75,s.station.z-target.z));
+ const goal=()=>({x:target.x+run.direction*280,y:target.y+140+s.station.y*.1,z:target.z+lane});
+ let point=goal();
+ if(Math.hypot(s.x-point.x,s.z-point.z)<65){run.direction*=-1;point=goal();}
+ return point;
 }

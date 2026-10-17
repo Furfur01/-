@@ -1,6 +1,8 @@
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import isolatedBrowserUrl from './isolated-browser-url.cjs';
+const testBase=await isolatedBrowserUrl();
 const require=createRequire(import.meta.url),{chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const out='output/playwright/celestial';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=d3d11']});
@@ -8,7 +10,7 @@ const page=await browser.newPage({viewport:{width:1440,height:1000}}),result={er
 page.on('pageerror',e=>result.errors.push(e.message));page.on('console',m=>{if(m.type()==='error'||/INVALID|GL_/.test(m.text()))result.errors.push(m.text());});page.on('request',r=>{if(r.url().endsWith('/api/action'))result.requests.push(r.postData());});
 const get=()=>page.evaluate(()=>CommandApp.scene.snapshot.navigation);
 try{
- await page.goto(process.env.UNIVERSE_TEST_URL||'http://127.0.0.1:8289');await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
+ await page.goto(testBase);await page.waitForFunction(()=>window.CommandApp?.scene?.snapshot?.navigation?.enabled);
  await page.evaluate(()=>{window.__frame=CommandApp.scene.frame;window.__canvas=__frame.contentWindow.document.querySelector('#world');window.__context=__canvas.getContext('webgl');});
  await page.waitForTimeout(1000);await page.screenshot({path:out+'/galaxy.png'});
  await page.evaluate(()=>CommandApp.scene.renderer.focusSystem(16));await page.waitForTimeout(2400);await page.screenshot({path:out+'/system.png'});

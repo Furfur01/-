@@ -1,3 +1,5 @@
+import {cockpitClass,pilotKeys,cabinPose,walkCabin} from '../../game/pilot-controls.mjs';
+import {bridgeObstacles} from '../../game/bridge-obstacles.mjs';
 import {missileTargetValid,missileGuidance,segmentEllipsoidHit,orbitDrag} from '../../game/ship-missiles.mjs';
 import {targetShieldCapacity} from '../../game/flight-scenes.mjs';
 import {slewJoint,hullBlocks} from '../../game/ship-turrets.mjs';
@@ -5,6 +7,9 @@ import {antimatterDamage} from '../../game/special-combat.mjs';
 // Shared archive, practice, live battle and replay UI. Physics in live mode stays server-authoritative.
 import {createGalaxyRender} from './renderer.js';
 import {createLifetime} from './lifecycle.js';
+import {FighterHUD} from './fighter-hud.js';
+import {BridgeHUD} from './bridge-hud.js';
+import {pilotWeaponStatus} from '../../game/weapon-solution.mjs';
 export function startFlightRuntime({fleet,assets,createController=null}) {
   window.GalacticDemo?.dispose?.();
   const lifetime=createLifetime(), {listen,later,scheduleFrame}=lifetime;
@@ -30,6 +35,40 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   };
   let renderer=null,lastTime=0,hudAccumulator=0,toastTimer,noticeTimer,hitTimer,damageTimer,audio=null,lastFocused=null,activePointer=null,mouseDown=false;
   const keys=new Set(),rnd=seeded(window.battleBenchmark?.visualSeed ?? 4982);
+  const fighterHUD=new FighterHUD({select:id=>{const live=globalThis.flightController;if(!live){const index=Number(id);if(Number.isInteger(index)&&state.flight.targets[index]?.hp>0)selectTarget(index);return;}const meta=live?.metadata?.[Number(id)];if(id===''||!meta||meta.side===live.metadata[live.selected]?.side||live.rows[meta.id]?.[6]<=0)return;live.refreshContacts(meta.id);const index=state.flight.targets.findIndex(t=>t.shipId===meta.id);if(index>=0)selectTarget(index);},target:()=>cycleTarget(),lock:()=>alignTarget(),fire:()=>fireMain(),missile:()=>fireMissile(),auto:()=>setAI(!state.flight.ai),view:()=>setView(),exit:()=>{const leave=$('#native-leave');if(leave)leave.click();else transitionTo('archive');},slower:()=>state.flight.throttle=clamp(state.flight.throttle-10,0,100),faster:()=>state.flight.throttle=clamp(state.flight.throttle+10,0,100)});
+  const bridgeHUD=new BridgeHUD({...fighterHUD.actions,mode:value=>void globalThis.flightController?.orderCarrier({mode:value}),formation:value=>void globalThis.flightController?.orderCarrier({formation:value}),focus:()=>void globalThis.flightController?.orderCarrier({target:selectedTarget()?.shipId})});
+  function updateFighterHUD(){
+    const live=globalThis.flightController,p=state.flight,m=live?.metadata?.[live.selected],visible=state.mode==='flight'&&m&&cockpitClass(m.profile)==='fighter'&&!live.overview;
+    const consoleTop=Math.min(...renderer.fighterConsoleLayout().flatMap(d=>d.corners.filter(c=>c.visible).map(c=>c.y)));
+    if(!live&&state.mode==='flight'&&!p.profile.capital){
+      const target=selectedTarget(),distance=target?V.length(V.sub(target.pos,p.pos)):null,c=p.profile;
+      const reason=c.primaryKind==='none'?'unavailable':p.gunCooldown>0||p.charging?'cooldown':'ready',missileReason=!LAYOUTS[state.shipIndex].tubes.length?'unavailable':p.missileCooldown>0?'cooldown':!p.missileLock||p.missileLockTime<.4?'target':distance>2200?'range':p.missileStock<=0?'unavailable':'ready';
+      renderer.fighterInstrumentState={visible:true,external:p.external,inspectingConsole:!p.external&&(p.cabinPose?.pitch||0)<-.1,name:SHIPS[state.shipIndex].name+' / 靶场',manual:!p.ai,heading:Math.PI-p.yaw,pitch:p.pitch,roll:p.roll||0,speed:p.speed/8,altitude:p.pos[1],pos:p.pos,throttle:p.throttle/100,shield:p.shield,hull:p.hull,contacts:p.targets.filter(t=>t.hp>0).map(t=>({id:p.targets.indexOf(t),name:t.name,pos:t.pos,enemy:true,distance:V.length(V.sub(t.pos,p.pos))})),target:p.targetIndex,locked:p.align,scanRange:2200,weaponName:c.primaryName,weapon:{reason,ready:reason==='ready',cooldown:p.gunCooldown,range:c.beam?1800:c.projectileSpeed*12,distance},missile:{reason:missileReason,ready:missileReason==='ready',cooldown:p.missileCooldown,range:2200,distance},solution:'靶场演练 · '+(reason==='ready'?'主武器就绪':'主武器冷却中')};
+      fighterHUD.update({...renderer.fighterInstrumentState,consoleTop,project:c=>{const q=renderer.project(c.pos);return q.visible?q:null;}});return;
+    }
+    if(!visible){fighterHUD.update(null);return;}
+    const row=live.rows[live.selected],target=selectedTarget(),targetRow=live.rows[target?.shipId];if(!row)return;
+    const weapon=pilotWeaponStatus(live.snapshot?.environment||live.replay?.environment,m,row,targetRow),missile=pilotWeaponStatus(live.snapshot?.environment||live.replay?.environment,m,row,targetRow,true);
+    const contacts=live.metadata.filter(c=>c.id!==m.id&&live.rows[c.id]?.[6]>0).map(c=>{const pos=live.row(c.id).slice(1,4);return {id:c.id,name:(SHIPS[live.indices.get(c.type)]?.name||c.type)+' #'+(c.id+1),pos,enemy:c.side!==m.side,distance:V.length(V.sub(pos,p.pos))};});
+    const instrumentState={visible:true,consoleTop,name:SHIPS[state.shipIndex].name+' #'+(m.id+1),manual:live.controlled===m.id,replay:!!live.replay,external:p.external,inspectingConsole:!p.external&&(p.cabinPose?.pitch||0)<-.1,heading:Math.PI-p.yaw,pitch:p.pitch,roll:p.roll||0,speed:p.speed/8,altitude:p.pos[1],pos:p.pos,throttle:p.throttle/100,shield:p.shield,hull:p.hull,contacts,scanRange:Math.max(1000,m.profile.range*4),target:target?.shipId,locked:p.align,weapon,missile,weaponName:m.profile.primaryName||'主武器',solution:({target:'请选择目标',range:'目标超出射程',terrain:'射线被星球遮挡',aim:p.align?'正在转向对准':'按 X 锁定对准',cooldown:'武器冷却中',unavailable:'未装备',ready:'可以开火'})[weapon.reason],project:c=>{const q=renderer.project(c.pos);return q.visible?q:null;}};fighterHUD.update(instrumentState);const {project,...consoleState}=instrumentState;renderer.fighterInstrumentState=consoleState;
+  }
+  function updateBridgeHUD(){
+    const live=globalThis.flightController,p=state.flight,m=live?.metadata?.[live.selected];
+    if(state.mode!=='flight'||!p.profile?.capital||live&&(live.overview||!m)){bridgeHUD.update(null);return;}
+    const target=selectedTarget(),distance=target?V.length(V.sub(target.pos,p.pos)):null,c=m?.profile||p.profile;
+    let weapon,missile,contacts;
+    if(live){const row=live.rows[live.selected],targetRow=live.rows[target?.shipId],environment=live.snapshot?.environment||live.replay?.environment;
+      if(!row||row[6]<=0){bridgeHUD.update(null);return;}
+      weapon=pilotWeaponStatus(environment,m,row,targetRow);missile=pilotWeaponStatus(environment,m,row,targetRow,true);
+      contacts=live.metadata.filter(t=>t.id!==m.id&&live.rows[t.id]?.[6]>0).map(t=>{const row=live.row(t.id),pos=row.slice(1,4);return {id:t.id,name:live.name(t.type)+' #'+(t.id+1),enemy:t.side!==m.side,drone:t.carrierId===m.id,pos,hull:row[6]/t.maxHp*100,distance:V.length(V.sub(pos,p.pos))};});
+    }else{const reason=c.primaryKind==='none'?'unavailable':p.gunCooldown>0||p.charging?'cooldown':'ready',mr=!LAYOUTS[state.shipIndex].tubes.length?'unavailable':p.missileCooldown>0?'cooldown':'ready';
+      weapon={reason,ready:reason==='ready',cooldown:p.gunCooldown,range:c.beam?1800:c.projectileSpeed*12,distance};missile={reason:mr,ready:mr==='ready',cooldown:p.missileCooldown,range:2200,distance};
+      contacts=p.targets.filter(t=>t.hp>0).map(t=>({id:p.targets.indexOf(t),name:t.name,enemy:true,pos:t.pos,hull:t.hp,distance:V.length(V.sub(t.pos,p.pos))}));
+    }
+    const carrier=(m?.profile.carrier||SHIPS[state.shipIndex].id==='Iron_Behemoth')?((live?.replay?live.replayCarriers:live?.snapshot?.carriers)?.find(v=>v.shipId===m?.id)||{active:0,capacity:12,nextWave:0,aura:0}):null;
+    const data={visible:true,name:SHIPS[state.shipIndex].name+(live?' #'+(m.id+1):' / 靶场'),manual:live?live.controlled===m.id:!p.ai,canPilot:live?m.owner===live.owner&&!!m.profile.piloted:true,replay:!!live?.replay,external:p.external,walking:!!p.cabinWalk&&p.ai,heading:Math.PI-p.yaw,pos:p.pos,speed:p.speed/8,throttle:p.throttle/100,shield:p.shield,hull:p.hull,contacts,target:live?target?.shipId:p.targetIndex,locked:p.align,scanRange:Math.max(carrier?2400:1000,(c.range||450)*4),weapon,missile,weaponName:c.primaryName,solution:({target:'请选择目标',range:'目标超出射程',terrain:'射线被星球遮挡',aim:p.align?'正在转向对准':'按 X 锁定对准',cooldown:'武器冷却中',unavailable:'未装备',ready:'可以开火'})[weapon.reason],command:live?.carrierMessage,carrier,canCommand:!!live&&!live.replay&&live.snapshot?.status==='active'&&m.owner===live.owner,commandPending:live?.carrierPending};
+    bridgeHUD.update(data);renderer.bridgeInstrumentState=data;
+  }
   const fmt=n=>n==null?'待取得':Math.round(n).toLocaleString('en-US');
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   const forward=()=>{let p=state.flight;return[Math.sin(p.yaw)*Math.cos(p.pitch),Math.sin(p.pitch),-Math.cos(p.yaw)*Math.cos(p.pitch)]};
@@ -80,7 +119,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     $('#system-turret').hidden=!c.capital;$('#turret-controls').hidden=!c.capital;$('#director').hidden=!c.capital;
     $('#view-label').textContent=p.external?(c.capital?'进入舰桥':'进入驾驶舱'):'外部追踪';
     $('#camera-mode').textContent=p.external?'外部追踪':(c.capital?'舰桥视角':'驾驶舱');
-    $('#flight-input-copy').textContent=c.capital?'右键拖动转向　W / S 油门　Space '+c.primaryName+'　R 导弹齐射':'右键拖动转向　W / S 油门　左键 / Space 机炮　R 导弹';
+    $('#flight-input-copy').textContent=p.cabinWalk?'W A S D 舰桥巡视 · 右键环视 · C 返回作战席 · G 接管':c.capital?'W / S 油门 · A / D 转向 · T 选敌 · X 对准 · G AUTO':'W / S 油门 · A / D 滚转 · Q / E 俯仰 · 右键瞄准 · 左键 / Space 机炮';
     if(c.special){
       $('#loadout-caption').textContent=c.special==='antimatter'?'无人一次性弹体 · 无炮塔 · 无驾驶舱 · 范围伤害忽略护盾 / 收割者免疫':'原创演练配置 · 双束相位切割 · 护盾回收 · 2 座副炮 / 2 座近防 / 4 个导弹口';
       $('#fire-spinal > span:nth-child(2)').innerHTML=c.special==='antimatter'?'自行突击<small>先锁定目标 · 弹体接近引爆</small>':'相位收割<small>蓄能 1.1 秒 · 持续切割</small>';
@@ -126,7 +165,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
 
   function renderShipData(){
     let ship=SHIPS[state.shipIndex];const displayWeapons=ship.weapons||[];$('#ship-name').textContent=ship.name;$('#ship-code').textContent=`${ship.en} / ${ship.serial}`;$('#model-class').textContent=`DEEP SPACE / ${ship.code}`;
-    $('#stats-source').textContent=ship.statsSource?.startsWith('https:')?'基础参数：社区 Wiki · 版本待核对':ship.statsSource?.startsWith('research/')?'基础参数：用户截图':'基础参数：待取得';
+
     $('#ship-stats').innerHTML=STAT_LABELS.map((label,i)=>`<div><dt>${label}</dt><dd>${fmt(ship.stats[i])}</dd></div>`).join('');
     $('#weapon-list').innerHTML=displayWeapons.map(([name,tech,en,level],i)=>`<button class="weapon-row" data-weapon="${i+1}" title="查看${name}安装位置"><span>${name}</span><span class="weapon-tech">${tech}${level===null?'':'<b>Lv.'+level+'</b>'}</span></button>`).join('');
     $$('.weapon-row').forEach(b=>{let tag=Number(b.dataset.weapon);listen(b,'pointerenter',()=>{if(!state.transition){state.highlight=tag;$('#annotation-name').textContent=displayWeapons[tag-1][0]+' / '+displayWeapons[tag-1][2]}});listen(b,'pointerleave',()=>{if(!b.classList.contains('active'))state.highlight=Number($('.weapon-row.active')?.dataset.weapon||-10)});listen(b,'click',()=>{let was=b.classList.contains('active');$$('.weapon-row').forEach(x=>x.classList.remove('active'));b.classList.toggle('active',!was);state.highlight=was?-10:tag;$('#annotation-name').textContent=displayWeapons[tag-1][0]+' / '+displayWeapons[tag-1][2];tone()})});
@@ -203,7 +242,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     state.helpOpen=open;keys.clear();mouseDown=false;const modal=$('#help-modal');modal.classList.toggle('open',open);modal.setAttribute('aria-hidden',String(!open));modal.inert=!open;
     if(open){lastFocused=document.activeElement;$('#close-help').focus()}else if(lastFocused&&document.contains(lastFocused)){lastFocused.focus({preventScroll:true})}tone();
   }
-  function setAI(enabled){if(globalThis.flightController){void globalThis.flightController.setAI(enabled);return;}state.flight.ai=enabled;$('#toggle-ai').setAttribute('aria-pressed',String(enabled));$('#ai-label').textContent=enabled?'取回控制':'自动驾驶';$('#ai-indicator').classList.toggle('visible',enabled);notice(enabled?'AI 已接管航向与武器':'已恢复手动驾驶');tone();addLog(enabled?'飞行控制已交还 AI':'已恢复手动驾驶')}
+  function setAI(enabled){if(globalThis.flightController){void globalThis.flightController.setAI(enabled);return;}state.flight.ai=enabled;state.flight.cabinWalk=enabled&&LAYOUTS[state.shipIndex].length>=50;state.flight.cabinPose=cabinPose(state.flight.cabinWalk?"bastion":"horizon");$('#toggle-ai').setAttribute('aria-pressed',String(enabled));$('#ai-label').textContent=enabled?'取回控制':'自动驾驶';$('#ai-indicator').classList.toggle('visible',enabled);notice(enabled?'AI 已接管航向与武器':'已恢复手动驾驶');tone();addLog(enabled?'飞行控制已交还 AI':'已恢复手动驾驶')}
 
   function setView(){if(state.flight.profile.special==='antimatter')return;
     const p=state.flight;p.external=!p.external;
@@ -487,6 +526,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   }
 
   function updateFlight(dt){
+    const cabin=state.flight;if(cabin.cabinWalk&&cabin.ai&&!cabin.external){cabin.cabinPose??=cabinPose("bastion");walkCabin(cabin.cabinPose,keys,dt,bridgeObstacles);}
     if(globalThis.flightController)return globalThis.flightController.update(dt);
     const p=state.flight,c=p.profile;
     updateSpecial(dt);
@@ -504,15 +544,14 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if((p.ai||p.align)&&t?.hp>0){let d=V.sub(t.pos,p.pos);p.yawTarget=Math.atan2(d[0],-d[2]);p.pitchTarget=Math.atan2(d[1],Math.hypot(d[0],d[2]));}
     if(!p.ai){
       if(keys.has('KeyW'))p.throttle+=dt*27;if(keys.has('KeyS'))p.throttle-=dt*27;p.throttle=clamp(p.throttle,0,100);
-      let turn=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0),pitch=(keys.has('ArrowUp')?1:0)-(keys.has('ArrowDown')?1:0);
+      const intent=pilotKeys(keys,{role:c.capital?'line':'fighter',length:LAYOUTS[state.shipIndex].length});let turn=intent.yaw,pitch=intent.pitch;
       if(turn||pitch){p.align=false;p.yawTarget+=turn*c.turnRate*dt;p.pitchTarget=clamp(p.pitchTarget+pitch*c.turnRate*.65*dt,-1.25,1.25);}
     }else p.throttle=mixExp(p.throttle,c.capital?22:38,.5,dt);
     const yd=shortAngle(p.yawTarget-p.yaw),pd=p.pitchTarget-p.pitch;
     p.yawVelocity=mixExp(p.yawVelocity,clamp(yd*c.turnResponse,-c.turnRate,c.turnRate),c.turnResponse,dt);
     p.pitchVelocity=mixExp(p.pitchVelocity,clamp(pd*c.turnResponse,-c.turnRate*.65,c.turnRate*.65),c.turnResponse,dt);
     p.yaw+=p.yawVelocity*dt;p.pitch=clamp(p.pitch+p.pitchVelocity*dt,-1.3,1.3);
-    const roll=(keys.has('KeyQ')?1:0)-(keys.has('KeyE')?1:0);
-    if(roll)p.roll+=roll*dt*(c.capital?.14:.9);else p.roll=mixExp(p.roll,-p.yawVelocity*(c.capital?.13:.22),2.4,dt);
+    const roll=!c.capital?((keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0)):0;if(roll&&!p.ai)p.roll+=roll*dt*1.65;if(c.capital)p.roll=0;
     p.boostActive=keys.has('ShiftLeft')||keys.has('ShiftRight')||p.boost;
     const desiredSpeed=p.throttle/100*c.maxSpeed*(p.boostActive?(c.capital?1.65:2.2):1);
     p.speed=mixExp(p.speed,desiredSpeed,c.accel,dt);
@@ -605,7 +644,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     listen($('#reset-observer'),'click',()=>{state.flight.orbitYaw=0;state.flight.orbitPitch=0;state.flight.cameraZoom=1;});
     listen($('#prev-ship'),'click',()=>selectShip(state.shipIndex-1));listen($('#next-ship'),'click',()=>selectShip(state.shipIndex+1));
     listen($('#autorotate'),'click',()=>{state.autoRotate=!state.autoRotate;$('#autorotate').setAttribute('aria-pressed',String(state.autoRotate));tone()});
-    listen($('#wireframe'),'click',()=>{state.wireframe=!state.wireframe;$('#wireframe').setAttribute('aria-pressed',String(state.wireframe));tone()});listen($('#reset-camera'),'click',resetCamera);
+    listen($('#reset-camera'),'click',resetCamera);
     listen($('#deploy'),'click',()=>transitionTo('flight'));listen($('#exit-flight'),'click',()=>transitionTo('archive'));
     listen($('#main-gun-label'),'click',fireMain);listen($('#system-gun'),'click',fireMain);listen($('#missile-label'),'click',fireMissile);listen($('#system-missile'),'click',fireMissile);
     listen($('#system-engine'),'click',()=>{state.flight.boost=!state.flight.boost;notice(state.flight.boost?'持续加速已开启':'已恢复巡航推力');tone()});
@@ -615,8 +654,8 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     $$('#main-nav button').forEach(b=>listen(b,'click',()=>setTab(state.activeTab===b.dataset.tab?'fleet':b.dataset.tab)));listen($('#close-sheet'),'click',()=>setTab('fleet'));
     $$('[data-help]').forEach(b=>listen(b,'click',()=>setHelp(true)));listen($('#close-help'),'click',()=>setHelp(false));listen($('#help-modal'),'click',e=>{if(e.target===$('#help-modal'))setHelp(false)});
     $$('.sound-toggle').forEach(b=>listen(b,'click',toggleSound));
-    const canvas=$('#scene');listen(canvas,'pointerdown',e=>{if(state.helpOpen||state.transition)return;if(state.activeTab!=='fleet')setTab('fleet');activePointer={id:e.pointerId,x:e.clientX,y:e.clientY,button:e.button,moved:0};canvas.setPointerCapture(e.pointerId);if(state.mode==='flight'&&e.button===0){mouseDown=true;fireTurrets()}if(state.mode==='archive')state.autoRotate=false;$('#autorotate').setAttribute('aria-pressed',String(state.autoRotate));});
-    listen(canvas,'pointermove',e=>{mouseAim={x:e.clientX,y:e.clientY};if(!activePointer||state.helpOpen||state.transition)return;let dx=e.clientX-activePointer.x,dy=e.clientY-activePointer.y;activePointer.x=e.clientX;activePointer.y=e.clientY;activePointer.moved+=Math.abs(dx)+Math.abs(dy);if(state.mode==='archive'){const direction=activePointer.button===1?-1:1;state.orbit.targetYaw+=dx*.006*direction;state.orbit.targetPitch=clamp(state.orbit.targetPitch+dy*.0045*direction,-.46,1.3)}else if(activePointer.button===2){const p=state.flight;p.ai=false;p.align=false;p.yawTarget+=dx*.0032;p.pitchTarget=clamp(p.pitchTarget-dy*.0032,-1.2,1.2);$('#ai-indicator').classList.remove('visible');$('#toggle-ai').setAttribute('aria-pressed','false');$('#ai-label').textContent='自动驾驶'}else if(activePointer.button===1&&state.flight.external){const orbit=orbitDrag(state.flight.orbitYaw,state.flight.orbitPitch,dx,dy);state.flight.orbitYaw=orbit.yaw;state.flight.orbitPitch=orbit.pitch}});
+    const canvas=$('#scene');listen(canvas,'pointerdown',e=>{if(e.button===1)e.preventDefault();if(state.helpOpen||state.transition)return;if(e.button===0&&state.mode==='flight'&&!state.flight.external){const hit=state.flight.profile.capital?renderer.pickBridgeConsole(e.clientX,e.clientY):renderer.pickFighterConsole(e.clientX,e.clientY);if(hit){e.preventDefault();(state.flight.profile.capital?bridgeHUD:fighterHUD).actions[hit.action]?.(hit.value);return;}}if(state.activeTab!=='fleet')setTab('fleet');activePointer={id:e.pointerId,x:e.clientX,y:e.clientY,button:e.button,moved:0};canvas.setPointerCapture(e.pointerId);if(state.mode==='flight'&&e.button===0){mouseDown=true;fireTurrets()}if(state.mode==='archive')state.autoRotate=false;$('#autorotate').setAttribute('aria-pressed',String(state.autoRotate));});
+    listen(canvas,'pointermove',e=>{mouseAim={x:e.clientX,y:e.clientY};if(!activePointer||state.helpOpen||state.transition)return;let dx=e.clientX-activePointer.x,dy=e.clientY-activePointer.y;activePointer.x=e.clientX;activePointer.y=e.clientY;activePointer.moved+=Math.abs(dx)+Math.abs(dy);if(state.mode==='archive'){const direction=activePointer.button===1?-1:1;state.orbit.targetYaw+=dx*.006*direction;state.orbit.targetPitch=clamp(state.orbit.targetPitch+dy*.0045*direction,-.46,1.3)}else if(activePointer.button===1&&!state.flight.external){const p=state.flight;p.cabinPose??=cabinPose(p.profile.capital?(p.cabinKind||cockpitClass({role:'line',length:LAYOUTS[state.shipIndex].length})):'fighter');p.cabinPose.yaw+=dx*.0032;p.cabinPose.pitch=clamp(p.cabinPose.pitch-dy*.0032,-1.2,1.2);}else if(activePointer.button===2){const p=state.flight;if(p.cabinWalk&&p.ai){p.cabinPose.yaw+=dx*.0032;p.cabinPose.pitch=clamp(p.cabinPose.pitch-dy*.0032,-1.2,1.2);return;}if(p.profile.capital||globalThis.flightController?.controlled===null)return;p.ai=false;p.align=false;p.yawTarget+=dx*.0032;p.pitchTarget=clamp(p.pitchTarget-dy*.0032,-1.2,1.2);$('#ai-indicator').classList.remove('visible');$('#toggle-ai').setAttribute('aria-pressed','false');$('#ai-label').textContent='自动驾驶'}else if(activePointer.button===1&&state.flight.external){const orbit=orbitDrag(state.flight.orbitYaw,state.flight.orbitPitch,dx,dy);state.flight.orbitYaw=orbit.yaw;state.flight.orbitPitch=orbit.pitch}});
     const release=()=>{activePointer=null;mouseDown=false};listen(canvas,'pointerup',release);listen(canvas,'pointercancel',release);listen(canvas,'lostpointercapture',release);
     listen(canvas,'contextmenu',e=>e.preventDefault());listen(canvas,'wheel',e=>{e.preventDefault();if(state.helpOpen||state.transition)return;if(state.mode==='archive')state.orbit.targetDistance=clamp(state.orbit.targetDistance+e.deltaY*.001*LAYOUTS[state.shipIndex].length,LAYOUTS[state.shipIndex].length*1.4,LAYOUTS[state.shipIndex].length*5);else if(e.ctrlKey&&state.flight.external)state.flight.cameraZoom=clamp(state.flight.cameraZoom+e.deltaY*.001,.7,1.6);else state.flight.throttle=clamp(state.flight.throttle-e.deltaY*.025,0,100)},{passive:false});
     listen(window,'keydown',e=>{if(e.target instanceof HTMLSelectElement||e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
@@ -627,7 +666,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
       if(state.mode==='archive'){if(e.repeat)return;if(e.code==='ArrowRight'){e.preventDefault();selectShip(state.shipIndex+1)}else if(e.code==='ArrowLeft'){e.preventDefault();selectShip(state.shipIndex-1)}else if(e.code==='KeyF'){e.preventDefault();transitionTo('flight')}}
       else{
         const handled=['KeyW','KeyS','KeyA','KeyD','KeyQ','KeyE','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','ShiftLeft','ShiftRight','Space'];if(handled.includes(e.code)){e.preventDefault();keys.add(e.code);if(e.code==='Space'&&!e.repeat)fireMain()}
-        if(!e.repeat){if(e.code==='KeyR')fireMissile();if(e.code==='KeyT')cycleTarget();if(e.code==='KeyV')setView();if(e.code==='KeyG')setAI(!state.flight.ai);if(e.code==='KeyX')alignTarget();if(e.code==='KeyL')cycleTurretMode();if(e.code==='Digit1')switchCombatHull(3);if(e.code==='Digit2')switchCombatHull(0);if(e.code==='Digit3')switchCombatHull(4);if(e.code==='KeyC'){state.flight.orbitYaw=0;state.flight.orbitPitch=0;state.flight.cameraZoom=1;}}
+        if(!e.repeat){if(e.code==='KeyR')fireMissile();if(e.code==='KeyT')cycleTarget();if(e.code==='KeyV')setView();if(e.code==='KeyG')setAI(!state.flight.ai);if(e.code==='KeyX')alignTarget();if(e.code==='KeyL')cycleTurretMode();if(e.code==='Digit1')switchCombatHull(3);if(e.code==='Digit2')switchCombatHull(0);if(e.code==='Digit3')switchCombatHull(4);if(e.code==='KeyC'){state.flight.cabinPose=cabinPose(state.flight.cabinKind||cockpitClass({role:state.flight.profile.capital?'line':'fighter',length:LAYOUTS[state.shipIndex].length}));state.flight.orbitYaw=0;state.flight.orbitPitch=0;state.flight.cameraZoom=1;}}
       }
     });
     listen(window,'keyup',e=>keys.delete(e.code));listen(window,'blur',()=>{keys.clear();mouseDown=false;activePointer=null});listen(document,'visibilitychange',()=>{keys.clear();mouseDown=false;lastTime=0});listen(window,'resize',()=>{renderer?.resize();moveNavIndicator()});
@@ -644,16 +683,16 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(state.shipSwitch){let t=state.shipSwitch;t.progress=clamp((now-t.start)/(reduced?200:CONFIG.shipSwitchMs),0,1);if(t.progress>=.5&&!t.swapped){state.shipIndex=t.to;t.swapped=true;state.orbit.targetDistance=LAYOUTS[state.shipIndex].archiveDistance;renderShipData();if(state.activeTab!=='fleet')renderSheet();$$('.ship-title h1,.ship-code,.ship-sidebar').forEach(el=>{el.classList.remove('data-switching');el.classList.add('data-entering')})}if(t.progress>=1)state.shipSwitch=null;}
     let o=state.orbit;if(state.autoRotate&&!state.helpOpen&&!activePointer)o.targetYaw+=dt*.11;let smooth=1-Math.exp(-dt*9);o.yaw=mix(o.yaw,o.targetYaw,smooth);o.pitch=mix(o.pitch,o.targetPitch,smooth);o.distance=mix(o.distance,o.targetDistance,smooth);
     if(state.mode==='flight'&&!state.transition&&!state.helpOpen&&!document.hidden)updateFlight(dt);
-    if(renderer){state.mode==='archive'?renderer.archive(state,now/1000):renderer.flight(state,now/1000);renderer.endFrame();positionHUD();updateRenderStats(now)}
+    if(renderer){state.mode==='archive'?renderer.archive(state,now/1000):renderer.flight(state,now/1000);renderer.endFrame();positionHUD();updateRenderStats(now);updateFighterHUD();updateBridgeHUD();}
     hudAccumulator+=dt;if(hudAccumulator>.065){hudAccumulator=0;if(state.mode==='flight'){updateHUD();globalThis.flightController?.syncHUD();}}
     scheduleFrame(frame);
   }
 
-  renderShipData();setupInstruments();bindEvents();addLog('舰船档案已载入 · 虚拟演练不影响实际战果');$('#message-dot').classList.remove('visible');scheduleFrame(moveNavIndicator);
+  renderShipData();setupInstruments();bindEvents();addLog('舰船档案已载入');$('#message-dot').classList.remove('visible');scheduleFrame(moveNavIndicator);
   try{renderer=new Renderer($('#scene'));const initial=Math.max(0,SHIPS.findIndex(s=>s.id===new URLSearchParams(location.search).get('ship')));configureFlight(initial,true);screenVisible('flight');document.documentElement.dataset.ready='true';scheduleFrame(frame)}catch(error){lifetime.dispose();renderer?.dispose();throw error}
   // Read-only-by-convention debug surface; useful for integration and automated UI tests.
   window.GalacticDemo={state,renderer,dispose,renderShipData,ships:SHIPS,config:CONFIG,enterFlight:()=>transitionTo('flight'),returnArchive:()=>transitionTo('archive'),selectShip,fireMain,fireMissile,setAI,setHelp,setTab,setView,switchCombatHull,setTurretMode,alignTarget,profiles:COMBAT,selectScene};
-  if(createController){const live=createController({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown:()=>mouseDown});globalThis.flightController=live;live.start().catch(failRuntime);}
+  if(createController){const live=createController({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown:()=>mouseDown});globalThis.flightController=live;live.start().catch(error=>{error.battleConnection=true;failRuntime(error);});}
 
   const ids=['Destroyer','Cruiser','Battleship','Heavy_Fighter','Dreadnought'];
   const labels=['DESTROYER','CRUISER','BATTLESHIP','HEAVY FIGHTER','DREADNOUGHT'];
@@ -677,7 +716,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   }
   function dispose(){
     if(lifetime.disposed)return;
-    globalThis.flightController?.dispose();lifetime.dispose();keys.clear();mouseDown=false;activePointer=null;
+    globalThis.flightController?.dispose();fighterHUD.dispose();bridgeHUD.dispose();lifetime.dispose();keys.clear();mouseDown=false;activePointer=null;
     renderer?.dispose();void audio?.close?.().catch(()=>{});
     if(window.GalacticDemo?.state===state)delete window.GalacticDemo;
     delete globalThis.flightController;
@@ -685,7 +724,8 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   function failRuntime(error){
     if(lifetime.disposed)return;
     console.error(error);dispose();
-    $('#no-webgl').hidden=false;$('#webgl-error').textContent=String(error.message||error);
+    const panel=$('#no-webgl');panel.hidden=false;$('#webgl-error').textContent=String(error.message||error);
+    if(error.battleConnection){panel.querySelector('h2').textContent='暂时无法进入战场';panel.querySelector('p').textContent='战斗记录未能读取。返回舰队后刷新列表；已经结束的战斗可从历史战报观看回放。';const link=$('#legacy-renderer-link');link.textContent='返回舰队';link.href='./index.html#reports';link.onclick=e=>{if(parent!==window){e.preventDefault();parent.postMessage({type:'battle-exit'},location.origin);}};}
     document.documentElement.dataset.ready='error';
   }
   listen(window,'pagehide',dispose);

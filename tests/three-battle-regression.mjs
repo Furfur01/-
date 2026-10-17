@@ -27,9 +27,9 @@ try{
     await page.locator('#native-claim').click();
     await page.waitForFunction(()=>flightController.controlled===flightController.selected);
     item.before=await page.evaluate(()=>({position:[...GalacticDemo.state.flight.pos],yaw:GalacticDemo.state.flight.yaw,shipId:flightController.controlled}));
-    const offset=inputs.length;
-    await page.locator('#scene').click({position:{x:960,y:500}});await page.keyboard.down('KeyW');await page.keyboard.down('ArrowRight');await page.keyboard.down('Space');
-    await page.waitForTimeout(650);await page.keyboard.up('KeyW');await page.keyboard.up('ArrowRight');await page.keyboard.up('Space');
+    const offset=inputs.length,turnKey=['Light_Fighter','Heavy_Fighter','Titanenergetic_Frigate'].includes(type)?'ArrowRight':'KeyD';
+    await page.locator('#scene').click({position:{x:960,y:500}});await page.keyboard.down('KeyW');await page.keyboard.down(turnKey);await page.keyboard.down('Space');
+    await page.waitForTimeout(650);await page.keyboard.up('KeyW');await page.keyboard.up(turnKey);await page.keyboard.up('Space');
     await page.evaluate(()=>flightController.fire('primary'));await page.waitForTimeout(150);
     item.after=await page.evaluate(()=>({position:[...GalacticDemo.state.flight.pos],yaw:GalacticDemo.state.flight.yaw,shipId:flightController.controlled,gl:GalacticDemo.renderer.gl.getError()}));
     assert.equal(item.after.shipId,item.before.shipId,type+' must remain controlled');assert.equal(item.after.gl,0);
@@ -75,7 +75,7 @@ try{
   result.specials.annihilator=await specialPage.evaluate(()=>({blasts:GalacticDemo.state.flight.specialBlasts.map(b=>({source:b.source,tick:b.tick})),gl:GalacticDemo.renderer.gl.getError()}));
   assert.equal(result.specials.annihilator.gl,0);const blastKeys=result.specials.annihilator.blasts.map(b=>b.source+':'+b.tick);assert.equal(new Set(blastKeys).size,blastKeys.length,'each warhead has one effect');
   await specialPage.screenshot({path:path.join(directory,'annihilator-detonation.png')});await specialPage.close();
-  const deathFixture=createFixture({seconds:1,fleet:{Death_Star:1,Dreadnought:1}}),deathPage=await context.newPage();deathPage.on('pageerror',e=>errors.push(e.message));
+  const deathFixture=createFixture({seconds:1,fleet:{Dreadnought:1},extraFleet:{Death_Star:1}}),deathPage=await context.newPage();deathPage.on('pageerror',e=>errors.push(e.message));
   await mountReplay(deathPage,server,deathFixture,'three');await deathPage.evaluate(()=>flightController.frameBattle(true));await deathPage.waitForTimeout(400);
   result.specials.deathStarHull=await deathPage.evaluate(()=>({ships:flightController.rows.length,deathStars:flightController.metadata.filter(m=>m.type==='Death_Star').length,render:flightController.renderStats,gl:GalacticDemo.renderer.gl.getError()}));
   assert.equal(result.specials.deathStarHull.deathStars,2);assert.equal(result.specials.deathStarHull.gl,0);assert.equal(result.specials.deathStarHull.render.instances,4);

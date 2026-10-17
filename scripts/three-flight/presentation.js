@@ -11,8 +11,11 @@ export function createBattlePresentation({state,M,V,LAYOUTS,shipMatrix}) {
     color(kind){return /laser|ion/.test(kind)?[1,.45,.09]:/plasma/.test(kind)?[.35,.5,1]:/beam/.test(kind)?[.12,.65,1]:[1,.8,.45];}
     update(dt){this.impacts=this.impacts.filter(e=>(e.age+=dt)<e.life).slice(-160);this.flashes=this.flashes.filter(e=>(e.age+=dt)<e.life).slice(-240);}
     clear(){this.impacts=[];this.flashes=[];}
-    environment(r,time){
+    environment(r,time,environment=globalThis.flightController?.snapshot?.environment||globalThis.flightController?.replay?.environment){
       r.drawSpaceSky(.8);
+      if(environment?.kind==='planet'){
+        r.drawBattlePlanet(environment);return;
+      }
       const planet=M.compose([3200,-2500,-5200],[.1,.42,.18],[900,900,900]);
       r.drawMesh(r.moonMesh,planet,{mode:7,light:[-.5,.7,1],exposure:1.1});
       r.setBlend(true,false);
