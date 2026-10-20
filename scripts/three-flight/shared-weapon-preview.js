@@ -83,7 +83,7 @@ export function createWeaponPreview(scene){
       const index=n%2?half+Math.floor(n/2):Math.floor(n/2),m=ports[index];
       queue.push({time:time+.7+n*.1,run:t=>{
         const from=point(m),to=point([(n%2?1:-1)*1.3,-.3,options.targetZ??-10.3]);
-        const direction=new THREE.Vector3(...layout.launchDirection).transformDirection(model.matrixWorld);
+        const direction=new THREE.Vector3(...(layout.missileDirections?.[index]||layout.launchDirection)).transformDirection(model.matrixWorld);
         orb(from,.09*caliberScale(),0xffbf72,t,.12,'Missile_port_flash');
         projectile(from,to,t,'missile',.075*caliberScale(),1.75,null,direction);
       }});
@@ -110,7 +110,7 @@ export function createWeaponPreview(scene){
         item.o.position.lerpVectors(item.from,item.to,p);
         if(age>.22&&age<1.5&&time>=item.nextShot){
           const ts=layout.pdScale||(model.name==='Iron_Behemoth'?.29:.34);
-          const mounts=layout.pointDefense.map(([x,y,z])=>point([x+.22*ts,y+.096*ts,z-.905*ts]));mounts.sort((a,b)=>a.distanceToSquared(item.o.position)-b.distanceToSquared(item.o.position));
+          const mounts=(layout.pdMuzzles||layout.pointDefense.map(([x,y,z])=>[x+.22*ts,y+.096*ts,z-.905*ts])).map(point);mounts.sort((a,b)=>a.distanceToSquared(item.o.position)-b.distanceToSquared(item.o.position));
           item.nextShot=Math.max(item.nextShot,time-.135);
           while(item.nextShot<=time){
             const aim=item.from.clone().lerp(item.to,Math.min((item.nextShot-item.birth+.82)/1.8,1));

@@ -46,7 +46,7 @@ function launchSwarm(b,s,count,emit){
     const drone={id:b.ships.length,type:SWARM_TYPE,side:s.side,owner:s.owner,batch:s.batch,
       formation:`${s.batch}:${SWARM_TYPE}:${s.id}`,station:{role:'fighter',spacing:12,depth:0,y:s.y,z:s.z},
       x:s.x+Math.cos(a)*120,y:s.y+25+(slot%3)*12,z:s.z+Math.sin(a)*120,yaw:s.yaw,pitch:0,roll:0,speed:0,
-      hp,shield:0,maxHp:hp,maxShield:0,attack:s.attack*DEVOURER.swarmShare/DEVOURER.capacity,profile:{...profile},rapid:{},
+      hp,shield:0,maxHp:hp,maxShield:0,attack:s.attack*DEVOURER.swarmShare/DEVOURER.capacity,profile:{...profile},splashMultipliers:{},
       cooldown:slot*.025,secondaryCooldown:0,missileCooldown:0,pdCooldown:0,target:-1,lastHit:-1000,
       temporary:true,carrierId:s.id,swarmSlot:slot,bornTick:b.tick,expires:b.tick+ticks(DEVOURER.lifetime)};
     b.ships.push(drone);ids.push(drone.id);

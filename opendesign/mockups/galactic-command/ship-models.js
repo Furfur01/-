@@ -5,6 +5,9 @@ import {spinalMounts,shipLengths} from '../../../game/ship-weapon-mounts.mjs';
 import {fitShipArmament} from './ship-armament.js';
 import {createSpecialShip} from './fleet-special.js';
 import {createReferenceReaper} from './reaper-reference.js';
+import {createSR07Recycler} from './recycler-sr07.js';
+import {createReferenceTransport} from './cargo-reference.js';
+import {createOctoberReference,octoberSources} from './october-reference.js';
 
 export const legacyIds=['Destroyer','Cruiser','Battleship','Heavy_Fighter','Dreadnought'];
 export const modelIds=[...legacyIds,'Light_Fighter','Bomber','Cargo_Ship','Large_Cargo_Ship','Colony_Ship','Recycler','Probe','Solar_Satellite','Death_Star','Interceptor','Iron_Behemoth','Devourer_Interceptor','Titanenergetic_Frigate','Annihilator','Reaper','Guardian'];
@@ -22,6 +25,9 @@ export function createShipModel(id){
   return model;
 }
 function createShipGeometry(id){
+  if(octoberSources[id])return createOctoberReference(id);
+  if(id==='Cargo_Ship'||id==='Large_Cargo_Ship')return createReferenceTransport(id);
+  if(id==='Recycler')return createSR07Recycler();
   if(id==='Reaper')return createReferenceReaper();
   if(id==='Annihilator')return createSpecialShip(id);
   if(!modelIds.includes(id))throw Error('未知舰船模型: '+id);

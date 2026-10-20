@@ -16,9 +16,27 @@ export function createAdditiveMaterial(color,opacity=1){
 }
 
 export function createVisualShaderMaterial(vertexShader,fragmentShader,uniforms,options={}){
-  const {raw=true,...settings}=options;
+  const {raw=true,logarithmicDepth=false,colorManaged=false,...settings}=options;
+  if(logarithmicDepth||colorManaged){
+    if(raw)throw new Error('World shader pipeline requires ShaderMaterial built-in camera uniforms');
+    ({vertexShader,fragmentShader}=worldShaderPipeline(vertexShader,fragmentShader,{logarithmicDepth,colorManaged}));
+  }
   const Material=raw?THREE.RawShaderMaterial:THREE.ShaderMaterial;
-  return new Material({vertexShader,fragmentShader,uniforms,side:THREE.DoubleSide,toneMapped:false,...settings});
+  return new Material({vertexShader,fragmentShader,uniforms,side:THREE.DoubleSide,toneMapped:colorManaged,...settings});
+}
+
+// A wrapper preserves shader branches with early returns. The submitted clip W
+// is already in world units, including each battle's display scale, so Three's
+// camera far plane gives exactly the same logarithmic depth as world meshes.
+export function worldShaderPipeline(vertexShader,fragmentShader,{logarithmicDepth=true,colorManaged=false}={}){
+  const wrap=(source,header,tail)=>header+'\n'+source.replace(/void\s+main\s*\(\s*\)\s*\{/,'void visualShaderMain(){')+'\nvoid main(){\nvisualShaderMain();\n'+tail+'\n}';
+  return {
+    vertexShader:wrap(vertexShader,logarithmicDepth?'#include <common>\n#include <logdepthbuf_pars_vertex>':'',logarithmicDepth?'#include <logdepthbuf_vertex>':''),
+    fragmentShader:wrap(fragmentShader,logarithmicDepth?'#include <logdepthbuf_pars_fragment>':'',[
+      logarithmicDepth?'#include <logdepthbuf_fragment>':'',
+      colorManaged?'#include <tonemapping_fragment>\n#include <colorspace_fragment>':'',
+    ].join('\n')),
+  };
 }
 
 export function disposeObjectResources(root,{geometries=true,materials=true}={}){

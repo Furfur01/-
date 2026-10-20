@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {writeBuildFile} from './write-build-file.mjs';
 import path from 'node:path';
 import {Box3,Vector3,Matrix3,Raycaster} from 'three';
 import {enginePorts,shipPropulsion} from '../game/ship-propulsion.mjs';
@@ -15,7 +16,7 @@ export function buildFlightFleet(dir){
   const ids=['Destroyer','Cruiser','Battleship','Heavy_Fighter','Dreadnought','Light_Fighter','Bomber','Titanenergetic_Frigate','Interceptor','Devourer_Interceptor','Iron_Behemoth','Reaper','Annihilator'];
   const chunks=[],ships=[],layouts=[],profiles=[],parts=[];let offset=0;
   for(const [index,id]of ids.entries()){
-    const model=createShipModel(id),layout=shipWeaponLayouts[id],length=shipLengths[id],meta=publicCatalog.shipArchive.find(s=>s.id===id),fx=weaponEffects[layout.kind],vertices=[];
+    const model=createShipModel(id),layout=model.userData.weaponLayout||shipWeaponLayouts[id],length=shipLengths[id],meta=publicCatalog.shipArchive.find(s=>s.id===id),fx=weaponEffects[layout.kind],vertices=[];
     model.updateMatrixWorld(true);const armament=installFlightArmament(model,id);const bounds=new Box3().setFromObject(model),size=bounds.getSize(new Vector3()),center=bounds.getCenter(new Vector3());
     model.traverse(mesh=>{
       if(!mesh.isMesh)return;
@@ -30,6 +31,7 @@ export function buildFlightFleet(dir){
         const code=g.attributes.joint?.getX(j)||0,joint=code?jointList?.[Math.floor((code-1)/2)]:null;
         if(code&&!joint)throw Error('Missing articulated geometry owner: '+id+' '+mesh.name);
         const position=native(p.toArray());if(joint)for(let a=0;a<3;a++)position[a]-=joint.mount[a];
+        if(joint?.neutralYaw){position[0]*=-1;position[2]*=-1;n.x*=-1;n.z*=-1;}
         (joint?joint.vertices[(code-1)%2]:vertices).push(...position,...native(n.toArray()),...c,mat.emissiveIntensity&&mat.emissive?.getHex()?Math.min(1,mat.emissiveIntensity):0,tag,-layer,0);
       }
     });
@@ -38,7 +40,7 @@ export function buildFlightFleet(dir){
     const pdJoints=armament.joints.filter(t=>t.role==='pd');
     const pdScale=layout.pdScale||(id==='Iron_Behemoth'?.29:.34);
     const measured=[];
-    if(['Cruiser','Destroyer','Reaper','Annihilator'].includes(id))model.traverse(owner=>{for(const e of owner.userData.engineNozzles||[]){const p=owner.localToWorld(new Vector3(...e.position)),direction=new Vector3(...e.direction).transformDirection(owner.matrixWorld);measured.push({position:native(p.toArray()),direction:native(direction.toArray()),radius:e.radius*model.scale.x,source:'modeled nozzle'});}});
+    model.traverse(owner=>{for(const e of owner.userData.engineNozzles||[]){const p=owner.localToWorld(new Vector3(...e.position)),direction=new Vector3(...e.direction).transformDirection(owner.matrixWorld);measured.push({position:native(p.toArray()),direction:native(direction.toArray()),radius:e.radius*owner.getWorldScale(new Vector3()).x,source:'modeled nozzle'});}});
     const engines=measured.length?measured:enginePorts[id].map(([x,y,z,r])=>{
       const pos=model.localToWorld(new Vector3(x,y,z));
       const ray=new Raycaster(new Vector3(pos.x,pos.y,bounds.max.z+length),new Vector3(0,0,-1));
@@ -47,7 +49,7 @@ export function buildFlightFleet(dir){
       pos.z=hit.point.z-r*model.scale.x*.015;
       return {position:native(pos.toArray()),direction:[1,0,0],radius:r*model.scale.x};
     });
-    layouts.push({id,length,scale:1,bridge:[0,bounds.max.y+length*.025,center.z+length*.2],chase:[length*.6,length*.55,length*1.5],focus:[0,0,-length*.25],main:layout.muzzles.map(convert),tubes:[...(layout.missiles||[]),...armament.tubes].map(convert),tubeDirections:[...(layout.missiles||[]).map(()=>native(layout.launchDirection||[0,0,-1])),...armament.tubes.map(()=>[0,1,0])],joints:armament.joints,mounts:pdJoints.map(t=>t.mount),pdMuzzles:pdJoints.map(t=>t.mount.map((v,i)=>v+t.muzzles[0][i])),engines,propulsion:shipPropulsion(meta),turretScale:model.scale.x*pdScale,bounds:{center:native(center.toArray()),half:[size.z/2,size.y/2,size.x/2]},archiveDistance:length*2.6});
+    layouts.push({id,length,scale:1,bridge:[0,bounds.max.y+length*.025,center.z+length*.2],chase:[length*.6,length*.55,length*1.5],focus:[0,0,-length*.25],main:layout.muzzles.map(convert),tubes:[...(layout.missiles||[]),...armament.tubes].map(convert),tubeDirections:[...(layout.missiles||[]).map((_,i)=>native(layout.missileDirections?.[i]||layout.launchDirection||[0,0,-1])),...armament.tubes.map(()=>[0,1,0])],joints:armament.joints,mounts:pdJoints.map(t=>t.mount),pdMuzzles:pdJoints.map(t=>t.mount.map((v,i)=>v+t.muzzles[0][i])),engines,propulsion:shipPropulsion(meta),turretScale:model.scale.x*pdScale,bounds:{center:native(center.toArray()),half:[size.z/2,size.y/2,size.x/2]},archiveDistance:length*2.6});
     const color=fx?[((fx.color>>16)&255)/255,((fx.color>>8)&255)/255,(fx.color&255)/255]:[1,.77,.42],small=length<=5;
     profiles.push({role:meta.name,className:id.replaceAll('_',' ').toUpperCase(),length:'舰长比例 '+length,relativeLength:length,maxSpeed:small?280:length>=50?75:120,turnRate:small?1.0:length>=50?.14:.3,turnResponse:small?6:2.8,accel:small?1.2:.4,chargeTime:fx?.charge||0,mainCooldown:small?.32:layout.kind==='ion'?.4:3.4,mainDamage:small?5:layout.kind==='ion'?6:32,beamWidth:Math.max(.02,layout.caliber*Math.min(model.scale.x,Math.sqrt(model.scale.x))),salvo:layout.missiles?.length||0,missileCooldown:4,missileCapacity:(layout.missiles?.length||0)*4,missileDamage:5,turretDamage:.12,turretCooldown:.045,capital:!small,fixedPrimary:!!layout.muzzles.length&&!['shell','ion'].includes(layout.kind),spinal:!!spinalMounts[id],primaryName:layout.primary,primaryKind:layout.kind||'none',beam:!!fx?.beam,weaponColor:color,projectileSpeed:{plasma:180,nuclear:145,heavy:420,shell:620,ion:380,advanced:500}[layout.kind]||640});
     profiles.at(-1).salvo=layouts.at(-1).tubes.length;profiles.at(-1).missileCapacity=profiles.at(-1).salvo*4;profiles.at(-1).defenseOnly=id==='Iron_Behemoth';
@@ -63,9 +65,9 @@ export function buildFlightFleet(dir){
     ships.push({id,name:meta.name,en:id.replaceAll('_',' ').toUpperCase(),code:'APK '+meta.apkId,serial:String(meta.apkId).padStart(2,'0'),count:0,stats:['strength','shield','attack','speed','cargo','fuel'].map(k=>meta.stats[k]??null),statsSource:meta.statsSource,levels:weapons.map(()=>0),weapons,offset,floatCount:data.length,triangles:data.length/39,relativeLength:length});offset+=data.length;disposeShip(model);
   }
   // Same measured mounts drive practice visuals and authoritative battle launches.
-  fs.writeFileSync(new URL('../game/ship-flight-hardpoints.json',import.meta.url),JSON.stringify(Object.fromEntries(layouts.map(l=>[l.id,{main:l.main,tubes:l.tubes,directions:l.tubeDirections,secondary:l.joints.filter(j=>j.role==='secondary').map(j=>j.mount),pd:l.joints.filter(j=>j.role==='pd').map(j=>j.mount)}])),null,2));
+  writeBuildFile(path.resolve(import.meta.dirname,'../game/ship-flight-hardpoints.json'),JSON.stringify(Object.fromEntries(layouts.map(l=>[l.id,{main:l.main,tubes:l.tubes,directions:l.tubeDirections,secondary:l.joints.filter(j=>j.role==='secondary').map(j=>j.mount),pd:l.joints.filter(j=>j.role==='pd').map(j=>j.mount)}])),null,2));
   for(const layout of layouts)for(const joint of layout.joints){for(const vertices of joint.vertices){const data=new Float32Array(vertices);joint.parts.push(parts.length);parts.push({offset,floatCount:data.length});chunks.push(Buffer.from(data.buffer));offset+=data.length;}delete joint.vertices;}
-  fs.writeFileSync(path.join(dir,'flight-fleet.bin'),Buffer.concat(chunks));
-  const result={ships,layouts,profiles,parts};fs.writeFileSync(path.join(dir,'flight-fleet.json'),JSON.stringify(result));return result;
+  writeBuildFile(path.join(dir,'flight-fleet.bin'),Buffer.concat(chunks));
+  const result={ships,layouts,profiles,parts};writeBuildFile(path.join(dir,'flight-fleet.json'),JSON.stringify(result));return result;
 }
 

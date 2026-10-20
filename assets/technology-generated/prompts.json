@@ -1,0 +1,31 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "created": "2026-10-18",
+  "assets": [
+    {
+      "id": "Advanced_Ship_Engineering",
+      "prompt": "Create ONE square technology icon for the Chinese space strategy game Galaxy Empire. Match the original game's circa-2012 pre-rendered sci-fi technology icons: realistically painted/CG industrial hardware, compact legible silhouette, dense metallic detail, dark black-teal background, luminous cyan highlights, restrained saturated accents, dramatic practical lighting, thin metallic cyan rounded square frame at the edges. No text, letters, numbers, watermark or labels. Not flat vector, not modern app logo, not infographic. Compose to remain readable at 78px. Full opaque background, square 1024x1024. Advanced spacecraft engineering: a half-assembled angular capital ship hull suspended inside a vast orbital drydock, two robotic manipulator arms welding the exposed silver rib frame, a few orange sparks, turquoise navigation lights. Clear single central hull in three-quarter perspective.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14b58-0f36-7fe3-8665-6bbc414b06e8\\exec-d3a4b179-ca47-4f3a-ba0d-ec95372664fb.png"
+    },
+    {
+      "id": "Quantum_Command",
+      "prompt": "Create ONE square technology icon for the Chinese space strategy game Galaxy Empire. Match the original game's circa-2012 pre-rendered sci-fi technology icons: realistically painted/CG industrial hardware, compact legible silhouette, dense metallic detail, dark black-teal background, luminous cyan highlights, restrained saturated accents, dramatic practical lighting, thin metallic cyan rounded square frame at the edges. No text, letters, numbers, watermark or labels. Not flat vector, not modern app logo, not infographic. Compose to remain readable at 78px. Full opaque background, square 1024x1024. Quantum command: a brilliant square cyan quantum processor in a deep metallic circuitry chamber, thin luminous conduits radiating outward toward six tiny points of light representing coordinated spacecraft, symmetrical perspective tunnel. Make actual machinery, not a diagram.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14b58-0f36-7fe3-8665-6bbc414b06e8\\exec-ac5ac85c-5ac4-4a6c-93f2-387cae0abaa6.png"
+    },
+    {
+      "id": "Metamaterial_Tech",
+      "prompt": "Create ONE square technology icon for the Chinese space strategy game Galaxy Empire. Match the original game's circa-2012 pre-rendered sci-fi technology icons: realistically painted/CG industrial hardware, compact legible silhouette, dense metallic detail, dark black-teal background, luminous cyan highlights, restrained saturated accents, dramatic practical lighting, thin metallic cyan rounded square frame at the edges. No text, letters, numbers, watermark or labels. Not flat vector, not modern app logo, not infographic. Compose to remain readable at 78px. Full opaque background, square 1024x1024. Metamaterials: a thick hexagonal-section slab of layered gunmetal spacecraft armor levitating between manufacturing clamps, exposed honeycomb and crystalline lattice along its cut edge, a blue-white scanning beam crossing the surface, subtle titanium violet reflections.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14b58-0f36-7fe3-8665-6bbc414b06e8\\exec-31899096-66d8-40c2-a892-d55979738a7b.png"
+    },
+    {
+      "id": "Phase_Energy",
+      "prompt": "Create ONE square technology icon for the Chinese space strategy game Galaxy Empire. Match the original game's circa-2012 pre-rendered sci-fi technology icons: realistically painted/CG industrial hardware, compact legible silhouette, dense metallic detail, dark black-teal background, luminous cyan highlights, restrained saturated accents, dramatic practical lighting, thin metallic cyan rounded square frame at the edges. No text, letters, numbers, watermark or labels. Not flat vector, not modern app logo, not infographic. Compose to remain readable at 78px. Full opaque background, square 1024x1024. Phase energy physics: two offset heavy metallic electromagnetic rings bending a narrow cyan beam through a glowing violet spatial ripple in a dark laboratory, visible machinery and a luminous lens-like distortion, strong central focus.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14b58-0f36-7fe3-8665-6bbc414b06e8\\exec-6fc5a743-43e2-4dca-a627-693f4aa70ec1.png"
+    },
+    {
+      "id": "Antimatter_Containment",
+      "prompt": "Create ONE square technology icon for the Chinese space strategy game Galaxy Empire. Match the original game's circa-2012 pre-rendered sci-fi technology icons: realistically painted/CG industrial hardware, compact legible silhouette, dense metallic detail, dark black-teal background, luminous cyan highlights, restrained saturated accents, dramatic practical lighting, thin metallic cyan rounded square frame at the edges. No text, letters, numbers, watermark or labels. Not flat vector, not modern app logo, not infographic. Compose to remain readable at 78px. Full opaque background, square 1024x1024. Antimatter containment: a tiny radiant orange-white sphere suspended safely inside concentric cyan magnetic containment rings, housed within a heavy dark steel reactor chamber, two opposing needle injectors and precise blue electrical filaments. Dramatic energy contrast, contained not exploding.",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14b58-0f36-7fe3-8665-6bbc414b06e8\\exec-c06f19b2-0e06-41aa-bf14-07e80b588cca.png"
+    }
+  ]
+}

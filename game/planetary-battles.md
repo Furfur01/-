@@ -9,9 +9,9 @@
 - 堡垒沿当地星球半径 1.3 倍的同心球面排列，保留离地间隙，不跟随地表自转。没有额外承载大底座，也不削平地形或改变 NPC 原模型。舰船、炮塔、弹道、曲速落点和回放使用同一轨道变换。恒星不再随战斗聚焦或缩放淡出。
 - 舰船不能进入地表以下，武器不能穿过星球内部。空目标仍正常结算搜刮返航；情报计数包含已进入战斗的防御设施。
 
-验证：`node --test tests/planet-battle.test.mjs`；`node tests/planet-battle-browser.mjs`。浏览器证据保存于 `output/playwright/planet-battle/`，使用隔离存档。
+历史近地战斗记录保存在 `output/playwright/planet-battle/`。
 
-当地模型衔接验收：`node --test tests/local-planet-battle.test.mjs tests/local-fortress-site.test.mjs`、`node tests/local-planet-battle-browser.mjs`、`node tests/local-fortress-site-browser.mjs`。后者检查四类地貌与五种 NPC 模型的真实堡垒落点，证据保存在 `output/playwright/local-fortress-site/`。
+历史当地模型记录保存在 `output/playwright/local-fortress-site/`；对应独立测试已清理。
 
 阵地使用可扩建的浮空六边形堡垒群（`game/fortress-layout.mjs`）。大六边形缩小为原模型的 72%，中心和六个顶点都是通用槽位：每个位可放一座大型炮塔或一个小六边形。小六边形的中心与六角可放火箭、轻型/重型激光、中子炮，模型相应缩小；磁轨、等离子和护盾设施使用大型槽位。优先填充已有小六边形，再使用空槽，满后沿六边形环扩建。布局 v2 保存在战斗环境中，增援不移动已有位置；v1 旧回放保留原尺寸与槽位。
 
@@ -27,6 +27,6 @@
 
 每个模块通过固定的 `fortressSlot.module` 统计所属设施。全部被摧毁时切换独立废墟几何：塌陷中央平台、焦黑地基、断墙、裸露钢筋及装甲碎片，关联通道同步破损。不另设建筑血量，也不因其他模块被毁而切换。状态从当前快照/回放帧派生，倒放可以恢复；缺少槽位的旧回放按原固定位置恢复归属。星图、实战、回放共用。
 
-验证补充：`node --test tests/planet-defense.test.mjs`；`node tests/fortress-state-browser.mjs`，覆盖共享能量、溢出伤害、失效发生器、逐模块损毁、护罩消失和回放倒退。图片保存在 `output/playwright/fortress-state/`。
+历史护盾与堡垒记录保存在 `output/playwright/fortress-state/`；对应独立测试已清理。
 
-`scripts/launch-planet-battle.mjs` 使用独立测试存档：12 艘轰炸机、2 艘战列舰、4 艘巡洋舰、4 艘轻型战机，对阵 51 座防御设施按大小六边形规则编排的堡垒模块（包含大小防护盾）；双方提高耐久以便观察。不修改正式账号资源或战损。战场的“地面阵地”按钮可切换到堡垒观察视角。
+开发专用近地试玩启动器已移除。正式战场的“地面阵地”按钮仍可切换堡垒观察视角。

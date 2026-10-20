@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-19",
+  "mode": "builtin image_gen",
+  "kind": "concept-art-and-handoff",
+  "artSource": "opendesign/mockups/planet-construction-review/reference/aurora-original.html",
+  "selected": [
+    {
+      "id": "terrestrial",
+      "title": "类地星",
+      "image": "images/01-terrestrial.png",
+      "tag": "海湾、山脊与森林",
+      "text": "连续大陆与水系先成立，再让机构沿缓坡、山脚和海湾落位。"
+    },
+    {
+      "id": "mercury",
+      "title": "金属岩星",
+      "image": "images/02-mercury-v2.png",
+      "tag": "玄武岩、火山与熔沟",
+      "text": "分支断裂切开完整岩地，开采与运输依附稳定岩台。"
+    },
+    {
+      "id": "mars",
+      "title": "火星岩星",
+      "image": "images/03-mars-v2.png",
+      "tag": "赤色高原与紫晶裂谷",
+      "text": "矿脉沿断层露出，功能区随谷口、崖顶和物流方向组织。"
+    },
+    {
+      "id": "gas",
+      "title": "气态巨星",
+      "image": "images/04-gas.png",
+      "tag": "云带、风暴与浮空站",
+      "text": "没有假陆地；按模型占地组织开放框架与小型服务浮舱。"
+    },
+    {
+      "id": "moon",
+      "title": "月球 · 补充",
+      "image": "images/05-moon-v2.png",
+      "tag": "月海、陨坑与低重力船坞",
+      "text": "浮空旗舰中心保留半成品深空吞噬者；舰体以既有模型为准。"
+    },
+    {
+      "id": "seeds",
+      "title": "同类，也不是同一颗",
+      "image": "images/06-terrestrial-seeds.png",
+      "tag": "三种独立的类地地貌",
+      "text": "双大陆、群岛海洋、内海大陆。示例 seed 为概念标签，供实现地形差异时参照。"
+    }
+  ],
+  "documents": [
+    "给GPT6Pro-星球整合提示词.md",
+    "图片提示词.md",
+    "imagegen-prompts.json",
+    "imagegen-corrections.json",
+    "06-terrestrial-seeds-prompt.txt"
+  ],
+  "notes": "Concept seed labels are illustrative, not generator verification."
+}

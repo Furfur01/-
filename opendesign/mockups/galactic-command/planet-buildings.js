@@ -378,6 +378,13 @@ export function createBuildingModel(THREE,id,level=1,shared={}) {
     cylinder(.15,.06,0,.88,-.03,'navy');cylinder(.09,.08,0,.94,-.03,'cyan');
     armor(.36,.35,.43,0,.43,.52,'white');box(.22,.25,.035,0,.42,.747,'navy');box(.025,.17,.015,-.07,.43,.77,'cyan');box(.025,.17,.015,.07,.43,.77,'cyan');
     tank(-.52,-.26,.13,.40,'slate');tank(.52,-.26,.13,.40,'slate');
+  }else if(id==='Flagship_Center') {
+    // Compact lunar construction dock for retained building inspectors.
+    for(const x of[-.64,.64]){armor(.3,.7,1.4,x,.61,0,'white');windows(x,.78,.72,.2,2);}
+    armor(1.15,.62,.25,0,.57,-.62,'navy');
+    for(const z of[-.4,.15,.6]){beam([-.6,1.05,z],[.6,1.05,z],.045,'orange');for(const x of[-.6,.6])beam([x,.3,z],[x,1.05,z],.035,'steel');}
+    armor(.38,.21,.95,0,.5,0,'slate');box(.07,.04,.8,0,.63,0,'cyan');
+    cylinder(.12,.6,.62,1.25,-.5,'navy');ring(.14,.62,1.56,-.5,'cyan');
   }else if(id==='Wormhole_Generator') {
     for(const side of [-1,1]){armor(.30,.53,.50,side*.43,.50,0,'white');box(.16,.06,.52,side*.43,.34,0,'orange');}
     const portal=moving('wormhole containment ring',0,1.15,0,'z',.13);ring(.59,0,0,0,'navy',0,portal);ring(.50,0,0,0,'cyan',0,portal);

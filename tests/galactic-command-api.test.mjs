@@ -8,10 +8,18 @@ import vm from 'node:vm';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
 import {createWorld,createPlayer} from '../game/engine.mjs';
+import {createSpatialBattle,addSpatialFleet,recordFrame} from '../game/spatial-battle.mjs';
+import {units} from '../game/catalog.mjs';
 
 test('local bridge resumes Local progress without returning its cookie and retains legacy APIs',async()=>{
-  const world=createWorld(),local=createPlayer(world,'Local progress'),browser=createPlayer(world,'Browser progress');
+  const world=createWorld(),local=createPlayer(world,'Local test progress'),browser=createPlayer(world,'Browser test progress');
   world.planets[local.home].buildings.Command_Center=3;
+  const battle=createSpatialBattle({id:'00000000-0000-4000-8000-000000000099',target:local.home,attacker:local.id,defender:browser.id,start:world.at});
+  addSpatialFleet(battle,{fleet:{Battleship:1},side:'attacker',owner:local.id},units);
+  addSpatialFleet(battle,{fleet:{Cruiser:1},side:'defender',owner:browser.id},units);
+  recordFrame(battle);battle.status='finished';battle.settled=true;
+  world.battles={[battle.id]:battle};
+  local.reports=[{id:'release-replay',type:'battle',engine:`spatial-v${battle.version}`,battleId:battle.id,at:world.at}];
   const directory=fs.mkdtempSync(path.join(os.tmpdir(),'empire-bridge-'));
   const file=path.join(directory,'universe.json'),session=path.join(directory,'session.json');
   fs.writeFileSync(file,JSON.stringify(world));fs.writeFileSync(session,JSON.stringify({cookie:`empire=${local.id}`}));
@@ -46,6 +54,9 @@ test('local bridge resumes Local progress without returning its cookie and retai
     const cookie=result.headers.get('set-cookie').split(';')[0];
     const state=await(await fetch(base+'/api/state',{headers:{Cookie:cookie}})).json();
     assert.equal(state.player.name,local.name);assert.equal(state.planets[0].buildings.Command_Center,3);
+    const replay=await(await fetch(base+'/api/replay/release-replay',{headers:{Cookie:cookie}})).json();
+    assert.equal(replay.version,4);assert.equal(replay.record.metadata.length,2);assert(replay.record.frames.length>0);
+    assert.equal((await fetch(base+'/api/replay/release-replay',{headers:{Cookie:`empire=${browser.id}`}})).status,404);
     assert.equal((await fetch(base+'/api/action',{method:'POST',headers:{...headers,Cookie:cookie},body:JSON.stringify({type:'readAll'})})).status,200);
     assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length);
     // Simulate the embedded browser dropping cookies on every refresh.
@@ -68,7 +79,7 @@ test('local bridge resumes Local progress without returning its cookie and retai
     const ambiguous=await fetch(base+'/api/session/local',{method:'POST',headers:{Origin:base,'X-Empire-Client':'galactic-command'}});
     assert.equal(ambiguous.status,409,'a lost session with multiple accounts requires selecting one, never another account');
     assert.equal(Object.keys(JSON.parse(fs.readFileSync(file)).players).length,Object.keys(world.players).length);
-    assert.equal((await fetch(base+'/opendesign/index.html')).status,200);
+    assert.equal((await fetch(base+'/')).status,200);
     for(const name of ['/data/session.json','/data/universe.json','/godot/data/session.json'])assert.equal((await fetch(base+name)).status,404);
   }finally{
     child.kill();await once(child,'exit');
@@ -77,9 +88,9 @@ test('local bridge resumes Local progress without returning its cookie and retai
 });
 
 function client(fetch){
-  const window={},storage=new Map(),intervals=[];
+  const window=new EventTarget(),storage=new Map(),intervals=[];
   vm.runInNewContext(fs.readFileSync(new URL('../opendesign/mockups/galactic-command/api.js',import.meta.url),'utf8'),{
-    window,fetch,console,AbortController,setTimeout,clearTimeout,setInterval:fn=>{intervals.push(fn);return intervals.length;},
+    window,fetch,console,AbortController,CustomEvent,setTimeout,clearTimeout,setInterval:fn=>{intervals.push(fn);return intervals.length;},
     document:{hidden:false,addEventListener(){}},localStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)}
   });
   return {api:window.EmpireAPI,intervals};
@@ -105,7 +116,7 @@ test('browser adapter ignores stale polls, blocks duplicate actions and exposes 
   const action=api.action({type:'build',id:'Metal_Mine'});
   assert.equal(api.busy,true);assert.equal(await api.action({type:'build'}),null);
   assert.equal(JSON.parse(calls.find(call=>call.url==='/api/action').options.body).planet,'colony');
-  act(response(snapshot(3)));await action;
+  act(response(snapshot(3)));assert.equal((await action).now,3);
   poll(response(snapshot(2)));await pending;
   assert.equal(api.state.now,3);assert.equal(api.busy,false);
   const failed=api.action({type:'build'});act(response({error:'资源不足'},false));

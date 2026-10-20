@@ -31,16 +31,19 @@
 
 ```powershell
 node scripts/build-npc-planets.mjs
-node scripts/build-colony-review.mjs
-node --test tests/system-npcs.test.mjs tests/system-npcs-api.test.mjs tests/npc-models.test.mjs tests/star-map.test.mjs tests/planet-types.test.mjs tests/aurora-navigation.test.mjs
-node tests/npc-models-browser.mjs
+npm run build:world
+npm test
 ```
 
-浏览器验收使用临时存档，检查五类模型、等级、巡逻运动、进攻目标、重复导航的缓存稳定性；截图和报告位于 `output/playwright/npc-integration/`。
+独立 NPC 浏览器脚本已清理；历史截图和报告保存在 `output/playwright/npc-integration/`。当前检查限于 `tests/README.md` 的 P0 与少量 P1。
 
 ## 战果与资源
 
 星球档案可查看个人最近战果、掠夺量、返航交付及剩余资源。未侦察、未交战不公开库存；侦察数据带时间，胜利后提供当前剩余库存。战利品受幸存舰队容量限制，返航抵达自动入库；后续可继续掠夺剩余库存。战斗现场在实际星球旁的星图中实时显示，历史回放仅作可选查看。
+
+2026-10-19：中立野怪被毁的防御不再战后自动修复。全歼后，货船可继续以「攻击」任务分批拉走剩余库存，直到北京时间零点刷新；未被摧毁的守军仍保留。玩家和其他有主星球的防御仍按每座 70% 概率修复，导弹造成的不可修复损失规则不变。
+
+首次重启载入旧存档时，后台先在存档旁生成 `universe.json.before-npc-defense-repair-<时间戳>.bak` 及对应战斗目录备份，再按本轮最新全歼战报清除已修复的野怪炮台。只处理守军与战报修复数量相符的据点；正在交战、已经每日刷新或缺少战报依据的据点不清除。库存、残骸、玩家进度、在途舰队、历史战报和回放保持不变。
 
 ## 每日恢复（2026-10-16）
 
@@ -58,4 +61,4 @@ node tests/npc-models-browser.mjs
 
 交战中的据点延后到本场战斗结算完毕再恢复，当前战斗仍从旧库存结算战利品，不在战斗中凭空增援。刷新后旧侦察和战后监测过期，须重新侦察；历史战报、在途战利品和交付记录仍保留。界面公开每日满额库存，实际剩余资源仍遵循情报规则。
 
-`game/npc-daily.mjs` 记录北京时间日期，`advance` 将刷新纳入任务时间序列，处理离线和零点同时抵达；首次启用对现存中立据点执行一次恢复，活跃战斗同样延后。`tests/npc-daily.test.mjs` 覆盖日期边界、跨日战斗、存档重载、离线补齐和固定库存。
+`game/npc-daily.mjs` 记录北京时间日期，`advance` 将刷新纳入任务时间序列，处理离线和零点同时抵达；首次启用对现存中立据点执行一次恢复，活跃战斗同样延后。

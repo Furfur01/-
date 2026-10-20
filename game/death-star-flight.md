@@ -20,15 +20,9 @@ http://127.0.0.1:8289/opendesign/mockups/galactic-command/hangar.html?map=death-
 - 机械面板与灯光由局部程序纹理生成，主炮保留八组发射器与凹面结构。地形和舰船采用相机相对坐标；远近地形使用独立投影与分离深度区间。大型机械结构和发射器具有独立碰撞包围体。
 - `scripts/upgrade-death-star.mjs` 与 `scripts/hangar-source/death-star-flight.js` 接入现有构建和驾驶行为。普通靶场之间切换保留原行为；进入死星或离开死星时重新配置演练。所有状态只存在当前页面内。
 
-## 验证
+## 历史验收
 
-```powershell
-npm run build:command
-node --test tests/death-star-terrain.test.mjs tests/death-star-reference.test.mjs tests/flight-scenes.test.mjs tests/pilot-point-defense.test.mjs tests/ship-missiles.test.mjs tests/ship-turrets.test.mjs
-node tests/death-star-flight-browser.cjs --performance
-node tests/battlefield-flow-selfcheck.mjs
-npm test
-```
+以下为 2026-10-15 原生渲染器记录；独立测试和性能脚本已清理。当前构建使用 `npm run build:command`，统一检查范围见 `tests/README.md`。
 
 浏览器脚本通过独立静态服务器运行，不读取或改写世界存档。报告与截图位于 `output/playwright/death-star-terrain/`。覆盖四个入口、武器伤害、遮挡、残骸保持、高速撞击、十次场景切换的 GPU 资源计数、普通靶场状态、移动端布局、无实例化扩展回退和原死星档案。
 

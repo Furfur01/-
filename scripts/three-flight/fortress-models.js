@@ -1,4 +1,41 @@
-// Shared detailed architecture; turrets remain separate, authoritative units.
+// Floating carrier deck. Socket heights match the authoritative turret layout.
+export function createFloatingPlatformGeometry(Geometry,scale=1){
+ const g=new Geometry(),bridge=new Geometry(),jets=[],armor=[.48,.55,.59],edge=[.72,.76,.76],deck=[.24,.31,.35],dark=[.1,.15,.18],steel=[.3,.37,.41],cyan=[.2,.77,1],yellow=[.89,.66,.25];
+ const hex=(cx,cz,bottom,top,rb,rt,color,emission=0)=>{
+  const p=(r,y,a)=>[cx+Math.cos(a)*r,y,cz+Math.sin(a)*r];
+  for(let k=0;k<6;k++){const a=k*Math.PI/3,b=(k+1)*Math.PI/3;
+   g.quad(p(rb,bottom,a),p(rt,top,a),p(rt,top,b),p(rb,bottom,b),color,emission);
+   g.tri([cx,top,cz],p(rt,top,b),p(rt,top,a),color,emission);
+   g.tri([cx,bottom,cz],p(rb,bottom,a),p(rb,bottom,b),color,emission);
+  }
+ };
+ // A shallow armored hull, suspended above the surface, with an exposed keel.
+ hex(0,0,18,32,72,113,steel);hex(0,0,32,36,113,113,armor);
+ hex(0,0,36,39,113,109,edge);hex(0,0,39,39.3,105,105,deck);
+ hex(0,0,39,57,35,31,steel);hex(0,0,57,60,33,33,edge);
+ const nozzle=(x,z,r)=>{
+  hex(x,z,14,25,r*1.25,r,dark);hex(x,z,13,16,r*1.32,r*1.32,steel);
+  hex(x,z,12.7,13,r*.93,r*.93,cyan,1);jets.push({pos:[x*scale,12.5*scale,z*scale],radius:r*.8*scale,length:Math.min(11,r*1.15)*scale});
+ };
+ nozzle(0,0,14);
+ for(let k=0;k<6;k++){
+  const a=k*Math.PI/3,x=Math.cos(a),z=Math.sin(a),side=a+Math.PI/6;
+  hex(x*82,z*82,39,43,30,28,armor);hex(x*82,z*82,43,46,34,34,edge);
+  nozzle(x*65,z*65,9);
+  const part=(r,t,y,size,c,e=0)=>g.box(size,[Math.cos(side)*r-Math.sin(side)*t,y,Math.sin(side)*r+Math.cos(side)*t],c,0,[0,-side,0],e);
+  part(97,0,33,[3,3,40],dark);part(99,0,34,[1,1.3,30],cyan,1);
+  for(const t of [-27,27]){part(64,t,40.2,[24,1.5,10],steel);for(let j=-3;j<=3;j++)part(64+j*2.7,t,41,[1,1,8],dark);}
+  for(const t of [-9,9])part(60,t,39.8,[37,.5,1.2],yellow);
+ }
+ // Lightweight suspended walkways detach as soon as either platform falls.
+ bridge.box([1,4,19],[.5,31,0],steel);bridge.box([1,1,19],[.5,33.5,0],deck);
+ for(const z of [-9,9]){bridge.box([1,1,1],[.5,38,z],edge);bridge.box([1,.5,.5],[.5,34.5,z],cyan,0,[0,0,0],1);}
+ for(let i=0;i<g.data.length;i+=13)for(let axis=0;axis<3;axis++)g.data[i+axis]*=scale;
+ for(let i=0;i<bridge.data.length;i+=13){bridge.data[i+1]*=scale;bridge.data[i+2]*=scale;}
+ return {module:g.upload(),bridge:bridge.upload(),jets};
+}
+
+// Small installations keep their fortified architecture and permanent ruins.
 export function createFortressGeometry(Geometry,scale=1,largeSockets=false){
  const g=new Geometry(),stone=[.44,.48,.5],armor=[.62,.65,.65],edge=[.75,.75,.69],dark=[.16,.22,.25],steel=[.29,.36,.39],cyan=[.3,.78,.91],yellow=[.86,.64,.23];
  const hex=(cx,cz,bottom,top,rb,rt,color)=>{

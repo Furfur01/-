@@ -6,6 +6,6 @@
 
 实现位于 `opendesign/mockups/planet-construction-review/aurora-gargantua.js`，接入现有 AURORA WebGL 上下文。黑洞阴影半径 6.5 世界单位，吸积盘处于恒星系尺度，投影半径小于 1.5 像素不绘制，1.5–6 像素渐显；银河总览只绘制点和标记。离屏目标最高 800 像素高，每条光线最多 220 步。缓冲、纹理和程序复用，视口尺寸变化时才重新分配纹理，场景释放时统一销毁。只有靠近银心后才隐藏势力标记，缩回银河时恢复。
 
-构建：`node scripts/build-colony-review.mjs`。`planet.js` 适配层修改后，仍需通过 esbuild 更新 `planet.bundle.js`。
+当前构建：`npm run build:world`。上方为早期 AURORA 实现记录；正式世界已迁移到 `scripts/universe/environment*.js`。
 
-验证：`node --test tests/gargantua.test.mjs tests/aurora-navigation.test.mjs tests/aurora-strategy.test.mjs`；`node tests/gargantua-ui-selfcheck.mjs`；`node tests/black-hole-ui-selfcheck.mjs`。浏览器脚本使用隔离存档，截图在 `output/playwright/gargantua/`。
+相关独立测试已清理；历史截图保存在 `output/playwright/gargantua/`。

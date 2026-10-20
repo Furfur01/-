@@ -5,17 +5,20 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {units,tech,publicCatalog} from '../game/catalog.mjs';
 import {exportModels} from '../client/command-p0/export-models.mjs';
+import {writeBuildFile} from './write-build-file.mjs';
 
 const root=path.resolve(import.meta.dirname,'..'),dir=path.join(root,'opendesign/mockups/galactic-command');
+// Source-only UI changes do not need to rewrite the retained GLB exports.
+if(!process.argv.includes('--ui-only')){
 const assetDir=path.join(dir,'assets/p0'),legacy=path.join(root,'opendesign/mockups/galaxy-empire/assets');
 const art=JSON.parse(await fs.readFile(path.join(root,'game/original-assets.json'),'utf8'));
 const archive=publicCatalog.shipArchive;
 const sources=[];
 for(const folder of ['tech','ships','models'])await fs.mkdir(path.join(assetDir,folder),{recursive:true});
 for(const t of Object.values(tech)){
- const source=path.join(legacy,art.technology[t.id]||`technologies-v2/${t.id}.png`);
+ const source=t.icon?path.join(root,'assets',t.icon):path.join(legacy,art.technology[t.id]||`technologies-v2/${t.id}.png`);
  await fs.copyFile(source,path.join(assetDir,'tech',t.id+'.png'));
- sources.push({id:t.id,source:path.relative(root,source),kind:art.technology[t.id]?'Original APK technology icon':'Project supplementary technology icon'});
+ sources.push({id:t.id,source:path.relative(root,source),kind:t.icon?'Imagegen original-style technology icon':art.technology[t.id]?'Original APK technology icon':'Project supplementary technology icon'});
 }
 const modelShips=[];
 for(const item of Object.values(units).filter(u=>u.fleetAvailable!==false)){
@@ -36,7 +39,9 @@ try{
  for(const ship of modelShips)await fs.rename(path.join(staging,'assets/models',ship.id+'.glb'),path.join(assetDir,'models',ship.id+'.glb'));
  sources.push(...models);
 }finally{await fs.rm(staging,{recursive:true,force:true});}
-await fs.writeFile(path.join(assetDir,'sources.json'),JSON.stringify(sources,null,2));
-await fs.copyFile(path.join(root,'client/command-p0/styles.css'),path.join(dir,'operations.css'));
-await build({entryPoints:[path.join(root,'client/command-p0/entry.jsx')],bundle:true,minify:true,outfile:path.join(dir,'operations.bundle.js'),platform:'browser',target:'es2022',define:{'process.env.NODE_ENV':'"production"'},logLevel:'info'});
+writeBuildFile(path.join(assetDir,'sources.json'),JSON.stringify(sources,null,2));
+}
+writeBuildFile(path.join(dir,'operations.css'),await fs.readFile(path.join(root,'client/command-p0/styles.css')));
+const result=await build({entryPoints:[path.join(root,'client/command-p0/entry.jsx')],bundle:true,minify:true,write:false,outfile:path.join(dir,'operations.bundle.js'),platform:'browser',target:'es2022',define:{'process.env.NODE_ENV':'"production"'},logLevel:'info'});
+for(const file of result.outputFiles)writeBuildFile(file.path,file.contents);
 console.log('Live research and shipyard UI built.');

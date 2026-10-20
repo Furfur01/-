@@ -2,11 +2,13 @@ import {fleetStations,fleetFronts,formationGoal,planetBombingGoal} from './fleet
 import {antimatterDamage} from './special-combat.mjs';
 import {projectileContact} from './projectile-contact.mjs';
 import {pilotHandling} from './pilot-controls.mjs';
+import {combatManeuver,committedPass} from './combat-maneuvers.mjs';
 import {steerPilot} from './pilot-motion.mjs';
 import {weaponSolution} from './weapon-solution.mjs';
 import {placePlanetUnit,keepAboveSurface,terrainBlocks,surfaceHeight,battleViewEnvironment} from './battle-terrain.mjs';
 import {STEP_MS,MAX_BATTLE_MS,SPATIAL_VERSION,combatProfile} from './spatial-profiles.mjs';
 import {absorbDefenseShield} from './planet-defense.mjs';
+import {splashMultiplier,splashDamage,rollCritical,areaWeaponRules} from './damage-amplification.mjs';
 import {advanceCarriers,retireSwarms,commandCarrier,commandMultiplier,commandedTarget,swarmTarget,swarmGoal,guardDecoy,carrierSnapshot} from './devourer-command.mjs';
 
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -36,7 +38,7 @@ export function addSpatialFleet(b,{fleet,technology={},owner,mission=null,side},
     for(let n=0;n<count;n++,ordinal++){
       const formation=Math.floor(n/32),slot=stations.get(id)[n],station={...slot,y:clamp(slot.y+sign*Math.min(60,profile.length*1.2+12),-560,560)};
       const x=sign*(1050+station.depth),y=station.y,z=station.z;
-      b.ships.push({id:b.ships.length,type:id,side,owner,batch:batch.id,formation:`${batch.id}:${id}:${formation}`,station,x,y,z,yaw:sign<0?Math.PI/2:-Math.PI/2,pitch:0,speed:0,hp:maxHp,shield:maxShield,maxHp,maxShield,attack,profile,rapid:{...u.rapid},cooldown:n%11*.07,secondaryCooldown:0,missileCooldown:0,pdCooldown:0,target:-1,lastHit:-1000});
+      b.ships.push({id:b.ships.length,type:id,side,owner,batch:batch.id,formation:`${batch.id}:${id}:${formation}`,station,x,y,z,yaw:sign<0?Math.PI/2:-Math.PI/2,pitch:0,speed:0,hp:maxHp,shield:maxShield,maxHp,maxShield,attack,profile,splashMultipliers:{...u.splashMultipliers},cooldown:n%11*.07,secondaryCooldown:0,missileCooldown:0,pdCooldown:0,target:-1,lastHit:-1000});
       placePlanetUnit(b,b.ships.at(-1));
       const placed=b.ships.at(-1);b.boundary=Math.max(b.boundary,Math.abs(placed.x)+1500,Math.abs(placed.z)+1500);
       b.boundary=Math.max(b.boundary,Math.abs(x)+1500,Math.abs(z)+1500);
@@ -92,7 +94,7 @@ export function controlBattle(b,owner,action){
 }
 // Grid buckets are keyed in the horizontal battle plane. Vertical distance still participates in all hits.
 function gridFor(b){const grids=[new Map(),new Map()],alive=[[],[]],bounds=[[Infinity,-Infinity,Infinity,-Infinity],[Infinity,-Infinity,Infinity,-Infinity]];for(const s of b.ships)if(s.hp>0){const side=s.side==='attacker'?0:1,x=Math.floor(s.x/300),z=Math.floor(s.z/300),key=`${x},${z}`,g=grids[side],box=bounds[side];box[0]=Math.min(box[0],x);box[1]=Math.max(box[1],x);box[2]=Math.min(box[2],z);box[3]=Math.max(box[3],z);if(!g.has(key))g.set(key,[]);g.get(key).push(s);alive[side].push(s);}return {grids,alive,bounds};}
-function targetScore(s,t){const role=s.profile.role,other=t.profile.role,priority=role==='line'?(other==='line'?.65:other==='fighter'?1.8:1):role==='fighter'?(other==='fighter'?.7:1):role==='screen'?(other==='fighter'?.65:1):1;return distance(s,t)*priority*(s.type==='Bomber'&&t.profile.ground?.3:1)/(1+Math.log2(s.rapid[t.type]||1)*.15);}
+function targetScore(s,t){const role=s.profile.role,other=t.profile.role,priority=role==='line'?(other==='line'?.65:other==='fighter'?1.8:1):role==='fighter'?(other==='fighter'?.7:1):role==='screen'?(other==='fighter'?.65:1):1;return distance(s,t)*priority*(s.type==='Bomber'&&t.profile.ground?.3:1)/(1+Math.log2(Math.max(1,splashMultiplier(s,t.type)))*.15);}
 function acquire(b,s,grid){
   const enemy=s.side==='attacker'?1:0,g=grid.grids[enemy],cx=Math.floor(s.x/300),cz=Math.floor(s.z/300);let best=null,score=Infinity,checked=0;
   const box=grid.bounds[enemy],firstRing=Math.max(0,box[0]-cx,cx-box[1],box[2]-cz,cz-box[3]);
@@ -113,10 +115,32 @@ function acquire(b,s,grid){
 function steer(s,yaw,pitch,dt){s.yaw+=clamp(angle(yaw-s.yaw),-s.profile.turn*dt,s.profile.turn*dt);s.yaw=angle(s.yaw);s.pitch+=clamp(pitch-s.pitch,-s.profile.turn*dt,s.profile.turn*dt);}
 function hurt(b,s,damage,contact={}){
   if(s.hp<=0)return;
+  const shieldBefore=s.shield,hpBefore=s.hp;
   const field=contact.bypassShield?{remaining:damage,absorbed:0,generators:[]}:absorbDefenseShield(b,s,damage);
   const absorbed=contact.bypassShield?0:Math.min(s.shield,field.remaining);
   s.shield-=absorbed;s.hp=Math.max(0,s.hp-field.remaining+absorbed);s.lastHit=b.tick;
-  if(contact.projectileId!==undefined||b.ships.length<=128||s.hp<=0||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/80))===0)emit(b,s.hp>0?'hit':'destroy',{shipId:s.id,shield:absorbed+field.absorbed>0,...(field.absorbed?{defenseShield:field.absorbed,shieldGenerators:field.generators}:{}),x:s.x,y:s.y,z:s.z,...contact});
+  if(contact.projectileId!==undefined||b.ships.length<=128||s.hp<=0||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/80))===0)emit(b,s.hp>0?'hit':'destroy',{shipId:s.id,shield:absorbed+field.absorbed>0,shieldBefore,shieldAfter:s.shield,hp:s.hp,hullDamage:hpBefore-s.hp,...(field.absorbed?{defenseShield:field.absorbed,shieldGenerators:field.generators}:{}),x:s.x,y:s.y,z:s.z,...contact});
+}
+// One impact, one critical roll. The directly hit hull is never hit a second
+// time by its own blast. Nearby victims use their own matchup, not the primary's.
+function areaImpact(b,source,victim,base,point,{radius=0,...contact},grid){
+  let sample;const randomOnce=()=>sample??=random(b),direct=rollCritical(source,victim.type,randomOnce),damage=base*direct.criticalMultiplier;
+  hurt(b,victim,damage,{source:source.id,...contact,...direct,damage,x:point[0],y:point[1],z:point[2]});
+  if(radius<=0)return damage;
+  const blast=emit(b,'blast',{source:source.id,kind:contact.kind,critical:direct.critical,criticalMultiplier:direct.criticalMultiplier,radius,x:point[0],y:point[1],z:point[2]});
+  const buckets=(grid||gridFor(b)).grids[source.side==='attacker'?1:0];
+  // The movement grid may precede this tick's motion; one extra bucket covers
+  // those moving hulls, while the final 3-D distance is always authoritative.
+  for(let x=Math.floor((point[0]-radius)/300)-1;x<=Math.floor((point[0]+radius)/300)+1;x++)for(let z=Math.floor((point[2]-radius)/300)-1;z<=Math.floor((point[2]+radius)/300)+1;z++)for(const enemy of buckets.get(`${x},${z}`)||[]){
+    if(enemy.id===victim.id||enemy.hp<=0)continue;
+    const d=Math.hypot(enemy.x-point[0],enemy.y-point[1],enemy.z-point[2]);
+    const ordinary=splashDamage(base,source,enemy.type,d,radius);
+    if(ordinary<=0||terrainBlocks(b.environment,point,[enemy.x,enemy.y,enemy.z]))continue;
+    const critical=rollCritical(source,enemy.type,randomOnce),power=ordinary*critical.criticalMultiplier;
+    if(critical.critical){blast.critical=true;blast.criticalMultiplier=2;}
+    hurt(b,enemy,power,{source:source.id,kind:contact.kind,splash:true,splashMultiplier:splashMultiplier(source,enemy.type),...critical,damage:power});
+  }
+  return damage;
 }
 function detonateOrdnance(b,s,harmless=false){
   if(s.hp<=0)return;
@@ -170,14 +194,14 @@ function launchRound(b,s,t,order){
   const from=battleMount(s,local),flight=distance(s,t)/speed,aim=[t.x+Math.sin(t.yaw)*t.speed*flight*.7,t.y,t.z+Math.cos(t.yaw)*t.speed*flight*.7],id=b.nextProjectile++;
   const direction=missile?battleMount(s,h?.directions?.[barrel]||[-1,0,0],true):null;
   // Every missile is a real projectile. Spread damage across the equipped launchers.
-  b.projectiles.push({id,source:s.id,target:t.id,side:s.side,kind,secondary,barrel,missile,damage,splashRadius:secondary?0:s.profile.splashRadius||0,splashFraction:secondary?0:s.profile.splashFraction||0,x:from[0],y:from[1],z:from[2],dx:aim[0],dy:aim[1],dz:aim[2],speed,ttl:range/speed+2,age:0,...(direction?{vx:direction[0]*38,vy:direction[1]*38,vz:direction[2]*38}:{})});
+  b.projectiles.push({id,source:s.id,target:t.id,side:s.side,kind,secondary,barrel,missile,damage,splashRadius:s.profile.splashRadius||0,splashMultipliers:{...s.splashMultipliers},x:from[0],y:from[1],z:from[2],dx:aim[0],dy:aim[1],dz:aim[2],speed,ttl:range/speed+2,age:0,...(direction?{vx:direction[0]*38,vy:direction[1]*38,vz:direction[2]*38}:{})});
   if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary,barrel,from,to:aim,projectileId:id,speed,...(direction?{velocity:direction.map(v=>v*38)}:{})});
 }
-function fire(b,s,t,secondary=false){
+function fire(b,s,t,secondary=false,grid){
   if(!secondary&&s.profile.defenseOnly)return false;
   const p=s.profile,auxMissile=secondary==='missile',turret=secondary===true,range=turret?Math.min(800,p.range):auxMissile?p.missileRange??Math.max(1100,p.range):p.range,d=distance(s,t);
   if(s.attack<=0||!weaponSolution(b.environment,s,t,secondary).ready)return false;
-  const multiplier=Math.min(4,1+Math.log2(s.rapid[t.type]||1)*.35),period=turret?1.4:auxMissile?p.missileCooldown:p.cooldown/multiplier;
+  const period=turret?1.4:auxMissile?p.missileCooldown:p.cooldown;
   const missileShare=p.missileShare??.18,secondaryShare=p.secondaryShare??.12,share=turret?secondaryShare:auxMissile?missileShare:1-(p.secondary?secondaryShare:0)-(p.secondaryMissile?missileShare:0);
   const damage=s.attack*commandMultiplier(b,s)*share*(turret?1.4:auxMissile?p.missileCooldown:p.cooldown)/6;
   if(turret)s.secondaryCooldown=period;else if(auxMissile)s.missileCooldown=period;else s.cooldown=period;
@@ -186,7 +210,11 @@ function fire(b,s,t,secondary=false){
   const aim=[t.x+Math.sin(t.yaw)*t.speed*flight*.7,t.y,t.z+Math.cos(t.yaw)*t.speed*flight*.7];
   const from=battleMount(s,p.hardpoints?.main?.[0]),center=[t.x,t.y,t.z],fraction=projectileContact(from,center,center,t.profile.radius+.4)??1;
   const point=from.map((v,i)=>v+(center[i]-v)*fraction);
-  if(beam){if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary:!!secondary,from,to:point,speed});hurt(b,t,damage,{source:s.id,kind,x:point[0],y:point[1],z:point[2]});if(kind==='reaper')s.shield=Math.min(s.maxShield,s.shield+Math.min(damage*.08,s.maxShield*.08));return true;}
+  if(beam){
+    if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary:!!secondary,from,to:point,speed});
+    const directDamage=areaImpact(b,s,t,damage,point,{kind,radius:p.splashRadius},grid);
+    if(kind==='reaper')s.shield=Math.min(s.maxShield,s.shield+Math.min(directDamage*.08,s.maxShield*.08));return true;
+  }
   const missile=auxMissile||!secondary&&p.missile,count=Math.max(1,missile?p.missileSalvo||1:turret?p.hardpoints?.secondary.length||1:p.hardpoints?.main.length||1);
   const ports=p.hardpoints?.tubes.length||count,rotate=missile&&count<ports;
   for(let i=0;i<count;i++){
@@ -199,7 +227,14 @@ function fire(b,s,t,secondary=false){
 }
 export function stepSpatialBattle(b){
   if(b.status!=='active')return;
-  if(b.version<SPATIAL_VERSION){emit(b,'rules-upgrade',{from:b.version,to:SPATIAL_VERSION});b.version=SPATIAL_VERSION;}
+  if(b.version<SPATIAL_VERSION){
+    for(const s of b.ships){
+      s.splashMultipliers??={...s.damageMultipliers??s.rapid};delete s.damageMultipliers;delete s.rapid;
+      Object.assign(s.profile,areaWeaponRules({id:s.type,attack:s.attack,splashMultipliers:s.splashMultipliers}));delete s.profile.splashFraction;delete s.profile.criticalChance;
+    }
+    for(const q of b.projectiles){const s=b.ships[q.source];Object.assign(q,{splashMultipliers:{...s.splashMultipliers},splashRadius:s.profile.splashRadius});delete q.splashFraction;delete q.criticalChance;delete q.criticalMultiplier;}
+    emit(b,'rules-upgrade',{from:b.version,to:SPATIAL_VERSION});b.version=SPATIAL_VERSION;
+  }
   const dt=STEP_MS/1000;b.tick++;
   const manual=new Map();
   // Old active saves acquire permanent stations at their existing lateral/vertical positions.
@@ -216,7 +251,7 @@ export function stepSpatialBattle(b){
     const p=s.profile,input=manual.get(s.id);
     s.cooldown=Math.max(0,s.cooldown-dt);s.secondaryCooldown=Math.max(0,s.secondaryCooldown-dt);s.pdCooldown=Math.max(0,s.pdCooldown-dt);s.missileCooldown=Math.max(0,(s.missileCooldown||0)-dt);
     if(!b.ships[s.target]||b.ships[s.target].hp<=0)s.target=acquire(b,s,grid);
-    else if((b.tick+s.id)%20===0){const candidate=b.ships[acquire(b,s,grid)];if(candidate&&targetScore(s,candidate)<targetScore(s,b.ships[s.target])*.75)s.target=candidate.id;}
+    else if((b.tick+s.id)%20===0&&!committedPass(s,b.ships[s.target])){const candidate=b.ships[acquire(b,s,grid)];if(candidate&&targetScore(s,candidate)<targetScore(s,b.ships[s.target])*.75)s.target=candidate.id;}
     if(input?.target>=0&&b.ships[input.target]?.hp>0)s.target=input.target;
     if(s.temporary){
       if(b.ships[s.carrierId]?.hp<=0){s.hp=0;s.shield=0;emit(b,'destroy',{shipId:s.id,x:s.x,y:s.y,z:s.z,kind:'swarm-expire'});continue;}
@@ -229,37 +264,34 @@ export function stepSpatialBattle(b){
     if(p.special==='antimatter'){moveOrdnance(b,s,t,dt,previous);continue;}
     let desiredSpeed=0,droneGoal=null;
     if(input){
+      s.maneuver=null;
       const intent=input.lock&&t?{...input,heading:Math.atan2(t.x-s.x,t.z-s.z),elevation:Math.atan2(t.y-s.y,Math.hypot(t.x-s.x,t.z-s.z))}:input;
       steerPilot(s,intent,dt);desiredSpeed=input.throttle*p.speed*(input.boost?1.5:1);
     }else if(t||s.temporary){
-      const d=t?distance(s,t):Infinity,goal=s.temporary?swarmGoal(b,s,t):formationGoal(s,t,fronts),close=t?Math.max(22,Math.min(60,(p.length+t.profile.length)*1.5,p.range*.2)):0;
-      let tx=goal.x,ty=goal.y,tz=goal.z;
+      const d=t?distance(s,t):Infinity,goal=s.temporary?swarmGoal(b,s,t):formationGoal(s,t,fronts);
+      const maneuver=combatManeuver(b,s,t,goal);
+      let tx=maneuver?.x??goal.x,ty=maneuver?.y??goal.y,tz=maneuver?.z??goal.z;
       if(b.environment&&!p.ground){
-        if(s.side==='defender')tx=Math.max(300,tx);
-        // Airborne targets must not feed their changing altitude back into each
-        // other's goals. Keep the formation's anchored vertical lane.
-        ty=Math.max(surfaceHeight(b.environment,tx,tz)+100,t?.profile.ground?t.y+100+clamp(s.station.y*.12,-60,60):goal.y);
+        if(s.side==='defender'&&!maneuver)tx=Math.max(300,tx);
+        // A fixed gun needs a descending sight line to a ground target. The
+        // attack-pass break and keepAboveSurface still enforce hull clearance;
+        // aiming permanently 100 units above the target prevents strafing fire.
+        const strafing=maneuver&&p.fixed&&t?.profile.ground&&s.maneuver?.phase==='attack'&&d<p.range*.95;
+        if(!strafing)ty=Math.max(surfaceHeight(b.environment,tx,tz)+100,t?.profile.ground?t.y+100+clamp(s.station.y*.12,-60,60):ty);
         if(s.type==='Bomber'&&t.profile.ground){const run=planetBombingGoal(s,t);tx=run.x;tz=run.z;ty=Math.max(surfaceHeight(b.environment,tx,tz)+120,run.y);}
       }
-      const skirmisher=!s.temporary&&(p.role==='fighter'||p.role==='screen');
-      if(skirmisher&&!goal.assembling&&d<close&&!s.attackRun)s.attackRun={x:s.x+Math.sin(s.yaw)*p.range*.4,y:clamp(s.y+(s.id%2?1:-1)*45,-600,600),z:s.z+Math.cos(s.yaw)*p.range*.4,until:b.tick+60};
-      if(s.attackRun&&(b.tick>s.attackRun.until||Math.hypot(s.attackRun.x-s.x,s.attackRun.y-s.y,s.attackRun.z-s.z)<p.speed*.25))s.attackRun=null;
-      if(s.attackRun){tx=s.attackRun.x;ty=s.attackRun.y;tz=s.attackRun.z;}
       ty=clamp(ty,-600,600);
-      const error=Math.hypot(tx-s.x,ty-s.y,tz-s.z),holding=!s.attackRun&&error<Math.max(3,s.station.spacing*.12);
+      const error=Math.hypot(tx-s.x,ty-s.y,tz-s.z),holding=!maneuver&&error<Math.max(3,s.station.spacing*.12);
       if(s.temporary)droneGoal={x:tx,y:ty,z:tz,error};
-      const gunRun=p.role==='line'&&d<=p.range*.9&&!terrainBlocks(b.environment,[s.x,s.y,s.z],[t.x,t.y,t.z]);
-      const aim=t&&(holding||gunRun||s.temporary&&d<p.range*.9)?[t.x,t.y,t.z]:[tx,ty,tz];
+      const aim=t&&(holding||s.temporary&&d<p.range*.9)?[t.x,t.y,t.z]:[tx,ty,tz];
       // Turret ships hold a stable hull while their weapons track the enemy.
-      const steady=(holding||gunRun)&&!p.fixed&&!skirmisher;
+      const steady=holding&&!p.fixed;
       const yaw=steady?s.yaw:Math.atan2(aim[0]-s.x,aim[2]-s.z),pitch=steady?0:clamp(Math.atan2(aim[1]-s.y,Math.hypot(aim[0]-s.x,aim[2]-s.z)),-1.2,1.2);
+      const turn=angle(yaw-s.yaw);
       steer(s,yaw,pitch,dt);
-      s.roll=(s.roll||0)*Math.exp(-dt*2);
-      desiredSpeed=holding?0:Math.min(p.speed,error*.7)*Math.max(0,Math.cos(angle(yaw-s.yaw)))*Math.max(0,Math.cos(pitch-s.pitch));
-      if(gunRun){
-        // Hold the firing line instead of turning the spinal guns away to readjust spacing.
-        desiredSpeed=0;
-      }
+      const bank=maneuver?.bank?clamp(-turn*.8,-.85,.85):0;
+      s.roll=(s.roll||0)+(bank-(s.roll||0))*(1-Math.exp(-dt*3));
+      desiredSpeed=maneuver?maneuver.speed:holding?0:Math.min(p.speed,error*.7)*Math.max(0,Math.cos(angle(yaw-s.yaw)))*Math.max(0,Math.cos(pitch-s.pitch));
 
     }
     const handling=input?pilotHandling(p):{braking:1,acceleration:.7};
@@ -286,17 +318,21 @@ export function stepSpatialBattle(b){
         if(Math.abs(s.y-other.y)>=gap)continue;
         const dx=s.x-other.x,dz=s.z-other.z;if(Math.abs(dx)>=gap||Math.abs(dz)>=gap)continue;
         const d=Math.hypot(dx,dz);
-        if(d<gap){const push=Math.min(p.speed*dt*.3,(gap-d)*.15),sign=s.id<other.id?-1:1;s.x+=(d?dx/d:sign)*push;s.z+=(d?dz/d:0)*push;}
+        if(d<gap){const push=Math.min(p.speed*dt,(gap-d)*.5),sign=s.id<other.id?-1:1;s.x+=(d?dx/d:sign)*push;s.z+=(d?dz/d:0)*push;}
       }
     }
     const edge=b.boundary;if(!p.ground&&(Math.abs(s.x)>edge||Math.abs(s.z)>edge||Math.abs(s.y)>700)){s.x=clamp(s.x,-edge,edge);s.z=clamp(s.z,-edge,edge);s.y=clamp(s.y,-700,700);s.speed=0;steer(s,Math.atan2(-s.x,-s.z),0,dt);}
     if(t){
-      if(s.cooldown<=0&&(!input||(!p.fixed&&!p.missile)||(p.missile?input.missile||input.fire:input.fire)))fire(b,s,t);
-      if(p.secondary&&s.secondaryCooldown<=0)fire(b,s,t,true);
-      if(p.secondaryMissile&&s.missileCooldown<=0&&(!input||input.missile))fire(b,s,t,'missile');
+      if(s.cooldown<=0&&(!input||(!p.fixed&&!p.missile)||(p.missile?input.missile||input.fire:input.fire)))fire(b,s,t,false,grid);
+      if(p.secondary&&s.secondaryCooldown<=0)fire(b,s,t,true,grid);
+      if(p.secondaryMissile&&s.missileCooldown<=0&&(!input||input.missile))fire(b,s,t,'missile',grid);
     }
   }
-  b.salvos=(b.salvos||[]).filter(order=>{const s=b.ships[order.source],t=b.ships[order.target];if(s.hp<=0||t.hp<=0)return false;if(order.tick>b.tick)return true;launchRound(b,s,t,order);return false;});
+  b.salvos=(b.salvos||[]).filter(order=>{const s=b.ships[order.source],t=b.ships[order.target];if(s.hp<=0||t.hp<=0)return false;if(order.tick>b.tick)return true;
+    // A queued coaxial barrel cannot keep firing sideways after the hull turns
+    // out of its sight line. Turret and guided-missile salvos keep their tracking.
+    if(!order.secondary&&!order.missile&&s.profile.fixed&&!weaponSolution(b.environment,s,t).ready)return false;
+    launchRound(b,s,t,order);return false;});
   const remaining=[],collisionGrid=gridFor(b);
   const padding=b.ships.reduce((max,s)=>Math.max(max,s.profile.radius+.4+distance(s,{x:previous[s.id][0],y:previous[s.id][1],z:previous[s.id][2]})),0);
   for(const q of b.projectiles){
@@ -321,17 +357,8 @@ export function stepSpatialBattle(b){
       }
     }
     if(victim){
-      const point=from.map((v,i)=>v+(to[i]-v)*first),contact={source:q.source,kind:q.kind,x:point[0],y:point[1],z:point[2]};
-      hurt(b,victim,q.damage,{...contact,projectileId:q.id});
-      const radius=q.splashRadius||0;
-      if(radius>0&&q.splashFraction>0){
-        emit(b,'blast',{...contact,radius});
-        for(let x=Math.floor((point[0]-radius)/300);x<=Math.floor((point[0]+radius)/300);x++)for(let z=Math.floor((point[2]-radius)/300);z<=Math.floor((point[2]+radius)/300);z++)for(const enemy of g.get(`${x},${z}`)||[]){
-          if(enemy.id===victim.id||enemy.hp<=0)continue;
-          const d=Math.hypot(enemy.x-point[0],enemy.y-point[1],enemy.z-point[2]);
-          if(d<radius)hurt(b,enemy,q.damage*q.splashFraction*(1-d/radius),{source:q.source,kind:q.kind,splash:true});
-        }
-      }
+      const point=from.map((v,i)=>v+(to[i]-v)*first),source=b.ships[q.source];
+      areaImpact(b,{...source,splashMultipliers:q.splashMultipliers??source.splashMultipliers},victim,q.damage,point,{kind:q.kind,projectileId:q.id,radius:q.splashRadius},collisionGrid);
       continue;
     }
     if(len<=move&&!q.missile)continue;remaining.push(q);
@@ -344,7 +371,7 @@ export function stepSpatialBattle(b){
   else if(b.tick%40===0||b.swarmChangedTick===b.tick)recordFrame(b);
 }
 export function advanceSpatialBattle(b,to){const tick=Math.min(MAX_BATTLE_MS/STEP_MS,Math.floor((to-b.start)/STEP_MS));while(b.status==='active'&&b.tick<tick)stepSpatialBattle(b);return b;}
-export function packedShips(b){return b.ships.map(s=>[s.id,Math.round(s.x*10)/10,Math.round(s.y*10)/10,Math.round(s.z*10)/10,Math.round(s.yaw*1000)/1000,Math.round(s.pitch*1000)/1000,Math.round(s.hp*100)/100,Math.round(s.shield*100)/100,s.target,Math.round(s.speed*10)/10,Math.round(s.cooldown*100)/100,Math.round((s.missileCooldown||0)*100)/100,Math.round((s.roll||0)*1000)/1000,...(s.profile.ground?[s.turretYaw??s.yaw,s.turretPitch??0]:[])]);}
+export function packedShips(b){return b.ships.map(s=>[s.id,Math.round(s.x*10)/10,Math.round(s.y*10)/10,Math.round(s.z*10)/10,Math.round(s.yaw*1000)/1000,Math.round(s.pitch*1000)/1000,Math.round(s.hp*100)/100,Math.round(s.shield*100)/100,s.target,Math.round(s.speed*10)/10,Math.round(s.cooldown*100)/100,Math.round((s.missileCooldown||0)*100)/100,Math.round((s.roll||0)*1000)/1000,...(s.profile.ground?[s.turretYaw??s.yaw,s.turretPitch??0]:[])].map(v=>v===0?0:v));}
 export function recordFrame(b){const frame={tick:b.tick,ships:packedShips(b),carriers:carrierSnapshot(b)};if(b.frames.at(-1)?.tick===b.tick)b.frames[b.frames.length-1]=frame;else b.frames.push(frame);}
 export function spatialMetadata(b){return b.ships.map(s=>({id:s.id,type:s.type,side:s.side,owner:s.owner,batch:s.batch,formation:s.formation,maxHp:s.maxHp,maxShield:s.maxShield,profile:s.profile,...(s.temporary?{temporary:true,carrierId:s.carrierId,bornTick:s.bornTick}:{}),...(s.fortressSlot?{fortressSlot:s.fortressSlot}:{})}));}
 export function spatialSnapshot(b,{since=0,metadata=true,planet={}}={}){return {...battleSummary(b,planet),tick:b.tick,boundary:b.boundary,ships:packedShips(b),carriers:carrierSnapshot(b),...(metadata?{metadata:spatialMetadata(b)}:{}),projectiles:b.projectiles.filter((q,i)=>i%Math.max(1,Math.ceil(b.projectiles.length/600))===0),specialBlasts:(b.specialBlasts||[]).map(({source,x,y,z,tick,radius,harmless})=>({source,x,y,z,tick,radius,harmless})),controls:b.controls,eventSeq:b.eventSeq,events:b.events.slice(Math.max(0,b.events.length-2000)).filter(e=>e.seq>since&&e.tick>=b.tick-40&&e.type!=='input')};}

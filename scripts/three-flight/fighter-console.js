@@ -8,8 +8,8 @@ export const fighterDisplays=[
  {id:'systems',pos:[1.38,-.73,-2.08],size:[.52,.48],rotation:[-.17,-.32,0]}
 ];
 export function consolePoint(panel,[x,y,z=0]){
- const [pitch,yaw]=panel.rotation,cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),yy=y*cp-z*sp,zz=y*sp+z*cp;
- return [panel.pos[0]+x*cy+zz*sy,panel.pos[1]+yy,panel.pos[2]-x*sy+zz*cy];
+ const [pitch,yaw,roll=0]=panel.rotation,cr=Math.cos(roll),sr=Math.sin(roll),xx=x*cr-y*sr,xy=x*sr+y*cr,cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),yy=xy*cp-z*sp,zz=xy*sp+z*cp;
+ return [panel.pos[0]+xx*cy+zz*sy,panel.pos[1]+yy,panel.pos[2]-xx*sy+zz*cy];
 }
 const dot=(a,b)=>a.reduce((sum,v,i)=>sum+v*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]);
 export function consoleIntersection(origin,direction,panels=fighterDisplays){

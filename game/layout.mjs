@@ -10,7 +10,7 @@ export const FIXED_PLOTS = {...DEFAULT_LAYOUT};
 export const MOON_LAYOUT = {
   Moon_Base:[800,430],Robotics_Facility:[580,620],Shipyard:[1130,710],
   Metal_Storage:[400,300],Crystal_Storage:[1170,300],Gas_Storage:[390,850],
-  The_EU_X_Radar:[920,850],Wormhole_Generator:[650,880]
+  The_EU_X_Radar:[920,850],Wormhole_Generator:[650,880],Flagship_Center:[1150,510],Missile_Silo:[800,650]
 };
 export function getLayout(planet){
   const defaults=planet.moon?MOON_LAYOUT:DEFAULT_LAYOUT,result={};

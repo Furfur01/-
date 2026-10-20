@@ -1,18 +1,19 @@
 // Model geometry is generated once from the same model factories used by the archive.
 // Model-local positions, joints and nozzles have already been converted at that boundary.
-export function mergeFleetAssets(data, vertices, extra, extraVertices) {
+import {shipCabinSeat} from '../../game/ship-cabins.mjs';
+export function mergeFleetAssets(data, vertices, extra, extraVertices, {shipsOnly=false}={}) {
   const fleet = {...data, ships: data.ships.map(ship => ({...ship})), layouts: [...data.layouts], profiles: [...data.profiles], vertices};
   const assets = {...extra, vertices: extraVertices};
   const known = new Set(data.ships.map(ship => ship.id));
-  const missing = extra.ships.filter(ship => !known.has(ship.id));
+  const missing = extra.ships.filter(ship => !known.has(ship.id)&&(!shipsOnly||!ship.profile.ground));
   const combined = new Float32Array(vertices.length + missing.reduce((sum, ship) => sum + ship.full.floatCount, 0));
   combined.set(vertices);
   let offset = vertices.length;
   for (const ship of missing) {
     combined.set(extraVertices.subarray(ship.full.offset, ship.full.offset + ship.full.floatCount), offset);
-    fleet.ships.push({id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: 'FLEET', serial: '', count: 0, stats: ship.stats, statsSource: '实时战斗', levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length});
-    fleet.layouts.push(ship.layout);
-    fleet.profiles.push({...data.profiles[2], role: ship.name, className: ship.id.toUpperCase(), relativeLength: ship.length, capital: ship.profile.role !== 'fighter', maxSpeed: ship.profile.speed * 8, turnRate: ship.profile.turn, primaryName: '舰载主武器', primaryKind: ship.profile.kind, beam: ship.profile.beam, mainCooldown: ship.profile.cooldown, salvo: 0, missileCapacity: 0, fixedPrimary: ship.profile.fixed, defenseOnly: ship.stats[2] === 0});
+    fleet.ships.push({id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: 'FLEET', serial: '', count: 0, stats: ship.stats, combatRules:ship.combatRules, statsSource: '实时战斗', levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length});
+    fleet.layouts.push({...ship.layout,bridge:shipCabinSeat(ship.id,ship.layout)});
+    fleet.profiles.push({...data.profiles[2], role: ship.name, className: ship.id.toUpperCase(), length:'舰长比例 '+Math.round(ship.length), relativeLength: ship.length, ground:!!ship.profile.ground, capital: ship.profile.role !== 'fighter', maxSpeed: ship.profile.speed * 8, turnRate: ship.profile.turn, primaryName: ship.profile.primaryName||'舰载主武器', primaryKind: ship.profile.kind, beam: ship.profile.beam, projectileSpeed:ship.profile.projectileSpeed, mainCooldown: ship.profile.cooldown, chargeTime:0, salvo: 0, missileCapacity: 0, turretDamage:0, secondary:null, fixedPrimary: ship.profile.fixed, defenseOnly: ship.stats[2] === 0});
     offset += ship.full.floatCount;
   }
   fleet.vertices = combined;
@@ -29,9 +30,9 @@ export async function loadFleetAssets({base = 'three-flight-assets/', signal, in
     read('flight-fleet.json'), read('flight-fleet.bin', true),
     read('battle-fleet.json'), read('battle-fleet.bin', true),
   ]);
-  // The independent practice range offers the same piloted hulls as before.
-  // Battle/replay rendering additionally needs cargo, defenses and the basic Death Star hull.
+  // Every archive ship keeps its own hull in the range. Ground installations
+  // are only added for battle/replay rendering.
   return includeBattleModels
-    ? mergeFleetAssets(data, vertices, extra, extraVertices)
+    ? mergeFleetAssets(data, vertices, extra, extraVertices,{shipsOnly:includeBattleModels==='ships'})
     : {fleet: {...data, vertices}, assets: {...extra, vertices: extraVertices}};
 }

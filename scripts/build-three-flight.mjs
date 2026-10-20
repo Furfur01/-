@@ -4,6 +4,8 @@ import {createHash} from 'node:crypto';
 import {build} from 'esbuild';
 import {freezeWebGLBaseline} from './freeze-webgl-baseline.mjs';
 import {writeBuildFile} from './write-build-file.mjs';
+import {units} from '../game/catalog.mjs';
+import {combatProfile} from '../game/spatial-profiles.mjs';
 
 const root=path.resolve(import.meta.dirname,'..');
 export async function buildThreeFlight(){
@@ -12,7 +14,13 @@ export async function buildThreeFlight(){
   const assets=path.join(out,'three-flight-assets');fs.mkdirSync(assets,{recursive:true});
   const hash=createHash('sha256');
   for(const name of ['flight-fleet.json','flight-fleet.bin','battle-fleet.json','battle-fleet.bin']){
-    const bytes=fs.readFileSync(path.join(out,name));writeBuildFile(path.join(assets,name),bytes);hash.update(bytes);
+    let bytes=fs.readFileSync(path.join(out,name));
+    if(name.endsWith('.json')){
+      const data=JSON.parse(bytes);
+      for(const ship of data.ships){const u=units[ship.id];if(!u)continue;ship.combatRules={splashMultipliers:u.splashMultipliers,splashRadius:u.splashRadius,criticalChances:u.criticalChances,criticalMultiplier:u.criticalMultiplier};if(ship.profile)ship.profile=combatProfile(u);}
+      bytes=Buffer.from(JSON.stringify(data));
+    }
+    writeBuildFile(path.join(assets,name),bytes);hash.update(bytes);
   }
   const result=await build({entryPoints:[path.join(source,'entry.js')],bundle:true,format:'esm',target:'es2022',sourcemap:true,write:false,outfile:path.join(out,'three-flight.bundle.js')});
   for(const file of result.outputFiles){writeBuildFile(file.path,file.contents);hash.update(file.contents);}

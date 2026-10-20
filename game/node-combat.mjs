@@ -1,4 +1,7 @@
 import {units} from './catalog.mjs';
+import {areaWeaponRules,splashDamage,criticalChance} from './damage-amplification.mjs';
+import {fleetStations} from './fleet-formation.mjs';
+import {combatProfile} from './spatial-profiles.mjs';
 
 const SIDES=['attacker','defender'],MAX_COHORTS=2048,ROUNDS=100,INTERVAL=6,IMPACT_DELAY=.75;
 function random(seed){let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
@@ -29,15 +32,17 @@ function setup(fleet,technology,definitions){
   const total=entries.reduce((n,[,count])=>n+count,0);
   if(!Number.isSafeInteger(total))throw new Error('参战舰队总数超出安全整数范围');
   const budget=MAX_COHORTS-entries.length,cohorts=[];
+  const groupCounts=new Map(entries.map(([id,count])=>[id,total<=MAX_COHORTS?count:Math.min(count,1+Math.floor(count/total*budget))]));
+  const stations=fleetStations([...groupCounts],id=>combatProfile({...units[id],...definitions[id]}));
   for(const[id,count]of entries){
-    const unit=definitions[id]||units[id];
+    const unit={...units[id],...definitions[id]};
     const maxHp=unit.strength*(1+(technology.Strength_Tech||0)*.1);
     const maxShield=unit.shield*(1+(technology.Shielding_Tech||0)*.1);
     const attack=unit.attack*(1+(technology.Weapons_Tech||0)*.1);
     if(![maxHp,maxShield,maxHp+maxShield,attack].every(Number.isFinite)||maxHp<=0||maxShield<0||attack<0)throw new Error('无效的战斗单位属性');
-    const groups=total<=MAX_COHORTS?count:Math.min(count,1+Math.floor(count/total*budget));
+    const groups=groupCounts.get(id);
     const quotient=Math.floor(count/groups),remainder=count%groups;
-    for(let i=0;i<groups;i++)cohorts.push({id,count:quotient+(i<remainder?1:0),maxHp,maxShield,attack,hp:maxHp,shield:maxShield});
+    for(let i=0;i<groups;i++){const p=stations.get(id)[i];cohorts.push({id,count:quotient+(i<remainder?1:0),maxHp,maxShield,attack,splashMultipliers:unit.splashMultipliers,...areaWeaponRules(unit),x:p.depth,y:p.y,z:p.z,hp:maxHp,shield:maxShield});}
   }
   return {cohorts,total};
 }
@@ -50,21 +55,21 @@ function snapshot(teams){
 }
 
 function targets(cohorts){
-  const list=cohorts.filter(c=>c.count>0),cumulative=[],counts={};let total=0;
-  for(const c of list){total+=c.count;cumulative.push(total);counts[c.id]=(counts[c.id]||0)+c.count;}
-  return {list,cumulative,total,counts};
+  const list=cohorts.filter(c=>c.count>0),cumulative=[],grid=new Map();let total=0;
+  for(const c of list){total+=c.count;cumulative.push(total);const key=[c.x,c.y,c.z].map(v=>Math.floor(v/60)).join(',');if(!grid.has(key))grid.set(key,[]);grid.get(key).push(c);}
+  return {list,cumulative,total,grid};
+}
+
+function nearby(table,target,radius){
+  const found=[];
+  for(let x=Math.floor((target.x-radius)/60);x<=Math.floor((target.x+radius)/60);x++)for(let y=Math.floor((target.y-radius)/60);y<=Math.floor((target.y+radius)/60);y++)for(let z=Math.floor((target.z-radius)/60);z<=Math.floor((target.z+radius)/60);z++)for(const c of table.grid.get(`${x},${y},${z}`)||[])found.push(c);
+  return found;
 }
 
 function choose(table,fraction){
   const value=fraction*table.total;let lo=0,hi=table.list.length-1;
   while(lo<hi){const mid=(lo+hi)>>>1;if(table.cumulative[mid]>value)hi=mid;else lo=mid+1;}
   return table.list[lo];
-}
-
-function rapidMean(id,table){
-  let stopping=0;const rapid=units[id].rapid;
-  for(const[target,count]of Object.entries(table.counts))stopping+=count/table.total/Math.max(1,rapid[target]||1);
-  return 1/stopping;
 }
 
 function hash(value){let h=2166136261;for(const c of JSON.stringify(value)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
@@ -79,7 +84,7 @@ export function simulateBattle(request){
   }
   const rng=random(request.seed),teams=SIDES.map(side=>setup(request.initial[side],request.technology[side]||{},request.unitStats||{}));
   const grouped=teams.some(t=>t.cohorts.some(c=>c.count>1));
-  const rounds=[];let before=snapshot(teams),duration=.25,shotCount=0,rapidTailMerged=false;
+  const rounds=[];let before=snapshot(teams),duration=.25,shotCount=0,criticalCount=0,splashCount=0;
   for(let number=1;number<=ROUNDS;number++){
     const tables=teams.map(t=>targets(t.cohorts));
     if(!tables[0].total||!tables[1].total){rounds.push({number,time:duration,before,after:before});break;}
@@ -88,28 +93,30 @@ export function simulateBattle(request){
     for(const team of teams)for(const c of team.cohorts)if(c.count)c.shield=c.maxShield;
     const packets=[];
     for(let side=0;side<2;side++){
-      const enemy=tables[1-side],means=new Map();
+      const enemy=tables[1-side];
       for(const source of teams[side].cohorts){
         if(!source.count||source.attack<=0)continue;
-        if(source.count===1){
-          let follow=true,chain=0;
-          while(follow&&chain<64){
-            const target=choose(enemy,rng());packets.push([target,source.attack,1]);shotCount++;chain++;
-            const rapid=Math.max(1,units[source.id].rapid[target.id]||1);
-            follow=rapid>1&&rng()<1-1/rapid;
-          }
-          if(!follow)continue;
-          rapidTailMerged=true;
-        }
-        if(!means.has(source.id))means.set(source.id,rapidMean(source.id,enemy));
-        const mean=means.get(source.id);
-        // shortcut: large fleets and long rapid-fire tails merge projectiles;
-        // retain per-ship simulation when formation-level positioning is needed.
-        const expected=source.count===1?(mean<=1?1:Math.max(1,Math.ceil(Math.log(1-rng())/Math.log(1-1/mean)))):source.count*mean;
-        const shots=Math.floor(expected)+(rng()<expected%1?1:0);
-        const samples=Math.min(shots,enemy.list.length,source.count===1?128:16);
+        const shots=source.count,samples=Math.min(shots,enemy.list.length,16);
         const offset=rng(),base=Math.floor(shots/samples),remainder=shots%samples;
-        for(let i=0;i<samples;i++)packets.push([choose(enemy,(i+offset)/samples),source.attack,base+(i<remainder?1:0)]);
+        for(let i=0;i<samples;i++){
+          const target=choose(enemy,(i+offset)/samples),count=base+(i<remainder?1:0);
+          // One random sample per impact, compared against each victim's own
+          // 1 - 1/r chance. Large salvos retain the expected critical count.
+          let sample,blastCrits=0;
+          const packet=(victim,power,members=1)=>{
+            const expected=count*criticalChance(source,victim.id),crits=Math.floor(expected)+(expected%1>0&&(sample??=rng())<expected%1?1:0);
+            blastCrits=Math.max(blastCrits,crits);
+            if(count>crits)packets.push([victim,power,(count-crits)*members]);
+            if(crits)packets.push([victim,power*2,crits*members]);
+          };
+          packet(target,source.attack);
+          if(source.splashRadius>0)for(const victim of nearby(enemy,target,source.splashRadius)){
+            const members=victim.count-(victim===target?1:0);if(members<=0)continue;
+            const power=splashDamage(source.attack,source,victim.id,Math.hypot(victim.x-target.x,victim.y-target.y,victim.z-target.z),source.splashRadius);
+            if(power>0){packet(victim,power,members);splashCount+=count*members;}
+          }
+          criticalCount+=blastCrits;
+        }
         shotCount+=shots;
       }
     }
@@ -123,7 +130,7 @@ export function simulateBattle(request){
   const survivors=snapshot(teams),alive=SIDES.map(side=>Object.keys(survivors[side]).length>0);
   for(const side of SIDES)for(const[id,count]of Object.entries(survivors[side]))if(!Number.isSafeInteger(count)||count<0||count>request.initial[side][id])throw new Error('战斗结算产生无效舰船数量');
   const winner=alive[0]&&!alive[1]?'attacker':alive[1]&&!alive[0]?'defender':'draw';
-  const simulation={implementation:'node-v1',spatial:false,grouped,cohorts:teams.map(t=>t.cohorts.length),cohortLimitPerSide:MAX_COHORTS,rapidTailMerged,shotCount};
+  const simulation={implementation:'node-v3-splash',spatial:false,formation:'stationary-cohorts',grouped,cohorts:teams.map(t=>t.cohorts.length),cohortLimitPerSide:MAX_COHORTS,shotCount,criticalCount,splashCount};
   // Keep this legacy report discriminator; implementation is explicitly Node.
   return {engine:'sandbox-v1',sandbox:{version:2,runtime:'node',volleyInterval:INTERVAL,shieldInterval:INTERVAL,impactDelay:IMPACT_DELAY,maxDuration:ROUNDS*INTERVAL},simulation,rounds,survivors,winner,duration,stateHash:hash([survivors,teams.map(t=>t.cohorts.map(c=>[c.count,c.hp,c.shield])),shotCount,request.seed])};
 }

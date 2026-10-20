@@ -1,0 +1,116 @@
+{
+  "status": "Former rapid-fire values; converted 1:1 to direct damage multipliers on 2026-10-19",
+  "matrix": {
+    "Cargo_Ship": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Large_Cargo_Ship": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Colony_Ship": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Recycler": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Probe": {},
+    "Solar_Satellite": {},
+    "Light_Fighter": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Heavy_Fighter": {
+      "Probe": 5,
+      "Solar_Satellite": 5,
+      "Cargo_Ship": 3
+    },
+    "Cruiser": {
+      "Light_Fighter": 6,
+      "Rocket_Launcher": 10,
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Battleship": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Dreadnought": {
+      "Battleship": 10,
+      "Cruiser": 4,
+      "Heavy_Fighter": 4,
+      "Large_Cargo_Ship": 3,
+      "Cargo_Ship": 3,
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Bomber": {
+      "Rocket_Launcher": 20,
+      "Light_Laser": 20,
+      "Heavy_Laser": 10,
+      "Ion_Cannon": 10,
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Destroyer": {
+      "Dreadnought": 2,
+      "Light_Laser": 10,
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Rocket_Launcher": {},
+    "Light_Laser": {},
+    "Heavy_Laser": {},
+    "MK2_Cannon": {},
+    "Ion_Cannon": {},
+    "Plasma_Cannon": {},
+    "Small_Shield_Dome": {},
+    "Large_Shield_Dome": {},
+    "Interceptor": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Titanenergetic_Frigate": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Devourer_Interceptor": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Iron_Behemoth": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Reaper": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Annihilator": {
+      "Probe": 5,
+      "Solar_Satellite": 5
+    },
+    "Death_Star": {
+      "Dreadnought": 15,
+      "Large_Cargo_Ship": 250,
+      "Colony_Ship": 250,
+      "Solar_Satellite": 1250,
+      "Light_Fighter": 200,
+      "Rocket_Launcher": 20,
+      "Cargo_Ship": 250,
+      "Cruiser": 33,
+      "Probe": 5,
+      "Destroyer": 5
+    },
+    "Guardian": {
+      "Dreadnought": 2,
+      "Destroyer": 2,
+      "Death_Star": 10
+    },
+    "Interceptor_Missile": {},
+    "Interplanetary_Missile": {}
+  }
+}

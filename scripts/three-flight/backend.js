@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {geometryFromNative,createVisualShaderMaterial} from './shared-resources.js';
+import {hullShadingGLSL} from './hull-shading.js';
 
 // The packed asset format is shared with the model builder: xyz, normal, rgb,
 // emission, material tag, uv. No second model conversion occurs in the browser.
@@ -15,17 +16,21 @@ const MAIN_DEFAULTS = {
   uOpacity:1,uSelected:-10,uMode:0,uWire:0,uTime:0,uExposure:1,uTint:[1,1,1],
   uNearFade:0,uFighter:0,uShellOffset:0,uImpact:[0,0,0,0],uShield:[1,0],uTexture:null,uTeamColor:[.086,.545,.922],
 };
-const fleetVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aTag,aEmission;uniform vec3 teamColor;uniform mat4 vp;varying vec3 color;
-void main(){vec3 normal=normalize(mat3(instanceMatrix)*aNormal);
-float light=.68+.72*max(0.,dot(normal,normalize(vec3(-.5,.9,.7))))+.2*max(0.,dot(normal,normalize(vec3(.8,-.1,-.7))));
-vec3 base=abs(aTag-77.)<.1?teamColor:aColor;color=pow(base,vec3(.85))*mix(light,1.2,clamp(aEmission,0.,1.));gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
-const fleetFragment = 'varying vec3 color;uniform vec3 tint;void main(){gl_FragColor=vec4(color*tint,1.);}';
+const fleetVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aTag,aEmission;uniform vec3 teamColor;uniform mat4 vp;
+varying vec3 color,surfaceNormal,worldPosition;varying float emission;
+void main(){surfaceNormal=mat3(cross(instanceMatrix[1].xyz,instanceMatrix[2].xyz),cross(instanceMatrix[2].xyz,instanceMatrix[0].xyz),cross(instanceMatrix[0].xyz,instanceMatrix[1].xyz))*aNormal;
+color=abs(aTag-77.)<.1?teamColor:aColor;emission=aEmission;
+vec4 world=instanceMatrix*vec4(aPosition,1.);worldPosition=world.xyz;gl_Position=vp*world;}`;
+const fleetFragment = `varying vec3 color,surfaceNormal,worldPosition;varying float emission;uniform vec3 tint,uLight;
+${hullShadingGLSL}
+void main(){vec3 normal=normalize(surfaceNormal);if(!gl_FrontFacing)normal=-normal;
+gl_FragColor=vec4(hullOutput(shadeHull(color*tint,normal,normalize(-worldPosition),normalize(uLight),emission)),1.);}`;
 const fortressVertex = `attribute vec3 aPosition,aNormal,aColor;attribute float aEmission;uniform mat4 vp;
 varying vec3 color,localPosition,surfaceNormal;varying float emission;
 void main(){surfaceNormal=normalize(mat3(instanceMatrix)*aNormal);localPosition=aPosition;color=aColor;emission=aEmission;gl_Position=vp*instanceMatrix*vec4(aPosition,1.);}`;
-const fortressFragment = `varying vec3 color,localPosition,surfaceNormal;varying float emission;uniform vec3 tint;
+const fortressFragment = `varying vec3 color,localPosition,surfaceNormal;varying float emission;uniform vec3 tint,uLight;
 float grain(vec3 p){return fract(sin(dot(p,vec3(17.13,93.71,41.37)))*43758.5453);}
-void main(){vec3 n=normalize(surfaceNormal);float key=max(0.,dot(n,normalize(vec3(-.5,.9,.7))));
+void main(){vec3 n=normalize(surfaceNormal);float key=max(0.,dot(n,normalize(uLight)));
 float noise=grain(floor(localPosition*3.));float stain=grain(floor(localPosition*vec3(.18,.06,.18)));
 float seams=step(.35,mod(localPosition.y+1.,9.));
 float weather=(.86+.1*noise+.06*stain)*mix(.78,1.,seams);
@@ -41,8 +46,10 @@ vec2 st=vec2(fract(atan(d.z,d.x)/6.28318530718+.5),acos(clamp(d.y,-1.,1.))/3.141
 vec4 tex=texture2D(image,st);vec3 c=tex.rgb*tex.a*16.*exposure;
 c=clamp((c*(2.51*c+.03))/(c*(2.43*c+.59)+.14),0.,1.);gl_FragColor=vec4(pow(c,vec3(1./2.2)),1.);}`;
 
-const material = (vertexShader,fragmentShader,defaults={}) => createVisualShaderMaterial(vertexShader,fragmentShader,Object.fromEntries(Object.entries(defaults).map(([k,v])=>[k,{value:v}])),{
+const material = (vertexShader,fragmentShader,defaults={},colorManaged=false) => createVisualShaderMaterial(vertexShader,fragmentShader,Object.fromEntries(Object.entries(defaults).map(([k,v])=>[k,{value:v}])),{
   raw:false,
+  logarithmicDepth:true,colorManaged,
+  defines:colorManaged?{}:{HULL_OUTPUT_SRGB:1},
   transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:true,
   // Preserve the native renderer's LESS test and blendFunc factors for both
   // RGB and alpha; Three's standard blends otherwise use a different alpha source.
@@ -50,29 +57,36 @@ const material = (vertexShader,fragmentShader,defaults={}) => createVisualShader
   blendEquation:THREE.AddEquation,blendEquationAlpha:THREE.AddEquation,
   blendSrc:THREE.SrcAlphaFactor,blendSrcAlpha:THREE.SrcAlphaFactor,
   blendDst:THREE.OneMinusSrcAlphaFactor,blendDstAlpha:THREE.OneMinusSrcAlphaFactor,
-  toneMapped:false,premultipliedAlpha:false,forceSinglePass:true,
+  premultipliedAlpha:false,forceSinglePass:true,
 });
 
 export class ThreeRenderBackend {
-  constructor(canvas, shaders, assets) {
+  constructor(canvas, shaders, assets, options={}) {
     this.canvas=canvas;this.shaders=shaders;this.assets=assets;
-    this.three=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'high-performance'});
+    this.managed=!!options.managed;
+    if(this.managed&&(!options.renderer||!options.scene||!options.camera))throw new Error('Managed fleet requires a shared renderer, scene and camera');
+    this.ownsRenderer=!options.renderer;
+    this.three=options.renderer||new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'high-performance'});
     this.gl=this.three.getContext();
-    this.three.autoClear=false;
-    this.three.outputColorSpace=THREE.LinearSRGBColorSpace;
-    this.three.toneMapping=THREE.NoToneMapping;
-    this.three.info.autoReset=false;
-    this.scene=new THREE.Scene();this.overlay=new THREE.Scene();this.camera=new THREE.Camera();
-    this.camera.matrixAutoUpdate=false;
-    this.meshPools=new Map();this.dynamicPools=new Map();this.instanceBatches=new Map();
+    if(this.ownsRenderer){
+      this.three.autoClear=false;
+      this.three.outputColorSpace=THREE.LinearSRGBColorSpace;
+      this.three.toneMapping=THREE.NoToneMapping;
+      this.three.info.autoReset=false;
+    }
+    this.scene=this.managed?new THREE.Group():new THREE.Scene();this.scene.name='world-fleet';
+    this.worldScene=options.scene||this.scene;if(this.managed)this.worldScene.add(this.scene);
+    this.overlay=new THREE.Scene();this.camera=options.camera||new THREE.Camera();
+    if(!options.camera)this.camera.matrixAutoUpdate=false;
+    this.meshPools=new Map();this.dynamicPools=new Map();this.instanceBatches=new Map();this.effectBatches=new Map();
     this.materials=new Map();this.geometryResources=new Set();this.textures=new Set();this.lowMeshes=new Map();
     this.shaderErrors=[];
-    this.three.debug.onShaderError=(gl,program,vertex,fragment)=>{
+    if(this.ownsRenderer)this.three.debug.onShaderError=(gl,program,vertex,fragment)=>{
       const error=[gl.getProgramInfoLog(program),gl.getShaderInfoLog(vertex),gl.getShaderInfoLog(fragment)].filter(Boolean).join('\n');
       this.shaderErrors.push(error);console.error('Three.js shader compilation failed',error);
     };
     this._onContextLost=e=>{e.preventDefault();const message=document.getElementById('no-webgl'),detail=document.getElementById('webgl-error');if(message)message.hidden=false;if(detail)detail.textContent='图形上下文已丢失。请刷新页面重新初始化。';};
-    canvas.addEventListener('webglcontextlost',this._onContextLost);
+    if(this.ownsRenderer)canvas.addEventListener('webglcontextlost',this._onContextLost);
     this.vp=new Float64Array(IDENTITY);this.eye=[0,0,0];this._relative=new Float64Array(16);
     this._blend=false;this._depthWrite=true;this._depthTest=true;this._frontSide=false;this._layer=0;this._order=0;
     this.frame=0;this.disposed=false;this.resize();
@@ -83,7 +97,7 @@ export class ThreeRenderBackend {
     const requested = new URLSearchParams(globalThis.location?.search||'').get('dpr');
     this.dpr=dpr??(requested?Number(requested):Math.min(globalThis.devicePixelRatio||1,1.6));
     if(!(this.dpr>0))this.dpr=1;
-    this.three.setPixelRatio(this.dpr);this.three.setSize(this.width,this.height,false);
+    if(this.ownsRenderer){this.three.setPixelRatio(this.dpr);this.three.setSize(this.width,this.height,false);}
   }
   texture(canvas) {
     const texture=new THREE.CanvasTexture(canvas);texture.minFilter=texture.magFilter=THREE.LinearFilter;
@@ -112,11 +126,11 @@ export class ThreeRenderBackend {
   _material(kind,state,wire=false) {
     const key=[kind,+state.blend,+state.depthWrite,+state.depthTest,+state.front,+wire].join(':');
     let mat=this.materials.get(key);if(mat)return mat;
-    if(kind==='main')mat=material(this.shaders.vertexSource,this.shaders.fragmentSource,{...MAIN_DEFAULTS});
-    else if(kind==='flat')mat=material(this.shaders.flatVertex,this.shaders.flatFragment,{uMatrix:IDENTITY,uDpr:1,uAlpha:1,uPointMode:0});
-    else if(kind==='impact')mat=material(this.shaders.impactVertex.replace('attribute vec2 uv;','attribute vec2 texcoord;').replace('tex=uv;','tex=texcoord;'),this.shaders.impactFragment,{vp:IDENTITY});
-    else if(kind==='ribbon')mat=material(ribbonVertex,ribbonFragment,{vp:IDENTITY});
-    else if(kind==='fleet')mat=material(fleetVertex,fleetFragment,{vp:IDENTITY,tint:[1,1,1]});
+    if(kind==='main')mat=material(this.shaders.vertexSource,this.shaders.fragmentSource,{...MAIN_DEFAULTS},this.managed);
+    else if(kind==='flat')mat=material(this.shaders.flatVertex,this.shaders.flatFragment,{uMatrix:IDENTITY,uDpr:1,uAlpha:1,uPointMode:0},this.managed);
+    else if(kind==='impact')mat=material(this.shaders.impactVertex.replace('attribute vec2 uv;','attribute vec2 texcoord;').replace('tex=uv;','tex=texcoord;'),this.shaders.impactFragment,{vp:IDENTITY},this.managed);
+    else if(kind==='ribbon')mat=material(ribbonVertex,ribbonFragment,{vp:IDENTITY},this.managed);
+    else if(kind==='fleet')mat=material(fleetVertex,fleetFragment,{vp:IDENTITY,tint:[1,1,1],teamColor:[.086,.545,.922],uLight:[-.5,.9,.7]},this.managed);
     else throw new Error('Unknown renderer material '+kind);
     mat.blendDst=mat.blendDstAlpha=state.blend?THREE.OneFactor:THREE.OneMinusSrcAlphaFactor;mat.depthWrite=state.depthWrite;mat.depthTest=state.depthTest;
     mat.side=state.front?THREE.FrontSide:THREE.DoubleSide;mat.wireframe=wire;
@@ -141,15 +155,40 @@ export class ThreeRenderBackend {
   drawMesh(mesh,model,opts={}) {
     if(!mesh||opts.opacity===0)return;
     const relative=new Float32Array(model);for(let i=0;i<3;i++)relative[12+i]=model[12+i]-this.eye[i];
-    const uniforms={uModel:relative,uVP:new Float32Array(this.relativeVP()),uEye:[0,0,0],uLight:opts.light||[-.65,.9,.65],
+    const uniforms={uModel:relative,uVP:new Float32Array(this.relativeVP()),uEye:[0,0,0],uLight:this.managed&&this.worldLight?this.worldLight:opts.light||[-.65,.9,.65],
       uOpacity:opts.opacity??1,uSelected:opts.selected??-10,uMode:opts.mode||0,uWire:opts.wire?1:0,uTime:this.time||0,
-      uExposure:opts.exposure??1,uTint:opts.tint||[1,1,1],uTeamColor:opts.teamColor||[.086,.545,.922],uNearFade:opts.nearFade||0,uFighter:opts.fighter?1:0,
+      uExposure:opts.exposure??1,uTint:opts.tint||[1,1,1],uTeamColor:opts.teamColor||[.086,.545,.922],uNearFade:opts.nearFade||0,uFighter:opts.fighter?(this.managed?2:1):0,
       uShellOffset:opts.shellOffset||0,uImpact:opts.impact||[0,0,0,0],uShield:opts.shield||[1,0],uTexture:opts.texture||this.moonTexture};
     this._queue(mesh.geometry,this._material('main',this._state(opts),!!opts.wire),'mesh',uniforms);
   }
   drawFlat(batch,matrix,points=false,alpha=1) {
     if(!batch?.count)return;
     this._queue(batch.geometry,this._material('flat',this._state()),points?'points':'lines',{uMatrix:new Float32Array(matrix),uDpr:this.dpr,uAlpha:alpha,uPointMode:points?1:0});
+  }
+  // Projectiles share geometry/shaders; only transforms and tint/alpha differ.
+  // Batch those attributes without changing the authored effect shader.
+  drawEffectMesh(mesh,model,{mode=0,tint=[1,1,1],opacity=1,light=[-.65,.9,.65]}={}) {
+    if(!mesh||opacity===0)return;
+    const state=this._state(),key=[this.effectNamespace||'',mesh.geometry.id,mode,+state.blend,+state.depthWrite,+state.depthTest,+state.front,light.join(',')].join(':');
+    let batch=this.effectBatches.get(key);
+    if(!batch){
+      const vertex=this.shaders.vertexSource.replace(/uniform\s+mat4\s+uModel\s*;/,'attribute vec4 effectTint; varying vec4 vEffectTint;\n#define uModel instanceMatrix\n').replace(/void\s+main\s*\(\s*\)\s*\{/,'void main(){vEffectTint=effectTint;');
+      const fragment=this.shaders.fragmentSource.replace(/uniform\s+vec3\s+uTint\s*;/,'varying vec4 vEffectTint;').replace(/uniform\s+float\s+uOpacity\s*;/,'').replace(/\buTint\b/g,'vEffectTint.rgb').replace(/\buOpacity\b/g,'vEffectTint.a');
+      const mat=material(vertex,fragment,{...MAIN_DEFAULTS,uMode:mode},this.managed);
+      mat.blendDst=mat.blendDstAlpha=state.blend?THREE.OneFactor:THREE.OneMinusSrcAlphaFactor;mat.depthWrite=state.depthWrite;mat.depthTest=state.depthTest;mat.side=state.front?THREE.FrontSide:THREE.DoubleSide;
+      batch={material:mat,count:0,capacity:0};this.effectBatches.set(key,batch);
+    }
+    if(batch.count===batch.capacity){
+      const capacity=Math.max(64,batch.capacity*2),geometry=mesh.geometry.clone(),colors=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4).setUsage(THREE.DynamicDrawUsage),object=new THREE.InstancedMesh(geometry,batch.material,capacity);
+      geometry.setAttribute('effectTint',colors);object.instanceMatrix.setUsage(THREE.DynamicDrawUsage);object.frustumCulled=false;object.matrixAutoUpdate=false;
+      if(batch.mesh){object.instanceMatrix.array.set(batch.mesh.instanceMatrix.array);colors.array.set(batch.colors.array);object.renderOrder=batch.mesh.renderOrder;batch.mesh.removeFromParent();batch.mesh.dispose();batch.mesh.geometry.dispose();}
+      batch.mesh=object;batch.colors=colors;batch.capacity=capacity;this.scene.add(object);
+    }
+    const object=batch.mesh,slot=batch.count++,offset=slot*16,array=object.instanceMatrix.array;
+    array.set(model,offset);for(let j=0;j<3;j++)array[offset+12+j]=model[12+j]-this.eye[j];
+    const colors=batch.colors.array;colors[slot*4]=tint[0];colors[slot*4+1]=tint[1];colors[slot*4+2]=tint[2];colors[slot*4+3]=opacity;
+    object.visible=true;object.count=batch.count;object.instanceMatrix.needsUpdate=true;batch.colors.needsUpdate=true;
+    if(slot===0){object.renderOrder=this._order++;const uniforms=batch.material.uniforms;uniforms.uVP.value=new Float32Array(this.relativeVP());uniforms.uTime.value=this.time||0;uniforms.uLight.value=this.managed&&this.worldLight?this.worldLight:light;}
   }
   _dynamic(kind,source,stride,attributes,uniforms,primitive='mesh',state=this._state()) {
     if(!source.length)return;
@@ -166,8 +205,13 @@ export class ThreeRenderBackend {
     item.buffer.array.set(source);item.buffer.clearUpdateRanges();item.buffer.addUpdateRange(0,source.length);item.buffer.needsUpdate=true;item.geometry.setDrawRange(0,source.length/stride);
     this._queue(item.geometry,mat,primitive,uniforms);
   }
-  dynamicFlat(source,points=false,alpha=1) {
-    const data=Float32Array.from(source);for(let i=0;i<data.length;i+=7)for(let j=0;j<3;j++)data[i+j]=source[i+j]-this.eye[j];
+  dynamicFlat(source,points=false,alpha=1,relative=false) {
+    let data=source;
+    if(!relative){
+      if(!this._flatScratch||this._flatScratch.length<source.length)this._flatScratch=new Float32Array(2**Math.ceil(Math.log2(Math.max(1,source.length))));
+      data=this._flatScratch.subarray(0,source.length);data.set(source);
+      for(let i=0;i<data.length;i+=7)for(let j=0;j<3;j++)data[i+j]=source[i+j]-this.eye[j];
+    }
     this._dynamic('flat',data,7,[['aPosition',3,0],['aColor',3,3],['aSize',1,6]],{uMatrix:new Float32Array(this.relativeVP()),uDpr:this.dpr,uAlpha:alpha,uPointMode:points?1:0},points?'points':'lines');
   }
   points(source,alpha=1){this.dynamicFlat(source,true,alpha);}
@@ -189,7 +233,7 @@ export class ThreeRenderBackend {
     if(!entry)return;
     if(!batch||batch.capacity<count||batch.mesh.geometry!==entry.geometry){
       if(batch){batch.mesh.removeFromParent();batch.mesh.dispose();batch.mesh.material.dispose();}
-      const capacity=2**Math.ceil(Math.log2(Math.max(1,count))),mat=material(geometry?fortressVertex:fleetVertex,geometry?fortressFragment:fleetFragment,{vp:IDENTITY,tint,teamColor});
+      const capacity=2**Math.ceil(Math.log2(Math.max(1,count))),mat=material(geometry?fortressVertex:fleetVertex,geometry?fortressFragment:fleetFragment,{vp:IDENTITY,tint,teamColor,uLight:[-.5,.9,.7]},this.managed);
       const mesh=new THREE.InstancedMesh(entry.geometry,mat,capacity);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.frustumCulled=false;mesh.matrixAutoUpdate=false;
       batch={mesh,capacity,ids:[],idToSlot:new Map()};this.instanceBatches.set(id,batch);this.scene.add(mesh);this.geometryResources.add(entry.geometry);
     }
@@ -198,6 +242,7 @@ export class ThreeRenderBackend {
     batch.mesh.instanceMatrix.clearUpdateRanges();batch.mesh.instanceMatrix.addUpdateRange(0,count*16);batch.mesh.instanceMatrix.needsUpdate=true;
     batch.mesh.material.uniforms.vp.value=new Float32Array(this.relativeVP());batch.mesh.material.uniforms.tint.value=tint;
     batch.mesh.material.uniforms.teamColor.value=teamColor;
+    batch.mesh.material.uniforms.uLight.value=this.managed&&this.worldLight?this.worldLight:[-.5,.9,.7];
     batch.ids=Array.from(ids).slice(0,count);batch.idToSlot.clear();batch.ids.forEach((shipId,slot)=>batch.idToSlot.set(shipId,slot));
   }
   drawFleetInstances(key,index,matrices,ids,opts={}) {this.drawInstances(key,{...opts,index,matrices,ids,count:ids.length,type:opts.type||key.split(':').at(-1)});}
@@ -217,26 +262,29 @@ export class ThreeRenderBackend {
     this.sky.draws++;
   }
   begin(time) {
-    this.time=time;this.frame++;this._order=0;this._layer=0;this._blend=false;this._depthWrite=true;this._depthTest=true;this._frontSide=false;
+    this.time=time;this.frame++;this._order=0;this._layer=0;this._blend=false;this._depthWrite=true;this._depthTest=true;this._frontSide=false;this.effectNamespace='';
     for(const pool of this.meshPools.values()){pool.cursor=0;for(const item of pool.items)item.visible=false;}
     for(const pool of this.dynamicPools.values())pool.cursor=0;
     for(const batch of this.instanceBatches.values()){batch.mesh.visible=false;batch.ids=[];batch.idToSlot.clear();}
-    this.three.info.reset();this.three.setClearColor(0,0);this.three.clear(true,true,true);
+    for(const batch of this.effectBatches.values()){batch.mesh.visible=false;batch.count=0;}
+    if(!this.managed){this.three.info.reset();this.three.setClearColor(0,0);this.three.clear(true,true,true);}
   }
   endFrame() {
     if(this.disposed)return;
-    this.three.render(this.scene,this.camera);
-    if(this._layer){this.three.clearDepth();this.three.render(this.overlay,this.camera);}
+    if(!this.managed){
+      this.three.render(this.scene,this.camera);
+      if(this._layer){this.three.clearDepth();this.three.render(this.overlay,this.camera);}
+    }
     if(this.shaderErrors.length)throw new Error(this.shaderErrors.at(-1));
     this.lastStats=this.stats();return this.lastStats;
   }
   stats(){const info=this.three.info;return {backend:'three',frame:this.frame,calls:info.render.calls,triangles:info.render.triangles,points:info.render.points,lines:info.render.lines,geometries:info.memory.geometries,textures:info.memory.textures,programs:info.programs?.length||0,instances:[...this.instanceBatches.values()].reduce((n,b)=>n+(b.mesh.visible?b.mesh.count:0),0),shaderErrors:[...this.shaderErrors]};}
   getStats(){return this.stats();}
   dispose() {
-    if(this.disposed)return;this.disposed=true;this.canvas.removeEventListener('webglcontextlost',this._onContextLost);
+    if(this.disposed)return;this.disposed=true;if(this.ownsRenderer)this.canvas.removeEventListener('webglcontextlost',this._onContextLost);
     for(const value of Object.values(this)){if(value?.geometry)this.geometryResources.add(value.geometry);if(Array.isArray(value))for(const item of value)if(item?.geometry)this.geometryResources.add(item.geometry);}
     for(const mesh of this.lowMeshes.values())this.geometryResources.add(mesh.geometry);
-    this.resetInstances();for(const geometry of this.geometryResources)geometry.dispose();for(const mat of this.materials.values())mat.dispose();this.sky?.material.dispose();for(const texture of this.textures)texture.dispose();
-    this.scene.clear();this.overlay.clear();this.meshPools.clear();this.dynamicPools.clear();this.materials.clear();this.geometryResources.clear();this.textures.clear();this.lowMeshes.clear();this.three.dispose();
+    this.resetInstances();for(const batch of this.effectBatches.values()){batch.mesh.removeFromParent();batch.mesh.dispose();batch.mesh.geometry.dispose();batch.material.dispose();}this.effectBatches.clear();for(const geometry of this.geometryResources)geometry.dispose();for(const mat of this.materials.values())mat.dispose();this.sky?.material.dispose();for(const texture of this.textures)texture.dispose();
+    this.scene.removeFromParent();this.scene.clear();this.overlay.clear();this.meshPools.clear();this.dynamicPools.clear();this.materials.clear();this.geometryResources.clear();this.textures.clear();this.lowMeshes.clear();if(this.ownsRenderer)this.three.dispose();
   }
 }

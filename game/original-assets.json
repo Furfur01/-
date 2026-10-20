@@ -58,7 +58,8 @@
     "Nanite_Factory": "original/buildings/Nanite_Factory.png",
     "The_EU_X_Radar": "original/buildings/The_EU_X_Radar.png",
     "Wormhole_Generator": "original/buildings/Wormhole_Generator.png",
-    "Moon_Base": "original/buildings/Moon_Base.png"
+    "Moon_Base": "original/buildings/Moon_Base.png",
+    "Flagship_Center": "original/archive/building_21.png"
   },
   "anchors": {
     "Metal_Mine": [
@@ -1946,11 +1947,11 @@
   ],
   "city": {
     "asset": "original/scenes/city.json",
-    "fps": 30.0,
+    "fps": 30,
     "widths": {
       "Metal_Mine": 137.37,
       "Crystal_Mine": 125.27,
-      "Gas_Mine": 127.0,
+      "Gas_Mine": 127,
       "Solar_Plant": 141.68,
       "Fusion_Reactor": 119.22,
       "Metal_Storage": 149.46,
@@ -1958,7 +1959,7 @@
       "Gas_Storage": 125.27,
       "Robotics_Facility": 141.68,
       "Shipyard": 170.19,
-      "Research_Lab": 146.0,
+      "Research_Lab": 146,
       "Alliance_Depot": 138.23,
       "Radar_Facility": 120.09,
       "Nanite_Factory": 129.59,

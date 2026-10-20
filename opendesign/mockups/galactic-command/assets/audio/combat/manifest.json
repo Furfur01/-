@@ -1,0 +1,230 @@
+{
+  "revision": 6,
+  "accepted": "2026-10-20",
+  "clips": {
+    "Light_Fighter": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Light_Fighter.wav",
+      "duration": 1.31,
+      "title": "针刺激光",
+      "source": "SCIWeap_SHOT Small Laser Punchy Needler_B00M_CWDS.wav",
+      "audition": "audio-ds/01_轻型战机_针刺激光.wav"
+    },
+    "Heavy_Fighter": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Heavy_Fighter.wav",
+      "duration": 1.38,
+      "title": "重脉冲激光",
+      "source": "SCIWeap_SHOT Medium Laser Ray Phaser_B00M_CWDS.wav",
+      "audition": "audio-ds/02_重型战机_重脉冲激光.wav"
+    },
+    "Cruiser": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Cruiser.wav",
+      "duration": 3.04,
+      "title": "离子熔流炮",
+      "source": "SCIWeap_SHOT Large Laser Ion Fusion_B00M_CWDS.wav",
+      "audition": "audio-ds/03_巡洋舰_离子熔流炮.wav"
+    },
+    "Battleship": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Battleship.wav",
+      "duration": 3.7,
+      "title": "舰炮轰击",
+      "source": "SCIWeap_SHOT Large Gun Cannon Blast_B00M_CWDS.wav",
+      "audition": "audio-ds/04_战列舰_舰炮轰击.wav"
+    },
+    "Dreadnought": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Dreadnought.wav",
+      "duration": 1.96,
+      "title": "星界双冲击激光",
+      "source": "SCIWeap_SHOT Large Laser Astral Disintegrator_B00M_CWDS.wav",
+      "audition": "audio-ds/05_无畏舰_星界双冲击激光.wav"
+    },
+    "Bomber": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Bomber.wav",
+      "duration": 3.71,
+      "title": "等离子弹掠过",
+      "source": "SCIWeap_FLYBY Large Blaster Liquid Burst_B00M_CWDS.wav",
+      "audition": "audio-ds/06_行星轰炸机_等离子弹掠过.wav"
+    },
+    "Destroyer": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Destroyer.wav",
+      "duration": 2.52,
+      "title": "等离子重炮",
+      "source": "SCIWeap_SHOT Large Blaster Plasma Cannon_B00M_CWDS.wav",
+      "audition": "audio-ds/07_驱逐舰_等离子重炮.wav"
+    },
+    "Interceptor": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Interceptor.wav",
+      "duration": 5.56,
+      "title": "泰坦震击炮",
+      "source": "SCIWeap_SHOT Large Gun Titan Cannon_B00M_CWDS.wav",
+      "audition": "audio-ds-v4/08_裂变者_泰坦震击炮.wav"
+    },
+    "Titanenergetic_Frigate": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Titanenergetic_Frigate.wav",
+      "duration": 1.14,
+      "title": "轻型电灼脉冲",
+      "source": "SCIWeap_SHOT Small Blaster Thermal Disintegrator_B00M_CWDS.wav",
+      "audition": "audio-ds-v4/09_钛能守卫者_轻型电灼脉冲.wav"
+    },
+    "Devourer_Interceptor": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Devourer_Interceptor.wav",
+      "duration": 4.75,
+      "title": "重炮轰鸣",
+      "source": "SCIWeap_SHOT Large Gun Heavy Artillery_B00M_CWDS.wav",
+      "audition": "audio-ds-v4/10_噬能截击者_重炮轰鸣.wav"
+    },
+    "Iron_Behemoth": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Iron_Behemoth.wav",
+      "duration": 3.55,
+      "title": "惩戒蜂群连射",
+      "source": "SCIWeap_SHOT Medium Blaster Punisher Auto_B00M_CWDS.wav",
+      "audition": "audio-ds/11_深空吞噬者_惩戒蜂群连射.wav"
+    },
+    "Reaper": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Reaper.wav",
+      "duration": 10.91,
+      "title": "超新星收割束",
+      "source": "SCIWeap_SHOT Beam Large Supernova_B00M_CWDS.wav",
+      "audition": "audio-ds-v4/12_收割者_超新星收割束.wav"
+    },
+    "Annihilator": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Annihilator.wav",
+      "duration": 3.69,
+      "title": "电磁雷爆",
+      "source": "SCIWeap_SHOT Large Gun Carbon Injector_B00M_CWDS.wav",
+      "audition": "audio-ds-v4/13_湮灭之星_电磁雷爆.wav"
+    },
+    "Cargo_Ship": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Cargo_Ship.wav",
+      "duration": 1.05,
+      "title": "轻型自卫短炮",
+      "source": "SCIWeap_SHOT Small Gun Bolt Colt_B00M_CWDS.wav",
+      "audition": "audio-ds/14_轻型运输舰_轻型自卫短炮.wav"
+    },
+    "Large_Cargo_Ship": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Large_Cargo_Ship.wav",
+      "duration": 1.34,
+      "title": "重运输自卫脉冲",
+      "source": "SCIWeap_SHOT Small Gun Bullet Snapper_B00M_CWDS.wav",
+      "audition": "audio-ds/15_重型运输舰_重运输自卫脉冲.wav"
+    },
+    "Colony_Ship": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Colony_Ship.wav",
+      "duration": 1.29,
+      "title": "殖民舰气动自卫炮",
+      "source": "SCIWeap_SHOT Small Gun P70 Sidearm_B00M_CWDS.wav",
+      "audition": "audio-ds/16_殖民舰_殖民舰气动自卫炮.wav"
+    },
+    "Recycler": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Recycler.wav",
+      "duration": 1.12,
+      "title": "回收舰穿刺自卫炮",
+      "source": "SCIWeap_SHOT Small Gun Slider Dart_B00M_CWDS.wav",
+      "audition": "audio-ds/17_回收舰_回收舰穿刺自卫炮.wav"
+    },
+    "Death_Star": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Death_Star.wav",
+      "duration": 9.18,
+      "title": "引力牵引长束",
+      "source": "SCIWeap_SHOT Beam Large Tractor Blast_B00M_CWDS.wav",
+      "audition": "audio-ds/20_死星_引力牵引长束.wav"
+    },
+    "Guardian": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/Guardian.wav",
+      "duration": 7.4,
+      "title": "晶化超空间长束",
+      "source": "SCIWeap_SHOT Beam Large Cryonic Bombard_B00M_CWDS.wav",
+      "audition": "audio-ds/21_守护者_晶化超空间长束.wav"
+    },
+    "shield_hit": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/shield_hit.wav",
+      "duration": 1.54,
+      "title": "电击与力场回响",
+      "source": "23_护盾受击.wav",
+      "audition": "audio-damage-v5/23_护盾受击.wav"
+    },
+    "armor_hit": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/armor_hit.wav",
+      "duration": 3.23,
+      "title": "装甲爆裂重击",
+      "source": "DTDS Metal Medium 01 Crash.wav",
+      "audition": "audio-damage-v5/24_重型装甲受击.wav"
+    },
+    "charge": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/charge.wav",
+      "duration": 3.09,
+      "title": "重炮能量装填",
+      "source": "SCIWeap_RELOAD Large Laser Power Injection_B00M_CWDS.wav",
+      "audition": "audio-ds/25_主炮重充能_重炮能量装填.wav"
+    },
+    "shield_break": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/shield_break.wav",
+      "duration": 2.47,
+      "title": "能量坍缩",
+      "source": "26_能量坍缩尾音.wav",
+      "audition": "audio-damage-v5/27_护盾击穿.wav"
+    },
+    "armor_light": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/armor_light.wav",
+      "duration": 1.64,
+      "title": "短促金属撞击",
+      "source": "DTDS Car Medium 01 Crash.wav",
+      "audition": "audio-damage-v5/28_轻型装甲受击.wav"
+    },
+    "hull_stress": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/hull_stress.wav",
+      "duration": 3.2,
+      "title": "金属屈曲与低鸣",
+      "source": "DTDS Metal Large 01 Stress.wav",
+      "audition": "audio-damage-v5/31_舰体结构撕裂.wav"
+    },
+    "hull_destroyed": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/hull_destroyed.wav",
+      "duration": 4.69,
+      "title": "爆裂与金属残骸",
+      "source": "DTDS Metal Large 02 Crash.wav",
+      "audition": "audio-damage-v5/29_舰体爆裂解体.wav"
+    },
+    "critical_alarm": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/critical_alarm.wav",
+      "duration": 1.38,
+      "title": "三声电子短警报",
+      "source": "SCIWeap_RELOAD Medium Blaster Fusionchamber_B00M_CWDS.wav",
+      "audition": "audio-damage-v5/30_严重损伤警报.wav"
+    },
+    "stress_light_shudder": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/stress_light_shudder.wav",
+      "duration": 1.4,
+      "title": "薄金属受压短鸣",
+      "source": "DTDS Metal Small 01 Stress.wav",
+      "audition": "audio-stress-v6/32_轻舰壳体震颤.wav"
+    },
+    "stress_light_twist": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/stress_light_twist.wav",
+      "duration": 2.3,
+      "title": "尖鸣接密集吱嘎",
+      "source": "DTDS Metal Small 02 Stress.wav",
+      "audition": "audio-stress-v6/33_轻舰装甲扭曲.wav"
+    },
+    "stress_medium_pressure": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/stress_medium_pressure.wav",
+      "duration": 2.4,
+      "title": "断续金属震响",
+      "source": "DTDS Metal Medium 01 Stress.wav",
+      "audition": "audio-stress-v6/34_中舰壳体挤压.wav"
+    },
+    "stress_medium_tear": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/stress_medium_tear.wav",
+      "duration": 4.1,
+      "title": "连续屈曲与高音吱鸣",
+      "source": "DTDS Metal Medium 02 Stress.wav",
+      "audition": "audio-stress-v6/35_中舰装甲拉扯.wav"
+    },
+    "stress_large_twist": {
+      "url": "/opendesign/mockups/galactic-command/assets/audio/combat/stress_large_twist.wav",
+      "duration": 4,
+      "title": "沉重金属呻吟",
+      "source": "DTDS Metal Large 02 Stress.wav",
+      "audition": "audio-stress-v6/36_巨舰梁架扭曲.wav"
+    }
+  }
+}

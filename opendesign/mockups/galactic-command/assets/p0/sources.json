@@ -80,6 +80,31 @@
     "kind": "Project supplementary technology icon"
   },
   {
+    "id": "Advanced_Ship_Engineering",
+    "source": "assets\\technology-generated\\Advanced_Ship_Engineering.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Quantum_Command",
+    "source": "assets\\technology-generated\\Quantum_Command.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Metamaterial_Tech",
+    "source": "assets\\technology-generated\\Metamaterial_Tech.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Phase_Energy",
+    "source": "assets\\technology-generated\\Phase_Energy.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Antimatter_Containment",
+    "source": "assets\\technology-generated\\Antimatter_Containment.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
     "id": "Cargo_Ship",
     "source": "models\\reference\\original-atlas-v1\\icons\\fleet_09_Cargo_Ship.png",
     "sha256": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b",
@@ -206,6 +231,42 @@
     "kind": "Original APK unit sprite"
   },
   {
+    "id": "Interceptor",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_23_Interceptor.png",
+    "sha256": "14e559652ee7ea02c9d4f332763c3fda5a2391af82df5a1196b4fa3d30c87622",
+    "kind": "Original APK unit sprite"
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_26_Titanenergetic_Frigate.png",
+    "sha256": "b30435a96530b818f2bc7e4c4d6ebf22cc1bf9f0571cf80ae4e208871088e30a",
+    "kind": "Original APK unit sprite"
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_25_Devourer_Interceptor.png",
+    "sha256": "7bf16d8d69fe7b9f5bd40c9784c2c90c78aeaf67633dac997762368754289962",
+    "kind": "Original APK unit sprite"
+  },
+  {
+    "id": "Iron_Behemoth",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_24_Iron_Behemoth.png",
+    "sha256": "f6324df90210bc892b12194bee4bf504c441ee781591a11f07520e0157e5098f",
+    "kind": "Original APK unit sprite"
+  },
+  {
+    "id": "Reaper",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_29_Reaper.png",
+    "sha256": "884556db6bad3f173ef334400c8be96d7544b5667be2900d33af4bb13b58a3ad",
+    "kind": "Original APK unit sprite"
+  },
+  {
+    "id": "Annihilator",
+    "source": "models\\reference\\original-atlas-v1\\icons\\fleet_28_Annihilator.png",
+    "sha256": "f09489129b34799030b907ef88c8bcd451054a4be3c4a028172d2f21f13588b7",
+    "kind": "Original APK unit sprite"
+  },
+  {
     "id": "Interceptor_Missile",
     "source": "opendesign\\mockups\\galaxy-empire\\assets\\civilian\\Interceptor_Missile.png",
     "sha256": "3e3068c239e6a886b52192adc26a5b2d6f5c9ba0cf88cd1214a5ec7e86104007",
@@ -223,8 +284,8 @@
     "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Cargo_Ship.glb",
-    "revision": "remaining-three-view-01",
-    "sha256": "033d099c848551d1d2d95252d4ca49086037770f55dc843232bd92c2f4a10d52"
+    "revision": "four-ships-transports-01",
+    "sha256": "6e0724f72caa88f9b0a2fe1a8e0bf4ad1709a2b0e67a03cf8f5363559f96d457"
   },
   {
     "id": "Large_Cargo_Ship",
@@ -232,8 +293,8 @@
     "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Large_Cargo_Ship.glb",
-    "revision": "remaining-three-view-01",
-    "sha256": "12838bef23610d17c090c141ea04f2f61ab6ca09240891a8a388546b76cdfe20"
+    "revision": "four-ships-transports-01",
+    "sha256": "e28084415fbb789ef74c786819441ad083347f5cb7db636e54b44c7a10c280c5"
   },
   {
     "id": "Colony_Ship",
@@ -241,8 +302,8 @@
     "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Colony_Ship.glb",
-    "revision": "remaining-three-view-01",
-    "sha256": "ccb0db735443c9e0151163f8b264b5e068db26a1450be7c4f9db3aaef591b811"
+    "revision": "october-user-models-01",
+    "sha256": "8bc3f9404da79f7020cd2cc53b649b4821839363acbc3dc9c7798931b6b4b04d"
   },
   {
     "id": "Recycler",
@@ -250,8 +311,8 @@
     "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Recycler.glb",
-    "revision": "remaining-three-view-01",
-    "sha256": "0f72680c9e031d8c446471129f7275ab73f5559717edf32bc336e7c28a4851ea"
+    "revision": "sr07-salvage-01",
+    "sha256": "7f44b864d98c20b3287c3b5aaeacd825e4eed8eb1188d698c79bdcbe7a39f2d2"
   },
   {
     "id": "Probe",
@@ -260,7 +321,7 @@
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Probe.glb",
     "revision": "fleet-refinement-01",
-    "sha256": "7ca16b02e7536c7a8e8e9ef9c490de3942642b565dda3796ce027eb312521f51"
+    "sha256": "022c6f95ca4c016c25f71aecf40a1dd536fb968b6ff8d7dc43051f47a7f58b42"
   },
   {
     "id": "Solar_Satellite",
@@ -322,8 +383,8 @@
     "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
     "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
     "target": "assets/p0/models/Bomber.glb",
-    "revision": "remaining-three-view-01",
-    "sha256": "4c800e3f9e35143704cc976d738ec1eb36320a2ab0f47709ea16fca088f497e6"
+    "revision": "october-user-models-01",
+    "sha256": "b633fe5b7885459cfed54c419671461e0d5bfb78b3f4c76526c1cd5b40af19f1"
   },
   {
     "id": "Destroyer",
@@ -397,5 +458,59 @@
     "target": "assets/p0/models/Large_Shield_Dome.glb",
     "revision": "existing foundry and shield geometry",
     "sha256": "614fe0d1967caf6d6f02c2bf84b4fddff8c213d1a807819c7ede287c75474da5"
+  },
+  {
+    "id": "Interceptor",
+    "apkId": 23,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Interceptor.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "40017bb44c053194a76514a097c2a16511dcac1b3bdb89c1118dd7a98028410b"
+  },
+  {
+    "id": "Titanenergetic_Frigate",
+    "apkId": 26,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Titanenergetic_Frigate.glb",
+    "revision": "remaining-three-view-01",
+    "sha256": "78e4c07033623b6c3d8f875bc2fb99fe9e3780f942b9d5cb42f16a6fdefe1550"
+  },
+  {
+    "id": "Devourer_Interceptor",
+    "apkId": 25,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Devourer_Interceptor.glb",
+    "revision": "october-user-models-01",
+    "sha256": "4bd8271dd0f3fe8744633f6a594ef4092bcbcdaaa298c342ea5e4df9e4ff469e"
+  },
+  {
+    "id": "Iron_Behemoth",
+    "apkId": 24,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Iron_Behemoth.glb",
+    "revision": "three-view-rebuild-01",
+    "sha256": "faa41804756ef89cb3aeffed0438960833b89b48a690223ad95fec2af1e00ebf"
+  },
+  {
+    "id": "Reaper",
+    "apkId": 29,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Reaper.glb",
+    "revision": "user-raven-reaper-02",
+    "sha256": "20c98251dcc0a94d4487bf4a09fc9d7add84b5ba0437fb8e2bbc616d840ea5b1"
+  },
+  {
+    "id": "Annihilator",
+    "apkId": 28,
+    "kind": "Current corrected fleet model snapshot; reconstructed geometry, not an APK 3D model",
+    "source": "opendesign/mockups/galactic-command/ship-models.js#createShipModel",
+    "target": "assets/p0/models/Annihilator.glb",
+    "revision": "armored-antimatter-02",
+    "sha256": "4d1a9b57cbefefbe9685902afe6e5e5c397ef672d1497cc35b6222a3231ed602"
   }
 ]

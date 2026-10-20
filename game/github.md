@@ -34,8 +34,8 @@ git push
 - `data/`：实际存档和本地会话。
 - `output/`：录像、完整回放、隔离测试存档、截图、工具下载、Git 恢复备份。
 - `opendesign/previews/`：带本机端口和临时战斗 ID 的启动页。
-- `models/recovered/`：离线建模恢复材料；仅保留身份回归测试需要的小清单及两个 GLB，GLB 通过 LFS 管理。
+- `models/recovered/`：离线建模恢复材料；仅保留可编辑源模型的清单及两个 GLB，GLB 通过 LFS 管理。
 
-不必删除这些本地文件。视频与原始验收指标通过本机播放器查看；复跑方式见 [Three.js 说明](three-battle.md)。源码和已经复制到运行资源目录的模型、纹理仍随仓库提供。
+不必删除这些本地文件。视频与原始验收指标通过本机播放器查看；当前玩法与构建方式见 [Three.js 说明](three-battle.md)。源码和已经复制到运行资源目录的模型、纹理仍随仓库提供。
 
 2026-10-15 首次上传整理：GitHub 远端为空，旧的单次初始提交包含超限普通对象。先将原始历史保存并验证为 `output/git-backups/before-github-cleanup.bundle`，再重整初始提交。该 bundle 和 Codex 的本地恢复记录不上传。需要取回旧历史时，请在另一目录执行 `git clone <bundle路径>`，不要覆盖当前工作区。

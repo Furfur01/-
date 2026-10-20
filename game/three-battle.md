@@ -4,20 +4,32 @@
 
 ## 使用
 
-```powershell
-npm run build:command
-npm run preview:three
-```
+从正式游戏的战场、战报或舰船档案进入。开发构建执行 `npm run build:command`。
 
-启动器建立独立的双方各 500 艘测试存档，打印服务器地址、新旧战场与靶场链接，并将进程 PID 保存到 links.json。新旧战场链接先自动建立该隔离服务的本地会话，因此首次打开也能进入同一场千舰战斗。正式存档不参与此演练。主界面战场列表中的“战场版本”默认选择“Three.js（正式版）”；可显式选择“原版 WebGL（已归档，仅供对照）”，对下一次进入战场或回放生效。
-
-- `battlefield-three.html?battle=ID`：正式战斗或隔离演练，支持观战与接管。
+- `battlefield-three.html?battle=ID`：正式战斗，支持观战与接管。
 - `battlefield-three.html?replay=ID`：只读回放，支持暂停、倍速、跳转。
-- `hangar-three.html?ship=Dreadnought`：独立靶场，不请求战斗 API。
-- `legacy-webgl/battlefield.html`、`legacy-webgl/hangar.html`：冻结的原版战场、回放和靶场入口。
-- `legacy-webgl/hangar.html?map=death-star`：未迁移的死星专用场景。
+- `hangar-three.html?ship=Dreadnought`：玩家驾驶靶场。
+- `legacy-webgl/hangar.html?map=death-star`：尚未迁移的死星专用场景。
 
-各入口均位于 `/opendesign/mockups/galactic-command/`。新版需要 WebGL2；初始化或绘制失败会显示原因及原版链接，不会在背景中悄悄更换渲染器。
+各入口位于 `/opendesign/mockups/galactic-command/`。编队测试接口、独立预览服务及对照基准已从开发入口移除；旧存档已有演练战斗仍能结算和回放。新版需要 WebGL2，加载失败时显示错误。
+
+### 战斗自由视角
+
+在实时战斗或主界面打开的空间战报中，摄像头下拉选择 **自由视角 · F**，或按 **F** 从跟舰/驾驶舱中脱离：
+
+- 左键拖动环绕，右键或 Shift 拖动平移，滚轮缩放。
+- **WASD** 前后左右移动，**Q / E** 下降 / 上升，按住 **Shift** 加速。
+- 再按 **F** 恢复跟舰，**V** 进入驾驶舱，**Esc** 结束观察。
+
+进入自由视角时交还驾驶权给 AI，移动镜头不会控制舰船。暂停或拖动回放进度后仍可自由观察；主界面的空间战报使用同一个三维视口，不另开 iframe。
+
+### 靶场瞄准与试射
+
+按 **T** 选敌、**X** 辅助瞄准、**Space** 发射主炮。选中目标不等于炮线已经对准；仪表会分别显示“炮线未对准”“蓄能中”“冷却”和“就绪”。具备导弹的舰型选敌后完成锁定，再按 **R** 发射。
+
+准心按真实炮口射线投影，随舰桥、追踪、环视和俯仰变化，不再固定在屏幕中央。固定主炮的各炮口汇聚到同一瞄准点；X 对准包含炮口偏移与炮弹飞行提前量，激光不加提前量。锁定模式下，蓄能完成但炮线尚未对准时会保持满蓄能，重新对准后释放；目标失效则取消蓄能。取消 X 后仍可自由试射。
+
+靶舰的绘制、瞄准中心和碰撞使用相同姿态；弹丸按与移动目标的相对轨迹判定，并只结算最先接触的目标。
 
 该目录下旧的 `battlefield.html` 和 `hangar.html` 现在是兼容入口，分别转向 `battlefield-three.html` 和 `hangar-three.html`，原样保留查询参数和 URL 片段，包括 `battle`、`replay`、`ship`。若查询参数为 `map=death-star`，则转向对应的 `legacy-webgl/` 页面。已保存的旧链接仍可使用；要固定使用原版，应保存显式归档地址。
 
@@ -39,56 +51,6 @@ npm run preview:three
 
 `npm run build:command` 最终调用 `scripts/build-three-flight.mjs` 生成正式页面和旧 URL 的兼容转向页。构建中保留的原生资源生成步骤服务于既有资源与工具；根目录旧 URL 不再作为原生战场入口，新版也不加载这些原生脚本。修改新版无需修改原版 HTML 拼接脚本。模型或规则变动后的性能比较，应明确说明是否仍与旧模型版本具有可比性，不能覆盖冻结清单来掩盖差异。归档用途及恢复显式入口见 [原版 WebGL 归档说明](legacy-webgl-archive.md)。
 
-## 验收
+## 开发检查
 
-```powershell
-npm run test:three
-npm run test:three:browser
-npm run bench:three
-node tests/three-battle-comparison.mjs --quick
-node tests/three-battle-comparison.mjs --with-stress
-```
-
-固定回放使用现有每方 500 艘预设和种子 42。两个渲染器顺序运行，四种视角各预热 10 秒、采样 30 秒、三轮交替顺序，1080p、DPR 1。样本、事件随机种子和镜头路径相同；固定画质对比禁用自动降级，并附加自动画质体验记录。原始指标、截图和性能判定保存在 `output/playwright/three-battle-comparison/`。
-
-验收要求所有三轮完成、新版平均 FPS 中位数不低于原版 95%、P95 帧时不超过原版 110%、最低一秒 FPS 不低于 30，并保持全部存活舰船的显示身份。快速测试仅用于排错，不作为性能通过依据。回归测试单独验证真实接管、武器输入、重连、隐藏页面释放、只读回放和反复退出的资源清理。
-
-## 完整战斗与视频复跑
-
-`scripts/build-three-battle-video-fixture.mjs` 使用原服务端规则，将种子 42 的千舰样本推进到正式终局并结算。它验证前 80 秒与性能验收样本完全连续，不修改正式存档。`scripts/build-three-battle-special-fixture.mjs` 另存 10 舰特殊武器样本，不能计入千舰性能结果。
-
-```powershell
-node --max-old-space-size=4096 scripts/build-three-battle-video-fixture.mjs
-node scripts/build-three-battle-special-fixture.mjs
-$videoFfmpeg = 'output/playwright/three-battle-video-tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe'
-node scripts/record-three-battle.mjs --engine three --view overview --fixture output/playwright/three-battle-video/fixture-complete.json --full --warm 0 --ffmpeg $videoFfmpeg --out output/playwright/video-rerun/full
-node scripts/record-three-battle-suite.mjs --out output/playwright/video-rerun --ffmpeg $videoFfmpeg
-node scripts/record-three-practice.mjs --engine both --view follow --duration 10 --warm 2 --fire-at 1 --ffmpeg $videoFfmpeg --out output/playwright/video-rerun/practice
-```
-
-每次使用新的输出目录，脚本拒绝覆盖已有录像清单。完整 FFmpeg 用于解码同步标记和输出 H.264，不能使用只支持 Playwright 录屏编码的裁剪版替代；也可以通过 `--ffmpeg` 指定其他完整安装。以上命令依次执行，录制时不并行运行另一份基准或转码。
-
-录像包含可见 FPS 面板，实际编码为 25 fps，面板显示的是游戏渲染帧率。每份 manifest 保存逐帧渲染指标、每秒 CPU/内存/GPU 采样、浏览器错误和绿色/紫色同步标记。录屏会增加负载，因此录屏结果与前面的无录屏验收分开。CPU 是本次浏览器进程组（不含外部编码器）；工作集可能重复计算共享页；GPU 利用率和显存是整卡数据，包含其他应用。
-
-`scripts/assemble-three-battle-videos.mjs` 可接收多个 `--manifest`，输出独立 1920×1080 MP4 和原版在左、新版在右的 3840×1080 对照。只接受实际解码确认的同步时间，不缩放、不改变速度；靶场保留各自的原模拟帧间隔，并单独报告发射阶段的时间偏移。`scripts/report-three-battle-videos.mjs` 汇总 `--assembly` 清单，生成播放器页面、指标和报告。用 `npm run preview:three:videos` 打开支持视频拖动定位的本地页面。
-
-`npm run preview:three` 的正式版与归档版试玩入口共用当前隔离战斗；若上一场已结束，入口会按同一预设自动创建新的千舰试玩。正式默认入口为 Three.js，原版对照始终使用显式 `legacy-webgl/` 地址。
-
-录制完成后，可按以下方式编码并生成可播放报告（继续使用上文的新目录）：
-
-```powershell
-node scripts/assemble-three-battle-videos.mjs --manifest output/playwright/video-rerun/full/recording-manifest.json --single --ffmpeg $videoFfmpeg --out output/playwright/video-rerun/deliverables/full
-$pairArgs = @('scripts/assemble-three-battle-videos.mjs', '--pairs-only', '--ffmpeg', $videoFfmpeg, '--out', 'output/playwright/video-rerun/deliverables/comparisons')
-foreach ($clip in @('views','shells','reaper','missiles','annihilator','special-reaper')) { $pairArgs += @('--manifest', "output/playwright/video-rerun/$clip/recording-manifest.json") }
-$pairArgs += @('--manifest', 'output/playwright/video-rerun/practice/practice-recording-manifest.json')
-node @pairArgs
-node scripts/report-three-battle-videos.mjs --assembly output/playwright/video-rerun/deliverables/full/assembly-manifest.json --assembly output/playwright/video-rerun/deliverables/comparisons/assembly-manifest.json --out output/playwright/video-rerun/deliverables
-node scripts/preview-three-battle-videos.mjs --root output/playwright/video-rerun/deliverables --port 8292
-node tests/three-battle-video-playback.mjs --url http://127.0.0.1:8292/ --out output/playwright/video-rerun/playback
-```
-
-重新生成的报告默认将画面核验标为待审核；只有实际检查截图后，才通过 `--visual-qa` 传入新的核验记录。`scripts/extract-three-battle-video-frames.mjs --assembly 清单路径 --out 新截图目录` 可从交付 MP4 提取带哈希的检查帧。同期视频只对齐录制起点，不保证中间每帧的粒子年龄严格相同；湮灭之星等快速变化效果应另用固定年龄截图核验。
-
-`node scripts/verify-three-special-fixed-age.mjs` 可复跑湮灭之星的五组固定年龄、相机和着色时间对照，默认输出到新的时间戳目录。像素比较需要 Python 的 Pillow 和 NumPy；可用 `--python` 指定已有运行环境。
-
-本次交付位于 `output/playwright/three-battle-video/deliverables/`，包含 600 秒完整战斗、10 段并排对照、`report.md`、`metrics.json` 和 `evidence/`。完整验收与最终 HUD 补丁的版本边界见 `output/playwright/three-battle-acceptance.md`。
+仅运行 `npm test` 中的 P0 与必要 P1 检查，范围见 `tests/README.md`。不再维护独立战场验收、千舰基准、自动录像或预览服务。历史测量保留在本机 `output/`，不代表当前版本已经完成同一性能验收。

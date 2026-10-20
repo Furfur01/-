@@ -333,10 +333,12 @@
         "pc": 70,
         "instruction": 2462302218
       },
-      "localization_key": "",
+      "localization_key": "menu.destroyer_description",
       "in_uploaded_atlas": true,
       "sha256": "50e2657043f123f1f9af9931c7ed4737028ec993d36f090c19d2cc45ccb4e521",
-      "name_note": ""
+      "name_note": "",
+      "localization_cn": "随着军备竞争的日益激烈化，各种强力战舰和高端炮台被相继研究出来，但没有任何一种战舰或炮台能完美地凌驾于其他武器之上。这种混乱的局面使好战的舰长们开始怀念起战列舰独霸星空的时代。  \n这时一种全新的武器概念被提出来。这就是死星。它拥有如星球一般庞大的体积，可以搭载无数炮台。它无坚不摧，以至于它到哪里，哪里就只能剩下死亡。          \n但人们无法克服一个难题，那就是引力。如此巨大质量的物体，如果自身没有足够的引力，它很快就会解体。研究于是陷入了僵局。但在这过程中，另一种体积远远小于死星，但能力却领先于现有所有舰船的战斗堡垒式新战舰被无意中设计出来。毁灭者由此而诞生。\n作为最恐怖的战舰，没有任何一种别的舰船能够与毁灭者匹敌。",
+      "localization_en": "With the increasingly fierce arms race, a variety of powerful warships and high-end defense buildings have been developed, but there is no warship or defensive facility that can perfectly take precedence over other weapons. This chaotic situation makes many militant captains begin to miss the time when only the battleship dominates the sky.\nThen a new concept of weapon is raised. Like a Death Star. It is huge and can be equipped with numerous cannons. Where it goes, only death remains.\nBut people can not overcome the problem of gravity. Such a great quality, if there is not enough gravity, it will disintegrate soon. The research is and development is at an impasse. However, in this process, a new warship had been inadvertently designed. It’s volume is far less than the Death Star, but it has the ability to lead a strong fighting force of all of the existing ship. Thus the Destroyer was born.\nAs the most horrible warship, there is no other ships that can match with the Destroyer. \n"
     },
     {
       "category": "fleet",
@@ -824,12 +826,12 @@
         "pc": 76,
         "instruction": 2479489034
       },
-      "localization_key": "menu.interceptor",
+      "localization_key": "menu.interceptor_description",
       "in_uploaded_atlas": true,
       "sha256": "14e559652ee7ea02c9d4f332763c3fda5a2391af82df5a1196b4fa3d30c87622",
       "name_note": "",
-      "localization_cn": "裂变者",
-      "localization_en": "Interceptor"
+      "localization_cn": "裂变者是建立在当前基础造船工业上，利用聚能波粒不断的膨胀、发光、塌缩时产生的巨大能量推动前行。并且聚能波粒在塌缩后产生的强大引力赋予了裂变者足以毁灭一切的力量力量。",
+      "localization_en": "A newly-developed technique of Galaxium collection and processing enables the construction of the Interceptor, a fearsome counterpoint to the Destroyer."
     },
     {
       "category": "fleet",
@@ -857,12 +859,12 @@
         "pc": 79,
         "instruction": 2496299018
       },
-      "localization_key": "building.TSZ_NAME",
+      "localization_key": "menu.desc_behemoth",
       "in_uploaded_atlas": true,
       "sha256": "f6324df90210bc892b12194bee4bf504c441ee781591a11f07520e0157e5098f",
       "name_note": "",
-      "localization_cn": "深空吞噬者",
-      "localization_en": "Iron Behemoth"
+      "localization_cn": "深空吞噬者，这种产生于银河战争残骸的特殊战场杀手，从设计之初就受到了整个银河帝国的瞩目。银河帝国的科学家为了让其投入量产，划时代的开创了反引力构架建造平台，实现了快速建造复杂巨大的机械结构的目的。为了实现推进这个银河帝国历史上最大的舰船航行，跃迁引擎这个曾经是理论的推进技术也在旗舰研究中心实现并列装到深空吞噬者上。再加上深空吞噬者其厚重的装甲、聚合高能武器系统、搭载舰队加成模块，都让这个庞然大物成为了战场毋庸置疑的统治者。\n\n提升当前所在舰队攻击力。舰队中深空吞噬者数量越多，提升幅度越大。",
+      "localization_en": "The Iron Behemoth has for generations been the fantasy of scientists across the galaxy. Nothing this large or mechanically sophisticated has ever been constructed before, and the techology and cost involved with construction of this monster is staggering. Coupled with other ships in your fleet, almost nothing will stand in your path once you have Behemoths fighting on your side.\n\nIncrease the current fleet's attack. The more Iron Behemoth in fleet, the more fleet attacking increase."
     },
     {
       "category": "fleet",

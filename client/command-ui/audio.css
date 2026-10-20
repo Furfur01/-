@@ -1,0 +1,8 @@
+.sec-audio-settings{margin-bottom:22px}
+.sec-audio-settings .sec-panel-heading{margin-bottom:14px}
+.sec-audio-controls{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.sec-audio-volume{display:flex;align-items:center;gap:14px;flex:1;max-width:460px;min-width:220px;font-size:13px}
+.sec-audio-volume input{flex:1;min-width:80px;height:36px;padding:0;accent-color:var(--mint);cursor:pointer}
+.sec-audio-volume output{width:42px;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+.sec-audio-settings .sec-fineprint{margin:12px 0 0;font-size:12px}
+@media(max-width:650px){.sec-audio-controls{gap:12px}.sec-audio-volume{order:3;flex-basis:100%;max-width:none}.sec-audio-controls>.text-button{margin-left:auto}}

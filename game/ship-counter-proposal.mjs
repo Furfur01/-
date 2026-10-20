@@ -1,6 +1,7 @@
-// Review-only balance proposal. Settlement continues to import catalog.mjs.
+// Retired rapid-fire proposal, kept only for historical research.
+import legacy from '../research/legacy-rapid-fire.json' with {type:'json'};
 export function shipCounterProposal(units,archive){
-  const rapid=Object.fromEntries(archive.map(s=>[s.id,{...(units[s.id]?.rapid||{})}]));
+  const rapid=Object.fromEntries(archive.map(s=>[s.id,{...(legacy.matrix[s.id]||{})}]));
   Object.assign(rapid,{
     Interceptor:{Light_Fighter:12,Heavy_Fighter:6,Cruiser:3,Cargo_Ship:10,Large_Cargo_Ship:10,Probe:10,Solar_Satellite:10},
     Iron_Behemoth:{},
@@ -19,7 +20,7 @@ export function shipCounterProposal(units,archive){
     ...Object.entries(rapid[s.id]).map(([id,rate])=>({direction:'against',target_id:id,fleet_type:ids[id]??null,unit_name:names[id],damage_rate:rate,bonus_damage_rate:0})),
     ...Object.entries(rapid).filter(([,r])=>r[s.id]>1).map(([id,r])=>({direction:'from',target_id:id,fleet_type:ids[id]??null,unit_name:names[id],damage_rate:r[s.id],bonus_damage_rate:0}))
   ]}));
-  return {status:'DRAFT_REQUIRES_USER_CONFIRMATION',appliedToCombat:false,interpretation:{damage_rate:'Local proposed rapid-fire r; continuation probability 1 - 1/r, not direct damage multiplication',bonus_damage_rate:'0 at base level; no invented enhancement progression',fatal_damage_list:'Derived outgoing and incoming relations; direction names are a local review format, not a recovered wire schema'},roles,ships,special:{
+  return {status:'ARCHIVED_REPLACED_BY_SPLASH',appliedToCombat:false,interpretation:{damage_rate:'Local proposed rapid-fire r; continuation probability 1 - 1/r, not direct damage multiplication',bonus_damage_rate:'0 at base level; no invented enhancement progression',fatal_damage_list:'Derived outgoing and incoming relations; direction names are a local review format, not a recovered wire schema'},roles,ships,special:{
     Annihilator:{source:'menu.GC_bomb_description',trigger:{side:'attacker',atLeastDistinct:2,enemyTypes:['Titanenergetic_Frigate','Devourer_Interceptor','Interceptor','Iron_Behemoth']},bypassShield:true,immuneTargets:['Reaper'],maxOwned:200,recovery:false,damageProposal:{formula:'baseExplosionDamage × targetMultiplier × (1 + 0.05 × (initialBombCount - 1)) / sqrt(livingEnemyTypeCount)',baseExplosionDamage:null,multipliers:{Interceptor:1.5,Iron_Behemoth:1.25,Devourer_Interceptor:1,Titanenergetic_Frigate:.75,Reaper:0,default:.5},note:'Multipliers, attenuation and stacking are draft design. Base explosion value needs separate confirmation; not executable balance.'}},
     Reaper:{source:'menu.GC_reaper_description',immuneTo:['Annihilator'],proposedTargetPriority:['Iron_Behemoth','Titanenergetic_Frigate','Devourer_Interceptor','Death_Star','Guardian','Destroyer','Dreadnought','Battleship'],fallback:'Other living targets selected uniformly by ship count',prioritySource:'Draft ordering; APK confirms special ordering but does not supply it'}
   }};

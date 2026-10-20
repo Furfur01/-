@@ -4,9 +4,11 @@ data/
 # Local captures, replay fixtures, isolated saves, tool downloads and Git backups.
 /output/
 /opendesign/previews/
+/.playwright-cli/
+/.claude/settings.local.json
 
-# Recovered modelling work is archived locally. Keep the two source meshes used
-# by the identity regression test; these are stored through Git LFS.
+# Recovered modelling work is archived locally. Keep these editable source
+# meshes and their provenance; the meshes are stored through Git LFS.
 /models/recovered/*
 !/models/recovered/remaining-tripo-20261013/
 /models/recovered/remaining-tripo-20261013/*

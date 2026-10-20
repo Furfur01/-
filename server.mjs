@@ -11,7 +11,6 @@ import {battleViewEnvironment} from './game/battle-terrain.mjs';
 import {starMap} from './game/star-map.mjs';
 import {battleVisible,controlBattle,spatialSnapshot,spatialMetadata} from './game/spatial-battle.mjs';
 import {battleStorage} from './game/battle-storage.mjs';
-import {trialCatalog,startTrial} from './game/battle-trial.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url)),saveFile=process.env.EMPIRE_SAVE_FILE||path.join(root,'data','universe.json');
 const isolated=path.resolve(saveFile).toLowerCase()!==path.join(root,'data','universe.json').toLowerCase();
@@ -25,10 +24,19 @@ for(const method of ['log','warn','error']){
   const original=console[method].bind(console);
   console[method]=(...args)=>{fs.appendFileSync(logFile,`${new Date().toISOString()} ${format(...args)}\n`);if(!managed)original(...args);};
 }
-// The test fleet editor can only run against an explicitly separate save.
-const trialEnabled=process.env.EMPIRE_BATTLE_TRIAL==='1'&&isolated;
 fs.mkdirSync(path.dirname(saveFile),{recursive:true});
 let world=fs.existsSync(saveFile)?JSON.parse(fs.readFileSync(saveFile,'utf8')):createWorld();
+if(fs.existsSync(saveFile)&&!(world.npcDefenseRepairVersion>=1)){
+  const backup=saveFile+'.before-npc-defense-repair-'+Date.now()+'.bak';
+  fs.copyFileSync(saveFile,backup,fs.constants.COPYFILE_EXCL);
+  if(fs.existsSync(saveFile+'.battles')){
+    // Battle storage is flat. Node 24 on Windows can crash in cpSync on Chinese
+    // directory paths; copy each checkpoint before allowing migration to run.
+    fs.mkdirSync(backup+'.battles');
+    for(const name of fs.readdirSync(saveFile+'.battles'))fs.copyFileSync(path.join(saveFile+'.battles',name),path.join(backup+'.battles',name),fs.constants.COPYFILE_EXCL);
+  }
+  console.log('野怪防御规则更新前的存档备份：%s',backup);
+}
 const battleStore=battleStorage(saveFile);
 world=migrateWorld(battleStore.restore(world));
 let dirty=true,lastSavedAt=fs.existsSync(saveFile)?fs.statSync(saveFile).mtime.toISOString():null;
@@ -109,14 +117,6 @@ const server=http.createServer(async(req,res)=>{
       const player=getPlayer(req);
       if(!player){json(res,{error:'请刷新游戏主页，重新连接账号'},401);return;}
       advance(world);dirty=true;
-      if(url.pathname==='/api/battle-trial'){
-        if(req.method==='GET'){json(res,trialEnabled?trialCatalog():{enabled:false});return;}
-        if(!trialEnabled){json(res,{error:'编队测试仅在隔离试玩服务开放'},403);return;}
-        if(req.method!=='POST'){json(res,{error:'不支持的操作'},405);return;}
-        if(!origin||new URL(origin).host!==req.headers.host){json(res,{error:'来源无效'},403);return;}
-        let body='';for await(const chunk of req){body+=chunk;if(body.length>8192){json(res,{error:'请求过大'},413);return;}}
-        try{const b=startTrial(world,player,JSON.parse(body));save();json(res,{id:b.id});}catch(error){json(res,{error:error.message},400);}return;
-      }
       const combat=/^\/api\/battles\/([a-f0-9-]+)(?:\/(events|control))?$/.exec(url.pathname);
       if(combat){
         const current=()=>world.battles?.[combat[1]],b=current();
@@ -146,7 +146,7 @@ const server=http.createServer(async(req,res)=>{
           if(!origin||new URL(origin).host!==req.headers.host){json(res,{error:'来源无效'},403);return;}
         }
         const replay=buildReplay(report);
-        if(/^spatial-v[12]$/.test(report.engine)){
+        if(/^spatial-v[1-5]$/.test(report.engine)){
           const stored=world.battles[report.battleId],b=stored?.storage?battleStore.read(stored.storage):stored;
           if(!b){json(res,{error:'战斗记录缺失'},404);return;}
           replay.version=4;replay.record={metadata:spatialMetadata(b),frames:b.frames,events:b.events.filter(e=>e.type!=='input'),boundary:b.boundary,environment:battleViewEnvironment(b.environment,world.planets[b.target]||world.planets[report.targetId]||(b.trial?world.planets[player.home]:null)||{})};

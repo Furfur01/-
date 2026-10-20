@@ -13,7 +13,6 @@ import {shipLengths} from '../../../game/ship-weapon-mounts.mjs';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reviewMode=location.pathname.endsWith('/ships-review.html');
 const modelVersion=()=>reviewMode?$('#model-version').value:'new';
-const counterVersion=()=>reviewMode?$('#counter-version').value:'current';
 const fields={strength:'护甲',shield:'护盾',attack:'攻击',speed:'速度',cargo:'货舱',fuel:'燃料'};
 const stage=$('#stage'),renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;stage.append(renderer.domElement);
@@ -26,7 +25,7 @@ controls.enableDamping=true;controls.autoRotateSpeed=.6;
 scene.add(new THREE.HemisphereLight(0xd7edf7,0x263743,2));
 for(const[color,power,pos]of[[0xffead9,3,[-8,10,-6]],[0x8bdfff,2,[6,4,6]]]){const light=new THREE.DirectionalLight(color,power);light.position.set(...pos);scene.add(light);}
 const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),environment=pmrem.fromScene(room,.04);scene.environment=environment.texture;scene.environmentIntensity=.5;room.dispose();pmrem.dispose();
-let ships=[],units={},tech={},proposal=null,current=null,selected=null,fitDistance=15,wireframe=false,active=true,selectionToken=0,comparing=false;
+let ships=[],units={},tech={},current=null,selected=null,fitDistance=15,wireframe=false,active=true,selectionToken=0,comparing=false;
 const displayName=s=>units[s.id]?.name||(s.id==='Reaper'?'收割者':s.name);
 const target=new THREE.Vector3();
 const modelCache=new ShipModelCache();
@@ -42,7 +41,7 @@ function inspect(view='perspective'){
   }
 }
 function fit(){if(!current)return;const box=new THREE.Box3().setFromObject(current);if(firingRange?.target)box.union(new THREE.Box3().setFromObject(firingRange.target));const size=box.getSize(new THREE.Vector3());box.getCenter(target);const aspect=stage.clientWidth/stage.clientHeight,half=size.length()*.56/Math.min(1,aspect);camera.top=half;camera.bottom=-half;camera.right=half*aspect;camera.left=-half*aspect;camera.zoom=1;fitDistance=size.length()*2;camera.near=Math.max(.001,fitDistance/1000);camera.far=fitDistance*8;camera.updateProjectionMatrix();controls.minZoom=.3;controls.maxZoom=4;inspect();}
-function counterRows(entries){return entries.map(([id,rate])=>`<div class="counter"><button data-select="${esc(id)}">${esc(units[id]?.name||ships.find(s=>s.id===id)?.name||id)}</button><b>${rate}</b></div>`).join('');}
+function damageRows(entries,incoming=false){return entries.map(([id,rate])=>`<div class="counter"><button data-select="${esc(id)}">${esc(units[id]?.name||id)}</button><b>×${rate} / ${Math.round((incoming?units[id]?.criticalChances?.[selected]||0:units[selected]?.criticalChances?.[id]||0)*1e4)/100}%</b></div>`).join('')||'<p>无溅射目标</p>';}
 function renderReviewData(){
   const ship=ships.find(s=>s.id===selected),u=units[selected];if(!ship)return;
   renderer.toneMappingExposure=current?.userData.revision&&modelVersion()==='new'?.94:1.3;
@@ -62,12 +61,11 @@ function renderReviewData(){
   $('#reference-image').hidden=!ship.reference;if(ship.reference)$('#reference-image').src='assets/ship-references/'+ship.reference.split('/').at(-1);
   $('#reference-image').alt=ship.name+' APK 原图';
   $('#ship-stats').innerHTML=Object.entries(fields).map(([k,name])=>`<div class="stat"><span>${name}</span><b>${number(u?.[k]??ship.stats[k])}</b></div>`).join('');
-  $('#source-note').textContent=u?'基础值来自已有截图校准；造价、前置和速射沿用当前规则，APK 服务器数值未取得。':ship.communitySource?'基础值参考 Galaxy Empire 社区 Wiki（2026-10-13 核对），版本待确认；不是 APK 解包数值。造价与结算未补入。':'APK 身份与图标已对齐；服务器属性、造价和克制倍率未取得，暂不开放建造。';
+  $('#source-note').textContent=u?'基础值来自已有截图校准；造价、前置和溅射倍率沿用当前规则，APK 服务器数值未取得。':ship.communitySource?'基础值参考 Galaxy Empire 社区 Wiki（2026-10-13 核对），版本待确认；不是 APK 解包数值。造价与结算未补入。':'APK 身份与图标已对齐；服务器属性、造价和克制倍率未取得，暂不开放建造。';
   $('#requirements').textContent=u?`金属 ${number(u.cost[0])} / 晶体 ${number(u.cost[1])} / 气体 ${number(u.cost[2])}。前置：${u.req.map(([id,n])=>(tech[id]?.name||id)+' '+n+'级').join('、')}${u.parts?'；外星部件 '+u.parts:''}`:'待取得服务器配置';
-  $('#counters').innerHTML=u?'<p>克制目标 · 速射值</p>'+(counterRows(Object.entries(u.rapid))||'<p>本地未配置额外速射</p>')+'<p>被以下单位克制</p>'+(counterRows(Object.values(units).filter(x=>x.rapid?.[selected]>1).map(x=>[x.id,x.rapid[selected]]))||'<p>本地未配置；不代表 APK 中无克制</p>')+'<p class="source-note">速射值 r：继续开火概率 1 − 1/r。与实际结算共用同一份数据。</p>':'<p>倍率待取得，不能按“没有克制”处理。</p>';
+  $('#counters').innerHTML=u?'<p>溅射半径 '+number(u.splashRadius||0)+' · 暴击伤害 ×2'+'</p><p>暴击率 = 1 − 1 ÷ 倍率；倍率 0、1 均不暴击。</p><p>溅射倍率 / 暴击率 · 对以下目标</p>'+damageRows(Object.entries(u.splashMultipliers||{}))+'<p>受到以下单位的溅射倍率 / 暴击率</p>'+damageRows(Object.values(units).filter(x=>x.splashMultipliers?.[selected]>0).map(x=>[x.id,x.splashMultipliers[selected]]),true)+'<p class="source-note">倍率 ×0 免疫溅射和暴击，直击只受基础伤害；溅射随距离线性衰减。</p>':'<p>暂未开放</p>';
   if(selected==='Reaper')$('#counters').innerHTML+='<p>APK 已证实：免疫湮灭之星攻击，具有特殊攻击顺序（顺序细节未取得）。</p>';
   if(selected==='Annihilator')$('#counters').innerHTML+='<p>APK 已证实：进攻方在敌方同时有至少两种裂变者、深空吞噬者、噬能截击者、钛能守卫者时逐个引爆；无视护盾并造成群体伤害。Reaper 免疫。完整条件见下方原文。</p>';
-  if(counterVersion()==='proposal'&&proposal){const row=proposal.ships.find(s=>s.id===selected);$('#counters').innerHTML='<p class="source-note">拟定方案 · 待你确认，尚未用于结算。'+esc(row.role)+'</p><p>克制目标 · 拟定速射值</p>'+(counterRows(Object.entries(row.rapid))||'<p>无额外普通速射</p>')+'<p>被以下单位克制</p>'+(counterRows(proposal.ships.filter(s=>s.rapid[selected]).map(s=>[s.id,s.rapid[selected]]))||'<p>无额外普通速射；特殊机制另列</p>')+'<p class="source-note">基础 bonus_damage_rate = 0。速射值不是直接伤害倍数。</p>';if(proposal.special[selected])$('#counters').innerHTML+='<p>'+esc(selected==='Reaper'?'免疫湮灭之星；拟定优先攻击深空吞噬者、钛能守卫者、噬能截击者。':'按 APK 文案逐个自爆、无视护盾；拟定对裂变者 / 深空吞噬者 / 噬能截击者 / 钛能守卫者伤害修正为 1.5 / 1.25 / 1 / 0.75，Reaper 为 0。')+'</p>';}
   $('#model-description').textContent=ship.description||'APK 已确认舰种编号；未提取到对应说明。';$('#model-note').textContent=modelVersion()==='preserved'?'保留的现有模型，未删除或替换。此版本可能存在原图形状错配。':ship.reference?'APK 重建草案；隐藏面与厚度为补建。90% 形状相似为待验收目标，尚未标为达标。':'无对应 APK 原图，当前为概念模型，不能进行原图相似度验收。';
   if(current?.userData.revision==='fleet-sculpted-02'&&modelVersion()==='new')$('#model-note').textContent=(ship.reference?'异形装甲 02：按各自原图轮廓，以大块异形装甲错层叠压，武器采用低矮炮座。90% 外形相似度待验收。':'异形装甲 02：保留旧版概念轮廓，无对应 APK 原图。')+(selected==='Probe'?' 三组传感分支绕中心轴相隔 120°，无武器。':'')+(ship.spinalMount?' '+ship.spinalMount.reason:' 未安装同轴大炮。');
   if(current?.userData.rebuiltFromScratch){
@@ -80,6 +78,14 @@ function renderReviewData(){
   if(current?.userData.revision==='death-star-user-01'){
     $('#model-version option[value="new"]').textContent='用户死星模型';
     $('#model-note').textContent='采用你提供的 Death_Star_Threejs 模型：保留装甲纹理、表面机械结构、赤道壕沟、凹面主炮和八组发射器。可旋转、缩放及导出 GLB。';
+  }
+  if(current?.userData.revision==='four-ships-transports-01'){
+    $('#model-version option[value="new"]').textContent=selected==='Cargo_Ship'?'用户 T02 小型运输船':'用户 T03 大型运输船';
+    $('#model-note').textContent='采用 Four_Ships_ThreeJS_Offline.html 中的原始造型与配色，保留开放货舱、侧舱结构和四个喷口。可旋转、缩放及导出 GLB。';
+  }
+  if(current?.userData.revision==='october-user-models-01'){
+    $('#model-version option[value="new"]').textContent='用户提供模型';
+    $('#model-note').textContent='采用你指定的 HTML 模型，保留原始造型与配色；喷口、舰载武器位置和舰队远景模型已同步。可旋转、缩放及导出 GLB。';
   }
   if(current?.userData.specialDesign){
     $('#model-version option[value="new"]').textContent=current.userData.design;
@@ -104,8 +110,8 @@ function renderData(){
   $('#ship-stats').innerHTML=Object.entries(fields).map(([key,label])=>`<div class="stat"><span>${label}</span><b>${u?number(u[key]):'—'}</b></div>`).join('');
   $('#availability').textContent=u?'':'暂未开放';$('#availability').hidden=!!u;
   $('#requirements').textContent=u?`金属 ${number(u.cost[0])} / 晶体 ${number(u.cost[1])} / 气体 ${number(u.cost[2])}。前置：${u.req.map(([id,n])=>(tech[id]?.name||({Shipyard:'太空电梯',Missile_Silo:'导弹发射井'})[id]||'设施')+' '+n+' 级').join('、')}${u.parts?'；外星部件 '+u.parts:''}`:'暂未开放';
-  // Player-facing counters always read the live settlement catalog. Drafts stay in the review page.
-  $('#counters').innerHTML=u?'<p>克制目标 · 速射值</p>'+(counterRows(Object.entries(u.rapid||{}))||'<p>无额外速射</p>')+'<p>被以下单位克制</p>'+(counterRows(Object.values(units).filter(x=>x.rapid?.[selected]>1).map(x=>[x.id,x.rapid[selected]]))||'<p>无额外速射</p>')+'<p class="source-note">速射值 r：命中后继续开火的概率为 1 − 1/r。</p>':'<p>暂未开放</p>';
+  // Player-facing values use the same damage multiplier fields as settlement.
+  $('#counters').innerHTML=u?'<p>溅射半径 '+number(u.splashRadius||0)+' · 暴击伤害 ×2'+'</p><p>暴击率 = 1 − 1 ÷ 倍率；倍率 0、1 均不暴击。</p><p>溅射倍率 / 暴击率 · 对以下目标</p>'+damageRows(Object.entries(u.splashMultipliers||{}))+'<p>受到以下单位的溅射倍率 / 暴击率</p>'+damageRows(Object.values(units).filter(x=>x.splashMultipliers?.[selected]>0).map(x=>[x.id,x.splashMultipliers[selected]]),true)+'<p class="source-note">倍率 ×0 免疫溅射和暴击，直击只受基础伤害；溅射随距离线性衰减。</p>':'<p>暂未开放</p>';
 }
 async function select(id){if(!ships.some(s=>s.id===id))return false;comparing=false;$('#scale-compare').setAttribute('aria-pressed','false');if(reviewMode)$('#export-model').hidden=false;weaponPreview.stop();$('#weapon-demo').setAttribute('aria-pressed','false');$('#weapon-demo').textContent='武器演示';const token=++selectionToken;$('#model-loading').hidden=false;try{const next=modelVersion()==='preserved'?(await new GLTFLoader().loadAsync('assets/preserved-ships/'+id+'.glb')).scene:make(id);if(token!==selectionToken){modelCache.release(next);return false;}selected=id;if(current){scene.remove(current);modelCache.release(current);}current=prepareShipPreviewMaterials(next);current.traverse(o=>{if(o.isMesh)o.material.wireframe=wireframe;});scene.add(current);firingRange?.select(current);fit();renderData();if(reviewMode){let triangles=0;current.traverse(o=>{if(o.isMesh)triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3*(o.isInstancedMesh?o.count:1);});$('#model-stats').textContent=Math.round(triangles).toLocaleString()+' TRIANGLES'+(shipLengths[id]?' · 舰长 '+shipLengths[id]:'');}$('#model-loading').hidden=true;if(reviewMode)$('#export-status').textContent='';return true;}catch(e){if(token===selectionToken)$('#model-loading').textContent=e.message;return false;}}
 function compareScale(){
@@ -128,10 +134,10 @@ function compareScale(){
   $('#weapon-fit-note').textContent='所有舰船按实际舰长排列。轻战、重战和钛能无炮台；点击左侧舰种返回单舰。';
 }
 function matrix(){
-  const rows=reviewMode?ships:ships.filter(s=>units[s.id]),targets=[...rows,...Object.values(units).filter(u=>u.type==='defense'&&!u.missile)],draft=counterVersion()==='proposal';
-  $('#matrix-version').textContent=reviewMode?(draft?'拟定方案 · 待确认':'现行结算规则'):'';
-  $('#matrix-scroll').innerHTML='<table><thead><tr><th>攻击方 ↓ / 目标 →</th>'+targets.map(s=>'<th>'+esc(s.name)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(s=>'<tr><th>'+esc(s.name)+'</th>'+targets.map(t=>{const rate=draft?proposal.ships.find(x=>x.id===s.id).rapid[t.id]:units[s.id]?.rapid[t.id];return `<td ${rate?'data-rate="'+rate+'"':''}>${!draft&&(!units[s.id]||!units[t.id])?'?':rate||'—'}</td>`;}).join('')+'</tr>').join('')+'</tbody></table>';
-  $('#counter-matrix').showModal();
+ const rows=ships.filter(s=>units[s.id]),targets=[...rows,...Object.values(units).filter(u=>u.type==='defense'&&!u.missile)];
+ $('#matrix-version').textContent='当前规则';
+ $('#matrix-scroll').innerHTML='<table><thead><tr><th>攻击方 ↓ / 目标 →</th>'+targets.map(s=>'<th>'+esc(s.name)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(s=>'<tr><th>'+esc(displayName(s))+'</th>'+targets.map(t=>'<td>×'+number(units[s.id].splashMultipliers?.[t.id]??0)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ $('#counter-matrix').showModal();
 }
 async function exportModel(id=selected){if(!ships.some(s=>s.id===id))throw Error('未知舰船');if(modelVersion()==='preserved'){const r=await fetch('assets/preserved-ships/'+id+'.glb');if(!r.ok)throw Error('现有模型读取失败');return r.arrayBuffer();}const model=createShipModel(id);model.userData={...model.userData,...ships.find(s=>s.id===id),units:shipLengths[id]?'relative hull length; Light_Fighter = 1':'display units',revision:model.userData.revision||'preserved-detail-model',silhouetteTarget:.9,silhouetteVerified:false};try{return await new GLTFExporter().parseAsync(model,{binary:true,trs:true});}finally{disposeShip(model);}}
 $('#ship-list').onclick=e=>{const b=e.target.closest('[data-model]');if(b)select(b.dataset.model);};$('#counters').onclick=e=>{const b=e.target.closest('[data-select]');if(b)select(b.dataset.select);};
@@ -139,7 +145,7 @@ document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>inspect(b.data
 $('#auto-rotate').onclick=()=>{controls.autoRotate=!controls.autoRotate;$('#auto-rotate').setAttribute('aria-pressed',String(controls.autoRotate));};if(reviewMode)$('#wireframe').onclick=()=>{wireframe=!wireframe;current?.traverse(o=>{if(o.isMesh)o.material.wireframe=wireframe;});$('#wireframe').setAttribute('aria-pressed',String(wireframe));};
 $('#scale-compare').onclick=compareScale;
 $('#matrix-open').onclick=matrix;$('#matrix-close').onclick=()=>$('#counter-matrix').close();
-if(reviewMode){$('#model-version').onchange=()=>select(selected);$('#counter-version').onchange=renderData;}
+if(reviewMode){$('#model-version').onchange=()=>select(selected);}
   $('#weapon-demo').onclick=()=>{if(weaponPreview.active){weaponPreview.stop();fit();}else{weaponPreview.start(current);fit();camera.zoom=.74;camera.updateProjectionMatrix();}$('#weapon-demo').setAttribute('aria-pressed',String(weaponPreview.active));$('#weapon-demo').textContent=weaponPreview.active?'停止武器演示':'武器演示';};
 if(reviewMode)$('#export-model').onclick=async()=>{const b=$('#export-model');b.disabled=true;try{const id=selected,data=await exportModel(id),url=URL.createObjectURL(new Blob([data],{type:'model/gltf-binary'})),a=document.createElement('a');a.href=url;a.download=id+'.glb';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);$('#export-status').textContent='已导出 GLB';}catch(e){$('#export-status').textContent=e.message;}finally{b.disabled=false;}};
 function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h);fit();}new ResizeObserver(resize).observe(stage);resize();
@@ -147,4 +153,4 @@ renderer.setAnimationLoop(time=>{if(!active||document.hidden)return;weaponPrevie
 window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent)return;const d=e.data;if(d?.type==='empire-visibility')active=!!d.active;if(d?.type==='empire-select')select(d.id||legacyIds[d.index]);if(d?.type==='empire-state'&&d.catalog){units=d.catalog.units;tech=d.catalog.tech;renderData();}});
 if(parent!==window)document.body.classList.add('embedded');
 if(new URLSearchParams(location.search).get('sample')==='1')document.body.classList.add('sample-review');
-fetch('ships-data.json').then(r=>{if(!r.ok)throw Error('舰船数据读取失败');return r.json();}).then(async data=>{ships=data.ships.filter(s=>data.units[s.id]?.fleetAvailable!==false&&(!rangeMode||shipLengths[s.id]));units=data.units;tech=data.tech;proposal=data.proposal;$('#ship-list').innerHTML=ships.map(s=>`<button data-model="${s.id}">${reviewMode?`<span>${s.apkId?String(s.apkId).padStart(2,'0'):'旧'}</span>`:''}${esc(reviewMode?s.name:displayName(s))}</button>`).join('');await select(new URLSearchParams(location.search).get('ship')||'Battleship');if(!current)await select('Battleship');window.ShipAtlas={ships,select,exportModel,renderer,scene,camera,controls,get current(){return current;},get selected(){return selected;}};parent.postMessage({type:'empire-hangar-ready'},location.origin);}).catch(e=>{$('#model-loading').textContent=e.message;});
+fetch('ships-data.json').then(r=>{if(!r.ok)throw Error('舰船数据读取失败');return r.json();}).then(async data=>{ships=data.ships.filter(s=>data.units[s.id]?.fleetAvailable!==false&&(!rangeMode||shipLengths[s.id]));units=data.units;tech=data.tech;$('#ship-list').innerHTML=ships.map(s=>`<button data-model="${s.id}">${reviewMode?`<span>${s.apkId?String(s.apkId).padStart(2,'0'):'旧'}</span>`:''}${esc(reviewMode?s.name:displayName(s))}</button>`).join('');await select(new URLSearchParams(location.search).get('ship')||'Battleship');if(!current)await select('Battleship');window.ShipAtlas={ships,select,exportModel,renderer,scene,camera,controls,get current(){return current;},get selected(){return selected;}};parent.postMessage({type:'empire-hangar-ready'},location.origin);}).catch(e=>{$('#model-loading').textContent=e.message;});

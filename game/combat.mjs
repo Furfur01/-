@@ -10,7 +10,7 @@ export function battle(attacker,defender,attackTech={},defenseTech={},seed=1){
   for(const technology of [attackTech,defenseTech])for(const value of Object.values(technology))if(!Number.isFinite(value)||value<0)throw new Error('无效的战斗科技');
   if(!Number.isSafeInteger(seed))throw new Error('无效的战斗种子');
   const initial=structuredClone({attacker,defender}),technology=structuredClone({attacker:attackTech,defender:defenseTech});
-  const unitStats=Object.fromEntries([...new Set([...Object.keys(attacker),...Object.keys(defender)])].map(id=>[id,{name:units[id].name,strength:units[id].strength,shield:units[id].shield,attack:units[id].attack}]));
+  const unitStats=Object.fromEntries([...new Set([...Object.keys(attacker),...Object.keys(defender)])].map(id=>[id,{name:units[id].name,strength:units[id].strength,shield:units[id].shield,attack:units[id].attack,splashMultipliers:{...units[id].splashMultipliers},splashRadius:units[id].splashRadius,criticalChances:{...units[id].criticalChances},criticalMultiplier:units[id].criticalMultiplier}]));
   const result=simulate({seed,initial,technology,unitStats});
   const losses={attacker:{},defender:{}},debris=[0,0,0];
   for(const [side,fleet]of Object.entries(initial))for(const[id,count]of Object.entries(fleet)){

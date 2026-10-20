@@ -74,6 +74,7 @@
         body: JSON.stringify({ planet: api.planet?.id, ...payload })
       });
       update(data);
+      window.dispatchEvent(new CustomEvent('empire:action-success', {detail: payload}));
       return data;
     } catch (cause) {
       error = cause.message || '操作失败';

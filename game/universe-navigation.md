@@ -1,6 +1,6 @@
 # 连续银河视口
 
-正式入口使用一个持久 iframe、canvas、WebGL 上下文和相机。`galaxy/system/planet` 只控制信息面板，不决定场景生命周期。独立 ASTRAL 页面保留作参考，正式导航不再加载它。
+正式入口已迁移为一个持久 Three.js canvas、WebGL 上下文和相机，不再通过 iframe 加载星图。`galaxy/system/planet` 只控制信息面板，不决定场景生命周期。下文保留连续导航的坐标与早期 AURORA 接入记录；当前渲染实现见 `docs/three-world-migration/README.md`。
 
 ## 坐标与相机
 
@@ -44,10 +44,9 @@
 npm run build:command
 npm test
 node scripts/export-star-names.mjs
-node scripts/verify-universe.mjs
 ```
 
-浏览器验证自动生成独立验收存档、使用临时端口，覆盖五种天体、非本方无建筑、滚轮反转与悬停、30 次完整往返、唯一上下文、缓存稳定、桌面／移动尺寸和真实建设／取消操作。截图、视频和帧时间记录写入 `output/playwright/universe-seamless/`。使用项目现有的本地 Playwright/Chrome 环境；正式存档不会用于该验证。
+独立浏览器与性能脚本已于 2026-10-20 清理。历史导航截图、视频和帧时间记录保存在本机 `output/playwright/universe-seamless/`；当前 `npm test` 只覆盖 P0 与少量 P1，不代表重新执行该矩阵。
 
 本地界面请求使用同源客户端标记，优先连接 `data/session.json` 的固定账号，即使嵌入浏览器不保留 Cookie，也不会在轮询中创建临时账号或切换母星。存档首次引导会同步持久化会话；无效的已有会话会报错，避免自动创建新账号。
 
@@ -57,8 +56,8 @@ node scripts/verify-universe.mjs
 
 ## B 棒旋星系素材
 
-选定原图保存在 `opendesign/mockups/planet-construction-review/assets/galaxy-barred-b.png`。`python scripts/build-barred-galaxy.py` 仅分析原图，不修改图像，生成 499 个实际星系显示锚点与 76,872 个背景星点（其中包括细小星尘和可分辨的亮星）。原图 SHA-256、像素坐标、大小和亮度记录在 `galaxy-layout.json`。运行时使用同一 WebGL 相机绘制立体点云，不叠加另一套螺旋公式或平面贴图。重建后运行 `node scripts/build-colony-review.mjs`，并重建 `planet.bundle.js`。
+选定原图保存在 `opendesign/mockups/planet-construction-review/assets/galaxy-barred-b.png`。`python scripts/build-barred-galaxy.py` 仅分析原图，不修改图像，生成 499 个实际星系显示锚点与 76,872 个背景星点（其中包括细小星尘和可分辨的亮星）。原图 SHA-256、像素坐标、大小和亮度记录在 `galaxy-layout.json`。运行时使用同一 WebGL 相机绘制立体点云，不叠加另一套螺旋公式或平面贴图。重建后运行 `npm run build:world` 更新 `planet.bundle.js`。
 
 背景白点亮度随缩放平滑变化：近景约 6%，中景逐步提高，完整银河远景约 71%，上限 72%，仍保留不同大小与亮度层次。按视口宽高比校正缩放距离，手机与桌面采用一致的视觉分级。可选恒星的星点、细圈及近景太阳共用 `auroraStarColor` / `auroraStarType` 配色；辅助圆圈只在中距离显示，近端 2500–8000 渐入、远端 38000–75000 渐出，完整银河视角只显示有颜色的星点。去除叠加的所有者圆圈与大光晕，归属仍由疆域色块和母星标识呈现。星座连线只连接实际可选恒星，按最短邻接边组成最多 8 颗的小组，每颗至多 3 条连接，世界坐标连线长度不超过 5400，并避开 X/Z 平面交叉；连线仅用于视觉导航，不是航线或势力数据。悬停或选中时突出对应组，近景自动淡出。手机缩小标记尺寸并省略没有足够屏幕间距的短线。银河中多个恒星点击范围重叠时，选择距点击点最近的恒星中心；其他近景天体继续按深度拾取。
 
-针对该层的验证：`node --test tests/barred-galaxy.test.mjs tests/aurora-strategy.test.mjs tests/aurora-navigation.test.mjs tests/star-map.test.mjs`；`node tests/barred-galaxy-browser.mjs` 自动创建临时存档与独立端口，在 finally 中关闭服务并删除临时目录。当前距离分级和恒星配色的截图及报告写入 `output/playwright/barred-galaxy-distance/`；旧的固定亮度与星座连线版本保留在 `output/playwright/barred-galaxy-guides/`，最初 B 版本保留在 `output/playwright/barred-galaxy/`。
+历史距离分级和恒星配色记录保存在 `output/playwright/barred-galaxy-distance/`；固定亮度与星座连线版本在 `output/playwright/barred-galaxy-guides/`，最初 B 版本在 `output/playwright/barred-galaxy/`。相应独立脚本已清理，不作为当前发行验证。

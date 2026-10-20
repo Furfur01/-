@@ -30,6 +30,8 @@ function auroraUpdateCombatCamera(){
  let row=auroraBattleRow(b,view.shipId),meta=auroraBattleVessel(b,view.shipId);
  if(!row||row[6]<=0){meta=b.metadata.find(m=>m.owner===meta?.owner&&m.side===meta?.side&&b.ships.find(r=>r[0]===m.id)?.[6]>0);if(!meta){auroraFleetExit('destroyed');return;}view.shipId=meta.id;view.mode='follow';row=auroraBattleRow(b,meta.id);}
  const scale=auroraBattleScale(p,b),anchor=auroraBattleAnchor(p,b),pos=add(anchor,mul(row.slice(1,4),scale)),length=meta.profile.length,forward=[Math.sin(row[4])*Math.cos(row[5]),Math.sin(row[5]),Math.cos(row[4])*Math.cos(row[5])];
+ const cabinKind=n.resources?.battles?.cabinClass?.(meta.type,meta.profile);
+ if(view.mode==='bridge'&&cabinKind===null)view.mode='follow';
  if(view.mode==='bridge'){
   const pose=view.pose||{eye:[0,0,0],yaw:0,pitch:0},small=meta.profile.role==='fighter',roll=small?row[12]||0:0;
   const right=norm(cross(forward,[0,1,0])),up=norm(cross(right,forward)),bankRight=add(mul(right,Math.cos(roll)),mul(up,-Math.sin(roll))),bankUp=add(mul(up,Math.cos(roll)),mul(right,Math.sin(roll)));
@@ -178,7 +180,7 @@ function createAuroraBattles(){
   n.resources.label.style.visibility=cruising?'hidden':'';
   stats={visible:[],markers:[],loaded:!!shared,failed,renderer:'shared-battlefield'};n.flights=[];
   const forward=norm(sub(n.camera.center,n.eye)),right=norm(cross(forward,[0,1,0])),up=norm(cross(right,forward));
-  shared?.begin({eye:n.eye,center:n.camera.center,vp:n.vp,fov:n.renderFov||FOV,forward,up:n.bridgeUp||up,width:W,height:H,dpr:ratio,time:n.time,dt,sampleTime:n.sampleTime,occluders:cruising?[]:n.planets.filter(p=>p.kind!=='belt'&&screen(p.position,p.radius).radius>1).map(p=>({position:p.position,radius:p.radius*(p.npc?.65:1)}))});
+  shared?.begin({backgroundCanvas:canvas,eye:n.eye,center:n.camera.center,vp:n.vp,fov:n.renderFov||FOV,forward,up:n.bridgeUp||up,width:W,height:H,dpr:ratio,time:n.time,dt,sampleTime:n.sampleTime,occluders:cruising?[]:n.planets.filter(p=>p.kind!=='belt'&&screen(p.position,p.radius).radius>1).map(p=>({position:p.position,radius:p.radius*(p.npc?.65:1)}))});
   const records=new Map((n.battles||[]).map(b=>[b.id,b]));for(const [id,b]of auroraMapBattles)records.set(id,b);
   const replayTargets=new Set([...records.values()].filter(b=>b.replay).map(b=>b.target));
   for(const b of records.values()){
@@ -230,5 +232,5 @@ function createAuroraBattles(){
   if(failed){ctx.fillStyle='#ffac87';ctx.font='13px sans-serif';ctx.fillText('舰队画面加载失败，请刷新重试',24,H-100);}
   shared?.end();
  }
- return {draw,ready,update:()=>auroraFollowMission(visual,cruiseView),bridgeSeat:type=>shared?.bridgeSeat(type),pickBridgeConsole:(x,y)=>shared?.pickBridgeConsole(x,y),bridgeConsoleLayout:()=>shared?.bridgeConsoleLayout()||[],pickFighterConsole:(x,y)=>shared?.pickFighterConsole(x,y),fighterConsoleLayout:()=>shared?.fighterConsoleLayout()||[],get stats(){return stats;},dispose(){disposed=true;abort.abort();shared?.dispose();scenery?.dispose();tunnel.remove();canvas3d.remove();overlay.remove();auroraMapBattles.clear();auroraFinishedBattles.clear();}};
+ return {draw,ready,walkCabin:(pose,keys,dt)=>shared?.walkCabin(pose,keys,dt),update:()=>auroraFollowMission(visual,cruiseView),bridgeSeat:type=>shared?.bridgeSeat(type),cabinClass:(type,profile)=>shared?.cabinClass(type,profile),pickBridgeConsole:(x,y)=>shared?.pickBridgeConsole(x,y),bridgeConsoleLayout:()=>shared?.bridgeConsoleLayout()||[],pickFighterConsole:(x,y)=>shared?.pickFighterConsole(x,y),fighterConsoleLayout:()=>shared?.fighterConsoleLayout()||[],get stats(){return stats;},dispose(){disposed=true;abort.abort();shared?.dispose();scenery?.dispose();tunnel.remove();canvas3d.remove();overlay.remove();auroraMapBattles.clear();auroraFinishedBattles.clear();}};
 }

@@ -1,4 +1,4 @@
-import {cockpitClass} from '../../game/pilot-controls.mjs';
+import {shipCabinClass} from '../../game/ship-cabins.mjs';
 import * as THREE from 'three';
 import {loadFleetAssets} from './assets.js';
 import {createGalaxyRender} from './renderer.js';
@@ -9,32 +9,43 @@ import {arrivingBattlePosition} from '../../game/battle-terrain.mjs';
 import {appendWarpEffect,stretchAlongHeading,warpEnvelope,WarpRibbonBuffer} from './warp-effects.js';
 
 export {missionVisual};
+export const timedMissionPose=(pose,time)=>({...pose,time:pose.time??time});
 // Both world scenery and the local fleet look straight along the same flight axis.
 export const cruiseView=Object.freeze({fov:42,pitch:Math.atan(.24),vanishingY:.5-.24/(2*Math.tan(42*Math.PI/360))});
 
 // The map supplies its camera and placement. Models, weapon events, shields,
 // particles, propulsion, LOD and GPU submission are the battlefield's own code.
-export async function createMapFleetRenderer(canvas, {signal}={}) {
+export async function createMapFleetRenderer(canvas, {signal,renderer:sharedRenderer,scene,camera:mainCamera,managed=false}={}) {
   const {fleet,assets}=await loadFleetAssets({base:'../galactic-command/three-flight-assets/',signal});
   const kit=createGalaxyRender(fleet,assets),{Renderer,M,V,LAYOUTS,shipMatrix,clamp,mix,seeded}=kit;
-  const renderer=new Renderer(canvas),views=new Map(),indices=new Map(fleet.ships.map((s,i)=>[s.id,i]));
+  const renderer=new Renderer(canvas,{renderer:sharedRenderer,scene,camera:mainCamera,managed}),views=new Map(),indices=new Map(fleet.ships.map((s,i)=>[s.id,i]));
   // Build the warp shader and upload its reusable buffer before departure. The
   // first visible field must not compile a new program or allocate a large VBO.
-  const warmTarget=new THREE.WebGLRenderTarget(1,1,{depthBuffer:false});
+  const warmTarget=managed?null:new THREE.WebGLRenderTarget(1,1,{depthBuffer:false}),previousTarget=renderer.three.getRenderTarget();
   try{
-    renderer.three.setRenderTarget(warmTarget);renderer.begin(0);
+    if(warmTarget)renderer.three.setRenderTarget(warmTarget);renderer.begin(0);
     renderer.drawRibbons(new Float32Array(213*54*16+2*54*96));
+    // Compile the real instanced weapon variants during loading as well. Their
+    // first launch must not block an active battle on shader compilation.
+    renderer.drawEffectMesh(renderer.missileMesh,M.identity(),{light:[-.3,.7,1]});
+    renderer.setBlend(true);renderer.setDepthWrite(false);
+    renderer.drawEffectMesh(renderer.plumeMesh,M.identity(),{mode:4});
+    renderer.drawImpacts(new Float32Array(30));
+    renderer.dynamicFlat(new Float32Array([0,0,0,1,1,1,1]),true);
     await renderer.three.compileAsync(renderer.scene,renderer.camera);
     if(signal?.aborted)throw new DOMException('舰队加载已取消','AbortError');
     renderer.endFrame();renderer.begin(0);
   }catch(error){renderer.dispose();throw error;}
-  finally{renderer.three.setRenderTarget(null);warmTarget.dispose();}
-  const occlusion=new THREE.Scene(),camera=new THREE.Camera(),sphere=new THREE.SphereGeometry(1,32,24);
-  const depth=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:true});
+  finally{if(warmTarget){renderer.three.setRenderTarget(previousTarget);warmTarget.dispose();}}
+  // Legacy standalone map tools still supply only a planet list. The live
+  // shared world uses its real planet geometry and depth, with no proxy meshes.
+  const occlusion=managed?null:new THREE.Scene(),camera=managed?mainCamera:new THREE.Camera(),sphere=managed?null:new THREE.SphereGeometry(1,32,24);
+  const depth=managed?null:new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:true});
   const masks=[],warpRibbons=new WarpRibbonBuffer();let frame,used=new Set();
   const cruiseCamera=new THREE.PerspectiveCamera(cruiseView.fov,1,.1,100000);
   const portScene=new THREE.Scene(),port=new THREE.Group(),portGeometry=new THREE.BoxGeometry(1,1,1),portMaterial=new THREE.MeshBasicMaterial({color:0x667c86});
-  for(const [position,size]of [[[0,-.6,0],[3,.16,2]],[[0,.6,0],[3,.16,2]],[[-1.4,0,0],[.16,1.2,2]],[[1.4,0,0],[.16,1.2,2]]]){const beam=new THREE.Mesh(portGeometry,portMaterial);beam.position.fromArray(position);beam.scale.fromArray(size);port.add(beam);}portScene.add(port);
+  for(const [position,size]of [[[0,-.6,0],[3,.16,2]],[[0,.6,0],[3,.16,2]],[[-1.4,0,0],[.16,1.2,2]],[[1.4,0,0],[.16,1.2,2]]]){const beam=new THREE.Mesh(portGeometry,portMaterial);beam.position.fromArray(position);beam.scale.fromArray(size);port.add(beam);}(managed?renderer.scene:portScene).add(port);port.visible=false;
+  const ports=[port];let portCursor=0;
   function view(id) {
     if(views.has(id))return views.get(id);
     const state={shipIndex:0,flight:{pos:[0,0,0],profile:fleet.profiles[0],targets:[],joints:[],shieldHits:[],beams:[],particles:[],projectiles:[],weaponImpacts:[],specialBlasts:[],elapsed:0}};
@@ -53,26 +64,30 @@ export async function createMapFleetRenderer(canvas, {signal}={}) {
     renderer,
     bridgeSeat(type){return LAYOUTS[indices.get(type)]?.bridge;},
     begin(value) {
-      frame=value;used=new Set();
+      frame=value;used=new Set();portCursor=0;for(const node of ports)node.visible=false;renderer.worldLight=managed?value.light:null;
+      if(managed&&value.mainCamera)renderer.camera=value.mainCamera;
       if(renderer.width!==value.width||renderer.height!==value.height||renderer.dpr!==value.dpr)renderer.resize(value.width,value.height,value.dpr);
       renderer.begin(value.time);renderer.cabinRequest=null;
-      // Invisible depth proxies keep fleets behind planets occluded on the map.
-      camera.projectionMatrix.fromArray(value.vp);camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-      for(const m of masks)m.visible=false;
-      value.occluders.forEach((p,i)=>{let mask=masks[i];if(!mask){mask=new THREE.Mesh(sphere,depth);masks.push(mask);occlusion.add(mask);}mask.visible=true;mask.position.fromArray(V.sub(p.position,value.center));mask.scale.setScalar(p.radius);});
-      renderer.three.render(occlusion,camera);
+      if(!managed){
+        camera.projectionMatrix.fromArray(value.vp);camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        for(const m of masks)m.visible=false;
+        (value.occluders||[]).forEach((p,i)=>{let mask=masks[i];if(!mask){mask=new THREE.Mesh(sphere,depth);masks.push(mask);occlusion.add(mask);}mask.visible=true;mask.position.fromArray(V.sub(p.position,value.center));mask.scale.setScalar(p.radius);});
+        renderer.three.render(occlusion,camera);
+      }
     },
-    port(position,scale,normal){port.position.fromArray(V.sub(position,frame.center));port.scale.setScalar(scale);port.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(...normal));renderer.three.render(portScene,camera);},
+    port(position,scale,normal){let node=port;if(managed){node=ports[portCursor++];if(!node){node=port.clone();ports.push(node);renderer.scene.add(node);}}node.visible=true;node.position.fromArray(V.sub(position,frame.center));node.scale.setScalar(scale);node.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(...normal));if(!managed)renderer.three.render(portScene,camera);},
     battle(data,anchor,scale,owner,{camera:mapCamera,dock}={}) {
       used.add(data.id);const item=view(data.id),{battle:b,state}=item,p=state.flight;
       if(item.epoch!==data.epoch){b.clearVisuals();item.seq=0;item.tick=undefined;item.epoch=data.epoch;}
       place(anchor,scale);
+      renderer.effectNamespace=data.id;
       const dt=data.replay?Math.max(0,Math.min(.4,((data.tick||0)-(item.tick??data.tick))*.05)):frame.dt;
       item.tick=data.tick;p.elapsed+=dt;renderer.time=p.elapsed;
       const entry=Math.min(1,(data.tick||0)*.05/4),entryEase=entry*entry*(3-2*entry),dockLocal=dock?V.scale(V.sub(dock,anchor),1/scale):null;
       const entering=rows=>!data.environment&&dockLocal&&entry<1?rows.map(row=>{const m=data.metadata.find(m=>m.id===row[0]);if(m?.side!=='defender'||m.profile.role==='station')return row;const out=row.slice(),t=Math.max(0,Math.min(1,entryEase*1.3-(row[0]%7)*.035));for(let i=1;i<=3;i++)out[i]=mix(dockLocal[i-1],row[i],t);return out;}):rows;
       b.presentationRow=data.pilotRow;b.previous=entering(data.previous||data.ships);b.rows=entering(data.ships);b.metadata=data.metadata;b.received=data.received;b.sampleTime=frame.sampleTime;b.owner=owner;
-      b.bridgeVessel=mapCamera?.id===data.id&&mapCamera.mode==='bridge'?mapCamera.shipId:null;b.hiddenVessel=b.bridgeVessel;
+      const cameraMeta=data.metadata.find(m=>m.id===mapCamera?.shipId),cabinKind=cameraMeta&&shipCabinClass(cameraMeta.type,cameraMeta.profile);
+      b.bridgeVessel=cabinKind&&mapCamera?.id===data.id&&mapCamera.mode==='bridge'?mapCamera.shipId:null;b.hiddenVessel=b.bridgeVessel;
       b.replay=!!data.replay;b.replayAlpha=1;b.fullDetail=data.metadata.length<=128;
       b.center=V.scale(V.sub(frame.center,anchor),1/scale);b.snapshot=data;b.projectiles=data.projectiles||[];
       if(item.metadata!==data.metadata){for(const m of data.metadata)if(m.profile.renderType&&indices.has(m.profile.renderType))indices.set(m.type,indices.get(m.profile.renderType));b.buildGroups();item.metadata=data.metadata;}
@@ -80,7 +95,7 @@ export async function createMapFleetRenderer(canvas, {signal}={}) {
       for(const e of data.effects||[])if(e.seq>item.seq){item.seq=e.seq;if(e.tick>=(data.tick||0)-(e.type==='antimatter'?106:data.replay?10:6))b.effect(e);}
       for(const e of data.specialBlasts||[])if(!e.harmless&&!p.specialBlasts.some(q=>q.source===e.source&&q.tick===e.tick))p.specialBlasts.push({...e,pos:[e.x,e.y,e.z],age:0});
       p.specialBlasts=p.specialBlasts.filter(e=>{e.age=Math.max(0,((data.tick||0)-e.tick)*.05);return e.age<5.3;});
-      if(b.bridgeVessel!=null){const meta=data.metadata.find(m=>m.id===b.bridgeVessel);renderer.cabinRequest={kind:cockpitClass(meta.profile),console:cockpitClass(meta.profile)==='fighter'?data.fighterInstruments:data.bridgeInstruments,pose:mapCamera.pose,meta,row:b.row(meta.id),time:p.elapsed,fov:frame.fov,auto:!data.controls?.[owner],counts:data.counts};}
+      if(b.bridgeVessel!=null){const meta=data.metadata.find(m=>m.id===b.bridgeVessel);renderer.cabinRequest={kind:cabinKind,feedbackEpoch:data.id+':'+data.epoch,shieldHits:b.visualVessel(meta.id).shieldHits,console:cabinKind==='fighter'?data.fighterInstruments:data.bridgeInstruments,pose:mapCamera.pose,meta,row:b.row(meta.id),time:p.elapsed,fov:frame.fov,auto:!data.controls?.[owner],counts:data.counts};}
       // The navigation renderer already draws the actual local planet, including
       // its terrain, colony and NPC model. Never cover it with a combat sphere.
       b.drawFleet(renderer);
@@ -89,9 +104,13 @@ export async function createMapFleetRenderer(canvas, {signal}={}) {
       if(b.bridgeVessel!=null)b.drawNativeShip(renderer,b.bridgeVessel);
       renderer.drawCombatEffects(p,p.elapsed,M.identity(),0);
       if(!b.fullDetail)b.presentation.draw(renderer,b,false);
-      return {renderer:'shared-battlefield',...b.renderStats,defenderLaunch:!data.environment&&entry<1,hiddenVessel:b.hiddenVessel,bridgeVessel:b.bridgeVessel,cabin:b.bridgeVessel!=null?cockpitClass(data.metadata.find(m=>m.id===b.bridgeVessel).profile):null,effects:p.beams.length+p.projectiles.length+p.weaponImpacts.length+p.specialBlasts.length,ships:data.ships.filter(row=>row[6]>0).map(row=>({id:row[0],type:data.metadata[row[0]]?.type,position:V.add(anchor,V.scale(b.row(row[0]).slice(1,4),scale)),hp:row[6],side:data.metadata[row[0]]?.side,loaded:indices.has(data.metadata[row[0]]?.type)}))};
+      return {renderer:'shared-battlefield',...b.renderStats,defenderLaunch:!data.environment&&entry<1,hiddenVessel:b.hiddenVessel,bridgeVessel:b.bridgeVessel,cabin:b.bridgeVessel!=null?cabinKind:null,effects:p.beams.length+p.projectiles.length+p.weaponImpacts.length+p.specialBlasts.length,ships:data.ships.filter(row=>row[6]>0).map(row=>({id:row[0],type:data.metadata[row[0]]?.type,position:V.add(anchor,V.scale(b.row(row[0]).slice(1,4),scale)),hp:row[6],side:data.metadata[row[0]]?.side,loaded:indices.has(data.metadata[row[0]]?.type)}))};
     },
-    cruise(mission,pose) {
+    cruise(mission,pose,anchor,scale,direction) {
+      if(managed){
+        if(!anchor||!(scale>0)||!direction)throw new Error('Shared cruise requires world position, scale and direction');
+        return this.travel(mission,{...pose,model:1,observer:true,budget:frame.width<600?9:18},anchor,scale,direction);
+      }
       // A local observer camera keeps the hulls readable even on inter-system routes.
       // Navigation still owns the real route position and the authoritative clock.
       const groups=Object.entries(mission.ships||{}).filter(([type,n])=>indices.has(type)&&n>0);
@@ -116,7 +135,7 @@ export async function createMapFleetRenderer(canvas, {signal}={}) {
       finally{frame=saved;}
     },
     travel(mission,pose,anchor,scale,direction) {
-      place(anchor,scale);renderer.time=frame.time;
+      pose=timedMissionPose(pose,frame.time);place(anchor,scale);renderer.time=frame.time;
       const heading=pose.battleApproach?[1,0,0]:pose.docking?V.scale(pose.dockNormal||direction,-1):pose.launch?pose.departureDirection||direction:direction;
       const yaw=pose.battleApproach?Math.PI/2:Math.atan2(heading[0],-heading[2]),pitch=pose.battleApproach?0:Math.atan2(heading[1],Math.hypot(heading[0],heading[2]));
       let count=0,exhausts=0;const groups=Object.entries(mission.ships||{}).filter(([type,n])=>indices.has(type)&&n>0).sort(([a],[b])=>a.localeCompare(b));
@@ -147,15 +166,18 @@ export async function createMapFleetRenderer(canvas, {signal}={}) {
       }
       return {models:count,exhausts,represented:total,ships,renderer:'shared-battlefield',focus:V.add(anchor,V.scale(focus,scale/Math.max(1,Math.min(count,16)))),warpEnergy:warpEnvelope(pose),warpVertices:ribbons.length/9};
     },
+    cabinClass:shipCabinClass,
+    walkCabin:(pose,keys,dt)=>renderer.cabins?.walk(pose,keys,dt),
     pickBridgeConsole:(x,y)=>renderer.cabinRequest&&renderer.cabinRequest.kind!=='fighter'?renderer.pickBridgeConsole(x,y):null,
     bridgeConsoleLayout:()=>renderer.cabinRequest&&renderer.cabinRequest.kind!=='fighter'?renderer.bridgeConsoleLayout():[],
     pickFighterConsole:(x,y)=>renderer.cabinRequest?.kind==='fighter'?renderer.pickFighterConsole(x,y):null,
     fighterConsoleLayout:()=>renderer.cabinRequest?.kind==='fighter'?renderer.fighterConsoleLayout():[],
     end() {
-      renderer.endFrame();
       let removed=false;for(const [id,item]of views)if(!used.has(id)){item.battle.dispose();views.delete(id);removed=true;}
-      if(removed)renderer.resetInstances();
+      if(removed)for(const [key,batch]of renderer.instanceBatches)if(![...used].some(id=>key.startsWith(id+':'))){batch.mesh.removeFromParent();batch.mesh.dispose();batch.mesh.material.dispose();renderer.instanceBatches.delete(key);}
+      return renderer.endFrame();
     },
-    dispose(){for(const item of views.values())item.battle.dispose();views.clear();sphere.dispose();depth.dispose();portGeometry.dispose();portMaterial.dispose();renderer.dispose();}
+    drawCabin(){renderer.drawCabin();return renderer.stats();},
+    dispose(){for(const item of views.values())item.battle.dispose();views.clear();sphere?.dispose();depth?.dispose();for(const node of ports)node.removeFromParent();portGeometry.dispose();portMaterial.dispose();renderer.dispose();}
   };
 }

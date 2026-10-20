@@ -14,6 +14,6 @@
 - 抬头准星下缘和目标提示按模型屏幕的投影位置避让，防止不同窗口比例下盖住雷达标题。
 - 战斗机使用这一套仪表；切换到战列舰或大型旗舰时使用 `BRIDGE-HUD.md` 中的模型舰桥仪表。
 
-构建星图入口：使用 esbuild 将 `planet.js` 打包为同目录的 `planet.bundle.js`（bundle、iife、minify），再执行 `node scripts/build-colony-review.mjs` 更新模型与星图接口。独立播放器执行 `node scripts/build-three-flight.mjs`。
+构建：`npm run build:command` 更新正式星图与播放器。
 
-验收：`node tests/pilot-experience-browser.mjs`、`node tests/cockpit-classes-browser.mjs`、`node --test tests/pilot-classes.test.mjs`。包括真实模型屏幕点击、左右环视、俯视、1280×720 / 1920×1080 截图、实战与靶场、舰种切换。浏览器验收使用随机独立端口、临时存档与测试会话，finally 中关闭服务并清理临时目录。
+2026-10-20 已清理上述功能的独立测试与预览工具；当前统一检查范围见 `tests/README.md`。

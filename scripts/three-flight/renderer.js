@@ -1,20 +1,29 @@
 import {groundCloudShader} from './ground-cloud-shader.js';
 import {groundBlastPhase} from '../../game/ground-blast.mjs';
+import {areaBlastPhase} from './area-blast.js';
 import {fortressConnections,fortressSocket,FORTRESS} from '../../game/fortress-layout.mjs';
-import {createFortressGeometry} from './fortress-models.js';
+import {createFortressGeometry,createFloatingPlatformGeometry} from './fortress-models.js';
 import {fortressState} from '../../game/planet-defense.mjs';
 import {Cabins} from './cabins.js';
 import {FighterConsole,fighterDisplays,consolePoint} from './fighter-console.js';
 import {cockpitClass} from '../../game/pilot-controls.mjs';
+import {shipCabinClass} from '../../game/ship-cabins.mjs';
 import {plumeEnvelope,plumeMeshData} from '../../game/ship-propulsion.mjs';
 import {mainGunGlow} from '../../game/ship-main-effects.mjs';
 import {speedFovOffset,smoothSpeedFov} from '../../game/flight-camera.mjs';
 import {nearestHullPoint,addShieldHit} from '../../game/flight-scenes.mjs';
+import {shieldEnvelope,shieldLocalPoint,shieldDirection} from '../../game/shield-envelope.mjs';
+import {shieldRippleGLSL} from './effects/shield-ripple.js';
 import {specialRingData,specialBlastPhase} from '../../game/special-combat.mjs';
 import {jointTransforms} from '../../game/ship-turrets.mjs';
 // Shared flight presentation. Geometry and visual calculations preserve the native baseline.
 // GPU resources, batching, shaders, and submission are owned exclusively by Three.js.
 import {ThreeRenderBackend,createGeometry} from './backend.js';
+import {composeShipMatrix} from './ship-transform.js';
+import {practiceTargetMatrix} from './practice-targeting.js';
+import {EffectVertices,effectRibbon,effectBillboard,effectRing} from './effect-vertices.js';
+import {BattleViewCulling,projectileInView} from './view-culling.js';
+import {hullShadingGLSL} from './hull-shading.js';
 
 export function createGalaxyRender(fleet, assets){
 if(!fleet?.vertices||!fleet?.layouts)throw new Error('Flight fleet assets are required');
@@ -88,7 +97,7 @@ const LAYOUTS=fleet.layouts;
     const up=V.add(V.scale(u,Math.cos(p.roll)),V.scale(right0,Math.sin(p.roll)));
     return {forward,up,right:V.norm(V.cross(forward,up))};
   }
-  function shipMatrix(p,index){let a=axes(p);return M.mul(M.camera(p.pos,a.forward,a.up),M.mul(M.ry(-Math.PI/2),M.scale(LAYOUTS[index].scale)))}
+  function shipMatrix(p,index){return composeShipMatrix(p,LAYOUTS[index].scale);}
 
   function turretTransforms(model,turret,index){
     const scale=LAYOUTS[index].turretScale;
@@ -135,7 +144,15 @@ vec4 spaceScene(vec3 d,float kind){
 }
 
     ${groundCloudShader}
+    ${shieldRippleGLSL}
+    ${hullShadingGLSL}
     void main(){
+      if(uMode>14.5&&uMode<15.5){
+        bool inside=uShield.x>.5;if(inside?gl_FrontFacing:!gl_FrontFacing)discard;
+        float energy=shieldRipple(normalize(vLocal),uImpact.xyz,uImpact.w,uShield.y);
+        if(energy<.001)discard;
+        gl_FragColor=vec4(uTint*energy,uOpacity);return;
+      }
       if(uMode>11.5&&uMode<12.5){bool inside=all(lessThan(abs(uImpact.xyz),vec3(1.)));if(inside?gl_FrontFacing:!gl_FrontFacing)discard;gl_FragColor=groundCloud(vLocal,uImpact.xyz,uImpact.w,uShield.x,uShield.y);return;}
       if(uMode>12.5&&uMode<13.5){
         float radius=length(vLocal.xz),age=uImpact.w;
@@ -156,6 +173,12 @@ vec4 spaceScene(vec3 d,float kind){
       }
       vec3 N=normalize(vNormal);if(!gl_FrontFacing)N=-N;
       vec3 L=normalize(uLight),V=normalize(uEye-vWorld);float diffuse=max(dot(N,L),0.);
+      if(uMode<.5&&uFighter>.5&&uWire<.5){
+        vec3 palette=abs(vTag-77.)<.1?uTeamColor:vColor;
+        vec3 hull=shadeHull(palette*uTint,N,V,L,vEmission);
+        if(abs(vTag-uSelected)<.1)hull+=vec3(.12,.33,.39)*(.7+sin(uTime*2.5)*.12);
+        gl_FragColor=vec4(hullOutput(hull*uExposure),uOpacity);return;
+      }
       float hemi=dot(N,vec3(0.,1.,0.))*.5+.5;
       vec3 base=vColor;
       if(abs(vTag-77.)<.1)base=uTeamColor;
@@ -164,14 +187,6 @@ vec4 spaceScene(vec3 d,float kind){
       vec3 lighting=vec3(.13,.17,.2)+vec3(.18,.20,.215)*hemi+vec3(.94,.9,.78)*diffuse;
       if(uMode>.5&&uMode<1.5)lighting=vec3(.028,.039,.055)+vec3(.89,.86,.76)*diffuse;
       vec3 color=base*lighting+spec;
-      if(uFighter>.5){
-        vec3 key=normalize(vec3(-.65,1.,.45)),fill=normalize(vec3(.55,.18,-.9));
-        float kd=max(dot(N,key),0.),fd=max(dot(N,fill),0.);
-        float edge=pow(1.-max(dot(N,V),0.),3.);
-        float highlight=pow(max(dot(N,normalize(key+V)),0.),56.);
-        color=base*(vec3(.24,.265,.29)+vec3(.94,.95,.96)*kd+vec3(.16,.20,.24)*fd)
-          +vec3(.075,.09,.11)*highlight+vec3(.02,.034,.046)*edge;
-      }
       color=mix(color,base*1.2,clamp(vEmission,0.,1.));
       if(abs(vTag-uSelected)<.1)color+=vec3(.12,.33,.39)*(.7+sin(uTime*2.5)*.12);
       if(uMode>1.5&&uMode<2.5)color=texture2D(uTexture,vUV).rgb*.76;
@@ -247,8 +262,8 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
   }
 
   class Renderer extends ThreeRenderBackend {
-    constructor(canvas){
-      super(canvas,{vertexSource,fragmentSource,flatVertex,flatFragment,impactVertex,impactFragment},assets);
+    constructor(canvas,options={}){
+      super(canvas,{vertexSource,fragmentSource,flatVertex,flatFragment,impactVertex,impactFragment},assets,options);
       this.jointMeshes=fleet.parts.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});this.shipMeshes=fleet.ships.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});
       this.defenseMeshes=new Map();for(const [index,ship]of fleet.ships.entries()){const parts=assets.ships.find(a=>a.id===ship.id)?.defenseParts;if(parts?.base)this.defenseMeshes.set(index,Object.fromEntries(Object.entries(parts).map(([part,range])=>{const g=new Geometry();g.data=assets.vertices.subarray(range.offset,range.offset+range.floatCount);return [part,range.floatCount?g.upload():null];})));}
       this.cloudVolume=new Geometry().box([2,2,2],[0,0,0]).upload();
@@ -269,36 +284,41 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       for(let i=0;i<g.data.length;i+=13){const p=g.data.slice(i,i+3),r=.83+.13*Math.sin(p[0]*8+p[1]*5)+.12*Math.cos(p[2]*9-p[0]*3);for(let j=0;j<3;j++)g.data[i+j]*=r;g.data[i+6]=.27+r*.08;g.data[i+7]=.25+r*.07;g.data[i+8]=.23+r*.06;}
       for(let i=0;i<g.data.length;i+=39){const a=g.data.slice(i,i+3),b=g.data.slice(i+13,i+16),c=g.data.slice(i+26,i+29),n=V.norm(V.cross(V.sub(b,a),V.sub(c,a)));for(let k=0;k<3;k++)for(let j=0;j<3;j++)g.data[i+k*13+3+j]=n[j];}return g;
     }
-    drawFortress(environment,namespace='',metadata=[],rows=[]){
+    drawFortress(environment,namespace='',metadata=[],rows=[],presentation,time=0,events=[]){
       const modules=environment?.fortress?.modules;if(!modules?.length)return;
       const compact=environment.fortress.version>=2;
       this.fortressMeshesByVersion??=new Map();const version=compact?2:1;
-      if(!this.fortressMeshesByVersion.has(version))this.fortressMeshesByVersion.set(version,createFortressGeometry(Geometry,compact?FORTRESS.scale:1,compact));
+      if(!this.fortressMeshesByVersion.has(version))this.fortressMeshesByVersion.set(version,createFloatingPlatformGeometry(Geometry,compact?FORTRESS.scale:1));
       const meshes=this.fortressMeshesByVersion.get(version),{destroyed,destroyedSockets}=fortressState(environment,metadata,rows);
-      for(const ruined of [false,true]){
-       const group=modules.filter(m=>destroyed.has(m.index)===ruined),matrices=new Float32Array(group.length*16);
-       group.forEach((m,i)=>matrices.set(M.translate(m.x-this.eye[0],m.y-this.eye[1],m.z-this.eye[2]),i*16));
-       if(group.length)this.drawInstances(namespace+(ruined?'fortress-wrecks':'fortress-modules'),{geometry:ruined?meshes.wreck:meshes.module,high:true,matrices,ids:group.map(m=>m.index)});
-      }
+      const poses=presentation.update(environment,metadata,rows,destroyed,time,events),parents=new Map(),group=modules.filter(m=>poses.has(m.index)),matrices=new Float32Array(group.length*16);
+      group.forEach((m,i)=>{
+       const pose=poses.get(m.index),down=V.norm(V.sub(environment.center||[m.x,m.y-1,m.z],[m.x,m.y,m.z])),matrix=M.compose([m.x+down[0]*pose.drop,m.y+down[1]*pose.drop,m.z+down[2]*pose.drop],[pose.pitch,0,pose.roll]);
+       parents.set(m.index,matrix);const relative=new Float64Array(matrix);for(let j=0;j<3;j++)relative[12+j]-=this.eye[j];matrices.set(relative,i*16);
+      });
+      if(group.length)this.drawInstances(namespace+'fortress-modules',{geometry:meshes.module,high:true,matrices,ids:group.map(m=>m.index)});
       if(compact){
        this.smallFortressMeshes??=createFortressGeometry(Geometry,FORTRESS.smallScale);
-       const sockets=modules.flatMap(m=>m.sockets.flatMap((s,i)=>s?.kind==='small'?[{module:m,index:i,...fortressSocket(m,i)}]:[]));
+       const sockets=group.flatMap(m=>m.sockets.flatMap((s,i)=>s?.kind==='small'?[{module:m,index:i,...fortressSocket(m,i)}]:[]));
        for(const ruined of [false,true]){
         const group=sockets.filter(s=>destroyedSockets.has(`${s.module.index}:${s.index}`)===ruined),matrices=new Float32Array(group.length*16);
-        group.forEach((s,i)=>matrices.set(M.translate(s.x-this.eye[0],s.y+4-this.eye[1],s.z-this.eye[2]),i*16));
+        group.forEach((s,i)=>{const matrix=M.mul(parents.get(s.module.index),M.translate(s.x-s.module.x,s.y+4-s.module.y,s.z-s.module.z));for(let j=0;j<3;j++)matrix[12+j]-=this.eye[j];matrices.set(matrix,i*16);});
         if(group.length)this.drawInstances(namespace+(ruined?'fortress-small-wrecks':'fortress-small-modules'),{geometry:ruined?this.smallFortressMeshes.wreck:this.smallFortressMeshes.module,high:true,matrices,ids:group.map(s=>s.module.index*7+s.index)});
        }
       }
-      const allLinks=fortressConnections(modules);
-      for(const ruined of [false,true]){
-       const links=allLinks.filter(([a,b])=>(destroyed.has(a.index)||destroyed.has(b.index))===ruined),bridges=new Float32Array(links.length*16);
+      const links=fortressConnections(modules).filter(([a,b])=>!destroyed.has(a.index)&&!destroyed.has(b.index)),bridges=new Float32Array(links.length*16);
        links.forEach(([a,b],i)=>{
         const d=V.sub([b.x,b.y,b.z],[a.x,a.y,a.z]),len=V.length(d),direction=V.scale(d,1/len);
         const inset=compact?65:90,start=V.add([a.x,a.y,a.z],V.scale(direction,inset)),end=V.add([b.x,b.y,b.z],V.scale(direction,-inset));
         const matrix=this.segmentModel(start,end);for(let j=0;j<3;j++)matrix[12+j]-=this.eye[j];bridges.set(matrix,i*16);
       });
-       if(links.length)this.drawInstances(namespace+(ruined?'fortress-broken-links':'fortress-links'),{geometry:ruined?meshes.brokenBridge:meshes.bridge,high:true,matrices:bridges,ids:links.map((_,i)=>i)});
+      if(links.length)this.drawInstances(namespace+'fortress-links',{geometry:meshes.bridge,high:true,matrices:bridges,ids:links.map((_,i)=>i)});
+      this.setBlend(true,false);
+      for(const m of group){if(poses.get(m.index).falling)continue;const parent=parents.get(m.index);
+       for(const jet of meshes.jets){const start=M.transform(parent,jet.pos),pulse=1+.06*Math.sin(this.time*9+m.index+jet.pos[0]),end=M.transform(parent,[jet.pos[0],jet.pos[1]-jet.length*pulse,jet.pos[2]]);
+        this.drawEffectMesh(this.plumeMesh,this.segmentModel(start,end,jet.radius),{mode:4,tint:[.16,.62,1],opacity:.75});
+       }
       }
+      this.setBlend(false,true);
     }
     drawDefenseField(environment,metadata,rows,owner){
       const modules=environment?.fortress?.modules;if(!modules?.length)return;
@@ -334,15 +354,24 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
     }
     shieldImpact(vessel,index,model,point,amount,charge){
       if(!(charge>0)||!(amount>0))return;
-      const delta=V.sub(point,[model[12],model[13],model[14]]),local=[0,1,2].map(i=>{const axis=[model[i*4],model[i*4+1],model[i*4+2]];return V.dot(delta,axis)/V.dot(axis,axis);});
+      const local=shieldLocalPoint(model,point);
       const surface=nearestHullPoint(fleet.vertices,fleet.ships[index],local);
       vessel.shieldHits??=[];addShieldHit(vessel.shieldHits,surface,this.time,amount,charge);
+      const hit=vessel.shieldHits.at(-1);hit.bubbleDirection=shieldDirection(local,this.shieldEnvelope(index));
+      // Native hulls face -X; cabin coordinates face -Z.
+      hit.cabinDirection=[-hit.bubbleDirection[2],hit.bubbleDirection[1],hit.bubbleDirection[0]];
+    }
+    shieldEnvelope(index){
+      this.shieldEnvelopes??=new Map();if(!this.shieldEnvelopes.has(index))this.shieldEnvelopes.set(index,shieldEnvelope(fleet.vertices,fleet.ships[index]));return this.shieldEnvelopes.get(index);
     }
     drawShield(vessel,index,model,opacity=1){
-      vessel.shieldHits=(vessel.shieldHits||[]).filter(h=>this.time-h.time<.48);
+      vessel.shieldHits=(vessel.shieldHits||[]).filter(h=>this.time-h.time<1.4);
       if(!vessel.shieldHits.length||opacity<.01)return;
       this.setDepthWrite(false);this.setBlend(true);this.setSide(true);
-      for(const h of vessel.shieldHits)this.drawMesh(this.shipMeshes[index],model,{mode:5,tint:h.weak?[1,.42,.12]:[.08,.62,1],opacity,shellOffset:LAYOUTS[index].length*.002,impact:[...h.point,this.time-h.time],shield:[LAYOUTS[index].length,h.power]});
+      for(const h of vessel.shieldHits)if(this.time-h.time<.48)this.drawMesh(this.shipMeshes[index],model,{mode:5,tint:h.weak?[1,.42,.12]:[.08,.62,1],opacity,shellOffset:LAYOUTS[index].length*.002,impact:[...h.point,this.time-h.time],shield:[LAYOUTS[index].length,h.power]});
+      const envelope=this.shieldEnvelope(index),bubble=M.mul(model,M.compose(envelope.center,[0,0,0],envelope.radii)),eye=shieldLocalPoint(bubble,this.eye),inside=Math.hypot(...eye)<1;
+      this.setSide(false);
+      for(const h of vessel.shieldHits)this.drawMesh(this.moonMesh,bubble,{mode:15,tint:h.weak?[1,.36,.14]:[.25,.8,1],opacity,impact:[...(h.bubbleDirection||shieldDirection(h.point,envelope)),this.time-h.time],shield:[inside?1:0,.8+h.power]});
       this.setSide(false);this.setBlend(false);this.setDepthWrite(true);
     }
     makeGrid(){let data=[];const add=(p,c)=>data.push(...p,...c,1);for(let x=-25;x<=26;x+=2.3)for(let z=-20;z<=25;z+=2.3){let fade=Math.max(0,1-Math.hypot(x*.7,z*.8)/27),c=[.22*fade,.38*fade,.45*fade];add([x-.08,-2.8,z],c);add([x+.08,-2.8,z],c);add([x,-2.8,z-.08],c);add([x,-2.8,z+.08],c)}return this.flatBuffer(data)}
@@ -390,25 +419,15 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       }
       return g;
     }
-    drawBow(index,model,opacity=1){
-      this.bowMeshes??=new Map();let mesh=this.bowMeshes.get(index);
-      if(!mesh){const source=this.shipMeshes[index].geometry.getAttribute('aPosition').data.array,b=LAYOUTS[index].bounds,L=LAYOUTS[index].length,data=[];
-        // Retain each ship's real forward hull, paint and wing silhouette. Lower tall
-        // superstructure so the command sightline is never covered by the own ship.
-        for(let i=0;i<source.length;i+=39){if(Math.max(source[i],source[i+13],source[i+26])>b.center[0]+L*.04)continue;for(let j=0;j<39;j++)data.push(source[i+j]);for(let j=0;j<3;j++){const o=data.length-39+j*13;data[o+1]=(data[o+1]-b.center[1])*.38;const n=Math.hypot(data[o+3],data[o+4]/.38,data[o+5]);data[o+3]/=n;data[o+4]/=.38*n;data[o+5]/=n;}}
-        let lift=Infinity;for(let i=0;i<data.length;i+=13)lift=Math.min(lift,L*.12-(L*.25-data[i])*.18-data[i+1]);for(let i=0;i<data.length;i+=13)data[i+1]+=lift;
-        mesh=createGeometry(data);this.bowMeshes.set(index,mesh);this.geometryResources.add(mesh.geometry);
-      }
-      this.drawMesh(mesh,model,{light:[-.35,.9,.6],exposure:1.15,opacity});
-    }
     drawVessel(index,model,opts={},turrets=null){
-      this.drawMesh(this.shipMeshes[index],model,{...opts,fighter:true});
-      for(const t of turrets||LAYOUTS[index].joints){const a=jointTransforms(M,model,t);this.drawMesh(this.jointMeshes[t.parts[0]],a.yaw,opts);this.drawMesh(this.jointMeshes[t.parts[1]],a.barrels,opts);}
+      const hullOpts={...opts,fighter:true};
+      this.drawMesh(this.shipMeshes[index],model,hullOpts);
+      for(const t of turrets||LAYOUTS[index].joints){const a=jointTransforms(M,model,t);this.drawMesh(this.jointMeshes[t.parts[0]],a.yaw,hullOpts);this.drawMesh(this.jointMeshes[t.parts[1]],a.barrels,hullOpts);}
     }
 
     drawDefense(index,model,yaw=0,pitch=0,teamColor=[.086,.545,.922]){
       const parts=this.defenseMeshes.get(index);if(!parts){this.drawVessel(index,model);return;}
-      const pivot=assets.ships?.find(a=>a.id===fleet.ships?.[index]?.id)?.defensePivot??3,opts={teamColor};
+      const pivot=assets.ships?.find(a=>a.id===fleet.ships?.[index]?.id)?.defensePivot??3,opts={teamColor,fighter:true};
       this.drawMesh(parts.base,model,opts);
       const turret=M.mul(model,M.ry(yaw)),barrels=M.mul(turret,M.mul(M.translate(0,pivot,0),M.mul(M.rz(-pitch),M.translate(0,-pivot,0))));
       if(parts.turret)this.drawMesh(parts.turret,turret,opts);
@@ -428,8 +447,9 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       this.setDepthWrite(true);this.setBlend(false);
     }
     segmentModel(a,b,radius=1){
-      const x=V.norm(V.sub(b,a)),ref=Math.abs(x[1])>.97?[0,0,1]:[0,1,0],z=V.norm(V.cross(x,ref)),y=V.cross(z,x),len=V.length(V.sub(b,a));
-      return new Float64Array([x[0]*len,x[1]*len,x[2]*len,0,y[0]*radius,y[1]*radius,y[2]*radius,0,z[0]*radius,z[1]*radius,z[2]*radius,0,...a,1]);
+      const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz)||1,x=dx/len,y=dy/len,z=dz/len,vertical=Math.abs(y)>.97;
+      let zx=vertical?y:-z,zy=vertical?-x:0,zz=vertical?0:x;const norm=Math.hypot(zx,zy,zz)||1;zx/=norm;zy/=norm;zz/=norm;
+      return new Float64Array([dx,dy,dz,0,(zy*z-zz*y)*radius,(zz*x-zx*z)*radius,(zx*y-zy*x)*radius,0,zx*radius,zy*radius,zz*radius,0,a[0],a[1],a[2],1]);
     }
     drawSpecial(p,time){
       this.setDepthWrite(false);this.setBlend(true);
@@ -502,49 +522,60 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
         }
         this.setBlend(false);this.setDepthWrite(true);
     }
-        weaponImpact(p,pos,{visual={},color=[1,.45,.08],shield=false,destroy=false,muzzle=false}={}){
+        weaponImpact(p,pos,{visual={},color=[1,.45,.08],shield=false,destroy=false,muzzle=false,critical=false,areaRadius=0}={}){
       const compact=!!visual.compact,type=compact?5:muzzle?0:shield?1:destroy?3:2;
       const radius=compact?(muzzle?.2:(visual.blastRadius||.35)*(destroy?1.8:1)):muzzle?Math.max(.7,(visual.radius||.15)*5):Math.max(1.3,visual.blastRadius||2)*(destroy?3:1);
-      (p.weaponImpacts??=[]).push({pos:[...pos],color:shield?[.12,.6,1]:color,type,radius,compact,elite:!!visual.elite,born:p.elapsed||0,life:compact?(destroy?.55:muzzle?.07:.15):muzzle?(visual.elite?.45:.24):destroy?2.6:shield?.65:visual.elite?1.7:1.05});
+      (p.weaponImpacts??=[]).push({pos:[...pos],color:shield?[.12,.6,1]:critical?[1,.82,.3]:color,type,radius,compact,critical,areaRadius,elite:!!visual.elite,born:p.elapsed||0,life:areaRadius?areaBlastPhase(0,areaRadius,critical).life:compact?(destroy?.55:muzzle?.07:.15):muzzle?(visual.elite?.45:.24):destroy?2.6:shield?.65:visual.elite?1.7:1.05});
       if(p.weaponImpacts.length>180)p.weaponImpacts.splice(0,p.weaponImpacts.length-180);
     }
-    drawWeaponImpacts(p){
+    drawWeaponImpacts(p,projectiles=p.projectiles){
 
       p.weaponImpacts=(p.weaponImpacts||[]).filter(e=>(p.elapsed||0)-e.born<e.life);
-      if(!p.weaponImpacts.length&&!p.beams?.length&&!p.projectiles?.some(q=>q.missile))return;
-      const eye=this.eye,right=V.norm(V.cross(this.cameraForward,this.cameraUp)),up=V.norm(V.cross(right,this.cameraForward)),data=[];
-      const focal=this.height/(2*Math.tan(this.fov/2));
+      if(!p.weaponImpacts.length&&!p.beams?.length&&!projectiles?.some(q=>q.missile))return;
+      const eye=this.eye,right=V.norm(V.cross(this.cameraForward,this.cameraUp)),up=V.norm(V.cross(right,this.cameraForward)),data=(this.impactVertices??=new EffectVertices()).reset();
+      const focal=this.height/(2*Math.tan(this.fov/2)),view=(this.impactView??=new BattleViewCulling()).update(this.vp);
       // Missile smoke and burning motors share the practice renderer at every fleet size.
       // Screen-space width keeps curved launch paths readable from the fleet camera.
-      for(const q of p.projectiles||[]){
-        if(!q.missile)continue;const compact=q.visual?.compact,trail=(q.trail||[]).slice(compact?-14:-32),step=V.length(V.sub(q.pos,eye))>650?3:2;
-        for(let i=step;i<trail.length;i+=step){
-          const a=trail[i-step],b=trail[i],fade=i/trail.length,mid=V.scale(V.add(a,b),.5),delta=V.sub(b,a);if(V.length(delta)<.01)continue;
-          const side=V.norm(V.cross(delta,V.sub(eye,mid))),pixel=V.length(V.sub(mid,eye))/focal,w=Math.max(compact?.09:.22,pixel*(compact?.55:1.05)),color=[.62,.69,.77];
-          for(const [x,y]of [[0,-1],[0,1],[1,-1],[1,-1],[0,1],[1,1]])data.push(...V.add(V.sub(x?b:a,eye),V.scale(side,y*w)),...color,x,y,fade*.24,4);
+      for(const q of projectiles||[]){
+        if(!q.missile)continue;const compact=q.visual?.compact,trail=q.trail||[],start=Math.max(0,trail.length-(compact?14:32)),length=trail.length-start,step=Math.hypot(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2])>650?3:2;
+        for(let i=step;i<length;i+=step){
+          const a=trail[start+i-step],b=trail[start+i];if(Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2])<.01)continue;
+          const pixel=Math.hypot((a[0]+b[0])*.5-eye[0],(a[1]+b[1])*.5-eye[1],(a[2]+b[2])*.5-eye[2])/focal,w=Math.max(compact?.09:.22,pixel*(compact?.55:1.05));
+          effectRibbon(data,a,b,eye,w,.62,.69,.77,i/length*.24);
         }
-        const a=V.sub(q.pos,V.scale(V.norm(q.velocity),Math.min(compact?4:9,Math.max(2,q.age*45)))),b=q.pos,mid=V.scale(V.add(a,b),.5),side=V.norm(V.cross(V.sub(b,a),V.sub(eye,mid))),w=Math.max(compact?.12:.28,V.length(V.sub(mid,eye))/focal*(compact?.8:2.2));
-        for(const [x,y]of [[0,-1],[0,1],[1,-1],[1,-1],[0,1],[1,1]])data.push(...V.add(V.sub(x?b:a,eye),V.scale(side,y*w)),1,.48,.12,x,y,.9,4);
+        const a=V.sub(q.pos,V.scale(V.norm(q.velocity),Math.min(compact?4:9,Math.max(2,q.age*45)))),b=q.pos,mid=V.scale(V.add(a,b),.5),w=Math.max(compact?.12:.28,V.length(V.sub(mid,eye))/focal*(compact?.8:2.2));
+        effectRibbon(data,a,b,eye,w,1,.48,.12,.9);
       }
       // Camera-facing core + halo, like the supplied NEREID reference; no solid white tubes.
       for(const b of p.beams||[]){
-        const mid=V.scale(V.add(b.start,b.end),.5),side=V.norm(V.cross(V.sub(b.end,b.start),V.sub(eye,mid)));
+        const mid=V.scale(V.add(b.start,b.end),.5);
         const pixel=V.length(V.sub(mid,eye))/focal,w=b.compact?Math.min(pixel*2,Math.max(b.width,pixel*.65)):Math.max(b.width*3,pixel*(b.width>=2?10:b.width>=.4?6:1.5));
+        if(!view.visible(...mid,V.length(V.sub(b.end,b.start))*.5+w))continue;
         const alpha=Math.min(1,(1-b.age/b.life)*4)*.9;
-        for(const [x,y]of [[0,-1],[0,1],[1,-1],[1,-1],[0,1],[1,1]]){
-          const pos=V.add(V.sub(x?b.end:b.start,eye),V.scale(side,y*w));data.push(...pos,...b.color,x,y,alpha,4);
-        }
+        effectRibbon(data,b.start,b.end,eye,w,b.color[0],b.color[1],b.color[2],alpha);
       }
       for(const e of p.weaponImpacts){
         const age=Math.max(0,((p.elapsed||0)-e.born)/e.life),pixel=Math.max(.001,V.length(V.sub(e.pos,eye))/focal);
-        const size=Math.max(pixel*(e.compact?1:e.elite?18:6),Math.min(pixel*(e.compact?20:e.elite?260:150),e.radius*(.65+age*(e.compact?.5:1.8))));
-        for(const [x,y]of [[-1,-1],[1,-1],[-1,1],[-1,1],[1,-1],[1,1]]){
-          const pos=V.add(V.sub(e.pos,eye),V.add(V.scale(right,x*size),V.scale(up,y*size)));
-          data.push(...pos,...e.color,x,y,age,e.type);
+        if(e.areaRadius){
+          const phase=areaBlastPhase(Math.max(0,(p.elapsed||0)-e.born),e.areaRadius,e.critical);
+          const core=Math.max(pixel*2,e.areaRadius*(.12+.1*phase.flash)),width=Math.max(pixel*.8,e.areaRadius*.04),ringRadius=Math.max(0,phase.radius-width);
+          if(!view.visible(...e.pos,Math.max(core*Math.SQRT2,ringRadius+width)))continue;
+          // A translucent expanding shell reaches the actual blast edge. Keep
+          // the hot core small so nearby ships remain legible through the blast.
+          effectBillboard(data,e.pos,eye,right,up,core,phase.color,age,2);
+          // Keep the authored 48 segments close up; subpixel arcs need fewer.
+          const segments=ringRadius/pixel>40?48:ringRadius/pixel>12?24:12;
+          effectRing(data,e.pos,eye,right,up,ringRadius,width,phase.color,phase.opacity,segments);
+          const tilted=up.map((v,j)=>v*Math.cos(.7)+this.cameraForward[j]*Math.sin(.7));
+          effectRing(data,e.pos,eye,right,tilted,ringRadius,width,phase.color,phase.opacity*.25,segments);
+          continue;
         }
+        const size=Math.max(pixel*(e.compact?1:e.elite?18:6),Math.min(pixel*(e.compact?20:e.elite?260:150),e.radius*(.65+age*(e.compact?.5:1.8))));
+        if(!view.visible(...e.pos,size*Math.SQRT2))continue;
+        effectBillboard(data,e.pos,eye,right,up,size,e.color,age,e.type);
       }
       this.setDepthWrite(false);this.setBlend(true);
-      this.drawImpacts(data);
+      this.drawImpacts(data.view());
       this.setBlend(false);this.setDepthWrite(true);
     }
     drawCombatEffects(p,time,own=this.ownModel,index=window.GalacticDemo?.state.shipIndex??0){const layout=LAYOUTS[index];
@@ -553,39 +584,42 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
         const glows=[];for(let m of layout.main){let x=M.transform(own,m);glows.push(...x,...p.profile.weaponColor,(p.profile.visual?.muzzle||22)*(.35+p.charge*.85))}
         this.setDepthWrite(false);this.setBlend(true);this.dynamicFlat(glows,true,.7);this.setBlend(false);this.setDepthWrite(true);
       }
-      const trails=[],heads=[];
-      for(let q of p.projectiles){
+      const trails=(this.trailVertices??=new EffectVertices()).reset(),heads=(this.headVertices??=new EffectVertices()).reset(),eye=this.eye;
+      const view=(this.effectView??=new BattleViewCulling()).update(this.vp),focal=this.height/(2*Math.tan(this.fov/2)),projectiles=p.projectiles.filter(q=>projectileInView(q,view,eye,focal));
+      for(let q of projectiles){
         if(q.missile){
           if(q.trail)for(let i=1;i<q.trail.length;i++){
-            let life=i/q.trail.length,c=[.6*life,.71*life,.73*life];trails.push(...q.trail[i-1],...c,1,...q.trail[i],...c,1);
+            const life=i/q.trail.length,a=q.trail[i-1],b=q.trail[i];trails.point(a[0]-eye[0],a[1]-eye[1],a[2]-eye[2],.6*life,.71*life,.73*life,1);trails.point(b[0]-eye[0],b[1]-eye[1],b[2]-eye[2],.6*life,.71*life,.73*life,1);
           }
           const unit=V.norm(q.velocity),tail=V.add(q.pos,V.scale(unit,-2.8));
-          trails.push(...tail,1,.56,.2,1,...q.pos,1,.88,.64,1);heads.push(...q.pos,...(q.color||[1,.77,.42]),q.visual?.capital?mainGunGlow(q.visual,V.length(V.sub(q.pos,this.eye)),this.height,this.fov):4.5);
+          trails.point(tail[0]-eye[0],tail[1]-eye[1],tail[2]-eye[2],1,.56,.2,1);trails.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],1,.88,.64,1);
+          const c=q.color||[1,.77,.42];heads.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],c[0],c[1],c[2],q.visual?.capital?mainGunGlow(q.visual,V.length(V.sub(q.pos,eye)),this.height,this.fov):4.5);
           const mx=this.segmentModel(V.add(q.pos,V.scale(unit,-.9)),q.pos,1.15);
-          this.drawMesh(this.missileMesh,mx,{light:[-.3,.7,1]});
+          this.drawEffectMesh(this.missileMesh,mx,{light:[-.3,.7,1]});
         }else{
           const back=V.add(q.pos,V.scale(V.norm(q.velocity),-(q.visual?.capital?Math.min(q.visual.trail,q.age*V.length(q.velocity)):q.kind==='pd'?1.3:q.hostile?11:3))),c=q.color||(q.hostile?[.94,.3,.2]:[.6,.86,1]);
           if(q.visual?.capital){
             this.setDepthWrite(false);this.setBlend(true);
-            this.drawMesh(this.plumeMesh,this.segmentModel(q.pos,back,q.visual.radius*2.4),{mode:4,tint:c,opacity:.6});
-            this.drawMesh(this.plumeMesh,this.segmentModel(q.pos,back,q.visual.radius*.55),{mode:4,tint:[1,.96,.9],opacity:.95});
+            this.drawEffectMesh(this.plumeMesh,this.segmentModel(q.pos,back,q.visual.radius*2.4),{mode:4,tint:c,opacity:.6});
+            this.drawEffectMesh(this.plumeMesh,this.segmentModel(q.pos,back,q.visual.radius*.55),{mode:4,tint:[1,.96,.9],opacity:.95});
             this.setBlend(false);this.setDepthWrite(true);
             const glow=mainGunGlow(q.visual,V.length(V.sub(q.pos,this.eye)),this.height,this.fov);
-            heads.push(...q.pos,c[0]*.48,c[1]*.48,c[2]*.48,glow,...q.pos,1,.96,.9,glow*.32);
+            heads.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],c[0]*.48,c[1]*.48,c[2]*.48,glow);heads.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],1,.96,.9,glow*.32);
           }
-          trails.push(...back,...c,1,...q.pos,...c,1);heads.push(...q.pos,...c,q.hostile?2:3);
+          trails.point(back[0]-eye[0],back[1]-eye[1],back[2]-eye[2],c[0],c[1],c[2],1);trails.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],c[0],c[1],c[2],1);heads.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],c[0],c[1],c[2],q.hostile?2:3);
         }
       }
-      if(trails.length)this.dynamicFlat(trails,false,.9);
-      const particles=[];
-      for(let q of p.particles){let f=1-q.age/q.life,c=q.color||[1,.7,.36];particles.push(...q.pos,c[0]*f,c[1]*f,c[2]*f,q.size);}
+      if(trails.length)this.dynamicFlat(trails.view(),false,.9,true);
+      const particles=(this.particleVertices??=new EffectVertices()).reset();
+      for(let q of p.particles){let f=1-q.age/q.life,c=q.color||[1,.7,.36];particles.point(q.pos[0]-eye[0],q.pos[1]-eye[1],q.pos[2]-eye[2],c[0]*f,c[1]*f,c[2]*f,q.size);}
       this.setDepthWrite(false);this.setBlend(true);
-      if(heads.length)this.dynamicFlat(heads,true,1);if(particles.length)this.dynamicFlat(particles,true,1);
+      if(heads.length)this.dynamicFlat(heads.view(),true,1,true);if(particles.length)this.dynamicFlat(particles.view(),true,1,true);
       this.setBlend(false);this.setDepthWrite(true);
       this.drawSpecial(p,time);
-      this.drawWeaponImpacts(p);this.drawMushroomClouds(p);
+      this.drawWeaponImpacts(p,projectiles);this.drawMushroomClouds(p);
     }
-    endFrame(){const stats=super.endFrame();if(this.cabinRequest){this.cabins??=new Cabins(this);this.cabins.draw(this.cabinRequest);}return stats;}
+    drawCabin(){if(this.cabinRequest){this.cabins??=new Cabins(this);this.cabins.draw(this.cabinRequest);}}
+    endFrame(){const stats=super.endFrame();if(!this.managed)this.drawCabin();return stats;}
     dispose(){this.cabins?.dispose();super.dispose();}
     flight(s,time){
 
@@ -595,7 +629,7 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       const shipFrame=M.camera(p.pos,forward,up),own=shipMatrix(p,s.shipIndex);
       this.flightCameraMatrix=shipFrame;this.ownModel=own;
       const blend=p.cameraBlend??(p.external?1:0);
-      const bridge=[0,layout.length*.12,layout.length*.25],zoom=p.cameraZoom||1,orbit=p.orbitYaw||0;
+      const bridge=layout.bridge,zoom=p.cameraZoom||1,orbit=p.orbitYaw||0;
       const c=layout.chase,co=Math.cos(orbit),si=Math.sin(orbit);
       const chase=[(c[0]*co+c[2]*si)*zoom,(c[1]+(p.orbitPitch||0)*c[2])*zoom,(-c[0]*si+c[2]*co)*zoom];
       const arc=Math.sin(blend*Math.PI)*layout.length*.15;
@@ -617,26 +651,17 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       this.projectionOffset=-.06;this.projectionShiftX=0;
       this.vp=M.mul(projection,M.lookAt(eye,V.add(eye,dir),up));
       if(globalThis.flightController)globalThis.flightController.presentation.environment(this,time);else this.environment(s,time);
-      if(globalThis.flightController)globalThis.flightController.drawFleet(this);else for(let t of p.targets){if(t.hp>0&&!t.terrainTurret){const model=M.compose(t.pos,[.035,t.heading||.2,-.045],[t.scale,t.scale,t.scale]);this.drawVessel(t.kind,model,{light:[-.3,.65,1],exposure:.85});this.drawShield(t,t.kind,model);}}
+      if(globalThis.flightController)globalThis.flightController.drawFleet(this);else for(let t of p.targets){if(t.hp>0&&!t.terrainTurret){const model=practiceTargetMatrix(M,t);this.drawVessel(t.kind,model,{light:[-.3,.65,1],exposure:.85});this.drawShield(t,t.kind,model);}}
       // The camera moves above the real hull toward the bridge. No cut, reset, or dark frame.
-      const ownOpacity=p.detonated?0:clamp((blend-.035)/.18,0,1);
+      const ownOpacity=p.detonated?0:1;
       if(ownOpacity>.001)this.drawVessel(s.shipIndex,own,{light:[-.5,.9,.75],opacity:ownOpacity,exposure:.83},p.joints);
-      if(blend<.17&&!p.detonated)this.drawBow(s.shipIndex,own,clamp(1-blend/.17,0,1));
-      this.drawShield(p,s.shipIndex,own,ownOpacity);
+      this.drawShield(p,s.shipIndex,own,p.detonated?0:1);
       // All exhaust starts inside the measured nozzle surface and follows the ship frame.
       if(ownOpacity>.05&&blend>.04)this.drawExhaust(s.shipIndex,own,p.throttle,p.boostActive,time,ownOpacity);
       this.drawCombatEffects(p,time,own);if(globalThis.flightController&&!globalThis.flightController.fullDetail)globalThis.flightController.presentation.draw(this,globalThis.flightController,false);
       // The interior is fixed to the bridge, never parented to the moving external camera.
-      const interiorAlpha=p.detonated?0:clamp(1-blend/.17,0,1);
-      if(interiorAlpha>0&&p.profile.capital){this.cabinRequest={kind:p.cabinKind||cockpitClass({role:"line",length:layout.length}),console:this.bridgeInstrumentState,pose:p.cabinPose,time,fov:this.fov,opacity:interiorAlpha,row:[0,...p.pos,Math.PI-p.yaw,p.pitch,p.hull,p.shield,-1,p.speed/8,p.gunCooldown,p.missileCooldown],meta:{type:fleet.ships[s.shipIndex].id,maxHp:100,maxShield:100},auto:p.ai,throttle:p.throttle/100};}
-      if(interiorAlpha>0&&!p.profile.capital){
-        const cockpitModel=M.mul(shipFrame,M.translate(...bridge));
-        // Clip-free overlay close to the eye; fade only the interior during the physical pullback.
-        if(blend<.02)this.beginOverlay();
-        this.drawMesh(!p.profile.capital?this.cockpit:this.bridgeMesh,cockpitModel,{opacity:interiorAlpha,light:[-.35,.7,.6],exposure:.7});
-        this.fighterConsoleFrame=cockpitModel;this.fighterConsole.update(this.fighterInstrumentState,time);
-        for(let i=0;i<this.screens.length;i++)this.drawMesh(this.screens[i],cockpitModel,{mode:2,texture:this.fighterConsole.displays[i].texture,opacity:interiorAlpha});
-      }
+      const cabinKind=shipCabinClass(fleet.ships[s.shipIndex].id,p.profile),interiorAlpha=p.detonated||!cabinKind?0:clamp(1-blend/.17,0,1);
+      if(interiorAlpha>0){const battle=globalThis.flightController;this.cabinRequest={kind:cabinKind,feedbackEpoch:battle?(battle.replayId||battle.id)+':'+(battle.feedbackEpoch||0):'practice',shieldHits:p.shieldHits,console:p.profile.capital?this.bridgeInstrumentState:this.fighterInstrumentState,pose:p.cabinPose,time,fov:this.fov,opacity:interiorAlpha,row:[0,...p.pos,Math.PI-p.yaw,p.pitch,p.hull,p.shield,-1,p.speed/8,p.gunCooldown,p.missileCooldown],meta:{id:battle?.selected,type:fleet.ships[s.shipIndex].id,maxHp:100,maxShield:100},auto:p.ai,throttle:p.throttle/100};}
     }
     pickFighterConsole(x,y){
       if(this.cabinRequest)return this.cabins?.pickFighterConsole(x,y)||null;

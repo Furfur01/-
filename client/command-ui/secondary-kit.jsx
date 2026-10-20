@@ -1,0 +1,13 @@
+import React from 'react';
+import {Search,ArrowUpRight,Inbox,Box,Diamond,Droplets} from 'lucide-react';
+import {number,compact} from './shared.jsx';
+import {resourceNames} from './secondary-logic.mjs';
+export const ResourceIcons=[Box,Diamond,Droplets];
+export const dateTime=at=>new Date(at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+export function Heading({eyebrow,title,description,children}){return <header className="sec-heading"><div><span className="sec-eyebrow">{eyebrow}</span><h2>{title}</h2>{description&&<p>{description}</p>}</div>{children&&<div className="sec-heading-actions">{children}</div>}</header>;}
+export function SearchField({value,onChange,placeholder='搜索',label=placeholder}){return <label className="sec-search"><Search size={16}/><input aria-label={label} placeholder={placeholder} value={value} onChange={e=>onChange(e.target.value)}/>{value&&<button type="button" aria-label="清除搜索" onClick={()=>onChange('')}>×</button>}</label>;}
+export function Blank({icon:Icon=Inbox,title,children,action}){return <div className="sec-empty"><Icon size={32}/><h3>{title}</h3>{children&&<p>{children}</p>}{action}</div>;}
+export function Metric({label,value,note}){return <div className="sec-metric"><span>{label}</span><strong>{value}</strong>{note&&<small>{note}</small>}</div>;}
+export function ActionLink({children,onClick}){return <button className="text-button sec-link" type="button" onClick={onClick}>{children}<ArrowUpRight size={15}/></button>;}
+export function ResourceBars({values=[0,0,0],capacity=[0,0,0],rate,local=false}){return <div className="sec-resource-bars">{values.map((n,i)=>{const Icon=ResourceIcons[i],percent=capacity[i]>0?Math.max(0,Math.min(100,n/capacity[i]*100)):0;return <div key={i} className={n>=capacity[i]?'sec-capacity-full':''}><div><span><Icon size={16}/>{resourceNames[i]}</span><strong title={number(n)+' / '+number(capacity[i])}>{compact(n)} <small>/ {compact(capacity[i])}</small></strong></div><div className="sec-storage-track" role="meter" aria-label={resourceNames[i]+'仓储'} aria-valuemin={0} aria-valuemax={Math.max(capacity[i],n,1)} aria-valuenow={Math.floor(n)}><i style={{width:percent+'%'}}/></div><small>{rate?`${rate[i]>=0?'+':''}${number(rate[i])} / 小时`:`使用率 ${Math.round(percent)}%`}{rate&&<span>{local?'本星净产量':'全系净产量'}</span>}</small></div>;})}</div>;}
+export function UnitTable({values,api,title}){const rows=Object.entries(values||{}).filter(([,n])=>n>0);return <section className="sec-unit-table"><h4>{title}</h4>{rows.length?<div>{rows.map(([id,n])=><div key={id}><span>{api.catalog.units[id]?.name||api.catalog.buildings[id]?.name||id}</span><b>{number(n)}</b></div>)}</div>:<p className="muted">无</p>}</section>;}

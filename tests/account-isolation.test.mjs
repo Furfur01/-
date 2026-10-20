@@ -6,7 +6,6 @@ import path from 'node:path';
 import net from 'node:net';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
-import isolatedBrowserUrl from './isolated-browser-url.cjs';
 
 const root=path.resolve(import.meta.dirname,'..');
 test('isolated saves own their sessions; anonymous polling and lost sessions never duplicate accounts',async()=>{
@@ -23,9 +22,6 @@ test('isolated saves own their sessions; anonymous polling and lost sessions nev
   try{
     await Promise.race([once(child.stdout,'data'),once(child,'exit').then(()=>{throw Error(errors);})]);
     assert.equal((await(await fetch(base+'/api/health')).json()).isolated,true);
-    assert.equal(await isolatedBrowserUrl(base),base);
-    await assert.rejects(isolatedBrowserUrl('http://127.0.0.1:8289'),/separate local port/);
-    await assert.rejects(isolatedBrowserUrl('https://example.com'),/separate local port/);
     for(let i=0;i<4;i++)for(const route of ['/api/state','/api/unknown']){
       const response=await fetch(base+route);
       assert.equal(response.status,401);assert.equal(response.headers.get('set-cookie'),null);

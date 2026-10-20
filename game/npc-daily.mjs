@@ -26,3 +26,24 @@ export function migrateNpcDaily(world){
   refreshNpcCamps(world,world.at);
   world.npcDailyVersion=1;
 }
+
+// Remove only defenses proved to be repairs from the latest full-clear victory.
+// Historical reports remain an accurate record of the old settlement rules.
+export function migrateNpcDefenseRepairs(world){
+  if(world.npcDefenseRepairVersion>=1)return;
+  const latest=new Map(),battles=Object.values(world.battles||{});
+  for(const player of Object.values(world.players))for(const r of player.reports||[]){
+    if(r.type!=='battle'||r.trial||r.defending||!r.targetId)continue;
+    if(!latest.has(r.targetId)||r.at>latest.get(r.targetId).at)latest.set(r.targetId,r);
+  }
+  for(const p of Object.values(world.planets)){
+    if(!npcType(p)||p.owner)continue;
+    const r=latest.get(p.id);
+    if(!r||r.winner!=='attacker'||!Number.isInteger(r.npcRefreshDay)||r.npcRefreshDay!==p.npcRefreshDay||r.at<p.npcRefreshedAt)continue;
+    if(!r.survivors?.defender||Object.values(r.survivors.defender).some(n=>n>0)||Object.values(p.ships).some(n=>n>0))continue;
+    if(battles.some(b=>b.target===p.id&&(b.status==='active'||b.start>r.at)))continue;
+    if(!Object.entries(p.defense).every(([id,n])=>n<=(r.repair?.[id]||0)))continue;
+    p.defense={};
+  }
+  world.npcDefenseRepairVersion=1;
+}

@@ -3,8 +3,9 @@ import {createShipKit} from '../opendesign/mockups/galactic-command/ship-sculpte
 
 // Positions are in the approved model's original construction coordinates.
 export function installFlightArmament(model,id){
-  const added={Cruiser:[.75,-3,.22],Battleship:[.95,3.6,.25],Bomber:[.5,-2,.36]}[id];
-  const bays={Destroyer:[1.7,3.8],Devourer_Interceptor:[2,-2.5],Iron_Behemoth:[1.35,1.9]}[id];
+  const authored=model.userData.revision==='october-user-models-01';
+  const added=!authored&&{Cruiser:[.75,-3,.22],Battleship:[.95,3.6,.25],Bomber:[.5,-2,.36]}[id];
+  const bays=!authored&&{Destroyer:[1.7,3.8],Devourer_Interceptor:[2,-2.5],Iron_Behemoth:[1.35,1.9]}[id];
   const k=createShipKit('Flight_armament'),tubes=[],bounds=new Box3().setFromObject(model);
   const seat=(x,z,r)=>{
     const samples=[[0,0],[r,0],[-r,0],[0,r],[0,-r]].map(([dx,dz])=>{
@@ -50,8 +51,8 @@ export function installFlightArmament(model,id){
          (id==='Interceptor'&&raw.y>0&&raw.z<1)||
          (id==='Devourer_Interceptor'&&raw.z>4)||
          (id==='Iron_Behemoth'&&(Math.abs(raw.z-1.1)<.1||Math.abs(raw.z-5.25)<.1)))role='secondary';
-      const s=new Vector3().setFromMatrixScale(matrix).x;
-      const joint={mount:[p.z,p.y,-p.x],scale:s,role,pivot:[-.2*s,.096*s,0],muzzles:[[-.905*s,.096*s,-.22*s],[-.905*s,.096*s,.22*s]],vertices:[[],[]],parts:[],source:owner.name+':'+i};joints.push(joint);return joint;
+      const worldScale=owner.getWorldScale(new Vector3()).x,s=entry.scale?entry.scale*worldScale:new Vector3().setFromMatrixScale(matrix).x;
+      const joint={mount:[p.z,p.y,-p.x],scale:s,role:entry.role||role,pivot:entry.pivot?.map(v=>v*worldScale)||[-.2*s,.096*s,0],muzzles:entry.muzzles?.map(m=>m.map(v=>v*worldScale))||[[-.905*s,.096*s,-.22*s],[-.905*s,.096*s,.22*s]],neutralYaw:entry.neutralYaw||0,vertices:[[],[]],parts:[],source:owner.name+':'+i};joints.push(joint);return joint;
     });owners.set(owner,list);
   });
   return {joints,owners,tubes};

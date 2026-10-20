@@ -12,4 +12,4 @@
 
 操作入口：在星图战场或独立战场选中己方深空吞噬者，使用“蜂群指挥”中的战术、阵型和“锁定并集火”。回放和敌方母舰只读。
 
-验证：`node --test tests/devourer-command.test.mjs`；`node tests/devourer-browser.mjs` 使用临时目录存档、独立会话与动态端口，并在 `finally` 中关闭浏览器、服务和清理存档。
+2026-10-20 已清理上述功能的独立测试与预览工具；当前统一检查范围见 `tests/README.md`。

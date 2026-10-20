@@ -1,0 +1,402 @@
+{
+  "date": "2026-10-19",
+  "mode": "builtin image_gen",
+  "style": "original AURORA: bold cartoon landmarks with compact functional satellites",
+  "referenceImages": [
+    "references/original-aurora-planet.png",
+    "references/render-style-exemplar.png",
+    "references/Iron_Behemoth-original.png",
+    "references/Iron_Behemoth-top-silhouette.png",
+    "references/flagship-center-original.png"
+  ],
+  "assets": [
+    {
+      "number": 1,
+      "id": "Command_Center",
+      "name": "主基地",
+      "image": "images/01-Command_Center.png",
+      "brief": "briefs/01-Command_Center.md",
+      "signature": "大穹顶＋四片楔形支撑翼",
+      "mainModules": [
+        "中央穹顶与指挥舱",
+        "四片径向支撑翼",
+        "底座与入口坡道"
+      ],
+      "supportFacilities": [
+        "通信舱",
+        "行政附楼",
+        "生命维持站",
+        "登陆接待亭"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-96732a8d-4014-42a8-a5c3-98bd6845a6a8.png"
+    },
+    {
+      "number": 2,
+      "id": "Research_Lab",
+      "name": "研究实验室",
+      "image": "images/02-Research_Lab.png",
+      "brief": "briefs/02-Research_Lab.md",
+      "signature": "倾斜实验圆环＋悬浮实验球",
+      "mainModules": [
+        "六角实验主楼",
+        "倾斜实验环与实验球",
+        "两侧实验翼及气闸"
+      ],
+      "supportFacilities": [
+        "共享仪器舱",
+        "样本保管库",
+        "密闭试验舱",
+        "冷却设备站"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-778035fd-2cda-4dc7-b378-7bf292554fcf.png"
+    },
+    {
+      "number": 3,
+      "id": "Metal_Mine",
+      "name": "金属开采综合体",
+      "image": "images/03-Metal_Mine.png",
+      "brief": "briefs/03-Metal_Mine.md",
+      "signature": "黄色大钻臂＋粗壮破碎料斗",
+      "mainModules": [
+        "钻臂、转轴与钻头",
+        "破碎料斗及精炼主机",
+        "短输送带",
+        "金属仓储舱（Metal_Storage）"
+      ],
+      "supportFacilities": [
+        "检修车间",
+        "装运站",
+        "控制室"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-1ba36d80-f7e8-4f92-9707-a162730ec5bf.png"
+    },
+    {
+      "number": 4,
+      "id": "Crystal_Mine",
+      "name": "晶体开采综合体",
+      "image": "images/04-Crystal_Mine.png",
+      "brief": "briefs/04-Crystal_Mine.md",
+      "signature": "巨型紫晶＋三爪采集架",
+      "mainModules": [
+        "紫晶矿体",
+        "三爪采集装置",
+        "分选主机",
+        "晶体仓储舱（Crystal_Storage）"
+      ],
+      "supportFacilities": [
+        "晶体检测舱",
+        "装运舱",
+        "设备维护站"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-661aa157-abac-4371-88e8-ebcf989f8868.png"
+    },
+    {
+      "number": 5,
+      "id": "Gas_Mine",
+      "name": "气体开采综合体",
+      "image": "images/05-Gas_Mine.png",
+      "brief": "briefs/05-Gas_Mine.md",
+      "signature": "大进气涡轮＋三联储气罐",
+      "mainModules": [
+        "进气涡轮及五片扇叶",
+        "压缩净化主机",
+        "粗管线",
+        "三联储罐（Gas_Storage）",
+        "浮台与悬浮支座"
+      ],
+      "supportFacilities": [
+        "采气控制舱",
+        "净化设备舱",
+        "装卸接口站"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-a12128db-ae86-422f-868b-b99060621e39.png"
+    },
+    {
+      "number": 6,
+      "id": "Solar_Plant",
+      "name": "太阳能设施",
+      "image": "images/06-Solar_Plant.png",
+      "brief": "briefs/06-Solar_Plant.md",
+      "signature": "四片大太阳能翼＋中央能源舱",
+      "mainModules": [
+        "中央能源舱",
+        "四片独立太阳能翼",
+        "翼铰链",
+        "储能块"
+      ],
+      "supportFacilities": [
+        "储能站",
+        "逆变器舱",
+        "维护舱"
+      ],
+      "modelNote": "成图采用四片大太阳能翼，模型按左侧大图保留四片；生成提示中的六片是早期构想，不作为模型数量要求。",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-3e6f0c6c-65fe-46b4-adc7-0ed5d4d91d76.png"
+    },
+    {
+      "number": 7,
+      "id": "Fusion_Reactor",
+      "name": "聚变能源设施",
+      "image": "images/07-Fusion_Reactor.png",
+      "brief": "briefs/07-Fusion_Reactor.md",
+      "signature": "粗圆环反应堆＋三片散热翼",
+      "mainModules": [
+        "环形反应堆",
+        "三足支架",
+        "三片散热翼",
+        "控制舱"
+      ],
+      "supportFacilities": [
+        "双筒冷却站",
+        "配电舱",
+        "控制舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-db873f4f-d1b9-4914-aea7-4f8dbebe82d5.png"
+    },
+    {
+      "number": 8,
+      "id": "Robotics_Facility",
+      "name": "机器人工厂",
+      "image": "images/08-Robotics_Facility.png",
+      "brief": "briefs/08-Robotics_Facility.md",
+      "signature": "敞口装配大厅＋两只大机械臂",
+      "mainModules": [
+        "敞口装配大厅",
+        "两组机械臂及关节",
+        "输入工位",
+        "短装配线及出货舱"
+      ],
+      "supportFacilities": [
+        "原料库",
+        "成品库",
+        "测试台",
+        "设备保障舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-bc248b9b-552c-4cde-af97-c2ce2b1babde.png"
+    },
+    {
+      "number": 9,
+      "id": "Nanite_Factory",
+      "name": "纳米工厂",
+      "image": "images/09-Nanite_Factory.png",
+      "brief": "briefs/09-Nanite_Factory.md",
+      "signature": "透明六面制造舱＋悬浮晶圆",
+      "mainModules": [
+        "六面洁净制造舱",
+        "晶圆与三组夹具",
+        "原料与成品密封盒",
+        "前气闸"
+      ],
+      "supportFacilities": [
+        "材料制备舱",
+        "封装检测舱",
+        "设备保障舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-057fa1bd-4623-44cc-9251-94bba18fae1c.png"
+    },
+    {
+      "number": 10,
+      "id": "Radar_Facility",
+      "name": "雷达设施",
+      "image": "images/10-Radar_Facility.png",
+      "brief": "briefs/10-Radar_Facility.md",
+      "signature": "单座大雷达碟＋楔形数据舱",
+      "mainModules": [
+        "雷达碟",
+        "馈源与碟面支架",
+        "方位及俯仰转轴",
+        "楔形数据舱"
+      ],
+      "supportFacilities": [
+        "独立数据舱",
+        "校准小天线台",
+        "设备维修舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-9df0be69-3cb8-4c2d-82ed-fc44e06f7a8a.png"
+    },
+    {
+      "number": 11,
+      "id": "Alliance_Depot",
+      "name": "联盟仓库",
+      "image": "images/11-Alliance_Depot.png",
+      "brief": "briefs/11-Alliance_Depot.md",
+      "signature": "大拱形货仓＋单座门式吊机",
+      "mainModules": [
+        "拱形货仓",
+        "门式吊机与吊具",
+        "三个大货箱",
+        "调度舱"
+      ],
+      "supportFacilities": [
+        "调度塔舱",
+        "货箱堆放位",
+        "维修棚",
+        "能源供应舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-e55c56d7-ddd1-454b-8141-d21a30876edc.png"
+    },
+    {
+      "number": 12,
+      "id": "Shipyard",
+      "name": "太空电梯与轨道船坞",
+      "image": "images/12-Shipyard.png",
+      "brief": "briefs/12-Shipyard.md",
+      "signature": "粗壮电梯基座＋双缆＋十字船坞",
+      "mainModules": [
+        "八角地面货运基座",
+        "电梯叉架与货运轿厢",
+        "双缆连接接口",
+        "轨道中央站",
+        "四个泊位及装配夹具"
+      ],
+      "supportFacilities": [
+        "部件装配舱",
+        "补给仓",
+        "控制舱",
+        "维修机库"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-b223ce32-5bf8-47c6-9ac3-d1f16bc6ce24.png"
+    },
+    {
+      "number": 13,
+      "id": "Missile_Silo",
+      "name": "行星保障中心",
+      "image": "images/13-Missile_Silo.png",
+      "brief": "briefs/13-Missile_Silo.md",
+      "signature": "盾形维修库＋救援吊臂",
+      "mainModules": [
+        "盾形维修主库",
+        "救援吊臂",
+        "维修车辆",
+        "密闭防务储存舱"
+      ],
+      "supportFacilities": [
+        "备件库",
+        "调度舱",
+        "车辆维护台"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-013a8737-b975-4508-8dd0-a11415b248ed.png"
+    },
+    {
+      "number": 14,
+      "id": "Terraformer",
+      "name": "地形改造器",
+      "image": "images/14-Terraformer.png",
+      "brief": "briefs/14-Terraformer.md",
+      "signature": "透明生态穹顶＋三枚气候叶片",
+      "mainModules": [
+        "生态穹顶及绿色内部",
+        "环形环境控制底座",
+        "三片气候调节叶片",
+        "水处理双筒",
+        "控制入口"
+      ],
+      "supportFacilities": [
+        "水处理站",
+        "小型生态试验舱",
+        "工程设备棚"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-d4bee4a1-b084-47b4-b2f5-f4d44f6d14b1.png"
+    },
+    {
+      "number": 15,
+      "id": "Moon_Base",
+      "name": "月球基地",
+      "image": "images/15-Moon_Base.png",
+      "brief": "briefs/15-Moon_Base.md",
+      "signature": "三瓣密闭居住舱＋中央气闸",
+      "mainModules": [
+        "中央气闸舱",
+        "三瓣居住舱",
+        "入口坡道",
+        "后部生命维持双罐"
+      ],
+      "supportFacilities": [
+        "通信舱",
+        "温室舱",
+        "储备仓",
+        "能源舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-12fc3955-a15c-4aa3-8c2b-cd7b8e34dda5.png"
+    },
+    {
+      "number": 16,
+      "id": "The_EU_X_Radar",
+      "name": "月球雷达",
+      "image": "images/16-The_EU_X_Radar.png",
+      "brief": "briefs/16-The_EU_X_Radar.md",
+      "signature": "双弧深空阵列＋高位接收球",
+      "mainModules": [
+        "双弧接收阵列",
+        "接收球",
+        "支撑转轴",
+        "控制基座"
+      ],
+      "supportFacilities": [
+        "信号处理舱",
+        "校准信标",
+        "电源舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-bd7138b5-df65-4daa-88b6-e1d3db925d5b.png"
+    },
+    {
+      "number": 17,
+      "id": "Wormhole_Generator",
+      "name": "虫洞发生器",
+      "image": "images/17-Wormhole_Generator.png",
+      "brief": "briefs/17-Wormhole_Generator.md",
+      "signature": "粗六边形星门＋三根锚定柱",
+      "mainModules": [
+        "六边形星门环",
+        "六段内环能量件",
+        "三根锚定支柱",
+        "双电源舱",
+        "可独立隐藏的门内效果面"
+      ],
+      "supportFacilities": [
+        "电源舱",
+        "控制舱",
+        "稳定器设备舱"
+      ],
+      "modelNote": "",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-f8effd14-8055-48ab-a6f8-efcd37243a33.png"
+    },
+    {
+      "number": 18,
+      "id": "Flagship_Center",
+      "name": "旗舰中心",
+      "image": "images/18-Flagship_Center.png",
+      "brief": "briefs/18-Flagship_Center.md",
+      "signature": "浮空重型船坞＋半成品深空吞噬者",
+      "mainModules": [
+        "两条浮空纵向装配平台及悬浮装置",
+        "双侧大型装配臂",
+        "后部指挥桥",
+        "半成品深空吞噬者（Iron_Behemoth）",
+        "短连接桥与能源管线"
+      ],
+      "supportFacilities": [
+        "部件仓",
+        "动力装配舱",
+        "调度舱",
+        "维修棚"
+      ],
+      "modelNote": "月球低重力浮空船坞；中央上下贯通，舰体宽前窄后并保持半成品状态。舰体与船坞独立，四组配套也悬浮。",
+      "sourceImage": "C:\\Users\\Administrator\\.codex\\generated_images\\01a14bb9-6e73-7961-8ef3-a10b2da2d132\\exec-437a46b0-834b-4719-8a68-fccb16670779.png"
+    }
+  ]
+}
