@@ -1,7 +1,8 @@
+import {EffectVertices,effectRibbon} from './effect-vertices.js';
 export function createBattlePresentation({state,M,V,LAYOUTS,shipMatrix}) {
   // Cosmetic geometry only. Every discharge/impact originates from a server event.
   class BattlePresentation {
-    constructor(){this.impacts=[];this.flashes=[];}
+    constructor(){this.impacts=[];this.flashes=[];this.ribbons=new EffectVertices(9);this.glows=new EffectVertices();}
     event(e,battle){
       if(e.type==='fire')this.flashes.push({pos:e.from,color:this.color(e.kind),age:0,life:.22});
       if(e.type==='hit'||e.type==='destroy'||e.type==='intercept'){
@@ -23,16 +24,13 @@ export function createBattlePresentation({state,M,V,LAYOUTS,shipMatrix}) {
       r.setBlend(false,true);
     }
     draw(r,battle,allWeapons){
-      const data=[],glows=[],focal=r.height/(2*Math.tan(r.fov/2)),eye=r.eye;
+      const data=this.ribbons.reset(),glows=this.glows.reset(),focal=r.height/(2*Math.tan(r.fov/2)),eye=r.eye;
       const pixelSize=p=>Math.max(.015,V.length(V.sub(p,eye))/focal);
       const ribbon=(a,b,color,width,alpha=1)=>{
-        const direction=V.sub(b,a),mid=V.scale(V.add(a,b),.5),side=V.norm(V.cross(direction,V.sub(eye,mid)));
-        if(!Number.isFinite(side[0]))return;
-        const w=Math.max(width,pixelSize(mid)*8),offset=V.scale(side,w);
-        const points=[V.sub(a,offset),V.add(a,offset),V.sub(b,offset),V.add(b,offset)];
-        for(const i of [0,1,2,2,1,3])data.push(...V.sub(points[i],eye),...color,i<2?0:1,i%2?1:-1,alpha);
+        const pixel=Math.hypot((a[0]+b[0])*.5-eye[0],(a[1]+b[1])*.5-eye[1],(a[2]+b[2])*.5-eye[2])/focal;
+        effectRibbon(data,a,b,eye,Math.max(width,pixel*8),...color,alpha);
       };
-      const glow=(p,c,size,alpha=1)=>glows.push(...p,...c.map(v=>v*alpha),size);
+      const glow=(p,c,size,alpha=1)=>glows.point(...p,c[0]*alpha,c[1]*alpha,c[2]*alpha,size);
       if(allWeapons){
         for(const beam of state.flight.beams.slice(-240)){
           const alpha=Math.max(0,1-beam.age/beam.life);ribbon(beam.start,beam.end,beam.color,beam.width*2,alpha);
@@ -75,8 +73,8 @@ export function createBattlePresentation({state,M,V,LAYOUTS,shipMatrix}) {
         }
       }
       r.setBlend(true,false);
-      if(data.length)r.drawRibbons(new Float32Array(data));
-      if(glows.length)r.dynamicFlat(glows,true,1);
+      if(data.length)r.drawRibbons(data.view());
+      if(glows.length)r.dynamicFlat(glows.view(),true,1);
       r.setBlend(false,true);
     }
   }

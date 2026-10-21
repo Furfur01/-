@@ -7,7 +7,7 @@ export const shipRoles={
  Bomber:['对地 · 防御压制','BOMBER / B-06','携带等离子武器，专注打击固定防御设施。'],
  Destroyer:['重装 · 舰队突破','DESTROYER / D-07','重装舰体与高攻击力，用于高强度舰队交战。'],
  Interceptor:['核子炮舰 · 舰群压制','INTERCEPTOR / X-01','量子火控为核子大炮提供射击解算，爆炸波及主目标附近的敌舰。'],
- Titanenergetic_Frigate:['精锐 · 高级战机','TITAN / X-02','超构材料打造的小型高级战机，搭载中央聚能主炮与十二个导弹口。'],
+ Titanenergetic_Frigate:['重装 · 阵线护卫','TITAN / X-02','高强度超构舰体承担正面防护，搭载中央聚能主炮与十二个导弹口，随主力阵线推进。'],
  Devourer_Interceptor:['双重型主炮 · 重点打击','DEVOURER INTERCEPTOR / X-03','相位能源为双重型主炮供能，集中火力打击大型舰，并波及附近敌舰。'],
  Iron_Behemoth:['旗舰 · 蜂群指挥','DEEP SPACE DEVOURER / F-01','月球旗舰中心专属母舰。指挥蜂群、召集友军集火，并提供不叠加的15%舰队攻击增益。'],
  Reaper:['猎杀 · 反旗舰','REAPER / X-04','大型舰猎手，拥有护盾回补能力与抗湮灭结构，免疫湮灭之星爆炸。'],

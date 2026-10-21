@@ -1,6 +1,5 @@
 import {battleMount} from '../../game/spatial-battle.mjs';
 import {surfaceHeight,battleViewEnvironment} from '../../game/battle-terrain.mjs';
-import {GROUND_BLAST_LIFETIME} from '../../game/ground-blast.mjs';
 import {cockpitClass,pilotKeys,pilotHandling,cabinPose} from '../../game/pilot-controls.mjs';
 import {shipCabinClass,resetShipCabin} from '../../game/ship-cabins.mjs';
 import {SessionStream} from './session-stream.js';
@@ -14,13 +13,14 @@ import {BattleViewCulling} from './view-culling.js';
 import {ProjectileVisualContacts,predictedProjectilePosition,displayedProjectilePosition} from './projectile-visuals.js';
 import {FortressPresentation} from './fortress-presentation.js';
 import {createCombatSoundSession} from '../../client/combat-audio.mjs';
+import {activeManualCues} from '../../game/weapon-timing.mjs';
 export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown,combatAudio=null})=>{
 
   const lifetime=createLifetime(), {listen,later}=lifetime;
   // Independent battlefield controller; shared runtime supplies cameras, controls and rendering.
   class NativeFleetBattle {
-    constructor(){this.audio=combatAudio;this.audioSession=combatAudio?createCombatSoundSession(combatAudio):null;this.params=new URLSearchParams(location.search);this.id=this.params.get('battle');this.replayId=this.params.get('replay');this.metadata=[];this.rows=[];this.previous=[];this.selected=-1;this.controlled=null;this.seq=0;this.eventSeq=0;this.fireUntil=0;this.missileUntil=0;this.overview=true;this.presentation=createBattlePresentation({state,M,V,LAYOUTS,shipMatrix});this.distance=650;this.center=[0,0,0];this.quality=1;this.lodLevels=new Map();this.overviewYaw=.45;this.overviewPitch=.24;this.playTime=0;this.playSpeed=1;this.elapsedFrames=[];this.contacts=new Map();this.vesselVisuals=new Map();this.projectileVisuals=new Map();this.meshGroups=new Map();this.detailIds=new Set();}
-    sound(data){if(!this.audioSession)return;this.audioSession.consume({...data,id:this.id||this.replayId,metadata:this.metadata,ships:this.rows},{active:!window.commandSceneActive&&!this.paused&&state.mode==='flight',owner:this.owner,focus:this.selected,listener:renderer.eye||state.flight.pos});}
+    constructor(){this.audio=combatAudio;this.audioSession=combatAudio?createCombatSoundSession(combatAudio):null;this.params=new URLSearchParams(location.search);this.id=this.params.get('battle');this.replayId=this.params.get('replay');this.metadata=[];this.rows=[];this.previous=[];this.selected=-1;this.controlled=null;this.seq=0;this.eventSeq=0;this.fireUntil=0;this.missileUntil=0;this.overview=true;this.presentation=createBattlePresentation({state,M,V,LAYOUTS,shipMatrix});this.distance=650;this.center=[0,0,0];this.quality=1;this.lodLevels=new Map();this.overviewYaw=.45;this.overviewPitch=.24;this.playTime=0;this.playSpeed=1;this.elapsedFrames=[];this.qualityFrames=0;this.contacts=new Map();this.vesselVisuals=new Map();this.projectileVisuals=new Map();this.meshGroups=new Map();this.detailIds=new Set();}
+    sound(data){if(!this.audioSession)return;this.audioSession.consume({...data,id:this.id||this.replayId,metadata:this.metadata,ships:this.rows},{active:!window.commandSceneActive&&!this.paused&&state.mode==='flight',owner:this.owner,focus:this.selected,listener:renderer.eye||state.flight.pos,speed:this.replay?this.playSpeed:1});}
     name(type){return type==='Swarm_Fighter'?'蜂群战斗机':SHIPS[this.indices?.get(type)]?.name||type;}
     async orderCarrier(order){const m=this.metadata[this.selected],id=this.selected;if(this.carrierPending||this.replay||this.snapshot?.status!=='active'||!m?.profile.carrier||m.owner!==this.owner||!(this.rows[id]?.[6]>0))return;
       this.carrierPending=true;this.carrierMessage='正在发送僚机指令';try{await this.request('/api/battles/'+this.id+'/control',{type:'carrier-order',shipId:id,...order});this.receive(await this.request('/api/battles/'+this.id));this.carrierMessage='僚机指令已下达';}catch(e){this.carrierMessage=e.message;notice(e.message);}finally{this.carrierPending=false;}
@@ -30,7 +30,7 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
     async start(){
       document.body.classList.add('real-battle');$('.flight-header>div').innerHTML='银河帝国<span>/</span>真实战场';$('.flight-header>p').textContent='正式交战 · 自动接敌 / 亲自驾驶';$('#flight').setAttribute('aria-label','真实战场驾驶');$('#flight-nav-label').textContent='真实战场';$('.help-note').textContent='这是正式战斗。移动与射击影响真实损失；退出驾驶交还 AI。全景中拖动旋转、滚轮缩放，Shift 拖动平移。';const bar=document.createElement('div');bar.id='native-battle-bar';bar.innerHTML='<strong id="native-status">连接真实战场…</strong><select id="native-formation" aria-label="己方编队"></select><select id="native-vessel" aria-label="编队内舰船"></select><button id="native-claim">亲自驾驶</button><button id="native-release">交还 AI</button><button id="native-cinema">交火视角</button><button id="native-ground">地面阵地</button><button id="native-overview">舰队全景</button><button id="native-follow">跟随 / 舰桥</button><button id="native-leave">返回舰队</button><button id="native-pause" hidden>暂停</button><select id="native-speed" hidden><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select><input id="native-seek" type="range" min="0" max="600" step=".1" value="0" hidden>';document.body.append(bar);this.labels=document.createElement('div');this.labels.id='formation-labels';document.body.append(this.labels);this.labels.onclick=e=>{const button=e.target.closest('[data-group]');if(!button)return;const group=this.displayGroups.find(g=>g.key===button.dataset.group);if(group)this.chooseGroup(group.key);};
       listen(window,'message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.type!=='battle-visibility')return;window.commandSceneActive=!e.data.active;if(!e.data.active){this.audio?.stop();keys.clear();void this.setAI(true);}});
-      $('#native-formation').onchange=e=>this.chooseGroup(e.target.value);$('#native-vessel').onchange=e=>this.select(Number(e.target.value));$('#native-claim').onclick=()=>this.setAI(false);$('#native-release').onclick=()=>this.setAI(true);$('#native-cinema').onclick=()=>this.frameBattle();$('#native-ground').onclick=()=>this.frameGround();$('#native-overview').onclick=()=>this.frameBattle(true);$('#native-follow').onclick=()=>{this.overview=false;setView();};$('#native-leave').onclick=()=>this.leave();$('#native-pause').onclick=()=>this.togglePlayback();$('#native-speed').onchange=e=>this.playSpeed=Number(e.target.value);$('#native-seek').oninput=e=>this.seek(Number(e.target.value));
+      $('#native-formation').onchange=e=>this.chooseGroup(e.target.value);$('#native-vessel').onchange=e=>this.select(Number(e.target.value));$('#native-claim').onclick=()=>this.setAI(false);$('#native-release').onclick=()=>this.setAI(true);$('#native-cinema').onclick=()=>this.frameBattle();$('#native-ground').onclick=()=>this.frameGround();$('#native-overview').onclick=()=>this.frameBattle(true);$('#native-follow').onclick=()=>{this.overview=false;setView();};$('#native-leave').onclick=()=>this.leave();$('#native-pause').onclick=()=>this.togglePlayback();$('#native-speed').onchange=e=>{this.playSpeed=Number(e.target.value);this.audio?.stop();this.sound({tick:this.playTime*20,events:activeManualCues(this.replay.events,this.playTime*20)});};$('#native-seek').oninput=e=>this.seek(Number(e.target.value));
       const canvas=$('#scene');listen(canvas,'wheel',e=>{if(this.overview){e.preventDefault();this.distance=clamp(this.distance*Math.exp(e.deltaY*.001),80,12000);}},{passive:false});listen(canvas,'pointermove',e=>{if(this.overview&&e.buttons){this.cinematicAnchor=null;if(e.shiftKey){this.cinematicAnchor=null;const right=[Math.cos(this.overviewYaw),0,-Math.sin(this.overviewYaw)];for(let i=0;i<3;i++)this.center[i]-=right[i]*e.movementX*this.distance*.001;this.center[1]+=e.movementY*this.distance*.001;}else{this.overviewYaw-=e.movementX*.004;this.overviewPitch=clamp(this.overviewPitch+e.movementY*.003,-1.3,1.3);}}});
       listen(document,'visibilitychange',()=>{if(document.hidden){keys.clear();void this.setAI(true);}});listen(window,'pagehide',()=>this.dispose());
       const account=await this.request('/api/state');if(lifetime.disposed)return;this.owner=account.player.id;
@@ -63,7 +63,7 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
       if(!this.replay)return;
       if(this.playTime>=this.report.duration){this.seek(0);this.frameBattle(true);this.paused=false;}
       else this.paused=!this.paused;
-      if(this.paused)this.audio?.stop();this.syncHeader();
+      if(this.paused)this.audio?.pause();else{this.audio?.resume();this.sound({tick:this.playTime*20,events:activeManualCues(this.replay.events,this.playTime*20)});}this.syncHeader();
     }
     clearVisuals(){
       this.audioSession?.reset();
@@ -71,12 +71,13 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
       this.presentation.clear();this.projectileVisuals.clear();this.vesselVisuals.clear();
       this.visualContacts?.clear();this.visualContactsReady=false;
       this.fortressPresentation?.clear();
-      for(const key of ['shieldHits','beams','particles','projectiles','weaponImpacts','specialBlasts','mushroomClouds'])state.flight[key]=[];
+      for(const key of ['shieldHits','beams','particles','projectiles','weaponImpacts','specialBlasts','weaponCharges'])state.flight[key]=[];
     }
     seek(seconds){
       if(!this.replay)return;
       this.playTime=clamp(seconds,0,this.report.duration);this.replayCursor=replayEventCursor(this.replay.events,this.playTime*20);
-      this.clearVisuals();for(const e of this.replay.events)if(e.tick<=seconds*20&&e.tick>seconds*20-GROUND_BLAST_LIFETIME*20)this.groundBlast(e,(seconds*20-e.tick)*.05);this.predicted=null;this.collisionRows=null;this.update(0);
+      this.clearVisuals();this.predicted=null;this.collisionRows=null;this.update(0);
+      const cues=activeManualCues(this.replay.events,this.playTime*20);for(const e of cues)this.effect(e);this.sound({events:cues,tick:this.playTime*20});
       this.syncHeader();
     }
     receive(data){
@@ -100,7 +101,7 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
       if(this.selected<0||!this.metadata[this.selected]){const id=this.metadata.find(m=>m.owner===this.owner&&m.profile.piloted&&this.rows[m.id]?.[6]>0)?.id??this.metadata.find(m=>this.indices.has(m.type))?.id;if(id!==undefined)this.select(id,false);}
       this.buildGroups();if(!this.framed){this.frameBattle();if(this.params.get('view')==='ground')this.frameGround();this.framed=true;}
     }
-    async select(id,release=true){if(!this.metadata[id]||!this.indices.has(this.metadata[id].type))return;if(release&&this.controlled!==null)await this.setAI(true);this.selected=id;this.predicted=null;const m=this.metadata[id],index=this.indices.get(m.type);const blasts=state.flight.specialBlasts,clouds=state.flight.mushroomClouds;configureFlight(index,true);state.flight.specialBlasts=blasts||[];state.flight.mushroomClouds=clouds||[];state.flight.targets=[];state.flight.ai=true;this.contacts.clear();const ids=this.displayGroups.find(g=>g.key===m.formation)?.ids||[id];$('#native-formation').value=m.formation;$('#native-vessel').innerHTML=ids.filter(id=>this.rows[id]?.[6]>0).map(id=>'<option value="'+id+'">'+this.name(m.type)+' #'+(id+1)+'</option>').join('');$('#native-vessel').value=id;this.applyOwn(true);this.refreshContacts();}
+    async select(id,release=true){if(!this.metadata[id]||!this.indices.has(this.metadata[id].type))return;if(release&&this.controlled!==null)await this.setAI(true);this.selected=id;this.predicted=null;const m=this.metadata[id],index=this.indices.get(m.type);const blasts=state.flight.specialBlasts;configureFlight(index,true);state.flight.specialBlasts=blasts||[];state.flight.targets=[];state.flight.ai=true;this.contacts.clear();const ids=this.displayGroups.find(g=>g.key===m.formation)?.ids||[id];$('#native-formation').value=m.formation;$('#native-vessel').innerHTML=ids.filter(id=>this.rows[id]?.[6]>0).map(id=>'<option value="'+id+'">'+this.name(m.type)+' #'+(id+1)+'</option>').join('');$('#native-vessel').value=id;this.applyOwn(true);this.refreshContacts();}
     refreshGroups(){const select=$('#native-formation'),value=select.value;select.innerHTML=this.displayGroups.map(g=>{const n=g.ids.filter(id=>this.rows[id]?.[6]>0).length;return '<option value="'+g.key+'" '+(!n?'disabled':'')+'>'+(g.owner===this.owner?'己方':'敌方')+' · '+this.name(g.type)+' · '+g.key.split(':').at(-1)+'队 · '+n+' 艘</option>';}).join('');if(this.displayGroups.some(g=>g.key===value))select.value=value;}
     chooseGroup(key){const group=this.displayGroups.find(g=>g.key===key),id=group?.ids.find(id=>this.rows[id]?.[6]>0);if(id!==undefined){this.select(id);const row=this.rows[id];this.cinematicAnchor=null;this.cinemaComposition=false;this.center=row.slice(1,4);this.distance=Math.max(100,this.metadata[id].profile.length*(this.metadata[id].type==='Iron_Behemoth'?3.2:12));this.overview=true;}}
     chooseType(type){const id=this.types.get(type)?.find(id=>this.rows[id]?.[6]>0);if(id!==undefined)return this.select(id);notice('该编队已经没有存活舰船');}
@@ -217,29 +218,32 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
       if(secondary)return {color:kind==='laser'?[1,.5,.14]:kind==='plasma'?[.48,.65,1]:[1,.78,.38],visual:{capital:true,radius:.18,trail:9,glow:8,blastRadius:2.5,impact:12}};
       return {color:profile.weaponColor||[.5,.8,1],visual};
     }
-    fleetBurst(point,count,color,life,speed){const left=Math.max(0,800-state.flight.particles.length);if(left&&count)burst(point,Math.min(count,left),color,life,speed);}
-    muzzle(id,mount=0,secondary=false){const row=this.row(id),index=this.indices.get(this.metadata[id]?.type),layout=LAYOUTS[index];if(!row||!layout)return null;if(this.metadata[id]?.profile.ground)return battleMount({x:row[1],y:row[2],z:row[3],yaw:row[4],pitch:0,turretYaw:row[13],turretPitch:row[14],profile:this.metadata[id].profile},this.metadata[id].profile.hardpoints?.main?.[0]);return M.transform(shipMatrix({pos:row.slice(1,4),yaw:Math.PI-row[4],pitch:row[5],roll:row[12]||0},index),(secondary?layout.joints.filter(j=>j.role==='secondary').map(j=>j.mount):layout.main)[mount]||[0,0,0]);}
-    beamEnd(from,id,fallback){const row=this.row(id);if(!row)return fallback;const center=row.slice(1,4),radius=this.metadata[id].profile.radius||1,k=projectileContact(from,center,center,radius)??1;return from.map((v,i)=>mix(v,center[i],k));}
-    groundBlast(e,age=0){
-      const m=this.metadata[e.shipId],source=this.metadata[e.source];
-      if(!m?.profile.ground||source?.type!=='Bomber'||!['hit','destroy'].includes(e.type)||(e.shield&&e.type!=='destroy'))return;
-      const p=state.flight,clouds=p.mushroomClouds??=[];
-      if(clouds.some(c=>c.shipId===e.shipId&&Math.abs(c.tick-e.tick)<30))return;
-      const env=this.snapshot?.environment||this.replay?.environment;if(!env)return;
-      clouds.push({shipId:e.shipId,tick:e.tick,pos:[e.x,Math.max(surfaceHeight(env,e.x,e.z)+2,e.y-4),e.z],age,seed:e.shipId*1.73+e.tick*.01});
-      if(clouds.length>16)clouds.shift();
+    fleetBurst(point,count,color,life,speed){
+      if(this.effectView&&!this.effectView.visible(...point,life*speed))return;
+      const distance=Math.hypot(...point.map((v,i)=>v-(renderer.eye||state.flight.pos)[i])),near=distance<350;
+      const left=Math.max(0,Math.floor(800*this.quality)-state.flight.particles.length);
+      if(left&&count)burst(point,Math.min(Math.ceil(count*(near?1:.25*this.quality)),left),color,life,speed);
     }
+    muzzle(id,mount=0,secondary=false,missile=false){const row=this.row(id),index=this.indices.get(this.metadata[id]?.type),layout=LAYOUTS[index];if(!row||!layout)return null;if(this.metadata[id]?.profile.ground)return battleMount({x:row[1],y:row[2],z:row[3],yaw:row[4],pitch:0,turretYaw:row[13],turretPitch:row[14],profile:this.metadata[id].profile},this.metadata[id].profile.hardpoints?.main?.[0]);return M.transform(shipMatrix({pos:row.slice(1,4),yaw:Math.PI-row[4],pitch:row[5],roll:row[12]||0},index),(missile?layout.tubes:secondary?layout.joints.filter(j=>j.role==='secondary').map(j=>j.mount):layout.main)[mount]||[0,0,0]);}
+    beamEnd(from,id,fallback){const row=this.row(id);if(!row)return fallback;const center=row.slice(1,4),radius=this.metadata[id].profile.radius||1,k=projectileContact(from,center,center,radius)??1;return from.map((v,i)=>mix(v,center[i],k));}
     effect(e){
       // The consumed warhead has one dedicated effect; victim ships still explode normally.
       if(e.type==='destroy'&&e.kind==='antimatter'&&e.shipId===e.source)return;
-      this.presentation.event(e,this);this.groundBlast(e);const p=state.flight;
+      const p=state.flight;
       if(e.projectileId!==undefined&&e.type!=='fire'){this.projectiles=(this.projectiles||[]).filter(q=>q.id!==e.projectileId);p.projectiles=(p.projectiles||[]).filter(q=>q.id!==e.projectileId);this.projectileVisuals.delete(e.projectileId);}
-      if(e.type==='fire'){
+      if(e.type==='weapon-charge'){
+        const index=this.indices.get(this.metadata[e.shipId]?.type),profile=COMBAT[index];
+        (p.weaponCharges??=[]).push({source:e.shipId,index,missile:e.kind==='missile',age:Math.max(0,((this.replay?this.playTime*20:this.snapshot?.tick??e.tick)-e.tick)*.05),life:e.windup,color:profile.weaponColor,size:profile.visual.muzzle,positions:(e.kind==='missile'?LAYOUTS[index].tubes:LAYOUTS[index].main).map((_,i)=>this.muzzle(e.shipId,i,false,e.kind==='missile')).filter(Boolean)});
+      }else if(e.type==='weapon-stop'){
+        p.weaponCharges=(p.weaponCharges||[]).filter(q=>q.source!==e.shipId);
+        p.beams=p.beams.filter(q=>q.source!==e.shipId||!q.manual);
+      }else if(e.type==='fire'){
+        if(!e.secondary)p.weaponCharges=(p.weaponCharges||[]).filter(q=>q.source!==e.shipId);
         const index=this.indices?.get(this.metadata[e.shipId]?.type),profile=COMBAT[index]||p.profile,{visual,color}=this.weaponStyle(index,e.kind,e.secondary);
         const mounts=/laser|ion|beam|reaper/.test(e.kind)?Math.max(1,e.secondary?LAYOUTS[index]?.joints.filter(j=>j.role==='secondary').length||0:LAYOUTS[index]?.main.length||0):1;
         for(let mount=0;mount<mounts;mount++){
           const from=/laser|ion|beam|reaper/.test(e.kind)?this.muzzle(e.shipId,mount,e.secondary)||e.from:e.from;
-          if(/laser|ion|beam|reaper/.test(e.kind))p.beams.push({source:e.shipId,target:e.target,mount,secondary:e.secondary,start:from,end:this.beamEnd(from,e.target,e.to),age:0,life:visual.beamLife||.35,width:visual.radius||profile.beamWidth||.12,color,compact:visual.compact});
+          if(/laser|ion|beam|reaper/.test(e.kind))p.beams.push({source:e.shipId,target:e.target,mount,secondary:e.secondary,start:from,end:this.beamEnd(from,e.target,e.to),age:Math.max(0,((this.replay?this.playTime*20:this.snapshot?.tick??e.tick)-e.tick)*.05),life:e.beamDuration||(/reaper/.test(e.kind)?.95:visual.compact?.075:.35),width:(visual.radius||profile.beamWidth||.12)*(e.manual?1.25:1),color,compact:visual.compact,manual:e.manual});
           else if(this.replay){const delta=V.sub(e.to,from),speed=e.speed||(e.kind==='missile'?210:540);p.projectiles.push({id:e.projectileId,source:e.shipId,side:this.metadata[e.shipId]?.side,target:e.target,pos:[...from],previous:[...from],velocity:e.velocity||V.scale(V.norm(delta),speed),speed,age:0,life:V.length(delta)/speed+.2,missile:e.kind==='missile',trail:[[...from]],color,visual,kind:e.kind});}
           const near=V.length(V.sub(from,renderer.eye||p.pos))<350||e.shipId===this.controlled;
           if(!visual.compact||near)renderer.weaponImpact(p,from,{visual,color,muzzle:true});
@@ -272,26 +276,31 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
       if(visual&&contact)visual.contact=contact;
       return contact?.pos||to;
     }
+    updateQuality(now=performance.now()){
+      if(this.frameTime&&now-this.frameTime<500)this.elapsedFrames.push(now-this.frameTime);this.frameTime=now;if(this.elapsedFrames.length>600)this.elapsedFrames.shift();if(window.battleBenchmark?.fixedQuality!==undefined){this.quality=clamp(Number(window.battleBenchmark.fixedQuality)||1,.4,1);}else if(this.elapsedFrames.length>=60&&++this.qualityFrames%60===0){const mean=this.elapsedFrames.slice(-60).reduce((a,b)=>a+b,0)/60;this.quality=clamp(this.quality+(mean>29?-.12:mean<20?.03:0),.4,1);}
+    }
     update(dt){
-      this.presentation.update(dt);const now=performance.now();if(this.frameTime)this.elapsedFrames.push(now-this.frameTime);this.frameTime=now;if(this.elapsedFrames.length>600)this.elapsedFrames.shift();if(window.battleBenchmark?.fixedQuality!==undefined){this.quality=clamp(Number(window.battleBenchmark.fixedQuality)||1,.4,1);}else if(this.elapsedFrames.length%60===0){const mean=this.elapsedFrames.slice(-60).reduce((a,b)=>a+b,0)/60;this.quality=clamp(this.quality+(mean>29?-.12:mean<20?.03:0),.4,1);}if(!this.rows.length)return;
+      const visualDt=this.replay?(this.paused?0:dt*this.playSpeed):dt;this.presentation.update(visualDt);const now=performance.now();this.updateQuality(now);if(!this.rows.length)return;
       const p=state.flight;if(this.replay){if(!this.paused)this.playTime=Math.min(this.report.duration,this.playTime+dt*this.playSpeed);if(this.playTime>=this.report.duration&&!this.paused){this.paused=true;this.audio?.stop();this.syncHeader();}const tick=this.playTime*20,frames=this.replay.frames;let lo=0,hi=frames.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(frames[mid].tick<=tick)lo=mid;else hi=mid-1;}const a=frames[lo],b=frames[Math.min(lo+1,frames.length-1)];this.replayCarriers=a.carriers||[];this.previous=a.ships;this.rows=a.ships.map((row,id)=>{const next=b.ships[id]||row;const result=[...next.slice(0,6),...row.slice(6,12),...next.slice(12)];if((this.deathTicks.get(id)??Infinity)<=tick)result[6]=0;return result;});this.replayAlpha=a.tick===b.tick?1:clamp((tick-a.tick)/(b.tick-a.tick),0,1);$('#native-seek').value=this.playTime;const soundEvents=[];while(this.replayCursor<this.replay.events.length&&this.replay.events[this.replayCursor].tick<=tick){const e=this.replay.events[this.replayCursor++];if(e.tick>=tick-(e.type==='antimatter'?106:3)){this.effect(e);soundEvents.push(e);}}if(soundEvents.length)this.sound({events:soundEvents,tick});}
       const blastTime=this.replay?this.playTime:(this.snapshot?.elapsed||0)+Math.min(.2,(now-this.received)/1000);p.specialBlasts=(p.specialBlasts||[]).filter(e=>{e.age=Math.max(0,blastTime-e.tick*.05);return e.age<5.3;});
       if(this.controlled!==null){const input=pilotKeys(keys,this.metadata[this.selected].profile);p.throttle=clamp(p.throttle+dt*27*input.throttle,0,100);if(input.yaw||input.pitch)p.align=false;p.yawTarget+=input.yaw*p.profile.turnRate*dt;p.pitchTarget=clamp(p.pitchTarget+input.pitch*p.profile.turnRate*dt,-1.2,1.2);}
       if(this.overview&&this.cinematicAnchor!=null){const anchor=this.row(this.cinematicAnchor);if(anchor?.[6]>0){const focus=this.cinemaFocus(this.cinematicAnchor,anchor);this.center=this.center.map((v,i)=>mix(v,focus.center[i],1-Math.exp(-dt)));this.overviewYaw+=shortAngle(focus.yaw-this.overviewYaw)*(1-Math.exp(-dt*.35));}else this.frameBattle();}
-      this.applyOwn();p.elapsed+=dt;p.boostActive=keys.has('ShiftLeft')||keys.has('ShiftRight')||p.boost;updateCamera(dt);p.shake*=Math.exp(-dt*5);
+      this.applyOwn();p.elapsed+=visualDt;p.boostActive=keys.has('ShiftLeft')||keys.has('ShiftRight')||p.boost;updateCamera(dt);p.shake*=Math.exp(-dt*5);
       if(!this.contactsAt||now-this.contactsAt>700){this.contactsAt=now;this.refreshContacts();this.refreshGroups();this.syncHeader();}else this.updateContacts();
       const target=selectedTarget();if(target){const dir=V.norm(V.sub(target.pos,p.pos));p.boresightError=Math.acos(clamp(V.dot(dir,forward()),-1,1))*180/Math.PI;p.missileLock=target;p.missileLockTime=.4;}
       // Articulation aims at actual contacts. Firing and damage stay server-authoritative.
       for(const joint of p.joints){joint.cooldown=Math.max(0,joint.cooldown-dt);if(target){const delta=V.sub(target.pos,p.pos);joint.yaw=clamp(Math.atan2(delta[0],-delta[2])-p.yaw,-Math.PI,Math.PI);joint.aligned=true;}}
-      this.updateVisuals(dt,now);
+      this.updateVisuals(visualDt,now);
       document.body.classList.toggle('battle-overview',this.overview);
     }
     // Shared by the standalone battlefield and the map; no UI or simulation side effects.
     updateVisuals(dt,now=performance.now()){
       const p=state.flight;
-      this.visualContacts??=new ProjectileVisualContacts();this.visualContacts.update(this.metadata,id=>this.row(id));this.visualContactsReady=true;
-      p.mushroomClouds=(p.mushroomClouds||[]).filter(c=>{c.age+=this.replay?(this.paused?0:dt*this.playSpeed):dt;return c.age<GROUND_BLAST_LIFETIME;});
-      p.beams=p.beams.filter(b=>{b.age+=dt;if(b.source!==undefined){b.start=this.muzzle(b.source,b.mount,b.secondary)||b.start;b.end=this.beamEnd(b.start,b.target,b.end);}return b.age<b.life;});p.particles=p.particles.filter(q=>{q.age+=dt;q.pos=V.add(q.pos,V.scale(q.velocity,dt));return q.age<q.life;});
+      this.effectView=(this.effectView??new BattleViewCulling()).update(renderer.vp);
+      this.visualContacts??=new ProjectileVisualContacts();this.visualContactsReady=false;
+      if((this.replay?p.projectiles:this.projectiles)?.length){this.visualContacts.update(this.metadata,id=>this.row(id));this.visualContactsReady=true;}
+      p.weaponCharges=(p.weaponCharges||[]).filter(q=>{q.age+=dt;q.positions=(q.missile?LAYOUTS[q.index].tubes:LAYOUTS[q.index].main).map((_,i)=>this.muzzle(q.source,i,false,q.missile)).filter(Boolean);return q.age<q.life&&this.rows[q.source]?.[6]>0;});
+      p.beams=p.beams.filter(b=>{b.age+=dt;if(b.source!==undefined){b.start=this.muzzle(b.source,b.mount,b.secondary)||b.start;b.end=this.beamEnd(b.start,b.target,b.end);}return b.age<b.life&&(!b.manual||this.rows[b.source]?.[6]>0&&this.rows[b.target]?.[6]>0);});p.particles=p.particles.filter(q=>{q.age+=dt;q.pos=V.add(q.pos,V.scale(q.velocity,dt));return q.age<q.life;});
       if(!this.replay){
         const liveIds=new Set(),sortCenter=this.overview?this.center:p.pos;p.projectiles=(this.projectiles||[]).map(q=>{
           liveIds.add(q.id);const dir=V.norm([q.dx-q.x,q.dy-q.y,q.dz-q.z]),age=clamp(((this.sampleTime??now)-this.received)/1000,0,.2);
@@ -303,7 +312,7 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
           const distance=(pos[0]-sortCenter[0])**2+(pos[1]-sortCenter[1])**2+(pos[2]-sortCenter[2])**2;return {id:q.id,pos,distance,previous:visual.trail.at(-2)||pos,velocity:q.vx===undefined?V.scale(dir,q.speed):[q.vx,q.vy,q.vz],age:(q.age||0)+age,life:10,missile:q.missile,trail:visual.trail,...this.weaponStyle(this.indices.get(this.metadata[q.source]?.type),q.kind,q.secondary),kind:q.kind,hostile:q.side!==this.metadata[this.selected]?.side};
         }).filter(Boolean).sort((a,b)=>a.distance-b.distance).slice(0,600);
         for(const id of this.projectileVisuals.keys())if(!liveIds.has(id))this.projectileVisuals.delete(id);
-      }else p.projectiles=p.projectiles.filter(q=>{if(this.paused)return true;const step=dt*this.playSpeed;q.age+=step;const target=this.row(q.target);if(q.missile&&target&&q.age>.2){const speed=Math.min(q.speed||210,38+(q.age-.2)*180),goal=V.scale(V.norm(V.sub(target.slice(1,4),q.pos)),speed);q.velocity=q.velocity.map((v,i)=>mix(v,goal[i],1-Math.exp(-step*4)));}q.previous=q.pos;q.pos=V.add(q.pos,V.scale(q.velocity,step));if(this.visualContacts.contact(q.previous,q.pos,q.side||this.metadata[q.source]?.side))return false;if(q.missile){q.trail.push([...q.pos]);if(q.trail.length>50)q.trail.shift();}return q.age<q.life;});
+      }else p.projectiles=p.projectiles.filter(q=>{if(this.paused)return true;const step=dt;q.age+=step;const target=this.row(q.target);if(q.missile&&target&&q.age>.2){const speed=Math.min(q.speed||210,38+(q.age-.2)*180),goal=V.scale(V.norm(V.sub(target.slice(1,4),q.pos)),speed);q.velocity=q.velocity.map((v,i)=>mix(v,goal[i],1-Math.exp(-step*4)));}q.previous=q.pos;q.pos=V.add(q.pos,V.scale(q.velocity,step));if(this.visualContacts.contact(q.previous,q.pos,q.side||this.metadata[q.source]?.side))return false;if(q.missile){q.trail.push([...q.pos]);if(q.trail.length>50)q.trail.shift();}return q.age<q.life;});
     }
     buildGroups(){
       this.meshGroups.clear();this.displayGroups=BattleDisplay.groupBattleShips(this.metadata);
@@ -331,7 +340,9 @@ export const createFlightController=({state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$
        const time=this.replay?.frames?this.playTime:(this.snapshot?.tick||0)*.05+(this.replay?0:Math.max(0,((this.sampleTime??performance.now())-this.received)/1000));
        r.drawFortress(environment,this.renderNamespace||'',this.metadata,this.rows,this.fortressPresentation,time,this.snapshot?.platformDeaths||this.replay?.events||this.snapshot?.effects||this.snapshot?.events||[]);
       }
-      const candidates=this.metadata.filter(m=>(showGround||!m.profile.ground)&&this.rows[m.id]?.[6]>0&&this.indices.has(m.type)).map(m=>{const d=Math.max(1,V.length(V.sub(this.rows[m.id].slice(1,4),r.eye)));return {id:m.id,d,pixels:m.profile.length*focal/d};}).sort((a,b)=>b.pixels-a.pixels);
+      // Retain the existing global LOD budget; filling vacated off-screen slots
+      // with new high-detail hulls would increase work rather than reduce it.
+      const candidates=this.metadata.filter(m=>(showGround||!m.profile.ground)&&this.rows[m.id]?.[6]>0&&this.indices.has(m.type)).map(m=>{const row=this.row(m.id),d=Math.max(1,Math.hypot(row[1]-r.eye[0],row[2]-r.eye[1],row[3]-r.eye[2]));return {id:m.id,d,pixels:m.profile.length*focal/d};}).sort((a,b)=>b.pixels-a.pixels);
       if(this.fullDetail&&candidates.every(c=>c.pixels>=8)){
         const ids=candidates.map(c=>c.id);this.renderedIds=new Set(ids);this.engineIds=[];this.detailIds=new Set(ids);this.highIds=new Set(ids);this.drawLabels(r,[]);
         this.renderStats={mode:'three',alive:ids.length,instances:ids.length,groups:0,detail:ids.length,high:ids.length,quality:1};

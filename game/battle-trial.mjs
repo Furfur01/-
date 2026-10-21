@@ -1,18 +1,9 @@
 import {randomUUID} from 'node:crypto';
 import {units} from './catalog.mjs';
-import {battleStats} from './battle-stats.mjs';
-import {planetBattleEnvironment} from './battle-terrain.mjs';
 import {spatialSurvivors} from './spatial-battle.mjs';
 
-// Retain the established trial balance; advanced hulls also have formal production definitions.
-export const trialUnits={...units,
-  Iron_Behemoth:{...units.Destroyer,id:'Iron_Behemoth',name:'深空吞噬者',strength:350000,shield:4000,attack:5500,splashMultipliers:{},splashRadius:0},
-  Interceptor:{...units.Destroyer,id:'Interceptor',name:'裂变者',strength:55000,shield:2250,attack:18000,splashMultipliers:{},splashRadius:0},
-  Devourer_Interceptor:{...units.Destroyer,id:'Devourer_Interceptor',name:'噬能截击者',strength:55000,shield:3000,attack:16000,splashMultipliers:{},splashRadius:0},
-  Titanenergetic_Frigate:{...units.Cruiser,id:'Titanenergetic_Frigate',name:'钛能守卫者',strength:13500,shield:600,attack:4800,splashMultipliers:{},splashRadius:0},
-  Reaper:{...units.Destroyer,id:'Reaper',name:'收割者',strength:165000,shield:6000,attack:48000,splashMultipliers:{},splashRadius:0},
-  Annihilator:{...units.Destroyer,id:'Annihilator',name:'湮灭之星',strength:2000,shield:0,attack:500000,splashMultipliers:{},splashRadius:0}
-};
+// Asset exporters use the production catalog; saved trial battles retain their frozen state.
+export const trialUnits=units;
 // Retained only to settle unfinished trial battles in existing saves.
 export function finishTrial(world,b){
   if(b.settled)return;

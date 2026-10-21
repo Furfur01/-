@@ -4,6 +4,7 @@
 # Runtime fleet data and editable/exported mesh assets belong in LFS.
 **/battle-fleet.bin filter=lfs diff=lfs merge=lfs -text
 **/flight-fleet.bin filter=lfs diff=lfs merge=lfs -text
+**/cabins.bin filter=lfs diff=lfs merge=lfs -text
 *.glb filter=lfs diff=lfs merge=lfs -text
 *.hdr filter=lfs diff=lfs merge=lfs -text
 

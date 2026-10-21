@@ -1,3 +1,4 @@
+import {navigationQuote} from './fleet-navigation.mjs';
 import {civicAction,civicState,civicEffects} from './civics.mjs';
 import {availableResources,storageEconomy,integrateStorage,spendResources,depositResources,logisticsAction,logisticsSnapshot} from './system-logistics.mjs';
 import {planetIntel} from './planet-intel.mjs';
@@ -10,13 +11,17 @@ import {planetName} from './star-map.mjs';
 import {buildings,tech,units,rules,missionNames} from './catalog.mjs';
 import {costAt} from './economy-costs.mjs';
 import {productionQueue,productionQueueKey,shipBuildSeconds,missileStorage,migrateDefenseProduction} from './production.mjs';
-import {battle,seeded} from './combat.mjs';
+import {accelerationQuote,accelerationQueueKey,darkMatterRules} from './dark-matter.mjs';
+import {seeded} from './combat.mjs';
+import {explore,escortAssessment,rewardShipPool} from './expedition.mjs';
+import {expeditionZones,expeditionRounds,miningCargo} from './expedition-rules.mjs';
+export {explore} from './expedition.mjs';
 import {createSpatialBattle,addSpatialFleet,advanceSpatialBattle,spatialSurvivors,strikeBattleDefenses,battleSummary,battleVisible} from './spatial-battle.mjs';
 import {getLayout,validatePlacement,findPlacement,migrateLayout,LAYOUT_VERSION} from './layout.mjs';
 import {factions,commanders,commanderInfo} from './factions.mjs';
 import {planetTypes,planetType} from './planet-types.mjs';
 import {NPC_SYSTEM_VERSION,npcType,npcPublic,plannedNpcs,restoreSystemCamps} from './npc-types.mjs';
-import {systemBiomes} from './system-biomes.mjs';
+import {systemBiomes,planetsBySystem} from './system-biomes.mjs';
 import {npcDay,npcDayStart,refreshNpcCamp,refreshNpcCamps,migrateNpcDaily,migrateNpcDefenseRepairs} from './npc-daily.mjs';
 import {colonyLimit,polity,systemTerritory,canColonizeSystem,claimSystem,migrateSovereignty} from './sovereignty.mjs';
 import {RESOURCE_COMPLEX_VERSION,isLegacyStorage,migrateResourceComplexes,planetCapacities,resourceComplexes,usedBuildingFields} from './resource-complexes.mjs';
@@ -68,7 +73,7 @@ export function duration(item,kind,p,level=1,world=null,player=null){
   if(kind==='ship')return shipBuildSeconds(item,p,rules.constructionSpeed);
   if(kind==='tech'){
     let labs=p.buildings.Research_Lab||0;
-    if(world&&player){const needed=item.req.find(([id])=>id==='Research_Lab')?.[1]||1;labs+=Object.values(world.planets).filter(x=>x.owner===player.id&&!x.moon&&x.id!==p.id&&(x.buildings.Research_Lab||0)>=needed).map(x=>x.buildings.Research_Lab).sort((a,b)=>b-a).slice(0,player.tech.Intergalactic_Network||0).reduce((a,b)=>a+b,0);}
+    if(world&&player&&(player.tech.Intergalactic_Network||0)>0){const needed=item.req.find(([id])=>id==='Research_Lab')?.[1]||1;labs+=Object.values(world.planets).filter(x=>x.owner===player.id&&!x.moon&&x.id!==p.id&&(x.buildings.Research_Lab||0)>=needed).map(x=>x.buildings.Research_Lab).sort((a,b)=>b-a).slice(0,player.tech.Intergalactic_Network).reduce((a,b)=>a+b,0);}
     return Math.max(20,Math.ceil((cost[0]+cost[1])*3.6/((labs+1)*rules.researchSpeed*(1+civicEffects(player).research))));
   }
   return Math.max(12,Math.ceil(material*1.44/(((p.buildings.Robotics_Facility||0)+1)*2**(p.buildings.Nanite_Factory||0)*rules.constructionSpeed)));
@@ -196,12 +201,18 @@ export function advance(world,to=Date.now()){
     if(e.kind==='npcDaily')refreshNpcCamps(world,e.at);
     if(e.kind==='logistics'){e.center.level=1;e.center.queue=null;}
     if(e.kind==='build'){const q=e.p.buildQueue;e.p.buildings[q.id]=q.level;e.p.buildQueue=null;}
-    if(e.kind==='ship'){const queue=e.p[e.queueKey],q=queue[0],target=units[q.id].type==='defense'?e.p.defense:e.p.ships;target[q.id]=(target[q.id]||0)+1;q.remaining--;if(q.remaining>0)q.end+=q.each*1000;else queue.shift();joinDefenders(world,e.p);}
+    if(e.kind==='ship')finishProduction(world,e.p,e.queueKey);
     if(e.kind==='research'){const q=e.player.researchQueue;e.player.tech[q.id]=q.level;e.player.researchQueue=null;}
     if(e.kind==='mission')resolveMission(world,e.m,e.at);
   }
   integrate(world,to);
   advancePlans(world,startBuilding,economy);
+}
+function finishProduction(world,p,queueKey,count=1){
+  const queue=p[queueKey],q=queue[0],target=units[q.id].type==='defense'?p.defense:p.ships;
+  target[q.id]=(target[q.id]||0)+count;q.remaining-=count;
+  if(q.remaining>0)q.end+=q.each*1000*count;else queue.shift();
+  joinDefenders(world,p);
 }
 function targetBattle(world,target){return Object.values(world.battles||{}).find(b=>b.status==='active'&&b.target===target.id);}
 function joinDefenders(world,target,mission=null){
@@ -276,8 +287,27 @@ function spatialHash(b){let h=2166136261;for(const s of b.ships)for(const n of [
 function resolveMission(world,m,now){
   const player=world.players[m.owner],home=world.planets[m.from],target=world.planets[m.target];
   const remove=()=>{world.missions=world.missions.filter(x=>x.id!==m.id);};
-  if(m.phase==='return'){for(const r of player.reports)if(r.battleId===m.battleId)for(const delivery of r.deliveries||[])if(delivery.missionId===m.id){delivery.status='delivered';delivery.deliveredAt=now;}merge(home.ships,m.ships);joinDefenders(world,home,m.id);add(world,home,m.cargo);player.darkMatter=(player.darkMatter||0)+(m.darkMatter||0);remove();sendReport(player,{type:'fleet',at:now,title:'舰队已返回',missionId:m.id,battleId:m.battleId,position:m.position,body:`舰队已抵达 ${home.name} [${home.position.join(':')}]。`,cargo:m.cargo,darkMatter:m.darkMatter||0});return;}
-  if(['explore','mine'].includes(m.task)&&m.phase==='outbound'){m.phase='holding';m.start=now;m.end=now+(m.task==='explore'?rules.explorationSeconds:(m.holdHours||1)*rules.explorationHourSeconds)*1000;return;}
+  if(m.phase==='return'){
+    for(const r of player.reports)if(r.battleId===m.battleId)for(const delivery of r.deliveries||[])if(delivery.missionId===m.id){delivery.status='delivered';delivery.deliveredAt=now;}
+    merge(home.ships,m.ships);joinDefenders(world,home,m.id);add(world,home,m.cargo);player.darkMatter=(player.darkMatter||0)+(m.darkMatter||0);remove();
+    const repeat=m.repeat;
+    let repeatStatus='';
+    if(repeat){
+      if(!repeat.stopReason&&repeat.round<repeat.total){
+        try{
+          requireThat(home.owner===player.id&&!targetBattle(world,home),'出发基地正在交战或已失去控制');
+          requireThat(escortAssessment(repeat.template,player.tech,repeat.zone).safe,'护航条件已变化');
+          dispatchFleet(world,player,home,{task:'explore',ships:repeat.template,position:repeat.position,zone:repeat.zone,speed:repeat.speed,rounds:1},now);
+          world.missions.at(-1).repeat={...repeat,round:repeat.round+1};
+          repeatStatus=`已按原编队开始第 ${repeat.round+1} / ${repeat.total} 轮。`;
+        }catch(error){repeat.stopReason=error.message;}
+      }
+      if(repeat.stopReason)repeatStatus=`连跑已停止：${repeat.stopReason}。`;
+      else if(repeat.round===repeat.total)repeatStatus=`已完成 ${repeat.total} 轮探险。`;
+    }
+    sendReport(player,{type:'fleet',at:now,title:'舰队已返回',missionId:m.id,battleId:m.battleId,position:m.position,body:`舰队已抵达 ${home.name} [${home.position.join(':')}]。${repeatStatus}`,cargo:m.cargo,darkMatter:m.darkMatter||0,foundShips:m.foundShips||{},repeat:repeat?{round:repeat.round,total:repeat.total,stopReason:repeat.stopReason||null}:null});return;
+  }
+  if(['explore','mine'].includes(m.task)&&m.phase==='outbound'){m.phase='holding';m.start=now;m.end=now+(m.task==='explore'?(m.workSeconds??rules.explorationSeconds):(m.workSeconds??(m.holdHours||1)*60))*1000;return;}
   let stay=false;
   if(['attack','destroyMoon'].includes(m.task)&&target&&target.owner!==m.owner&&(m.task!=='destroyMoon'||target.moon)){beginEngagement(world,m,target,now);return;}
   if(m.task==='spy'&&target){
@@ -299,50 +329,24 @@ function resolveMission(world,m,now){
     }else sendReport(player,{type:'fleet',at:now,title:'殖民失败',body:!permitted?'其他势力已先抵达并殖民该恒星系，舰队携全部殖民船和物资返航。':occupied?'目标星球已被占领，舰队携殖民船和物资返航。':'殖民地数量已达上限。'});
   }
   if(m.task==='mine'){
-    const capacity=(m.ships.Recycler||0)*units.Recycler.cargo;
-    const amount=Math.floor(capacity*Math.min(1,(m.holdHours||1)*.25));
-    m.cargo=[Math.floor(amount*.7),amount-Math.floor(amount*.7),0];
+    // Already paid legacy trips retain their original short-trip yield.
+    if(m.workSeconds===undefined){const amount=Math.floor((m.ships.Recycler||0)*units.Recycler.cargo*Math.min(1,(m.holdHours||1)*.25));m.cargo=[Math.floor(amount*.7),amount-Math.floor(amount*.7),0];}
+    else m.cargo=miningCargo(m.ships.Recycler||0,m.holdHours||1,units);
     sendReport(player,{type:'fleet',at:now,title:'小行星采矿完成',body:`采矿舰队已离开 [${m.position[0]}:${m.position[1]}] 小行星带。`,cargo:m.cargo});
   }
   if(m.task==='explore'){
-    const outcome=explore(m.ships,m.seed,m.holdHours||1,player.tech);
+    const outcome=explore(m.ships,m.seed,m.holdHours||1,player.tech,{zone:m.zone||'outer',rewardPool:m.rewardPool||rewardShipPool(m.ships,player,home)});
     m.ships=outcome.ships;m.cargo=outcome.cargo;m.returnFactor=outcome.returnFactor;
-    m.darkMatter=outcome.darkMatter;
+    m.darkMatter=outcome.darkMatter;m.foundShips=outcome.foundShips;
+    if(m.repeat&&(outcome.retreated||total(outcome.losses)>0))m.repeat.stopReason=outcome.retreated?'本轮撤退':'护航舰出现损失';
     if(outcome.combat)sendReport(player,{type:'battle',at:now,title:'银心海盗遭遇战',targetName:'海盗舰队',position:m.position,attackerName:player.name,defenderName:'海盗舰队',...outcome.combat,loot:zeros(),debris:zeros(),moonChance:0,moonCreated:false});
-    sendReport(player,{type:'explore',at:now,title:outcome.event==='lost'?'银心探险 · 舰队失联':'银心黑洞探索报告',body:outcome.body,event:outcome.event,cargo:m.cargo,darkMatter:outcome.darkMatter,discovered:outcome.discovered,capacity:outcome.capacity,explorationSeconds:rules.explorationSeconds});
+    sendReport(player,{type:'explore',at:now,title:`银心${expeditionZones[m.zone||'outer'].name}探索报告`,body:outcome.body,event:outcome.event,cargo:m.cargo,darkMatter:outcome.darkMatter,discovered:outcome.discovered,capacity:outcome.capacity,explorationSeconds:m.workSeconds??rules.explorationSeconds,zone:outcome.zone,encounter:outcome.encounter,retreated:outcome.retreated,losses:outcome.losses,foundShips:outcome.foundShips,salvage:outcome.salvage,repeat:m.repeat?{round:m.repeat.round,total:m.repeat.total,stopReason:m.repeat.stopReason||null}:null});
     if(!total(m.ships)){remove();return;}
   }
   if(stay){remove();return;}m.phase='return';m.start=now;m.end=now+Math.ceil(m.travel*(m.returnFactor||1));m.originPosition=m.position;
 }
-export function explore(fleet,seed,_holdHours=1,technology={}){
-  const rng=seeded(seed),roll=rng(),capacity=Object.entries(fleet).reduce((n,[id,count])=>n+units[id].cargo*count,0);
-  const result={event:'nothing',body:'舰队完成了银心黑洞外围探测，没有发现可回收物资，正在返航。',ships:{...fleet},cargo:zeros(),darkMatter:0,parts:0,foundShips:{},returnFactor:1,discovered:null,capacity};
-  // Discovery size is independent of fleet strength and cargo space.
-  if(roll<.60){
-    result.event='resources';const resource=Math.floor(rng()*3),amount=rules.explorationResourceMin+Math.floor(rng()*(rules.explorationCargoCap-rules.explorationResourceMin+1)),loaded=Math.min(amount,capacity);
-    result.discovered={resource,amount};result.cargo[resource]=loaded;
-    result.body=`发现${['金属','晶体','气体'][resource]} ${amount}，舰队仓容量 ${capacity}，实际装载 ${loaded}，返航后入库。`;
-  }else if(roll<.75){
-    result.event='darkMatter';const amount=3+Math.floor(rng()*23);result.discovered={resource:'darkMatter',amount};result.darkMatter=Math.min(amount,capacity);
-    result.body=`发现暗物质 ${amount}，舰队仓容量 ${capacity}，实际装载 ${result.darkMatter}，返航后入账。`;
-  }else if(roll<.85){}
-  else if(roll<.98){
-    result.event='pirates';const enemy={},strength=Math.min(rules.explorationStrengthCap,Object.entries(fleet).reduce((n,[id,count])=>n+units[id].strength*10*count,0));
-    for(const[id,count]of Object.entries(fleet))if(units[id].type==='combat')enemy[id]=Math.max(1,Math.floor(count*.35));
-    if(!total(enemy))enemy.Light_Fighter=Math.max(1,Math.min(30,Math.ceil(strength/40000)));
-    const enemyTech=Object.fromEntries(Object.entries(technology).map(([id,n])=>[id,Math.max(0,n-2)]));
-    result.combat=battle(fleet,enemy,technology,enemyTech,seed^0xEAA);result.ships=result.combat.survivors.attacker;
-    result.body=total(result.ships)?'舰队遭遇海盗伏击，战斗记录已传回，幸存舰船正在返航。':'舰队遭遇海盗伏击，全军覆没，战斗记录已传回。';
-  }else{result.event='lost';result.ships={};result.body='舰队进入黑洞异常引力区，全部信号消失。整支舰队失联，无法返航。';}
-  return result;
-}
 export function fleetQuote(player,p,ships,position,speed=100){
-  const distance=position[0]!==p.position[0]?100:position[1]!==p.position[1]?Math.min(80,Math.abs(position[1]-p.position[1])*.3+12):Math.abs(position[2]-p.position[2]);
-  const slowest=Math.min(...Object.keys(ships).map(id=>{const hyper=units[id].drive==='Hyperspace_Drive'||['Battleship','Dreadnought','Destroyer','Death_Star','Guardian'].includes(id)||(id==='Bomber'&&(player.tech.Hyperspace_Drive||0)>=8),impulse=['Heavy_Fighter','Cruiser','Colony_Ship','Bomber'].includes(id),drive=hyper?'Hyperspace_Drive':impulse?'Impulse_Drive':'Combustion_Drive';return units[id].speed*(1+(player.tech[drive]||0)*(hyper?.3:impulse?.2:.1));}));
-  const seconds=Math.max(20,Math.ceil((22+distance*2.5)*Math.sqrt(10000/Math.max(100,slowest))*100/speed));
-  const fuel=Math.max(1,Math.ceil(Object.entries(ships).reduce((n,[id,count])=>n+units[id].fuel*count,0)*.08*(1+distance/30)*(speed/100)**2));
-  const capacity=Object.entries(ships).reduce((n,[id,count])=>n+units[id].cargo*count,0);
-  return {seconds,fuel,capacity};
+  return navigationQuote(units,player.tech,p.position,ships,position,speed);
 }
 function startBuilding(world,player,p,id,now,slotId,dryRun=false){
   const item=Object.hasOwn(buildings,id)?buildings[id]:null;
@@ -363,77 +367,10 @@ function startBuilding(world,player,p,id,now,slotId,dryRun=false){
   const available=availableResources(world,p);requireThat(cost.every((v,i)=>available[i]>=v),'资源不足');
   if(dryRun)return;
   pay(world,p,cost);p.layout??={};p.layout[id]=location;
-  p.buildQueue={id,level:current+1,start:now,end:now+duration(item,'build',p,current+1,world,player)*1000,planet:p.id,cost};
+  p.buildQueue={queueId:uid(),id,level:current+1,start:now,end:now+duration(item,'build',p,current+1,world,player)*1000,planet:p.id,cost};
   if(!p.moon)p.buildQueue.slotId=surfaceLayout.slots[id].slotId;
 }
-export function act(world,player,action,now=Date.now()){
-  if(action.type==='dispatch')requireThat(action.position?.[0]===1,'仅开放第 1 银河');
-  if(['jump','missile','scan'].includes(action.type)&&action.target)requireThat(world.planets[action.target]?.position[0]===1,'仅开放第 1 银河');
-  advance(world,now);const p=world.planets[action.planet];if(p)migrateLayout(p);
-  requireThat(['civic','logistics','plan','applyTemplate','build','downgrade','research','ship','dispatch','renamePlanet','cancel','scan','jump','recall','read','readAll','rename','alliance','chat','purchase','missile','place'].includes(action.type),'操作不存在');
-  if(['logistics','plan','build','downgrade','research','ship','dispatch','renamePlanet','cancel','scan','jump','purchase','missile','place'].includes(action.type))requireThat(p?.owner===player.id,'无法操作此星球');
-  if(action.type==='civic'){
-    requireThat(p?.owner===player.id,'无法操作此星球');
-    civicAction(player,action,now,cost=>pay(world,p,cost));
-  }
-  if(action.type==='logistics')logisticsAction(world,player,p,action,now);
-  if(action.type==='plan'){requireThat(p.position[0]===1,'仅开放第 1 银河');editPlan(p,action);advancePlans(world,startBuilding,economy);}
-  if(action.type==='applyTemplate'){
-    const previews=templatePreview(world,player,action);
-    for(const preview of previews){
-      requireThat(action.revisions?.[preview.planet]===preview.revision,'计划已更新，请重新预览');
-      if(action.growth==='incremental')requireThat(action.bases?.[preview.planet]===preview.basis,'建筑等级或施工已变化，请重新预览增量计划');
-    }
-    for(const preview of previews)world.planets[preview.planet].constructionPlan={items:preview.items,paused:preview.paused,revision:preview.revision+1,template:action.template,growth:action.growth||'fixed'};
-    advancePlans(world,startBuilding,economy);
-  }
-  if(action.type==='purchase'){
-    const resource=Number(action.resource),size=Number(action.size),quantity=Number(action.quantity);
-    requireThat(Number.isInteger(resource)&&resource>=0&&resource<=2&&[1,10,100].includes(size)&&Number.isInteger(quantity)&&quantity>=1&&quantity<=100,'商品无效');
-    requireThat((player.darkMatter||0)>=size*quantity,'暗物质不足');player.darkMatter-=size*quantity;add(world,p,[0,1,2].map(i=>i===resource?size*quantity*10000:0));
-  }
-  if(action.type==='build')startBuilding(world,player,p,action.id,now,action.slotId);
-  if(action.type==='research'){
-    const isTech=action.type==='research',item=(isTech?tech:buildings)[action.id];requireThat(item,'目标不存在');
-    requireThat(!isTech||!p.moon,'月球上不能研究科技');requireThat(isTech||!item.moon||p.moon,'只能在月球建造');
-    requireThat(isTech||!p.moon||['Moon_Base','Wormhole_Generator','The_EU_X_Radar','Robotics_Facility','Shipyard','Missile_Silo','Metal_Storage','Crystal_Storage','Gas_Storage'].includes(item.id),'无法在月球建造');
-    requireThat(isTech||p.moon||!isLegacyStorage(item.id),'仓库已并入对应开采综合体，请升级综合体');
-    if(!isTech){const error=validateSurfaceSlot(p,item.id,action.slotId);requireThat(!error,error);}
-    requireThat(!isTech?!p.buildQueue:!player.researchQueue,isTech?'已有研究进行中':'已有建筑正在建造');
-    requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');
-    const current=isTech?(player.tech[item.id]||0):(p.buildings[item.id]||0);requireThat(!item.one||current===0,'建筑已经完成');
-    requireThat(!item.maxLevel||current<item.maxLevel,'该科技已完成全部研究');
-    if(!isTech){const next={...p,buildings:{...p.buildings,[item.id]:current+1}};requireThat(usedBuildingFields(next)<=fieldsAvailable(p),'建筑空间不足');}
-    if(item.energy)requireThat(economy(p,world).supply>=item.energy*(item.factor||2)**current,'能源不足');
-    let location=null;if(!isTech){const at=getLayout(p)[item.id];location=at&&!validatePlacement(p,item.id,...at)?at:findPlacement(p,item.id);requireThat(location,'没有空闲建筑位置');}
-    const cost=costAt(item,current+1);requireThat(cost.every(Number.isSafeInteger),'等级超出范围');pay(world,p,cost);if(location){p.layout??={};p.layout[item.id]=location;}
-    const q={id:item.id,level:current+1,start:now,end:now+duration(item,isTech?'tech':'build',p,current+1,world,player)*1000,planet:p.id,cost};if(!isTech&&!p.moon)q.slotId=surfaceLayout.slots[item.id].slotId;if(isTech)player.researchQueue=q;else p.buildQueue=q;
-  }
-  if(action.type==='downgrade'){
-    const item=buildings[action.id],level=p.buildings[action.id]||0;requireThat(item&&level>0,'建筑不存在');requireThat(!p.buildQueue,'已有建筑正在建造');
-    requireThat(p.moon||!isLegacyStorage(item.id),'仓库已并入对应开采综合体，不能单独拆除');
-    requireThat(item.id!=='Research_Lab'||!player.researchQueue,'研究期间不能拆除实验室');requireThat(item.id!=='Shipyard'||!p.shipQueue.length,'造船期间不能拆除太空电梯');
-    requireThat(item.id!=='Missile_Silo'||!p.defenseQueue?.length,'防务生产期间不能拆除保障中心');
-    requireThat(item.id!=='Flagship_Center'||!p.flagshipQueue?.length,'旗舰生产期间不能拆除旗舰中心');
-    const next={...p,buildings:{...p.buildings,[item.id]:level-1}},lostFields=item.id==='Moon_Base'?3:item.id==='Terraformer'?5:0;
-    requireThat(usedBuildingFields(next)<=fieldsAvailable(p)-lostFields,'请先拆除占用方圆的其他建筑');
-    if(item.id==='Missile_Silo')requireThat(missileStorage(p)<=(level-1)*10,'导弹储位不足');
-    const cost=costAt(item,level);pay(world,p,cost);p.buildQueue={id:item.id,level:level-1,mode:'downgrade',start:now,end:now+duration(item,'build',p,level)*1000,planet:p.id,cost};
-  }
-  if(action.type==='cancel'){
-    requireThat(['build','research'].includes(action.kind),'舰船和防御建造不能取消');
-    const q=action.kind==='research'?player.researchQueue:p.buildQueue;requireThat(q,'没有进行中的任务');requireThat(q.planet===p.id,'请在任务所在星球取消');add(world,p,q.cost);if(action.kind==='research')player.researchQueue=null;else {p.buildQueue=null;if(p.constructionPlan){p.constructionPlan.paused=true;p.constructionPlan.revision++;}}
-  }
-  if(action.type==='ship'){
-    const item=units[action.id],count=Number(action.count);requireThat(item&&Number.isInteger(count)&&count>0&&count<=10000,'数量无效');
-    requireThat(item.fleetAvailable!==false,'该舰型暂时移出舰队');requireThat(!item.moonOnly||p.moon,'该舰船只能在月球旗舰中心制造');requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');requireThat(productionQueue(p,item).length<8,'建造队列已满');
-    if(item.id.endsWith('Shield_Dome'))requireThat(count===1&&!p.defense[item.id]&&!Object.values(world.battles||{}).some(b=>b.status==='active'&&b.target===p.id&&b.ships.some(s=>s.type===item.id&&s.hp>0))&&!productionQueue(p,item).some(q=>q.id===item.id),'每种护盾罩只能建造一个');
-    if(item.missile)requireThat(missileStorage(p)+count*(item.id==='Interplanetary_Missile'?2:1)<=(p.buildings.Missile_Silo||0)*10,'导弹储位不足');
-    if(item.parts)requireThat((player.parts||0)>=item.parts*count,'外星部件不足');
-    pay(world,p,item.cost.map(v=>v*count));if(item.parts)player.parts-=item.parts*count;
-    const queue=p[productionQueueKey(item)]??=[],each=duration(item,'ship',p),last=queue.at(-1);const start=last?last.end+(last.remaining-1)*last.each*1000:now;queue.push({id:item.id,count,remaining:count,each,start,end:start+each*1000});
-  }
-  if(action.type==='dispatch'){
+function dispatchFleet(world,player,p,action,now){
     requireThat(world.missions.filter(m=>m.owner===player.id).length<1+(player.tech.Computer_Tech||0),'舰队派遣名额已满');
     const ships={};for(const[id,n]of Object.entries(action.ships||{})){requireThat(units[id]&&units[id].type!=='defense'&&id!=='Solar_Satellite'&&Number.isInteger(n)&&n>=0&&n<=(p.ships[id]||0),'舰船数量无效');if(n){requireThat(units[id].fleetAvailable!==false,'该舰型暂时移出舰队');ships[id]=n;}}
     requireThat(total(ships)>0&&total(ships)<=20000,'请选择舰船');
@@ -452,16 +389,120 @@ export function act(world,player,action,now=Date.now()){
     requireThat(['explore','mine'].includes(task)||position[2]<=15,'此区域只能探索或采矿');
     requireThat(task!=='mine'||ships.Recycler>0,'小行星采矿需要回收舰');
     let holdHours=0;
+    const zone=action.zone??'outer',rounds=action.rounds??1;
+    if(task==='explore'){
+      requireThat(Object.hasOwn(expeditionZones,zone),'探险区域无效');
+      requireThat((player.tech.Astrophysics_Tech||0)>=expeditionZones[zone].level,`需要天体物理科技 ${expeditionZones[zone].level} 级`);
+      requireThat(expeditionRounds.includes(rounds),'连跑轮数只能为 1、3、6、12');
+      if(rounds>1)requireThat(escortAssessment(ships,player.tech,zone).safe,'护航不足，不能自动连跑；仍可手动单次派遣');
+    }
     if(task==='explore'){const level=player.tech.Astrophysics_Tech||0;requireThat(level>0,'银心探险需要天体物理科技1级');requireThat(world.missions.filter(m=>m.owner===player.id&&m.task==='explore').length<Math.floor(Math.sqrt(level)),'探索舰队名额已满');}
-    if(task==='mine'){holdHours=Number(action.holdHours??1);requireThat(Number.isInteger(holdHours)&&holdHours>=1&&holdHours<=4,'采矿停留时间为1至4小时');}
+    if(task==='mine'){holdHours=Number(action.holdHours??1);requireThat(Number.isInteger(holdHours)&&holdHours>=1&&holdHours<=4,'采矿时长为 30、60、90 或 120 分钟');}
     requireThat(task!=='destroyMoon'||(target.moon&&(ships.Death_Star||0)>0),'摧毁月球需要死星');
     const speed=Number(action.speed||100);requireThat([10,25,50,75,100].includes(speed),'速度无效');const quote=fleetQuote(player,p,ships,position,speed);
     const cargo=(action.cargo||zeros()).map(Number);requireThat(cargo.length===3&&cargo.every(n=>Number.isInteger(n)&&n>=0)&&cargo.reduce((a,b)=>a+b,0)<=quote.capacity,'货舱不足');
     requireThat(['transport','deploy','colonize'].includes(task)||cargo.every(n=>n===0),'此任务不能装载资源');
     pay(world,p,cargo.map((n,i)=>n+(i===2?quote.fuel:0)));for(const[id,n]of Object.entries(ships))p.ships[id]-=n;p.flightsUsed=(p.flightsUsed||0)+1;
-    world.missions.push({id:uid(),owner:player.id,from:p.id,target:target?.id||null,position,task,...(task==='colonize'?{colonyBiome:biomeAt(world,position)}:{}),ships,cargo,holdHours,phase:'outbound',start:now,end:now+quote.seconds*1000,travel:quote.seconds*1000,seed:Math.floor(Math.random()*4294967295)});
+    world.missions.push({id:uid(),owner:player.id,from:p.id,target:target?.id||null,position,task,...(task==='colonize'?{colonyBiome:biomeAt(world,position)}:{}),ships,cargo,holdHours,...(task==='mine'?{workSeconds:holdHours*rules.explorationHourSeconds}:{}),...(task==='explore'?{zone,workSeconds:expeditionZones[zone].seconds,rewardPool:rewardShipPool(ships,player,p),repeat:{total:rounds,round:1,template:{...ships},speed,position:[...position],zone}}:{}),phase:'outbound',start:now,end:now+quote.seconds*1000,travel:quote.seconds*1000,seed:Math.floor(Math.random()*4294967295)});
+
+}
+export function act(world,player,action,now=Date.now()){
+  if(action.type==='dispatch')requireThat(action.position?.[0]===1,'仅开放第 1 银河');
+  if(['jump','missile','scan'].includes(action.type)&&action.target)requireThat(world.planets[action.target]?.position[0]===1,'仅开放第 1 银河');
+  advance(world,now);const p=world.planets[action.planet];if(p)migrateLayout(p);
+  requireThat(['civic','logistics','plan','applyTemplate','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','recall','stopExpedition','read','readAll','rename','alliance','chat','purchase','accelerate','missile','place'].includes(action.type),'操作不存在');
+  if(['logistics','plan','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','purchase','accelerate','missile','place'].includes(action.type))requireThat(p?.owner===player.id,'无法操作此星球');
+  if(action.type==='civic'){
+    requireThat(p?.owner===player.id,'无法操作此星球');
+    civicAction(player,action,now,cost=>pay(world,p,cost));
   }
-  if(action.type==='recall'){const m=world.missions.find(m=>m.id===action.id&&m.owner===player.id);requireThat(m&&['outbound','holding','waiting'].includes(m.phase),'舰队无法召回');if(m.phase==='outbound')m.recalledElapsed=now-m.start;m.end=now+(['holding','waiting'].includes(m.phase)?m.travel:now-m.start);m.phase='return';m.start=now;}
+  if(action.type==='logistics')logisticsAction(world,player,p,action,now);
+  if(action.type==='plan'){requireThat(p.position[0]===1,'仅开放第 1 银河');editPlan(p,action);advancePlans(world,startBuilding,economy);}
+  if(action.type==='applyTemplate'){
+    const previews=templatePreview(world,player,action);
+    for(const preview of previews){
+      requireThat(action.revisions?.[preview.planet]===preview.revision,'计划已更新，请重新预览');
+      if(action.growth==='incremental')requireThat(action.bases?.[preview.planet]===preview.basis,'建筑等级或施工已变化，请重新预览增量计划');
+    }
+    for(const preview of previews)world.planets[preview.planet].constructionPlan={items:preview.items,paused:preview.paused,revision:preview.revision+1,template:action.template,growth:action.growth||'fixed'};
+    advancePlans(world,startBuilding,economy);
+  }
+  if(action.type==='purchase'){
+    const resource=Number(action.resource),size=Number(action.size),quantity=Number(action.quantity);
+    requireThat(Number.isInteger(resource)&&resource>=0&&resource<=2&&[1,10,100].includes(size)&&Number.isInteger(quantity)&&quantity>=1&&quantity<=100,'商品无效');
+    const cost=size*quantity,amount=cost*darkMatterRules.resourcePerUnit;
+    requireThat((player.darkMatter||0)>=cost,'暗物质不足');player.darkMatter-=cost;add(world,p,[0,1,2].map(i=>i===resource?amount:0));
+    sendReport(player,{type:'system',at:now,title:'暗物质 · 物资兑换',position:p.position,darkMatterSpent:cost,body:`消耗 ${cost} 暗物质，${amount} 单位${['金属','晶体','气体'][resource]}已存入 ${p.name}。`});
+  }
+  if(action.type==='accelerate'){
+    const quote=accelerationQuote(p,player,action.kind,now);
+    requireThat(quote&&quote.cost>0&&quote.queue===action.queue,'任务已完成或已变化，请重新选择');
+    requireThat(Number.isSafeInteger(action.maxCost)&&action.maxCost>0&&quote.cost<=action.maxCost,'加速费用已变化，请重新确认');
+    requireThat((player.darkMatter||0)>=quote.cost,'暗物质不足');
+    player.darkMatter-=quote.cost;
+    if(action.kind==='build'){p.buildings[quote.id]=quote.level;p.buildQueue=null;advancePlans(world,startBuilding,economy);}
+    else if(action.kind==='research'){player.tech[quote.id]=quote.level;player.researchQueue=null;}
+    else{
+      const key=accelerationQueueKey[action.kind];
+      finishProduction(world,p,key,quote.count);
+      // Keep subsequent paid batches and any legacy gaps; advance only this line.
+      for(const q of p[key]){q.queueId??=uid();q.start-=quote.end-now;q.end-=quote.end-now;}
+    }
+    const item=(buildings[quote.id]||tech[quote.id]||units[quote.id]).name;
+    sendReport(player,{type:'system',at:now,title:'暗物质 · 加速完成',position:p.position,darkMatterSpent:quote.cost,body:`消耗 ${quote.cost} 暗物质，${p.name} 的${item}${quote.level!==undefined?` ${quote.mode==='downgrade'?'降级至':'升至'} Lv ${quote.level}`:` × ${quote.count}`}已完成。`});
+  }
+  if(action.type==='build')startBuilding(world,player,p,action.id,now,action.slotId);
+  if(action.type==='research'){
+    const isTech=action.type==='research',item=(isTech?tech:buildings)[action.id];requireThat(item,'目标不存在');
+    requireThat(!isTech||!p.moon,'月球上不能研究科技');requireThat(isTech||!item.moon||p.moon,'只能在月球建造');
+    requireThat(isTech||!p.moon||['Moon_Base','Wormhole_Generator','The_EU_X_Radar','Robotics_Facility','Shipyard','Missile_Silo','Metal_Storage','Crystal_Storage','Gas_Storage'].includes(item.id),'无法在月球建造');
+    requireThat(isTech||p.moon||!isLegacyStorage(item.id),'仓库已并入对应开采综合体，请升级综合体');
+    if(!isTech){const error=validateSurfaceSlot(p,item.id,action.slotId);requireThat(!error,error);}
+    requireThat(!isTech?!p.buildQueue:!player.researchQueue,isTech?'已有研究进行中':'已有建筑正在建造');
+    requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');
+    const current=isTech?(player.tech[item.id]||0):(p.buildings[item.id]||0);requireThat(!item.one||current===0,'建筑已经完成');
+    requireThat(!item.maxLevel||current<item.maxLevel,'该科技已完成全部研究');
+    if(!isTech){const next={...p,buildings:{...p.buildings,[item.id]:current+1}};requireThat(usedBuildingFields(next)<=fieldsAvailable(p),'建筑空间不足');}
+    if(item.energy)requireThat(economy(p,world).supply>=item.energy*(item.factor||2)**current,'能源不足');
+    let location=null;if(!isTech){const at=getLayout(p)[item.id];location=at&&!validatePlacement(p,item.id,...at)?at:findPlacement(p,item.id);requireThat(location,'没有空闲建筑位置');}
+    const cost=costAt(item,current+1);requireThat(cost.every(Number.isSafeInteger),'等级超出范围');pay(world,p,cost);if(location){p.layout??={};p.layout[item.id]=location;}
+    const q={queueId:uid(),id:item.id,level:current+1,start:now,end:now+duration(item,isTech?'tech':'build',p,current+1,world,player)*1000,planet:p.id,cost};if(!isTech&&!p.moon)q.slotId=surfaceLayout.slots[item.id].slotId;if(isTech)player.researchQueue=q;else p.buildQueue=q;
+  }
+  if(action.type==='downgrade'){
+    const item=buildings[action.id],level=p.buildings[action.id]||0;requireThat(item&&level>0,'建筑不存在');requireThat(!p.buildQueue,'已有建筑正在建造');
+    requireThat(p.moon||!isLegacyStorage(item.id),'仓库已并入对应开采综合体，不能单独拆除');
+    requireThat(item.id!=='Research_Lab'||!player.researchQueue,'研究期间不能拆除实验室');requireThat(item.id!=='Shipyard'||!p.shipQueue.length,'造船期间不能拆除太空电梯');
+    requireThat(item.id!=='Missile_Silo'||!p.defenseQueue?.length,'防务生产期间不能拆除保障中心');
+    requireThat(item.id!=='Flagship_Center'||!p.flagshipQueue?.length,'旗舰生产期间不能拆除旗舰中心');
+    const next={...p,buildings:{...p.buildings,[item.id]:level-1}},lostFields=item.id==='Moon_Base'?3:item.id==='Terraformer'?5:0;
+    requireThat(usedBuildingFields(next)<=fieldsAvailable(p)-lostFields,'请先拆除占用方圆的其他建筑');
+    if(item.id==='Missile_Silo')requireThat(missileStorage(p)<=(level-1)*10,'导弹储位不足');
+    const cost=costAt(item,level);pay(world,p,cost);p.buildQueue={queueId:uid(),id:item.id,level:level-1,mode:'downgrade',start:now,end:now+duration(item,'build',p,level)*1000,planet:p.id,cost};
+  }
+  if(action.type==='cancel'){
+    requireThat(['build','research'].includes(action.kind),'舰船和防御建造不能取消');
+    const q=action.kind==='research'?player.researchQueue:p.buildQueue;requireThat(q,'没有进行中的任务');requireThat(q.planet===p.id,'请在任务所在星球取消');add(world,p,q.cost);if(action.kind==='research')player.researchQueue=null;else {p.buildQueue=null;if(p.constructionPlan){p.constructionPlan.paused=true;p.constructionPlan.revision++;}}
+  }
+  if(action.type==='ship'){
+    const item=units[action.id],count=Number(action.count);requireThat(item&&Number.isInteger(count)&&count>0&&count<=10000,'数量无效');
+    requireThat(item.fleetAvailable!==false,'该舰型暂时移出舰队');requireThat(!item.moonOnly||p.moon,'该舰船只能在月球旗舰中心制造');requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');requireThat(productionQueue(p,item).length<8,'建造队列已满');
+    if(item.id.endsWith('Shield_Dome'))requireThat(count===1&&!p.defense[item.id]&&!Object.values(world.battles||{}).some(b=>b.status==='active'&&b.target===p.id&&b.ships.some(s=>s.type===item.id&&s.hp>0))&&!productionQueue(p,item).some(q=>q.id===item.id),'每种护盾罩只能建造一个');
+    if(item.missile)requireThat(missileStorage(p)+count*(item.id==='Interplanetary_Missile'?2:1)<=(p.buildings.Missile_Silo||0)*10,'导弹储位不足');
+    if(item.parts)requireThat((player.parts||0)>=item.parts*count,'外星部件不足');
+    pay(world,p,item.cost.map(v=>v*count));if(item.parts)player.parts-=item.parts*count;
+    const queue=p[productionQueueKey(item)]??=[],each=duration(item,'ship',p),last=queue.at(-1);const start=last?last.end+(last.remaining-1)*last.each*1000:now;queue.push({queueId:uid(),id:item.id,count,remaining:count,each,start,end:start+each*1000});
+  }
+  if(action.type==='dispatch')dispatchFleet(world,player,p,action,now);
+  if(action.type==='recall'){const m=world.missions.find(m=>m.id===action.id&&m.owner===player.id);requireThat(m&&['outbound','holding','waiting'].includes(m.phase),'舰队无法召回');if(m.phase==='outbound')m.recalledElapsed=now-m.start;m.end=now+(['holding','waiting'].includes(m.phase)?m.travel:now-m.start);m.phase='return';m.start=now;if(m.repeat)m.repeat.stopReason='已手动召回';}
+  if(action.type==='stopExpedition'){const m=world.missions.find(m=>m.id===action.id&&m.owner===player.id&&m.task==='explore');requireThat(m?.repeat,'连跑任务不存在');m.repeat.stopReason='已手动停止连跑';}
+  if(action.type==='saveExpeditionPreset'){
+    const zone=action.zone??'outer',rounds=action.rounds??1,speed=action.speed??100;
+    requireThat(Object.hasOwn(expeditionZones,zone)&&expeditionRounds.includes(rounds)&&[10,25,50,75,100].includes(speed),'探险编队设置无效');
+    const ships={};for(const[id,n]of Object.entries(action.ships||{})){requireThat(Object.hasOwn(units,id)&&units[id].type!=='defense'&&id!=='Solar_Satellite'&&units[id].fleetAvailable!==false&&Number.isSafeInteger(n)&&n>=0,'舰船数量无效');if(n)ships[id]=n;}
+    requireThat(total(ships)>0&&total(ships)<=20000,'请选择 1–20,000 艘舰船');
+    const position=action.position;requireThat(Array.isArray(position)&&position.length===3&&position[0]===1&&Number.isInteger(position[1])&&position[1]>=1&&position[1]<=499&&position[2]===16,'探险坐标无效');
+    p.expeditionPreset={ships,zone,rounds,speed,position:[...position]};
+  }
   if(action.type==='read'){const r=player.reports.find(r=>r.id===action.id);if(r)r.read=true;}
   if(action.type==='readAll')for(const r of player.reports)r.read=true;
   if(action.type==='place'){requireThat(buildings[action.id],'建筑不存在');const error=validatePlacement(p,action.id,action.x,action.y);requireThat(!error,error);p.layout??={};p.layout[action.id]=[action.x,action.y];}
@@ -504,9 +545,9 @@ export function snapshot(world,player,system=null){
       researchOptions:Object.fromEntries(Object.values(tech).map(item=>{const level=player.tech[item.id]||0;return[item.id,{cost:costAt(item,level+1),seconds:duration(item,'tech',p,level+1,world,player),energy:item.energy?item.energy*item.factor**level:0}];}))};
   });
   const map=Object.values(world.planets).map(p=>({id:p.id,name:p.name,position:p.position,biome:p.moon?null:planetType(p).id,owner:p.owner,ownerName:world.players[p.owner]?.name||'守备舰队',moon:p.moon,parent:p.parent,npc:!!p.npc,npcSkin:p.npc&&!p.moon?p.npcSkin:null,...npcPublic(p),commander:commanderInfo(world,p),debris:p.debris,intel:planetIntel(world,player,p)}));
-  const occupied=new Set(map.filter(p=>!p.moon).map(p=>p.position.join(':')));
+  const occupied=new Set(map.filter(p=>!p.moon).map(p=>p.position.join(':'))),systems=planetsBySystem(world);
   for(const key of Object.keys(world.npcSystems||{})){
-    const [galaxy,system]=key.split(':').map(Number),types=systemBiomes(world,galaxy,system);
+    const [galaxy,system]=key.split(':').map(Number),types=systemBiomes(world,galaxy,system,systems.get(key)||[]);
     for(let slot=1;slot<=15;slot++){
       const position=[galaxy,system,slot];if(occupied.has(position.join(':')))continue;
       const biome=types[slot-1];map.push({id:null,name:`${planetTypes[biome].name} ${slot}`,position,biome,owner:null,ownerName:'无人',moon:false,npc:false,unoccupied:true,debris:zeros()});

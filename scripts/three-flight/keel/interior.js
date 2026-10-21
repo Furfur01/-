@@ -3,9 +3,10 @@ import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js'
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {buildSeating} from './seating.js';
 import {buildAftBulkhead} from './aft.js';
+import {mountBakedInterior} from './baked-interior.js';
 
 // User-approved KEEL physical interior. No DOM, input listeners, game loop or world scenery.
-export function createKeelInterior({renderer=null,staticBatching=true}={}){
+export function createKeelInterior({renderer=null,staticBatching=true,baked=null}={}){
 const CONFIG = {
   width:13.0, aft:6.45, ceiling:4.85,
   pilot:[0,1.80,0.95], fov:64,
@@ -528,13 +529,15 @@ function lightRig(){
 }
 
 
+  if(baked)mountBakedInterior(interior,M,baked);else{
   buildArchitecture();buildPilotEquipment();
   const seats=buildSeating({THREE:T,RoundedBoxGeometry,M});
   for(const chair of [...seats.children]){seats.remove(chair);if(Math.abs(chair.position.x)<.1)chair.position.y+=.125;chair.name='10_SEATING / '+chair.name;interior.add(chair);}
   const aft=buildAftBulkhead({THREE:T,RoundedBoxGeometry,M});aft.name='11_AFT_PRESSURE_BULKHEAD';interior.add(aft);
+  }
   const originalGeometry=new Set();interior.traverse(o=>{if(o.geometry)originalGeometry.add(o.geometry);});
-  const stats=CONFIG.staticBatching?batchStatic(interior):{};
-  if(CONFIG.staticBatching){const retained=new Set();interior.traverse(o=>{if(o.geometry)retained.add(o.geometry);});for(const g of originalGeometry)if(!retained.has(g))g.dispose();CACHE.clear();}
+  const stats=baked?baked.stats:CONFIG.staticBatching?batchStatic(interior):{};
+  if(CONFIG.staticBatching&&!baked){const retained=new Set();interior.traverse(o=>{if(o.geometry)retained.add(o.geometry);});for(const g of originalGeometry)if(!retained.has(g))g.dispose();CACHE.clear();}
   const lights=lightRig(),environment=renderer?makeEnvironment(renderer):null;
   const baseline=new Map();lights.traverse(l=>{if(l.isLight)baseline.set(l,l.intensity);});
   const alarms=[];for(const side of [-1,1]){const l=new T.PointLight(0xf14b29,0,10,1.8);l.position.set(side*3,3,-1.6);lights.add(l);alarms.push(l);}

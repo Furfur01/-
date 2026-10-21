@@ -14,22 +14,15 @@ import {bridgeThreats} from './bridge-status.js';
 import {pilotWeaponStatus} from '../../game/weapon-solution.mjs';
 import {practiceTargetMatrix,practiceTargetCenter,practiceTargetHit,interceptPoint} from './practice-targeting.js';
 import {getCombatAudio,createCombatSoundSession,firingClip} from '../../client/combat-audio.mjs';
-export function startFlightRuntime({fleet,assets,createController=null}) {
+import {manualWeaponTiming} from '../../game/weapon-timing.mjs';
+export async function startFlightRuntime({fleet,assets,createController=null,signal}) {
   window.GalacticDemo?.dispose?.();
   const lifetime=createLifetime(), {listen,later,scheduleFrame}=lifetime;
   const {Renderer,V,M,clamp,mix,seeded,LAYOUTS,axes,shipMatrix,turretTransforms,jointTransforms}=createGalaxyRender(fleet, assets);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const CONFIG={transitionMs:1550,shipSwitchMs:560,maxSpeed:214,mainCooldown:.34,missileCooldown:4,constructionSeconds:5,researchSeconds:4};
-  const SHIPS=[
-    {name:'驱逐舰',en:'DESTROYER',code:'D-06',serial:'06',count:6,stats:[11000,500,2000,5000,2000,1000],levels:[6,4,8]},
-    {name:'巡洋舰',en:'CRUISER',code:'C-03',serial:'03',count:3,stats:[24000,1400,4200,3600,4500,1800],levels:[8,6,9]},
-    {name:'护卫舰',en:'FRIGATE',code:'F-12',serial:'12',count:12,stats:[4500,300,950,8200,800,450],levels:[4,3,6]},
-    {name:'重装战机',en:'HEAVY FIGHTER',code:'HF-01',serial:'01',count:24,stats:[900,220,760,15000,24,96],levels:[6,4,2]},
-    {name:'重型战列舰',en:'BATTLESHIP',code:'BB-01',serial:'01',count:1,stats:[68000,9600,18500,2200,14000,4800],levels:[10,9,10]}
-  ];
-  [{"name":"驱逐舰","count":0,"stats":[11000,500,2000,5000,2000,1000],"levels":[0],"weapons":[["双等离子大炮","等离子科技","PLASMA",0]]},{"name":"巡洋舰","count":0,"stats":[2700,50,400,15000,800,300],"levels":[0],"weapons":[["离子炮","离子科技","ION",0]]},{"name":"战列舰","count":0,"stats":[6000,200,1000,10000,1500,250],"levels":[0],"weapons":[["重型舰炮","武器科技","SHELL",0]]},{"name":"重型战机","count":0,"stats":[1000,25,150,10000,100,75],"levels":[0],"weapons":[["重型激光炮","激光科技","LASER",0]]},{"name":"无畏舰","count":0,"stats":[7000,400,700,10000,750,250],"levels":[0],"weapons":[["前置双激光炮","激光科技","LASER",0]]}].forEach((data,i)=>Object.assign(SHIPS[i],data));
-  SHIPS.splice(0,SHIPS.length,...fleet.ships);
-  const STAT_LABELS=['护甲','护盾','攻击','基础速度','货舱容量','燃料消耗'];
+  const SHIPS=[...fleet.ships];
+  const STAT_LABELS=['基础舰体','基础护盾','基础攻击','战略基础航速','货舱容量','基础燃耗'];
   const WEAPONS=[['主炮试射','主炮演练','SPINAL DEMO'],['导弹试射','导弹演练','MISSILE DEMO'],['炮塔试射','炮塔演练','TURRET DEMO']];
   const LOCATIONS=[{name:'母星',coords:'1:16:3',orbit:'母星近地轨道',en:'HOMEWORLD',description:'舰队主港。为当前舰船提供维护、补给和虚拟战报演练。'},{name:'前哨',coords:'1:16:4',orbit:'前哨近地轨道',en:'OUTPOST',description:'外层轨道前哨。可设为当前演练区域，进行舰船系统测试。'}];
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -129,9 +122,11 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
       });
       if(!hit)reason='aim';
     }
-    const aimed=reason==='ready';
-    if(aimed)reason=p.charging?'charging':p.gunCooldown>0?'cooldown':'ready';
-    return {reason,ready:reason==='ready',aimed,charge:p.charging?p.charge:undefined,cooldown:p.gunCooldown,range,distance};
+    const aimed=reason==='ready',missileCharge=p.salvoQueue.find(q=>q.manual&&q.sound&&q.delay>0);
+    const charging=p.charging||!!missileCharge,cooldown=c.primaryKind==='missile'?p.missileCooldown:p.gunCooldown;
+    const charge=missileCharge?1-missileCharge.delay/missileCharge.windup:p.charging?p.charge:undefined;
+    if(aimed)reason=charging?'charging':cooldown>0?'cooldown':'ready';
+    return {reason,ready:reason==='ready',aimed,charge,cooldown,range,distance};
   }
   function practiceSolution(weapon){
     return ({target:'请选择存活目标',range:'目标超出射程',aim:state.flight.align?'正在对准提前量':'炮线未对准 · X 辅助瞄准',charging:'主武器蓄能中',cooldown:'主武器冷却中',unavailable:'未装备主武器',ready:'射击解算就绪'})[weapon.reason];
@@ -149,7 +144,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     Object.assign(p,{profile:c,external:keepView,cameraBlend:keepView?1:0,cameraVelocity:0,cameraZoom:1,orbitYaw:0,orbitPitch:0,
       yawTarget:p.yaw,pitchTarget:p.pitch,yawVelocity:0,pitchVelocity:0,velocity:[0,0,0],align:false,
       charging:false,charge:0,gunCooldown:0,missileCooldown:0,missileStock:c.missileCapacity,restock:0,
-      specialBlasts:[],assault:null,detonated:null,reaperCut:null,blastHits:0,shieldHits:[],shieldRegenDelay:0,missileLock:null,missileLockTime:0,salvoQueue:[],beams:[],projectiles:[],particles:[],shake:0,boresightError:0,turretMode:'auto',turretHeat:0,
+      specialBlasts:[],assault:null,detonated:null,reaperCut:null,primaryBeam:null,blastHits:0,shieldHits:[],shieldRegenDelay:0,missileLock:null,missileLockTime:0,salvoQueue:[],beams:[],projectiles:[],particles:[],shake:0,boresightError:0,turretMode:'auto',turretHeat:0,
       turretShots:0,mainShots:0,missilesFired:0,boost:false,boostActive:false});
     resetShipCabin(p,SHIPS[index].id,c);
     renderer.fighterInstrumentState=null;renderer.bridgeInstrumentState=null;
@@ -239,6 +234,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     let ship=SHIPS[state.shipIndex];const displayWeapons=ship.weapons||[];$('#ship-name').textContent=ship.name;$('#ship-code').textContent=`${ship.en} / ${ship.serial}`;$('#model-class').textContent=`DEEP SPACE / ${ship.code}`;
 
     $('#ship-stats').innerHTML=STAT_LABELS.map((label,i)=>`<div><dt>${label}</dt><dd>${fmt(ship.stats[i])}</dd></div>`).join('');
+    $('#stats-source').textContent=[ship.statsLabel,ship.statsNote,'此表为科技前基础值；靶场使用独立演练缩放，正式战斗使用入场时科技与战场规则。'].filter(Boolean).join(' ');
     $('#weapon-list').innerHTML=displayWeapons.map(([name,tech,en,level],i)=>`<button class="weapon-row" data-weapon="${i+1}" title="查看${name}安装位置"><span>${name}</span><span class="weapon-tech">${tech}${level===null?'':'<b>Lv.'+level+'</b>'}</span></button>`).join('');
     $$('.weapon-row').forEach(b=>{let tag=Number(b.dataset.weapon);listen(b,'pointerenter',()=>{if(!state.transition){state.highlight=tag;$('#annotation-name').textContent=displayWeapons[tag-1][0]+' / '+displayWeapons[tag-1][2]}});listen(b,'pointerleave',()=>{if(!b.classList.contains('active'))state.highlight=Number($('.weapon-row.active')?.dataset.weapon||-10)});listen(b,'click',()=>{let was=b.classList.contains('active');$$('.weapon-row').forEach(x=>x.classList.remove('active'));b.classList.toggle('active',!was);state.highlight=was?-10:tag;$('#annotation-name').textContent=displayWeapons[tag-1][0]+' / '+displayWeapons[tag-1][2];tone()})});
     $('#station-number').textContent=String(ship.count).padStart(2,'0');
@@ -311,10 +307,10 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(p>=1){$('#transition-curtain').classList.remove('active');$('#transition-curtain').style.opacity=0;$('#transition-curtain').style.pointerEvents='none';state.transition=null;if(state.mode==='flight'){notice('V 切换舰桥 / 追踪视角 · X 舰艏对准目标');updateHUD()}else moveNavIndicator();}
   }
   function setHelp(open){
-    state.helpOpen=open;keys.clear();mouseDown=false;const modal=$('#help-modal');modal.classList.toggle('open',open);modal.setAttribute('aria-hidden',String(!open));modal.inert=!open;
+    state.helpOpen=open;if(open)combatAudio.pause();else combatAudio.resume();keys.clear();mouseDown=false;const modal=$('#help-modal');modal.classList.toggle('open',open);modal.setAttribute('aria-hidden',String(!open));modal.inert=!open;
     if(open){lastFocused=document.activeElement;$('#close-help').focus()}else if(lastFocused&&document.contains(lastFocused)){lastFocused.focus({preventScroll:true})}tone();
   }
-  function setAI(enabled){if(globalThis.flightController){void globalThis.flightController.setAI(enabled);return;}state.flight.ai=enabled;const kind=state.flight.cabinKind||cockpitClass({role:state.flight.profile.capital?'line':'fighter',length:LAYOUTS[state.shipIndex].length});state.flight.cabinWalk=enabled&&kind==='bastion';state.flight.cabinPose=cabinPose(kind);$('#toggle-ai').setAttribute('aria-pressed',String(enabled));$('#ai-label').textContent=enabled?'取回控制':'自动驾驶';$('#ai-indicator').classList.toggle('visible',enabled);notice(enabled?'AI 已接管航向与武器':'已恢复手动驾驶');tone();addLog(enabled?'飞行控制已交还 AI':'已恢复手动驾驶')}
+  function setAI(enabled){if(globalThis.flightController){void globalThis.flightController.setAI(enabled);return;}if(state.flight.charging||state.flight.reaperCut||state.flight.primaryBeam||state.flight.salvoQueue.some(q=>q.manual))stopWeapon();state.flight.ai=enabled;const kind=state.flight.cabinKind||cockpitClass({role:state.flight.profile.capital?'line':'fighter',length:LAYOUTS[state.shipIndex].length});state.flight.cabinWalk=enabled&&kind==='bastion';state.flight.cabinPose=cabinPose(kind);$('#toggle-ai').setAttribute('aria-pressed',String(enabled));$('#ai-label').textContent=enabled?'取回控制':'自动驾驶';$('#ai-indicator').classList.toggle('visible',enabled);notice(enabled?'AI 已接管航向与武器':'已恢复手动驾驶');tone();addLog(enabled?'飞行控制已交还 AI':'已恢复手动驾驶')}
 
   function setView(){if(!state.flight.cabinKind)return;
     const p=state.flight;p.external=!p.external;
@@ -326,11 +322,24 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   function fireMain(){
     if(globalThis.flightController)return globalThis.flightController.fire('primary');
     if(state.flight.profile.special)return fireSpecial();
-    const p=state.flight,c=p.profile;if(!canFire()||p.gunCooldown>0||p.charging)return false;
-    if(!c.primaryKind){if(c.capital&&!c.fixedPrimary){fireTurrets();return true;}dischargeMain();return true;}
+    const p=state.flight,c=p.profile;if(!canFire()||p.gunCooldown>0||p.charging||p.reaperCut||p.primaryBeam)return false;
+    if(!c.primaryKind){if(c.capital&&!c.fixedPrimary){fireTurrets();return true;}beginWeaponCharge();return true;}
     if(c.primaryKind==='none'){notice('该旗舰仅配置自卫副炮与拦截导弹');return false;}
     if(c.primaryKind==='missile'){fireMissile();return true;}
-    if(c.chargeTime>0){p.charging=true;p.charge=0;tone('charge');}else dischargeMain();return true;
+    beginWeaponCharge();return true;
+  }
+  function beginWeaponCharge(){
+    const p=state.flight,c=p.profile,manual=!p.ai&&c.special!=='antimatter';
+    p.shotTiming=manual?{...manualWeaponTiming(SHIPS[state.shipIndex].id,c.mainCooldown),manual}: {windup:c.chargeTime,reload:c.mainCooldown,beam:c.special==='reaper'?1.25:(c.visual.beamLife||.35),damageScale:1,manual};
+    p.charging=true;p.charge=0;
+    if(manual&&c.special!=='antimatter')practiceSound('weapon-charge',{kind:c.primaryKind,windup:p.shotTiming.windup});
+    else if(c.special==='antimatter')tone('charge');
+    if(!p.shotTiming.windup)dischargeMain();
+  }
+  function stopWeapon(){
+    const p=state.flight;p.charging=false;p.charge=0;p.reaperCut=null;p.primaryBeam=null;p.beams=p.beams.filter(b=>!b.manual);
+    p.missileStock+=p.salvoQueue.filter(q=>q.manual).length;p.salvoQueue=p.salvoQueue.filter(q=>!q.manual);
+    practiceSound('weapon-stop');
   }
   // A segment / oriented ellipsoid intersection. Fast deterministic hit testing for the prototype.
   function hitSegment(a,b,t){
@@ -339,19 +348,34 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   function dischargeMain(){
     if(state.flight.profile.special){dischargeSpecial();return;}
     const p=state.flight,c=p.profile,layout=LAYOUTS[state.shipIndex];
-    p.charging=false;p.charge=0;p.gunCooldown=c.mainCooldown;p.mainShots++;p.shake=Math.min(.35,c.relativeLength*.005);
+    const timing=p.shotTiming;p.charging=false;p.charge=0;p.gunCooldown=timing.reload;p.mainShots++;p.shake=Math.min(.5,c.relativeLength*(timing.manual?.008:.005));
     const rays=mainRays(true);
-    if(!rays.length){p.gunCooldown=0;p.mainShots--;notice('主炮正在转向，或舰体遮挡射界');return;}
+    if(!rays.length){stopWeapon();p.gunCooldown=0;p.mainShots--;notice('主炮正在转向，或舰体遮挡射界');return;}
+    if(c.beam&&timing.manual)p.primaryBeam={age:0,life:timing.beam,damagePerSecond:c.mainDamage*timing.damageScale/timing.beam,target:selectedTarget()};
     for(const {start,dir:f} of rays){renderer.weaponImpact(p,start,{visual:c.visual,color:c.weaponColor,muzzle:true});burst(start,c.visual.capital?22:8,c.weaponColor,.18,c.visual.capital?10:4);
       if(c.visual.capital)p.beams.push({start,end:V.add(start,V.scale(f,c.visual.radius*5)),age:0,life:.18,width:c.visual.radius*1.6,color:c.weaponColor});
       if(c.beam){
+        if(timing.manual)continue;
         let end=V.add(start,V.scale(f,1800)),best=1,target=null;
         for(const t of p.targets){const k=hitSegment(start,end,t);if(k!==null&&k<best){best=k;target=t;}}
-        if(target){end=start.map((v,i)=>mix(v,end[i],best));weaponHit(target,c.mainDamage/layout.main.length,end);burst(end,14,c.weaponColor,.5,18);}
-        p.beams.push({start,end,age:0,life:c.primaryKind==='laser'?.65:.12,width:c.visual.capital?c.visual.radius:c.beamWidth,color:c.weaponColor});
-      }else p.projectiles.push({pos:start,previous:[...start],velocity:V.scale(f,c.projectileSpeed),age:0,life:12,missile:false,damage:c.mainDamage/layout.main.length,color:c.weaponColor,kind:c.primaryKind,width:c.beamWidth,visual:c.visual});
+        if(target){end=start.map((v,i)=>mix(v,end[i],best));weaponHit(target,c.mainDamage*timing.damageScale/layout.main.length,end);burst(end,14,c.weaponColor,.5,18);}
+        p.beams.push({start,end,age:0,life:timing.beam,manual:timing.manual,width:(c.visual.capital?c.visual.radius:c.beamWidth)*(timing.manual?1.25:1),color:c.weaponColor});
+      }else p.projectiles.push({pos:start,previous:[...start],velocity:V.scale(f,c.projectileSpeed),age:0,life:12,missile:false,damage:c.mainDamage*timing.damageScale/layout.main.length,color:c.weaponColor,kind:c.primaryKind,width:c.beamWidth,visual:c.visual});
     }
-    tone('fire');notice(c.primaryName+' 已开火');
+    practiceSound('fire',{kind:c.primaryKind,manual:timing.manual,beamDuration:timing.beam});notice(c.primaryName+' 已开火');
+  }
+  function updateMainBeam(dt){
+    const p=state.flight,beam=p.primaryBeam;if(!beam)return;
+    if(beam.age>=beam.life){p.primaryBeam=null;return;}
+    const rays=mainRays(true);
+    if(!rays.length||beam.target&&beam.target.hp<=0){stopWeapon();return;}
+    const step=Math.min(dt,beam.life-beam.age);beam.age+=step;
+    for(const {start,dir} of rays){
+      let end=V.add(start,V.scale(dir,1800)),best=1,target=null;
+      for(const t of p.targets){const k=hitSegment(start,end,t);if(k!==null&&k<best){best=k;target=t;}}
+      if(target){end=start.map((v,i)=>mix(v,end[i],best));weaponHit(target,beam.damagePerSecond*step/LAYOUTS[state.shipIndex].main.length,end);}
+      p.beams.push({start,end,age:0,life:dt*1.4+.015,manual:true,width:(p.profile.visual.capital?p.profile.visual.radius:p.profile.beamWidth)*1.25,color:p.profile.weaponColor});
+    }
   }
   function updateMissileLock(dt){
     const p=state.flight,c=p.profile;
@@ -367,17 +391,19 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     const target=p.missileLock;if(p.missileLockTime<.4||!missileTargetValid({target,defensive:c.defenseOnly},p)){notice('导弹未锁定 · 点击目标或按 T 锁定');return;}
     if(V.length(V.sub(target.pos,p.pos))>2200){notice('目标超出导弹射程');return;}
     if(p.missileStock<=0){notice('弹舱补给中');return;}
-    let count=Math.min(c.salvo,p.missileStock);p.missileStock-=count;p.missileCooldown=c.missileCooldown;
-    for(let i=0;i<count;i++)p.salvoQueue.push({delay:i*.16,tube:i%LAYOUTS[state.shipIndex].tubes.length,target});
+    const manual=!p.ai&&c.primaryKind==='missile',timing=manual?manualWeaponTiming(SHIPS[state.shipIndex].id,c.missileCooldown):{windup:0,reload:c.missileCooldown,damageScale:1};
+    let count=Math.min(c.salvo,p.missileStock);p.missileStock-=count;p.missileCooldown=timing.windup+timing.reload;
+    if(manual)practiceSound('weapon-charge',{kind:'missile',windup:timing.windup});
+    for(let i=0;i<count;i++)p.salvoQueue.push({delay:timing.windup+i*.16,tube:i%LAYOUTS[state.shipIndex].tubes.length,target,manual,sound:i===0,windup:timing.windup,damageScale:timing.damageScale});
     notice(`${count} 枚导弹顺序发射`);updateHUD();
   }
   function launchMissile(order){
     const p=state.flight,l=LAYOUTS[state.shipIndex],model=shipMatrix(p,state.shipIndex),a=axes(p);
-    if(p.missileLock!==order.target||p.missileLockTime<.4||!missileTargetValid({target:order.target,defensive:p.profile.defenseOnly},p)){p.missileStock=Math.min(p.profile.missileCapacity,p.missileStock+1);return;}
+    if(p.missileLock!==order.target||p.missileLockTime<.4||!missileTargetValid({target:order.target,defensive:p.profile.defenseOnly},p)){p.missileStock=Math.min(p.profile.missileCapacity,p.missileStock+1);if(order.manual)practiceSound('weapon-stop');return;}
     const start=M.transform(model,l.tubes[order.tube]);
     const local=l.tubeDirections[order.tube],direction=V.norm(V.sub(M.transform(model,local),M.transform(model,[0,0,0]))),eject=V.scale(direction,42);
-    p.projectiles.push({pos:start,previous:[...start],velocity:eject,ejectDirection:direction,age:0,life:p.profile.defenseOnly?5:13,missile:true,defensive:p.profile.defenseOnly,damage:p.profile.missileDamage,target:order.target,visual:p.profile.visual,color:p.profile.weaponColor,trail:[[...start]],trailClock:0,seed:order.tube});
-    p.missilesFired++;burst(start,12,[.55,.66,.69],1.2,7);tone('missile');
+    p.projectiles.push({pos:start,previous:[...start],velocity:eject,ejectDirection:direction,age:0,life:p.profile.defenseOnly?5:13,missile:true,defensive:p.profile.defenseOnly,damage:p.profile.missileDamage*order.damageScale,target:order.target,visual:p.profile.visual,color:p.profile.weaponColor,trail:[[...start]],trailClock:0,seed:order.tube});
+    p.missilesFired++;burst(start,12,[.55,.66,.69],1.2,7);practiceSound('fire',{kind:'missile',manual:order.manual,sound:order.sound});
   }
   function burst(pos,count,color=[1,.7,.36],life=.8,speed=22){
     const p=state.flight;for(let i=0;i<count;i++)p.particles.push({pos:[...pos],velocity:[(rnd()-.5)*speed,(rnd()-.5)*speed,(rnd()-.5)*speed],age:0,life:life*(.6+rnd()*.8),size:2+rnd()*6,color});
@@ -562,16 +588,16 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(!t||t.hp<=0||!p.targets.includes(t)){notice('先点击接触目标锁定');return false;}
     if(p.profile.special==='antimatter'&&p.missileLockTime<.4){notice('锁定中');return false;}
     if(V.length(V.sub(t.pos,p.pos))>2200){notice('目标超出射程');return false;}
-    p.specialTarget=t;p.charging=true;p.charge=0;tone('charge');return true;
+    p.specialTarget=t;beginWeaponCharge();return true;
   }
   function dischargeSpecial(){
     const p=state.flight,t=p.specialTarget;p.charging=false;p.charge=0;
-    if(!t||t.hp<=0||!p.targets.includes(t)){notice('目标失效 · 取消发射');return;}
-    p.gunCooldown=p.profile.mainCooldown;p.mainShots++;
+    if(!t||t.hp<=0||!p.targets.includes(t)){stopWeapon();notice('目标失效 · 取消发射');return;}
+    p.gunCooldown=p.shotTiming.reload;p.mainShots++;
     if(p.profile.special==='antimatter'){
       p.assault={target:t,age:0};p.align=true;p.targetIndex=p.targets.indexOf(t);p.throttle=100;p.external=true;p.cameraBlend=1;
       notice('反物质自行导弹 · 自主接近');
-    }else {p.reaperCut={target:t,age:0};notice('相位收割 · 双束汇聚');tone('fire');}
+    }else {p.reaperCut={target:t,age:0,...p.shotTiming};notice('相位收割 · 双束汇聚');practiceSound('fire',{kind:'reaper',manual:p.shotTiming.manual,beamDuration:p.shotTiming.beam});}
   }
   function detonateSpecial(harmless=false){
     const p=state.flight;if(p.detonated)return;
@@ -603,11 +629,12 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(p.detonated?.age>5.2){const kills=p.kills;configureFlight(state.shipIndex,true);p.kills=kills;notice('新演练弹已补充');return;}
     const cut=p.reaperCut;if(!cut)return;
     cut.age+=dt;const t=cut.target;
-    if(cut.age>1.25||t.hp<=0||!p.targets.includes(t)||V.length(V.sub(t.pos,p.pos))>2200){p.reaperCut=null;return;}
-    const direction=V.norm(V.sub(t.pos,p.pos));if(V.dot(direction,forward())<.65){p.reaperCut=null;notice('目标离开前向收割射界');return;}
+    if(cut.age>cut.beam){p.reaperCut=null;return;}
+    if(t.hp<=0||!p.targets.includes(t)||V.length(V.sub(t.pos,p.pos))>2200){stopWeapon();return;}
+    const direction=V.norm(V.sub(t.pos,p.pos));if(V.dot(direction,forward())<.65){stopWeapon();notice('目标离开前向收割射界');return;}
     const model=shipMatrix(p,state.shipIndex),end=V.add(t.pos,[Math.sin(cut.age*8)*8,Math.cos(cut.age*8)*4,0]);
     for(const m of LAYOUTS[state.shipIndex].main){const start=M.transform(model,m);p.beams.push({start,end,age:0,life:dt*1.4+.015,width:p.profile.visual.radius*(.65+.08*Math.sin(cut.age*40)),color:[.18,1,.68]});}
-    damageTarget(t,p.profile.mainDamage/1.25*dt,end);p.shield=Math.min(100,p.shield+dt*8);
+    damageTarget(t,p.profile.mainDamage*cut.damageScale/cut.beam*dt,end);p.shield=Math.min(100,p.shield+dt*8);
     if(rnd()<dt*25)burst(end,4,[.3,1,.78],.6,25);
   }
 
@@ -619,7 +646,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(p.detonated){updateCamera(dt);updateProjectiles(dt);return;}
     p.elapsed+=dt;updateCamera(dt);p.shake=mixExp(p.shake,0,5,dt);
     p.gunCooldown=Math.max(0,p.gunCooldown-dt);p.missileCooldown=Math.max(0,p.missileCooldown-dt);
-    if(p.charging)p.charge=Math.min(1,p.charge+dt/c.chargeTime);
+    if(p.charging)p.charge=Math.min(1,p.charge+dt/p.shotTiming.windup);
     if(p.missileStock===0&&p.salvoQueue.length===0){p.restock+=dt;if(p.restock>=15){p.missileStock=c.missileCapacity;p.restock=0;notice('演练弹舱已补给');}}
     for(let t of p.targets){
       t.previousPos=[...t.pos];
@@ -647,13 +674,15 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
     if(t?.hp>0){const origin=mainOrigin(),d=V.norm(V.sub(targetAim(origin),origin));p.boresightError=Math.acos(clamp(V.dot(d,forward()),-1,1))*180/Math.PI;}else p.boresightError=180;
     updateTurrets(dt);
     if(p.charging&&p.charge>=1){
-      // A locked charge may finish during the steering overshoot. Hold it until
-      // the current firing solution is valid, rather than discharge the old aim.
-      if((p.align||p.ai)&&(!t||t.hp<=0)){p.charging=false;p.charge=0;notice('目标失效 · 已取消蓄能');}
+      // Manual audio has a fixed release cue: never hold a completed charge
+      // indefinitely while its discharge sound plays. AI retains its aim wait.
+      if((p.align||p.ai)&&(!t||t.hp<=0)){stopWeapon();notice('目标失效 · 已取消蓄能');}
       else if(c.special||!(p.align||p.ai)||practiceWeaponStatus().aimed)dischargeMain();
+      else if(p.shotTiming.manual){stopWeapon();notice('射界丢失 · 已取消蓄能');}
     }
     if(p.ai&&t?.hp>0){if(p.boresightError<(c.capital?.6:1.8))fireMain();if(p.elapsed>3&&p.missileCooldown<=0&&t.hp>35)fireMissile();}
     if(!p.ai&&(keys.has('Space')||(!c.capital&&mouseDown)))fireMain();
+    updateMainBeam(dt);
     updateProjectiles(dt);
     p.enemyAttack-=dt;if(p.enemyAttack<=0){
       p.enemyAttack=4.8;const enemy=p.targets.find(t=>t.hp>0);
@@ -786,7 +815,7 @@ export function startFlightRuntime({fleet,assets,createController=null}) {
   }
 
   renderShipData();setupInstruments();bindEvents();updateSoundButtons();addLog('舰船档案已载入');$('#message-dot').classList.remove('visible');scheduleFrame(moveNavIndicator);
-  try{renderer=new Renderer($('#scene'));const requested=new URLSearchParams(location.search).get('ship'),initial=requested?SHIPS.findIndex(s=>s.id===requested):0;if(initial<0)throw Error('未找到舰型：'+requested);configureFlight(initial,true);screenVisible('flight');document.documentElement.dataset.ready='true';scheduleFrame(frame)}catch(error){lifetime.dispose();renderer?.dispose();throw error}
+  try{renderer=new Renderer($('#scene'));await renderer.prepareCabins({signal});const requested=new URLSearchParams(location.search).get('ship'),initial=requested?SHIPS.findIndex(s=>s.id===requested):0;if(initial<0)throw Error('未找到舰型：'+requested);configureFlight(initial,true);screenVisible('flight');document.documentElement.dataset.ready='true';scheduleFrame(frame)}catch(error){dispose();throw error}
   // Read-only-by-convention debug surface; useful for integration and automated UI tests.
   window.GalacticDemo={state,renderer,dispose,renderShipData,ships:SHIPS,config:CONFIG,enterFlight:()=>transitionTo('flight'),returnArchive:()=>transitionTo('archive'),selectShip,fireMain,fireMissile,setAI,setHelp,setTab,setView,switchCombatHull,setTurretMode,alignTarget,profiles:COMBAT,selectScene};
   if(createController){const live=createController({combatAudio,state,renderer,SHIPS,COMBAT,LAYOUTS,keys,$,M,V,clamp,mix,shortAngle,notice,configureFlight,setView,selectedTarget,renderContacts,shipMatrix,tone,burst,updateCamera,forward,getMouseDown:()=>mouseDown});globalThis.flightController=live;live.start().catch(error=>{error.battleConnection=true;failRuntime(error);});}

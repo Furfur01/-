@@ -18,7 +18,7 @@ try {
   // Compatibility surfaces are for the existing parent frame and diagnostic tools.
   window.FlightFleet = fleet;
   window.BattleFleetAssets = assets;
-  const app = startFlightRuntime({fleet, assets, createController: battlefield ? createFlightController : null});
+  const app = await startFlightRuntime({fleet, assets, createController: battlefield ? createFlightController : null,signal:loading.signal});
   app.loadedMs = performance.now() - started;
   document.documentElement.dataset.renderer = 'three';
  }

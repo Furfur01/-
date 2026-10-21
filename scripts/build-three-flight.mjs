@@ -6,18 +6,23 @@ import {freezeWebGLBaseline} from './freeze-webgl-baseline.mjs';
 import {writeBuildFile} from './write-build-file.mjs';
 import {units} from '../game/catalog.mjs';
 import {combatProfile} from '../game/spatial-profiles.mjs';
+import {buildCabinAssets} from './build-cabin-assets.mjs';
 
 const root=path.resolve(import.meta.dirname,'..');
 export async function buildThreeFlight(){
   freezeWebGLBaseline();
   const source=path.join(root,'scripts/three-flight'),out=path.join(root,'opendesign/mockups/galactic-command');
   const assets=path.join(out,'three-flight-assets');fs.mkdirSync(assets,{recursive:true});
+  buildCabinAssets(assets);
   const hash=createHash('sha256');
   for(const name of ['flight-fleet.json','flight-fleet.bin','battle-fleet.json','battle-fleet.bin']){
     let bytes=fs.readFileSync(path.join(out,name));
     if(name.endsWith('.json')){
       const data=JSON.parse(bytes);
-      for(const ship of data.ships){const u=units[ship.id];if(!u)continue;ship.combatRules={splashMultipliers:u.splashMultipliers,splashRadius:u.splashRadius,criticalChances:u.criticalChances,criticalMultiplier:u.criticalMultiplier};if(ship.profile)ship.profile=combatProfile(u);}
+      for(const ship of data.ships){const u=units[ship.id];if(!u)continue;ship.stats=['strength','shield','attack','speed','cargo','fuel'].map(k=>u[k]);for(const k of ['statsSource','statsLabel','statsNote','economyLabel'])ship[k]=u[k];ship.combatRules={splashMultipliers:u.splashMultipliers,splashRadius:u.splashRadius,criticalChances:u.criticalChances,criticalMultiplier:u.criticalMultiplier};if(ship.profile)ship.profile=combatProfile(u);}
+      // Reclassify the retained range metadata without rebuilding model geometry.
+      const titan=data.ships.findIndex(s=>s.id==='Titanenergetic_Frigate');
+      if(data.profiles&&titan>=0)Object.assign(data.profiles[titan],{capital:true,maxSpeed:120,turnRate:.3,turnResponse:2.8,accel:.4,mainCooldown:3.4,mainDamage:32});
       bytes=Buffer.from(JSON.stringify(data));
     }
     writeBuildFile(path.join(assets,name),bytes);hash.update(bytes);

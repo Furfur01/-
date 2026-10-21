@@ -1,11 +1,11 @@
 // Reuse CPU storage as well as GPU buffers. Coordinates are made camera-relative
 // before Float32 conversion, preserving precision in distant battles.
 export class EffectVertices {
- constructor(){this.array=new Float32Array(1024);this.length=0;}
+ constructor(stride=10){this.array=new Float32Array(1024);this.length=0;this.stride=stride;}
  reset(){this.length=0;return this;}
  reserve(count){if(this.length+count<=this.array.length)return;const next=new Float32Array(2**Math.ceil(Math.log2(this.length+count)));next.set(this.array);this.array=next;}
  point(x,y,z,r,g,b,size){this.reserve(7);const a=this.array,i=this.length;this.length+=7;a[i]=x;a[i+1]=y;a[i+2]=z;a[i+3]=r;a[i+4]=g;a[i+5]=b;a[i+6]=size;}
- vertex(x,y,z,r,g,b,u,v,age,type){this.reserve(10);const a=this.array,i=this.length;this.length+=10;a[i]=x;a[i+1]=y;a[i+2]=z;a[i+3]=r;a[i+4]=g;a[i+5]=b;a[i+6]=u;a[i+7]=v;a[i+8]=age;a[i+9]=type;}
+ vertex(x,y,z,r,g,b,u,v,age,type){this.reserve(this.stride);const a=this.array,i=this.length;this.length+=this.stride;a[i]=x;a[i+1]=y;a[i+2]=z;a[i+3]=r;a[i+4]=g;a[i+5]=b;a[i+6]=u;a[i+7]=v;a[i+8]=age;if(this.stride===10)a[i+9]=type;}
  view(){return this.array.subarray(0,this.length);}
 }
 const QUAD_X=[0,0,1,1,0,1],QUAD_Y=[-1,1,-1,-1,1,1];

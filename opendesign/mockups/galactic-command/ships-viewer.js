@@ -13,7 +13,8 @@ import {shipLengths} from '../../../game/ship-weapon-mounts.mjs';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reviewMode=location.pathname.endsWith('/ships-review.html');
 const modelVersion=()=>reviewMode?$('#model-version').value:'new';
-const fields={strength:'护甲',shield:'护盾',attack:'攻击',speed:'速度',cargo:'货舱',fuel:'燃料'};
+const fields={strength:'基础舰体',shield:'基础护盾',attack:'基础攻击',speed:'战略基础航速',cargo:'货舱',fuel:'基础燃耗'};
+const statSource=u=>[u.statsLabel,u.statsNote,u.economyLabel,'科技加成前；溅射与暴击采用单机规则。'].filter(Boolean).join(' ');
 const stage=$('#stage'),renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;stage.append(renderer.domElement);
 const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-8,8,8,-8,.1,500),controls=new OrbitControls(camera,renderer.domElement);
@@ -61,7 +62,7 @@ function renderReviewData(){
   $('#reference-image').hidden=!ship.reference;if(ship.reference)$('#reference-image').src='assets/ship-references/'+ship.reference.split('/').at(-1);
   $('#reference-image').alt=ship.name+' APK 原图';
   $('#ship-stats').innerHTML=Object.entries(fields).map(([k,name])=>`<div class="stat"><span>${name}</span><b>${number(u?.[k]??ship.stats[k])}</b></div>`).join('');
-  $('#source-note').textContent=u?'基础值来自已有截图校准；造价、前置和溅射倍率沿用当前规则，APK 服务器数值未取得。':ship.communitySource?'基础值参考 Galaxy Empire 社区 Wiki（2026-10-13 核对），版本待确认；不是 APK 解包数值。造价与结算未补入。':'APK 身份与图标已对齐；服务器属性、造价和克制倍率未取得，暂不开放建造。';
+  $('#source-note').textContent=u?statSource(u):'社区基础资料；尚未开放制造。';
   $('#requirements').textContent=u?`金属 ${number(u.cost[0])} / 晶体 ${number(u.cost[1])} / 气体 ${number(u.cost[2])}。前置：${u.req.map(([id,n])=>(tech[id]?.name||id)+' '+n+'级').join('、')}${u.parts?'；外星部件 '+u.parts:''}`:'待取得服务器配置';
   $('#counters').innerHTML=u?'<p>溅射半径 '+number(u.splashRadius||0)+' · 暴击伤害 ×2'+'</p><p>暴击率 = 1 − 1 ÷ 倍率；倍率 0、1 均不暴击。</p><p>溅射倍率 / 暴击率 · 对以下目标</p>'+damageRows(Object.entries(u.splashMultipliers||{}))+'<p>受到以下单位的溅射倍率 / 暴击率</p>'+damageRows(Object.values(units).filter(x=>x.splashMultipliers?.[selected]>0).map(x=>[x.id,x.splashMultipliers[selected]]),true)+'<p class="source-note">倍率 ×0 免疫溅射和暴击，直击只受基础伤害；溅射随距离线性衰减。</p>':'<p>暂未开放</p>';
   if(selected==='Reaper')$('#counters').innerHTML+='<p>APK 已证实：免疫湮灭之星攻击，具有特殊攻击顺序（顺序细节未取得）。</p>';
@@ -108,7 +109,8 @@ function renderData(){
   $('#enter-range').href=(rangeMode?'ships.html?ship=':'hangar-three.html?entry=direct-flight-01&ship=')+selected;
   $('#enter-range').textContent=rangeMode?'返回舰船档案 ↗':'进入靶场 ↗';
   $('#ship-stats').innerHTML=Object.entries(fields).map(([key,label])=>`<div class="stat"><span>${label}</span><b>${u?number(u[key]):'—'}</b></div>`).join('');
-  $('#availability').textContent=u?'':'暂未开放';$('#availability').hidden=!!u;
+  $('#source-note').textContent=u?statSource(u):'尚未开放';
+  $('#availability').textContent=u?.fleetAvailable!==false&&u?'':'暂未开放制造';$('#availability').hidden=!!u&&u.fleetAvailable!==false;
   $('#requirements').textContent=u?`金属 ${number(u.cost[0])} / 晶体 ${number(u.cost[1])} / 气体 ${number(u.cost[2])}。前置：${u.req.map(([id,n])=>(tech[id]?.name||({Shipyard:'太空电梯',Missile_Silo:'导弹发射井'})[id]||'设施')+' '+n+' 级').join('、')}${u.parts?'；外星部件 '+u.parts:''}`:'暂未开放';
   // Player-facing values use the same damage multiplier fields as settlement.
   $('#counters').innerHTML=u?'<p>溅射半径 '+number(u.splashRadius||0)+' · 暴击伤害 ×2'+'</p><p>暴击率 = 1 − 1 ÷ 倍率；倍率 0、1 均不暴击。</p><p>溅射倍率 / 暴击率 · 对以下目标</p>'+damageRows(Object.entries(u.splashMultipliers||{}))+'<p>受到以下单位的溅射倍率 / 暴击率</p>'+damageRows(Object.values(units).filter(x=>x.splashMultipliers?.[selected]>0).map(x=>[x.id,x.splashMultipliers[selected]]),true)+'<p class="source-note">倍率 ×0 免疫溅射和暴击，直击只受基础伤害；溅射随距离线性衰减。</p>':'<p>暂未开放</p>';

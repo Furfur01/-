@@ -18,19 +18,20 @@ export const keelRoomKind=(kind,data={})=>data.meta?.type?shipCabinFamily(data.m
 
 // The world uses its own shaders and output transform. Scope PBR settings to the
 // cabin pass, including on failure, so switching seats cannot recolour combat.
-export function renderKeelPass(renderer,scene,camera,{exposure=1.12,shadowDirty=false}={}){
+export function withKeelSettings(renderer,{exposure=1.12,shadowDirty=false}={},draw){
  const previous={toneMapping:renderer.toneMapping,toneMappingExposure:renderer.toneMappingExposure,outputColorSpace:renderer.outputColorSpace};
  const shadow=Object.fromEntries(['enabled','type','autoUpdate','needsUpdate'].map(k=>[k,renderer.shadowMap[k]]));
  try{
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=exposure;renderer.outputColorSpace=THREE.SRGBColorSpace;
   Object.assign(renderer.shadowMap,{enabled:true,type:THREE.PCFShadowMap,autoUpdate:false,needsUpdate:shadowDirty});
-  renderer.clearDepth();renderer.render(scene,camera);
+  return draw();
  }finally{Object.assign(renderer,previous);Object.assign(renderer.shadowMap,shadow);}
 }
+export function renderKeelPass(renderer,scene,camera,settings){return withKeelSettings(renderer,settings,()=>{renderer.clearDepth();renderer.render(scene,camera);});}
 
-export function createKeelRoom(backend,kind='horizon'){
+export function createKeelRoom(backend,kind='horizon',baked=null){
  const factory={horizon:createKeelInterior,fighter:createFighterInterior,bastion:createBattleshipInterior,flagship:createFlagshipInterior}[kind];
- const keel=factory({renderer:backend.three}),scene=new THREE.Scene();
+ const keel=factory({renderer:backend.three,baked}),scene=new THREE.Scene();
  // Preserve the existing game eye origin, aiming and world/cabin parallax.
  keel.root.position.fromArray(cabinPose(kind==='flagship'?'bastion':kind).eye).sub(new THREE.Vector3(...keel.config.pilot));scene.add(keel.root);
  const console=kind==='fighter'?createFighterInstruments(keel):new BridgeConsole(kind);scene.add(console.group);
@@ -50,6 +51,21 @@ export function createKeelRoom(backend,kind='horizon'){
   }});lastOpacity=value;
  }
  return {scene,console,keel,faceCulling,materials:[],geometries:[],obstacles:[],walk:kind==='bastion'||kind==='flagship'?createKeelWalker(keel):null,
+  async prepare(camera,texture){
+   status?.update(null,0,texture);console.update(null,0,camera);
+   // Compile the instanced radar's colour attributes too, before any contacts
+   // arrive. Count/capacity changes then reuse these same programs.
+   if(console.radar)for(const ally of [false,true]){const b=console.radar.batch(ally,1);for(const o of [b.mesh,b.dot]){o.count=1;o.visible=true;o.setColorAt(0,new THREE.Color(0xffffff));}b.stem.visible=true;b.stem.geometry.setDrawRange(0,2);}
+   sparks.update({event:1,hullFlash:1},0,0);
+   const culling=new Map();scene.traverse(o=>{if(o.isMesh||o.isPoints||o.isLine){culling.set(o,o.frustumCulled);o.frustumCulled=false;}});
+   try{
+    faceCulling.update(camera);
+    await withKeelSettings(backend.three,{exposure:keel.config.exposure},()=>backend.three.compileAsync(scene,camera));
+    // A real draw also resolves uniforms, double-sided variants and driver
+    // first-use work. compileAsync alone does not perform those uploads.
+    renderKeelPass(backend.three,scene,camera,{exposure:keel.config.exposure,shadowDirty});shadowDirty=false;
+   }finally{faceCulling.restore();for(const [o,value]of culling)o.frustumCulled=value;sparks.update({event:0,hullFlash:0},0,0);}
+  },
   render(camera,data){
    const hull=data.console?.hull??100,shield=data.console?.shield??100;
    const fx=data.feedback||{alert:hull<35||shield<=0,event:0};keel.update(fx,data.time||0);shieldBounce.update(fx);sparks.update(fx,data.time,Math.min(.1,Math.max(0,data.time-lastTime)));lastTime=data.time;opacity(Math.max(0,Math.min(1,data.opacity??1)));

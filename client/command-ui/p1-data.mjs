@@ -1,4 +1,6 @@
+import {navigationQuote} from '../../game/fleet-navigation.mjs';
 import {missileStorage} from '../../game/production.mjs';
+import {expeditionZones,expeditionRounds} from '../../game/expedition-rules.mjs';
 // Read-only UI projections. Actions and settlement remain in the game engine.
 export const mineIds=['Metal_Mine','Crystal_Mine','Gas_Mine'];
 export const moonBuildings=['Moon_Base','Wormhole_Generator','The_EU_X_Radar','Robotics_Facility','Shipyard','Flagship_Center','Missile_Silo','Metal_Storage','Crystal_Storage','Gas_Storage'];
@@ -62,9 +64,12 @@ export function fleetIssues(api,p,draft,quote=quoteFleet(api,p,draft)){
  }
  if(['mine','explore'].includes(task)?pos[2]!==api.catalog.rules.explorationSlot:pos[2]>15)issues.push(['mine','explore'].includes(task)?'探索与采矿需要轨道 16':'轨道 16 仅支持探索与采矿');
  if(task==='explore'){
-  const level=player.tech.Astrophysics_Tech||0;if(level<1)issues.push('需要天体物理科技 1 级');else if(own.filter(m=>m.task==='explore').length>=Math.floor(Math.sqrt(level)))issues.push('探索舰队名额已满');
+  const zone=expeditionZones[draft.zone||'outer'],level=player.tech.Astrophysics_Tech||0;
+  if(!zone)issues.push('探险区域无效');else if(level<zone.level)issues.push(`需要天体物理科技 ${zone.level} 级`);
+  if(level>0&&own.filter(m=>m.task==='explore').length>=Math.floor(Math.sqrt(level)))issues.push('探索舰队名额已满');
+  if(!expeditionRounds.includes(draft.rounds??1))issues.push('连跑轮数无效');
  }
- if(task==='mine'&&(!Number.isInteger(draft.holdHours)||draft.holdHours<1||draft.holdHours>4))issues.push('采矿停留时间为 1–4 游戏小时');
+ if(task==='mine'&&(!Number.isInteger(draft.holdHours)||draft.holdHours<1||draft.holdHours>4))issues.push('采矿作业时长为 30、60、90 或 120 分钟');
  if(![10,25,50,75,100].includes(draft.speed))issues.push('航速无效');
  if(quote.count<1||quote.count>20000)issues.push('请选择 1–20,000 艘舰船');
  if(Object.entries(ships).some(([id,n])=>!api.catalog.units[id]||api.catalog.units[id].type==='defense'||id==='Solar_Satellite'||!Number.isInteger(n)||n<0||n>(p.ships[id]||0)||(n>0&&api.catalog.units[id].fleetAvailable===false)))issues.push('派遣数量超出驻港舰队或包含不可派遣舰型');

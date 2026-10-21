@@ -22,6 +22,7 @@ export function pilotWeaponStatus(environment,meta,row,target,missile=false){
  const p=meta.profile,primaryMissile=missile&&p.missile;
  const result=weaponSolution(environment,ship(row),target?ship(target):null,missile&&!primaryMissile?'missile':false);
  const cooldown=row[missile&&!primaryMissile?11:10]||0;
+ if((!missile||primaryMissile)&&row[15]>0)return {...result,reason:'charging',ready:false,charge:1-row[15]/row[16],cooldown:row[15]};
  if(result.ready&&cooldown>0){result.reason='cooldown';result.ready=false;}
  return {...result,cooldown};
 }

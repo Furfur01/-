@@ -21,9 +21,10 @@ export async function createMapFleetRenderer(canvas, {signal,renderer:sharedRend
   const renderer=new Renderer(canvas,{renderer:sharedRenderer,scene,camera:mainCamera,managed}),views=new Map(),indices=new Map(fleet.ships.map((s,i)=>[s.id,i]));
   // Build the warp shader and upload its reusable buffer before departure. The
   // first visible field must not compile a new program or allocate a large VBO.
-  const warmTarget=managed?null:new THREE.WebGLRenderTarget(1,1,{depthBuffer:false}),previousTarget=renderer.three.getRenderTarget();
+  const previousTarget=renderer.three.getRenderTarget(),viewport=renderer.three.getViewport(new THREE.Vector4()),scissor=renderer.three.getScissor(new THREE.Vector4()),scissorTest=renderer.three.getScissorTest();
   try{
-    if(warmTarget)renderer.three.setRenderTarget(warmTarget);renderer.begin(0);
+    renderer.three.setRenderTarget(null);renderer.three.setViewport(0,0,1,1);renderer.three.setScissor(0,0,1,1);renderer.three.setScissorTest(true);renderer.begin(0);
+    renderer.drawVessel(0,M.identity());
     renderer.drawRibbons(new Float32Array(213*54*16+2*54*96));
     // Compile the real instanced weapon variants during loading as well. Their
     // first launch must not block an active battle on shader compilation.
@@ -32,11 +33,12 @@ export async function createMapFleetRenderer(canvas, {signal,renderer:sharedRend
     renderer.drawEffectMesh(renderer.plumeMesh,M.identity(),{mode:4});
     renderer.drawImpacts(new Float32Array(30));
     renderer.dynamicFlat(new Float32Array([0,0,0,1,1,1,1]),true);
-    await renderer.three.compileAsync(renderer.scene,renderer.camera);
+    await renderer.three.compileAsync(renderer.scene,renderer.camera,renderer.worldScene);
     if(signal?.aborted)throw new DOMException('舰队加载已取消','AbortError');
-    renderer.endFrame();renderer.begin(0);
+    renderer.three.render(renderer.worldScene,renderer.camera);renderer.begin(0);
+    await renderer.prepareCabins({base:'../galactic-command/three-flight-assets/',signal});
   }catch(error){renderer.dispose();throw error;}
-  finally{if(warmTarget){renderer.three.setRenderTarget(previousTarget);warmTarget.dispose();}}
+  finally{renderer.three.setRenderTarget(previousTarget);renderer.three.setViewport(viewport);renderer.three.setScissor(scissor);renderer.three.setScissorTest(scissorTest);}
   // Legacy standalone map tools still supply only a planet list. The live
   // shared world uses its real planet geometry and depth, with no proxy meshes.
   const occlusion=managed?null:new THREE.Scene(),camera=managed?mainCamera:new THREE.Camera(),sphere=managed?null:new THREE.SphereGeometry(1,32,24);
@@ -88,11 +90,11 @@ export async function createMapFleetRenderer(canvas, {signal,renderer:sharedRend
       b.presentationRow=data.pilotRow;b.previous=entering(data.previous||data.ships);b.rows=entering(data.ships);b.metadata=data.metadata;b.received=data.received;b.sampleTime=frame.sampleTime;b.owner=owner;
       const cameraMeta=data.metadata.find(m=>m.id===mapCamera?.shipId),cabinKind=cameraMeta&&shipCabinClass(cameraMeta.type,cameraMeta.profile);
       b.bridgeVessel=cabinKind&&mapCamera?.id===data.id&&mapCamera.mode==='bridge'?mapCamera.shipId:null;b.hiddenVessel=b.bridgeVessel;
-      b.replay=!!data.replay;b.replayAlpha=1;b.fullDetail=data.metadata.length<=128;
+      b.replay=!!data.replay;b.playTime=(data.tick||0)*.05;b.replayAlpha=1;b.fullDetail=data.metadata.length<=128;
       b.center=V.scale(V.sub(frame.center,anchor),1/scale);b.snapshot=data;b.projectiles=data.projectiles||[];
       if(item.metadata!==data.metadata){for(const m of data.metadata)if(m.profile.renderType&&indices.has(m.profile.renderType))indices.set(m.type,indices.get(m.profile.renderType));b.buildGroups();item.metadata=data.metadata;}
-      b.updateVisuals(dt);b.presentation.update(dt);
-      for(const e of data.effects||[])if(e.seq>item.seq){item.seq=e.seq;if(e.tick>=(data.tick||0)-(e.type==='antimatter'?106:data.replay?10:6))b.effect(e);}
+      b.updateQuality(frame.sampleTime);b.updateVisuals(dt);b.presentation.update(dt);
+      for(const e of data.effects||[])if(e.seq>item.seq){item.seq=e.seq;if(e.resume||e.tick>=(data.tick||0)-(e.type==='antimatter'?106:data.replay?10:6))b.effect(e);}
       for(const e of data.specialBlasts||[])if(!e.harmless&&!p.specialBlasts.some(q=>q.source===e.source&&q.tick===e.tick))p.specialBlasts.push({...e,pos:[e.x,e.y,e.z],age:0});
       p.specialBlasts=p.specialBlasts.filter(e=>{e.age=Math.max(0,((data.tick||0)-e.tick)*.05);return e.age<5.3;});
       if(b.bridgeVessel!=null){const meta=data.metadata.find(m=>m.id===b.bridgeVessel);renderer.cabinRequest={kind:cabinKind,feedbackEpoch:data.id+':'+data.epoch,shieldHits:b.visualVessel(meta.id).shieldHits,console:cabinKind==='fighter'?data.fighterInstruments:data.bridgeInstruments,pose:mapCamera.pose,meta,row:b.row(meta.id),time:p.elapsed,fov:frame.fov,auto:!data.controls?.[owner],counts:data.counts};}

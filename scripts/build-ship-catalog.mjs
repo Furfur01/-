@@ -11,5 +11,5 @@ for(const file of result.outputFiles)writeBuildFile(file.path,file.contents);
 // These retained standalone pages share the same current catalog as the game.
 for(const name of ['ships.html','ships-review.html']){
  const path=`${dir}/${name}`,html=await fs.readFile(path,'utf8');
- writeBuildFile(path,html.replace(/ships\.bundle\.js\?v=[^"\s]+/g,'ships.bundle.js?v=matchup-crit-20261019'));
+ writeBuildFile(path,html.replace(/ships\.bundle\.js\?v=[^"\s]+/g,'ships.bundle.js?v=wiki-p0-20261021'));
 }

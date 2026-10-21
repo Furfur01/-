@@ -70,3 +70,5 @@
 
 
 .ship-damage{margin:14px 0}.ship-damage>div:not(.section-label){display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:13px;color:var(--muted)}.ship-damage b{color:var(--ink);font-weight:500}
+
+.ship-performance{margin:14px 0;border-block:1px solid #ffffff16;padding:12px 0;font-size:13px;line-height:1.65}.ship-performance summary{cursor:pointer;color:#dfe9ed}.ship-performance table{width:100%;border-collapse:collapse;margin:10px 0;font-variant-numeric:tabular-nums}.ship-performance th,.ship-performance td{text-align:right;padding:5px 0;font-weight:400}.ship-performance th:first-child{text-align:left}.ship-performance thead{color:#9aadb9}.ship-performance p{color:#a9bac5;margin:10px 0}.ship-performance a{color:#8ee4e8}

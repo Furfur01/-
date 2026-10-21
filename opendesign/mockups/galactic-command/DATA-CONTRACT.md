@@ -92,7 +92,16 @@ Math.max(2, Math.ceil((unit.cost[0] + unit.cost[1]) * 1.44 /
 | `chat` | `text,channel` | ≤160 字；`channel:'alliance'` 要求已有联盟 |
 | `purchase` | `resource:0|1|2,size:1|10|100,quantity:1..100` | 消耗已有暗物质；本地无充值 |
 
-任务名从 `catalog.missionNames` 获取：`attack,spy,recycle,transport,deploy,colonize,explore,mine,destroyMoon`。探索/采矿沿用轨道 16 接口；银心黑洞探索抵达后固定停留 `rules.explorationSeconds=1800` 秒，往返另算，忽略客户端 `holdHours`。采矿停留 1..4 游戏小时，每游戏小时对应 60 秒。探索需要天体物理 1 级，名额 `floor(sqrt(等级))` 含返航任务；发现量独立抽取，装载量取发现量与舰队总仓容量的较小值，资源及暗物质均返航入账。探索报告含 `discovered:{resource,amount}`（无发现为 null）、`capacity`、`cargo`、`darkMatter`；资源索引 0/1/2 对应金属/晶体/气体，暗物质为 `darkMatter`。侦察需 Probe，回收/采矿需 Recycler，殖民需 Colony_Ship。运输/驻扎/殖民之外任务的 cargo 必须全零。任务时间/燃料计算由服务端确认；不可用前端展示替代服务端结算。完整规则见 [银心黑洞探险](../../../game/black-hole-exploration.md)。
+任务名从 `catalog.missionNames` 获取：`attack,spy,recycle,transport,deploy,colonize,explore,mine,destroyMoon`。探索/采矿沿用轨道 16 接口。
+
+- 探索派遣新增 `zone:'outer'|'inner'|'deep'`（默认外围）、`rounds:1|3|6|12`（默认单次）。航区和海盗公开于 `catalog.expeditionZones`。各区 `seconds` 为 900 / 1800 / 3600，派遣时保存到任务 `workSeconds`，抵达后按此停留；客户端不能覆盖时长，`holdHours` 不影响探险。旧任务缺少 `workSeconds` 时沿用 `rules.explorationSeconds=900`，报告的 `explorationSeconds` 记录实际工期。星图共用原有世界、相机、星点和黑洞，距离驱动三层剖面及提示线，选择结果以 `explorationZone` 进入派遣草稿，不创建独立银心场景。天体物理门槛分别为 1 / 4 / 9，名额 `floor(sqrt(等级))` 含返航。
+- `POST /api/expedition-preview` 接收 `{ships,zone}`，返回 `{safe,reason,losses}`，使用登录玩家科技评估固定海盗，不扣费。派遣时服务端再次校验；单次不要求通过护航评估。
+- `saveExpeditionPreset` 接收 `planet,ships,zone,rounds,speed,position`，只保存该玩家出发星球的 `expeditionPreset`。`stopExpedition` 接收任务 `id`，只能停止自己的连跑；当前轮正常返航。`recall` 同时取消连跑。
+- 探险任务的 `repeat` 含 `total,round,template,speed,position,zone,stopReason?`。返港后先交付，再按固定模板派遣；有战损、撤退或条件不满足时停航。新船不加入模板。
+- 新采矿任务 `holdHours:1..4` 对应 30 / 60 / 90 / 120 分钟，服务端保存 `workSeconds`。更新前缺少该字段的采矿任务保留旧工期和产量。采矿不连跑。
+- 资源及暗物质均返航入账。探索报告含 `zone,event,encounter,retreated,losses,foundShips,salvage,repeat` 及 `discovered,capacity,cargo,darkMatter`。资源发现为 `{resource:0|1|2,amount}`，暗物质为 `{resource:'darkMatter',amount}`，舰船为 `{ship,count,materials}`，无发现为 null。普通损失按舰型计数；海盗交战另外生成现有格式的战报。
+
+侦察需 Probe，回收/采矿需 Recycler，殖民需 Colony_Ship。运输/驻扎/殖民之外任务的 cargo 必须全零。任务时间、燃料、护航、奖励和连跑由服务端确认，前端展示不替代结算。完整规则见 [银心探险与采矿](../../../game/black-hole-exploration.md)。
 
 ## 单位显示映射
 

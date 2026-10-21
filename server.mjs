@@ -6,11 +6,13 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {createWorld,createPlayer,advance,act,snapshot,migrateWorld,templatePreview} from './game/engine.mjs';
 import {publicCatalog} from './game/catalog.mjs';
+import {escortAssessment} from './game/expedition.mjs';
 import {buildReplay} from './game/replay.mjs';
 import {battleViewEnvironment} from './game/battle-terrain.mjs';
 import {starMap} from './game/star-map.mjs';
 import {battleVisible,controlBattle,spatialSnapshot,spatialMetadata} from './game/spatial-battle.mjs';
 import {battleStorage} from './game/battle-storage.mjs';
+import {createSaveWriter} from './game/save-writer.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url)),saveFile=process.env.EMPIRE_SAVE_FILE||path.join(root,'data','universe.json');
 const isolated=path.resolve(saveFile).toLowerCase()!==path.join(root,'data','universe.json').toLowerCase();
@@ -39,8 +41,19 @@ if(fs.existsSync(saveFile)&&!(world.npcDefenseRepairVersion>=1)){
 }
 const battleStore=battleStorage(saveFile);
 world=migrateWorld(battleStore.restore(world));
-let dirty=true,lastSavedAt=fs.existsSync(saveFile)?fs.statSync(saveFile).mtime.toISOString():null;
-function save(){if(!dirty)return;const manifest=battleStore.checkpoint(world);fs.writeFileSync(saveFile+'.tmp',JSON.stringify(manifest));fs.renameSync(saveFile+'.tmp',saveFile);battleStore.compact(world,manifest);battleStore.prune(manifest);dirty=false;lastSavedAt=new Date().toISOString();}
+const saveWriter=createSaveWriter(saveFile);
+let revision=1,savedRevision=0,saving=null,transaction=null,shuttingDown=false;
+let lastSavedAt=fs.existsSync(saveFile)?fs.statSync(saveFile).mtime.toISOString():null;
+async function save(){
+  const target=revision;
+  while(savedRevision<target){
+    if(!saving){
+      const version=revision;
+      saving=saveWriter.write(world).then(result=>{battleStore.compact(world,result);savedRevision=version;lastSavedAt=result.savedAt;if(result.warning)console.error('存档已保存，旧检查点清理失败：',result.warning);}).finally(()=>{saving=null;});
+    }
+    await saving;
+  }
+}
 function json(res,value,status=200){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(value));}
 const playerCookie=player=>`empire=${player.id}; Path=/; HttpOnly; SameSite=Strict; Max-Age=31536000`;
 function cookiePlayer(cookie){const token=cookie?.match(/(?:^|;\s*)empire=([a-f0-9-]+)(?:;|$)/)?.[1];const player=world.players[token];return player&&!player.bot?player:null;}
@@ -73,6 +86,7 @@ const server=http.createServer(async(req,res)=>{
     }
     if(url.pathname.startsWith('/api/launcher/')){
       if(!trustedLocalClient(req)||req.headers.origin!==new URL('http://'+req.headers.host).origin){json(res,{error:'来源无效'},403);return;}
+      while(transaction)await transaction;
       const players=Object.values(world.players).filter(player=>!player.bot);
       if(url.pathname==='/api/launcher/status'&&req.method==='GET'){
         const current=localSessionPlayer();
@@ -83,11 +97,11 @@ const server=http.createServer(async(req,res)=>{
         let key;try{key=JSON.parse(body).key;}catch{json(res,{error:'账号参数无效'},400);return;}
         const player=players.find(player=>accountKey(player)===key);
         if(!player){json(res,{error:'账号不存在'},404);return;}
-        save();persistSession(player);
+        await save();persistSession(player);
         console.log('启动器切换账号：%s',player.name);json(res,{ok:true,name:player.name});return;
       }
       if(url.pathname==='/api/launcher/stop'&&req.method==='POST'){
-        dirty=true;save();console.log('启动器请求关闭后台，进度已保存');
+        revision++;await save();console.log('启动器请求关闭后台，进度已保存');
         res.once('finish',shutdown);json(res,{ok:true,savedAt:lastSavedAt});return;
       }
       json(res,{error:'不支持的操作'},405);return;
@@ -96,13 +110,14 @@ const server=http.createServer(async(req,res)=>{
       const host=new URL('http://'+req.headers.host),origin=req.headers.origin;
       const local=['127.0.0.1','localhost','[::1]'].includes(host.hostname)&&Number(host.port||80)===server.address().port&&['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress);
       if(req.method!=='POST'||!local||origin!==host.origin||req.headers['x-empire-client']!=='galactic-command'||(req.headers['sec-fetch-site']&&req.headers['sec-fetch-site']!=='same-origin')){json(res,{error:'来源无效'},403);return;}
+      while(transaction)await transaction;if(shuttingDown){json(res,{error:'后台正在保存并关闭'},503);return;}
       let player=localSessionPlayer(),source='local';
       if(!player){player=cookiePlayer(req.headers.cookie);source=player?'browser':'new';}
       if(!player){
         const players=Object.values(world.players).filter(p=>!p.bot);
         if(players.length>1){json(res,{error:'请在启动器选择已有账号'},409);return;}
         if(players.length===1){player=players[0];source='local';}
-        else{player=createPlayer(world,isolated?'测试指挥官':'指挥官');dirty=true;save();}
+        else{player=createPlayer(world,isolated?'测试指挥官':'指挥官');revision++;await save();}
       }
       persistSession(player);
       res.setHeader('Set-Cookie',playerCookie(player));json(res,{source,name:player.name});return;
@@ -114,9 +129,10 @@ const server=http.createServer(async(req,res)=>{
       const origin=req.headers.origin;
       if(origin&&new URL(origin).host!==req.headers.host){json(res,{error:'来源无效'},403);return;}
       // Polling, probes and failed requests must never register accounts or advance the world.
+      while(transaction)await transaction;if(shuttingDown){json(res,{error:'后台正在保存并关闭'},503);return;}
       const player=getPlayer(req);
       if(!player){json(res,{error:'请刷新游戏主页，重新连接账号'},401);return;}
-      advance(world);dirty=true;
+      advance(world);revision++;
       const combat=/^\/api\/battles\/([a-f0-9-]+)(?:\/(events|control))?$/.exec(url.pathname);
       if(combat){
         const current=()=>world.battles?.[combat[1]],b=current();
@@ -124,12 +140,13 @@ const server=http.createServer(async(req,res)=>{
         if(req.method==='POST'&&combat[2]==='control'){
           if(!origin||new URL(origin).host!==req.headers.host){json(res,{error:'来源无效'},403);return;}
           let body='';for await(const chunk of req){body+=chunk;if(body.length>4096){json(res,{error:'请求过大'},413);return;}}
-          try{const action=JSON.parse(body),live=current();controlBattle(live,player.id,action);if(action.type==='claim')for(const other of Object.values(world.battles))if(other.id!==live.id&&other.status==='active'&&other.controls[player.id])controlBattle(other,player.id,{type:'release',clientId:other.controls[player.id].clientId});dirty=true;json(res,{ok:true,tick:live.tick,control:live.controls[player.id]||null});}catch(error){json(res,{error:error.message},400);}return;
+          while(transaction)await transaction;if(shuttingDown){json(res,{error:'后台正在保存并关闭'},503);return;}
+          try{const action=JSON.parse(body),live=current();controlBattle(live,player.id,action);if(action.type==='claim')for(const other of Object.values(world.battles))if(other.id!==live.id&&other.status==='active'&&other.controls[player.id])controlBattle(other,player.id,{type:'release',clientId:other.controls[player.id].clientId});revision++;json(res,{ok:true,tick:live.tick,control:live.controls[player.id]||null});}catch(error){json(res,{error:error.message},400);}return;
         }
         if(req.method==='GET'&&combat[2]==='events'){
           res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store','Connection':'keep-alive'});
           let seq=0,count=-1;
-          const send=()=>{const live=current();if(!live||live.status!=='active'){res.write('event: finished\ndata: '+JSON.stringify({id:combat[1]})+'\n\n');clearInterval(timer);res.end();return;}if(res.writableLength>1024*1024)return;const data=spatialSnapshot(live,{since:seq,metadata:count!==live.ships.length,planet:world.planets[live.target]||(live.trial?world.planets[player.home]:null)||{}});count=live.ships.length;seq=live.eventSeq;res.write('id: '+seq+'\ndata: '+JSON.stringify(data)+'\n\n');};
+          const send=()=>{if(transaction||shuttingDown)return;const live=current();if(!live||live.status!=='active'){res.write('event: finished\ndata: '+JSON.stringify({id:combat[1]})+'\n\n');clearInterval(timer);res.end();return;}if(res.writableLength>1024*1024)return;const data=spatialSnapshot(live,{since:seq,metadata:count!==live.ships.length,planet:world.planets[live.target]||(live.trial?world.planets[player.home]:null)||{}});count=live.ships.length;seq=live.eventSeq;res.write('id: '+seq+'\ndata: '+JSON.stringify(data)+'\n\n');};
           const timer=setInterval(send,200);send();req.on('close',()=>clearInterval(timer));return;
         }
         if(req.method==='GET'&&!combat[2]){const data=b.storage?battleStore.read(b.storage):b;json(res,spatialSnapshot(data,{planet:world.planets[data.target]||(data.trial?world.planets[player.home]:null)||{}}));return;}
@@ -157,10 +174,24 @@ const server=http.createServer(async(req,res)=>{
         let body='';for await(const chunk of req){body+=chunk;if(body.length>64000){json(res,{error:'请求过大'},413);return;}}
         try{json(res,{previews:templatePreview(world,player,JSON.parse(body))});}catch(error){json(res,{error:error.message},400);}return;
       }
+      if(req.method==='POST'&&url.pathname==='/api/expedition-preview'){
+        let body='';for await(const chunk of req){body+=chunk;if(body.length>64000){json(res,{error:'请求过大'},413);return;}}
+        try{
+          const {ships,zone}=JSON.parse(body),{combat,...assessment}=escortAssessment(ships,player.tech,zone);
+          json(res,assessment);
+        }catch(error){json(res,{error:error.message},400);}return;
+      }
       if(req.method==='POST'&&url.pathname==='/api/action'){
         let body='';for await(const chunk of req){body+=chunk;if(body.length>64000){json(res,{error:'请求过大'},413);return;}}
-        const action=JSON.parse(body);const checkpoint=structuredClone(world);
-        try{act(world,player,action);save();json(res,snapshot(world,player));}catch(error){world=checkpoint;json(res,{error:error.message},400);}return;
+        const action=JSON.parse(body);while(transaction)await transaction;if(shuttingDown){json(res,{error:'后台正在保存并关闭'},503);return;}
+        // Resource-changing actions retain their all-or-nothing save contract.
+        // Periodic checkpoints do not take this barrier: battle control and the
+        // 20 Hz simulation keep running while those snapshots are compressed.
+        let release;transaction=new Promise(resolve=>{release=resolve;});
+        const checkpoint=structuredClone(world),currentPlayer=world.players[player.id];
+        try{act(world,currentPlayer,action);revision++;await save();json(res,snapshot(world,currentPlayer));}
+        catch(error){world=checkpoint;revision++;json(res,{error:error.message},400);}
+        finally{transaction=null;release();}return;
       }
       json(res,{error:'不存在'},404);return;
     }
@@ -170,13 +201,12 @@ const server=http.createServer(async(req,res)=>{
     res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':path.extname(file)==='.png'?'public, max-age=3600':'no-cache','X-Content-Type-Options':'nosniff'});fs.createReadStream(file).pipe(res);
   }catch(error){if(!res.headersSent)json(res,{error:'服务器暂时无法处理请求'},500);else res.end();console.error(error);}
 });
-setInterval(()=>{try{advance(world);dirty=true;save();}catch(error){console.error(error);}},5000).unref();
-setInterval(()=>{if(Object.values(world.battles||{}).some(b=>b.status==='active'))try{advance(world);dirty=true;}catch(error){console.error(error);}},50).unref();
-let shuttingDown=false;
+setInterval(()=>{if(transaction||shuttingDown)return;try{advance(world);revision++;void save().catch(error=>console.error('定时保存失败：',error));}catch(error){console.error(error);}},5000).unref();
+setInterval(()=>{if(!transaction&&!shuttingDown&&Object.values(world.battles||{}).some(b=>b.status==='active'))try{advance(world);revision++;}catch(error){console.error(error);}},50).unref();
 function shutdown(){
   if(shuttingDown)return;shuttingDown=true;
-  const finish=()=>{
-    try{dirty=true;save();process.exit(0);}
+  const finish=async()=>{
+    try{while(transaction)await transaction;revision++;await save();await saveWriter.close();process.exit(0);}
     catch(error){console.error('退出前保存失败，将重试：',error);setTimeout(finish,1000);}
   };
   finish();

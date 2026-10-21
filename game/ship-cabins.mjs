@@ -3,7 +3,7 @@ import {cockpitClass,cabinPose} from './pilot-controls.mjs';
 // Interior selection is shared by the range, live combat and replays. It does
 // not grant pilot authority or change the server's handling/weapon profiles.
 export const shipCabins=Object.freeze({
- Light_Fighter:'fighter',Heavy_Fighter:'fighter',Titanenergetic_Frigate:'fighter',
+ Light_Fighter:'fighter',Heavy_Fighter:'fighter',
  Destroyer:'horizon',Cruiser:'horizon',Battleship:'horizon',Dreadnought:'horizon',Bomber:'horizon',
  Cargo_Ship:'horizon',Large_Cargo_Ship:'horizon',Colony_Ship:'horizon',Recycler:'horizon',Guardian:'horizon',
  Interceptor:'bastion',Devourer_Interceptor:'bastion',Reaper:'bastion',Death_Star:'bastion',

@@ -1,6 +1,6 @@
 import {systemTerritory,polity} from './sovereignty.mjs';
 import {systemCoordinates} from './star-positions.mjs';
-import {systemBiomes} from './system-biomes.mjs';
+import {systemBiomes,planetsBySystem} from './system-biomes.mjs';
 export {systemTypes} from './system-biomes.mjs';
 import {plannedNpcs,npcPublic} from './npc-types.mjs';
 
@@ -20,11 +20,11 @@ export const bodyKey=p=>p.moon?`moon:${p.id}`:`1:${p.position[1]}:${p.position[2
 export const systemPositions=()=>systemCoordinates().map(s=>({...s,name:systemName(s.id)}));
 export function starMap(world){
   const existing=new Map();for(const p of Object.values(world.planets||{}))if(p.position[0]===1&&!p.moon)existing.set(p.position.join(':'),p);
-  const planets=[];
+  const planets=[],systems=planetsBySystem(world);
   for(let system=1;system<=SYSTEM_COUNT;system++){
-    const types=systemBiomes(world,1,system),planned=new Map();
+    const local=systems.get(`1:${system}`)||[],types=systemBiomes(world,1,system,local),planned=new Map();
     // Public projection uses the same planner as initialization, without mutation.
-    for(const {type,slot,id}of plannedNpcs(world,1,system))planned.set(slot,{npc:true,npcType:type.id,name:type.name,biome:'terrestrial'});
+    for(const {type,slot,id}of plannedNpcs(world,1,system,local))planned.set(slot,{npc:true,npcType:type.id,name:type.name,biome:'terrestrial'});
     for(let slot=1;slot<=15;slot++){
       const position=[1,system,slot],key=position.join(':'),p=existing.get(key)||planned.get(slot),biome=p?.biome||types[slot-1],catalogName=planetName(system,slot,biome);
       planets.push({key,id:p?.id??null,position,biome,catalogName,name:p?.name||catalogName,owner:p?.owner??null,ownerName:world.players?.[p?.owner]?.name||'',npc:!!p?.npc,npcSkin:p?.npcSkin??null,...npcPublic(p),moon:false,known:true});

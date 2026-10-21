@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   let state = null, catalog = null, selectedPlanet = '', error = '', busy = false;
-  let loading = false, connected = false, sessionSource = '', offset = 0;
+  let loading = false, connected = false, sessionSource = '', offset = 0, combatView = false;
   let initPromise = null, refreshing = null, system = null, revision = 0, timer = null;
   const listeners = new Set();
   try { selectedPlanet = localStorage.getItem('galaxy.planet') || ''; } catch {}
@@ -104,6 +104,9 @@
         if (!timer) timer = setInterval(() => {
           if (document.hidden || busy || loading) return;
           if (!catalog || !state) { void init(); return; }
+          // The battle's SSE stream already owns live combat updates. Rebuilding
+          // the hidden empire/map every 3 s interrupts both simulation and frames.
+          if (combatView) return;
           void refresh();
         }, 3000);
       }
@@ -113,7 +116,14 @@
 
   const api = {
     init, refresh, action, replay,
+    setCombatView(active) {
+      active = !!active;
+      if (combatView === active) return;
+      combatView = active;
+      if (!active && state && !document.hidden) void refresh();
+    },
     previewPlan: payload => request('/api/plan-preview', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),
+    previewExpedition: payload => request('/api/expedition-preview', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),
     get state() { return state; },
     get catalog() { return catalog; },
     get planet() { return state?.planets.find(planet => planet.id === selectedPlanet) || state?.planets[0] || null; },
@@ -131,6 +141,6 @@
     },
     subscribe(listener) { listeners.add(listener); listener(api); return () => listeners.delete(listener); }
   };
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && state) void refresh(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && state && !combatView) void refresh(); });
   window.EmpireAPI = api;
 })();

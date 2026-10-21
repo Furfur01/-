@@ -37,9 +37,11 @@ export function restoreSystemCamps(world,originalPositions={}){
   world.npcDistributionVersion=1;
 }
 // Used by both the pure directory projection and the mutating initializer.
-export function plannedNpcs(world,galaxy,system){
-  const local=Object.values(world.planets||{}).filter(p=>p.position[0]===galaxy&&p.position[1]===system),existing=local.filter(p=>p.npc&&!p.moon),marker=world.npcSystems?.[`${galaxy}:${system}`];
+export function plannedNpcs(world,galaxy,system,local){
+  const marker=world.npcSystems?.[`${galaxy}:${system}`];
   if(Number(marker)>=NPC_SYSTEM_VERSION)return [];
+  local??=Object.values(world.planets||{}).filter(p=>p.position[0]===galaxy&&p.position[1]===system);
+  const existing=local.filter(p=>p.npc&&!p.moon);
   const fresh=!marker&&!existing.length,types=fresh?npcTypes:npcTypes.filter(t=>t.index===5&&!existing.some(p=>npcType(p)?.id===t.id));
   const occupied=new Set(local.map(p=>p.position[2]));
   for(const m of world.missions||[])if(m.task==='colonize'&&m.phase==='outbound'&&m.position[0]===galaxy&&m.position[1]===system)occupied.add(m.position[2]);

@@ -25,7 +25,6 @@ function cabinPose(kind) {
 var shipCabins = Object.freeze({
   Light_Fighter: "fighter",
   Heavy_Fighter: "fighter",
-  Titanenergetic_Frigate: "fighter",
   Destroyer: "horizon",
   Cruiser: "horizon",
   Battleship: "horizon",
@@ -84,7 +83,7 @@ function mergeFleetAssets(data, vertices, extra, extraVertices, { shipsOnly = fa
   let offset = vertices.length;
   for (const ship of missing) {
     combined.set(extraVertices.subarray(ship.full.offset, ship.full.offset + ship.full.floatCount), offset);
-    fleet.ships.push({ id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: "FLEET", serial: "", count: 0, stats: ship.stats, combatRules: ship.combatRules, statsSource: "\u5B9E\u65F6\u6218\u6597", levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length });
+    fleet.ships.push({ id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: "FLEET", serial: "", count: 0, stats: ship.stats, combatRules: ship.combatRules, statsSource: ship.statsSource, statsLabel: ship.statsLabel, statsNote: ship.statsNote, economyLabel: ship.economyLabel, levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length });
     fleet.layouts.push({ ...ship.layout, bridge: shipCabinSeat(ship.id, ship.layout) });
     fleet.profiles.push({ ...data.profiles[2], role: ship.name, className: ship.id.toUpperCase(), length: "\u8230\u957F\u6BD4\u4F8B " + Math.round(ship.length), relativeLength: ship.length, ground: !!ship.profile.ground, capital: ship.profile.role !== "fighter", maxSpeed: ship.profile.speed * 8, turnRate: ship.profile.turn, primaryName: ship.profile.primaryName || "\u8230\u8F7D\u4E3B\u6B66\u5668", primaryKind: ship.profile.kind, beam: ship.profile.beam, projectileSpeed: ship.profile.projectileSpeed, mainCooldown: ship.profile.cooldown, chargeTime: 0, salvo: 0, missileCapacity: 0, turretDamage: 0, secondary: null, fixedPrimary: ship.profile.fixed, defenseOnly: ship.stats[2] === 0 });
     offset += ship.full.floatCount;
@@ -234,79 +233,6 @@ function rollCritical(unit, targetType, random) {
 }
 function splashDamage(base, unit, targetType, distance, radius) {
   return radius > 0 && distance < radius ? base * splashMultiplier(unit, targetType) * Math.max(0, 1 - distance / radius) : 0;
-}
-
-// scripts/three-flight/ground-cloud-shader.js
-var groundCloudShader = `
-float cloudHash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
-float cloudNoise(vec3 p){
- vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
- return mix(mix(mix(cloudHash(i),cloudHash(i+vec3(1,0,0)),f.x),mix(cloudHash(i+vec3(0,1,0)),cloudHash(i+vec3(1,1,0)),f.x),f.y),mix(mix(cloudHash(i+vec3(0,0,1)),cloudHash(i+vec3(1,0,1)),f.x),mix(cloudHash(i+vec3(0,1,1)),cloudHash(i+vec3(1,1,1)),f.x),f.y),f.z);
-}
-float cloudDensity(vec3 p,float age,float height,float seed){
- // Curl around the cap's rim: material rises inside, rolls out, then down.
- float radial=length(p.xz),dy=p.y-height,theta=atan(dy,radial-.57);
- float roll=age*.75,ringDistance=length(vec2(radial-.57,dy));
- vec3 flow=vec3(p.x,p.y-age*.16,p.z);
- flow.y=height+sin(theta+roll)*ringDistance;
- flow.xz*=max(.1,.57+cos(theta+roll)*ringDistance)/max(radial,.01);
- flow+=vec3(seed*.71,seed*.29,-seed*.43);
- float noise=cloudNoise(flow*4.)*.58+cloudNoise(flow*8.3+3.7)*.28+cloudNoise(flow*17.1)*.14;
- float disruption=(noise-.5)*.78;
- float mature=smoothstep(.3,2.2,age),diffusion=smoothstep(6.,18.,age);
- float cap=length(vec3(p.x,(p.y-height)/mix(.85,.47,mature),p.z));
- cap=1.-smoothstep(.66,1.12+diffusion*.2,cap+disruption);
- float f=clamp(p.y/max(height,.1),0.,1.);
- vec2 bend=vec2(sin(p.y*3.+seed+age*.3),cos(p.y*2.-seed))*.06*f;
- float width=.17+.12*f+.04*sin(f*8.-age*.8);
- float column=(1.-smoothstep(width*.5,width+.11, length(p.xz-bend)+disruption*.22))*smoothstep(-.05,.15,p.y)*(1.-smoothstep(height*.8,height*1.06,p.y));
- column*=mature*(1.-diffusion*.8);
- float density=max(cap,column)*smoothstep(.2+diffusion*.14,.68,noise);
- return density*smoothstep(0.,.09,p.y);
-}
-vec4 groundCloud(vec3 entry,vec3 eye,float age,float height,float seed){
- vec3 ray=normalize(entry-eye),safe=ray+mix(vec3(-.00001),vec3(.00001),step(vec3(0.),ray));
- vec3 t0=(-vec3(1.)-eye)/safe,t1=(vec3(1.)-eye)/safe;
- vec3 lo=min(t0,t1),hi=max(t0,t1);
- float near=max(0.,max(lo.x,max(lo.y,lo.z))),far=min(hi.x,min(hi.y,hi.z));
- if(far<=near)return vec4(0.);
- float stepSize=(far-near)/48.,jitter=.25+.5*cloudHash(vec3(gl_FragCoord.xy,seed));
- vec3 sum=vec3(0.);float alpha=0.;
- for(int i=0;i<48;i++){
-  vec3 q=eye+ray*(near+(float(i)+jitter)*stepSize);
-  vec3 p=vec3(q.x*1.6,(q.y+1.)*.5*(height+.95),q.z*1.6);
-  float density=cloudDensity(p,age,height,seed);
-  if(density>.008){
-   float lightDensity=cloudDensity(p+vec3(-.13,.23,.09),age,height,seed);
-   float lighting=clamp(.52+(density-lightDensity)*3.2,.12,1.);
-   vec3 smoke=mix(vec3(.11,.12,.13),vec3(.64,.62,.59),lighting);
-   float heat=exp(-max(0.,age-.18)*1.5)*(.6+density*.9);
-   vec3 fire=mix(vec3(1.5,.17,.015),vec3(4.,2.6,.65),clamp(density*2.,0.,1.));
-   vec3 color=mix(smoke,fire,clamp(heat,0.,1.));
-   float a=1.-exp(-density*stepSize*9.*uOpacity);
-   sum+=(1.-alpha)*a*color;alpha+=(1.-alpha)*a;
-   if(alpha>.98)break;
-  }
- }
- return vec4(sum/max(alpha,.001),alpha);
-}
-`;
-
-// game/ground-blast.mjs
-var GROUND_BLAST_LIFETIME = 18;
-function groundBlastPhase(age) {
-  const t = Math.max(0, age), rise = Math.max(0, t - 0.45), spread = Math.max(0, t - 6);
-  const fade = Math.max(0, Math.min(1, (GROUND_BLAST_LIFETIME - t) / 8));
-  return {
-    radius: 12 + 43 * (1 - Math.exp(-t * 0.8)) + spread * 3,
-    height: 9 + 119 * (1 - Math.exp(-rise * 0.4)) + spread * 1.4,
-    heat: Math.exp(-Math.max(0, t - 0.2) * 1.5),
-    flash: Math.exp(-t * 7),
-    shockRadius: 8 + 150 * (1 - Math.exp(-t * 1.1)),
-    shockOpacity: Math.max(0, 1 - t / 3.2) ** 2,
-    opacity: Math.min(1, t * 12) * fade * fade,
-    spread
-  };
 }
 
 // scripts/three-flight/area-blast.js
@@ -44114,7 +44040,10 @@ function createCabinSparks(eye) {
 function createFeedbackOverlay() {
   const scene = new Scene(), camera = new Camera(), geometry = new PlaneGeometry(2, 2), material2 = new ShaderMaterial({ transparent: true, depthTest: false, depthWrite: false, toneMapped: false, uniforms: { hull: { value: 0 }, shield: { value: 0 }, alarm: { value: 0 } }, vertexShader: "varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position.xy,0.,1.);}", fragmentShader: "varying vec2 uv0;uniform float hull,shield,alarm;void main(){float edge=pow(length((uv0-.5)*1.4),2.);float h=hull*(.04+edge*.34)+alarm*edge*.045;float s=shield*(.018+edge*.13);gl_FragColor=vec4(mix(vec3(.18,.65,.9),vec3(1.,.19,.055),h/(h+s+.001)),min(.45,h+s));}" });
   scene.add(new Mesh(geometry, material2));
-  return { draw(renderer, fx, time) {
+  return { async prepare(renderer) {
+    await renderer.compileAsync(scene, camera);
+    renderer.render(scene, camera);
+  }, draw(renderer, fx, time) {
     material2.uniforms.hull.value = fx.hullFlash;
     material2.uniforms.shield.value = fx.shieldFlash;
     material2.uniforms.alarm.value = fx.alert ? 0.5 + 0.5 * Math.sin(time * 5) : 0;
@@ -45021,8 +44950,43 @@ function buildAftBulkhead({ THREE, RoundedBoxGeometry: RoundedBoxGeometry2, M })
   return root;
 }
 
+// scripts/three-flight/keel/baked-interior.js
+function mountBakedInterior(root, materials, { tree, geometries, buffer }) {
+  const decoded = geometries.map((data) => {
+    const g = new BufferGeometry();
+    for (const [name, a] of Object.entries(data.attributes)) g.setAttribute(name, new BufferAttribute(new Float32Array(buffer, a.offset, a.length), a.size));
+    if (data.index) g.setIndex(new BufferAttribute(new Uint32Array(buffer, data.index.offset, data.index.length), 1));
+    if (data.planes) g.userData.cabinPlanes = new Float32Array(buffer, data.planes.offset, data.planes.length);
+    g.groups = data.groups;
+    g.boundingSphere = new Sphere(new Vector3(...data.sphere.center), data.sphere.radius);
+    return g;
+  });
+  const node = (data) => {
+    const o = data.geometry == null ? new Group() : new Mesh(decoded[data.geometry], Array.isArray(data.material) ? data.material.map((k) => materials[k]) : materials[data.material]);
+    o.name = data.name;
+    o.position.fromArray(data.position);
+    o.quaternion.fromArray(data.quaternion);
+    o.scale.fromArray(data.scale);
+    o.userData = data.userData;
+    o.castShadow = data.castShadow;
+    o.receiveShadow = data.receiveShadow;
+    for (const child of data.children) o.add(node(child));
+    return o;
+  };
+  for (const child of tree.children) root.add(node(child));
+}
+async function loadBakedCabins(base, signal) {
+  const read = async (name) => {
+    const r = await fetch(base + name, { signal });
+    if (!r.ok) throw Error("\u9A7E\u9A76\u8231\u8D44\u6E90\u52A0\u8F7D\u5931\u8D25\uFF1A" + name);
+    return name.endsWith(".json") ? r.json() : r.arrayBuffer();
+  };
+  const [data, buffer] = await Promise.all([read("cabins.json"), read("cabins.bin")]);
+  return Object.fromEntries(Object.entries(data).map(([kind, room]) => [kind, { ...room, buffer }]));
+}
+
 // scripts/three-flight/keel/interior.js
-function createKeelInterior({ renderer = null, staticBatching = true } = {}) {
+function createKeelInterior({ renderer = null, staticBatching = true, baked = null } = {}) {
   const CONFIG = {
     width: 13,
     aft: 6.45,
@@ -45692,24 +45656,27 @@ function createKeelInterior({ renderer = null, staticBatching = true } = {}) {
     }
     return lights2;
   }
-  buildArchitecture();
-  buildPilotEquipment();
-  const seats = buildSeating({ THREE: three_module_exports, RoundedBoxGeometry, M });
-  for (const chair of [...seats.children]) {
-    seats.remove(chair);
-    if (Math.abs(chair.position.x) < 0.1) chair.position.y += 0.125;
-    chair.name = "10_SEATING / " + chair.name;
-    interior.add(chair);
+  if (baked) mountBakedInterior(interior, M, baked);
+  else {
+    buildArchitecture();
+    buildPilotEquipment();
+    const seats = buildSeating({ THREE: three_module_exports, RoundedBoxGeometry, M });
+    for (const chair of [...seats.children]) {
+      seats.remove(chair);
+      if (Math.abs(chair.position.x) < 0.1) chair.position.y += 0.125;
+      chair.name = "10_SEATING / " + chair.name;
+      interior.add(chair);
+    }
+    const aft = buildAftBulkhead({ THREE: three_module_exports, RoundedBoxGeometry, M });
+    aft.name = "11_AFT_PRESSURE_BULKHEAD";
+    interior.add(aft);
   }
-  const aft = buildAftBulkhead({ THREE: three_module_exports, RoundedBoxGeometry, M });
-  aft.name = "11_AFT_PRESSURE_BULKHEAD";
-  interior.add(aft);
   const originalGeometry = /* @__PURE__ */ new Set();
   interior.traverse((o) => {
     if (o.geometry) originalGeometry.add(o.geometry);
   });
-  const stats = CONFIG.staticBatching ? batchStatic(interior) : {};
-  if (CONFIG.staticBatching) {
+  const stats = baked ? baked.stats : CONFIG.staticBatching ? batchStatic(interior) : {};
+  if (CONFIG.staticBatching && !baked) {
     const retained = /* @__PURE__ */ new Set();
     interior.traverse((o) => {
       if (o.geometry) retained.add(o.geometry);
@@ -46561,15 +46528,15 @@ var FusionRadar = class {
       for (const o of [b.mesh, b.dot, b.stem]) {
         o.removeFromParent();
         o.dispose?.();
-        o.geometry.dispose();
-        o.material.dispose();
       }
+      b.stem.geometry.dispose();
     }
     const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count))), material2 = (opacity) => new MeshBasicMaterial({ color: 16777215, transparent: true, opacity, blending: AdditiveBlending, depthWrite: false, side: DoubleSide, toneMapped: false });
-    const mesh = new InstancedMesh(new OctahedronGeometry(0.022), material2(ally ? 0.55 : 1), capacity), dot2 = new InstancedMesh(new RingGeometry(8e-3, 0.014, 12).rotateX(-Math.PI / 2), material2(ally ? 0.25 : 0.6), capacity);
+    const mesh = new InstancedMesh(b?.mesh.geometry || new OctahedronGeometry(0.022), b?.mesh.material || material2(ally ? 0.55 : 1), capacity), dot2 = new InstancedMesh(b?.dot.geometry || new RingGeometry(8e-3, 0.014, 12).rotateX(-Math.PI / 2), b?.dot.material || material2(ally ? 0.25 : 0.6), capacity);
+    mesh.material.blending = NormalBlending;
     const geometry = new BufferGeometry();
     for (const name of ["position", "color"]) geometry.setAttribute(name, new BufferAttribute(new Float32Array(capacity * 6), 3).setUsage(DynamicDrawUsage));
-    const stem = new LineSegments(geometry, new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: ally ? 0.2 : 0.5, blending: AdditiveBlending, depthWrite: false, toneMapped: false }));
+    const stem = new LineSegments(geometry, b?.stem.material || new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: ally ? 0.2 : 0.5, blending: AdditiveBlending, depthWrite: false, toneMapped: false }));
     for (const o of [mesh, dot2]) {
       o.instanceMatrix.setUsage(DynamicDrawUsage);
       o.boundingSphere = new Sphere(new Vector3(), 1);
@@ -46584,6 +46551,14 @@ var FusionRadar = class {
     this.sweep.rotation.y = -time * 1.8;
     this.disk.material.opacity = 0.13 + 0.03 * Math.sin(time * 7);
     this.lockRing.visible = false;
+    const key = (s?.vesselId ?? s?.name) + ":" + s?.target + ":" + s?.locked;
+    if (this.lastTime != null && time >= this.lastTime && time - this.lastTime < 0.05 && key === this.lastKey) {
+      this.lockRing.visible = this.markers.has(s?.target);
+      if (camera) this.lockRing.quaternion.copy(camera.quaternion);
+      return;
+    }
+    this.lastTime = time;
+    this.lastKey = key;
     const contacts = s?.contacts || [], counts = [0, 0];
     for (const c of contacts) counts[+!c.enemy]++;
     for (const ally of [false, true]) {
@@ -46593,7 +46568,7 @@ var FusionRadar = class {
         for (const o of [b.mesh, b.dot, b.stem]) o.visible = count > 0;
       }
     }
-    const seen = /* @__PURE__ */ new Set();
+    const seen = /* @__PURE__ */ new Set(), cells = /* @__PURE__ */ new Map();
     for (const c of contacts) {
       seen.add(c.id);
       let m = this.markers.get(c.id);
@@ -46606,7 +46581,11 @@ var FusionRadar = class {
       m.position.set(x, y, z);
       m.scale = selected ? 1.5 : ally ? 0.65 : 1;
       m.action = c.enemy && !s.replay ? { action: "select", value: String(c.id) } : null;
-      const b = this.batches.get(ally), slot = b.count++, transform = this.transform;
+      const b = this.batches.get(ally), cell = +ally + ":" + Math.round(x / 0.05) + ":" + Math.round(y / 0.05) + ":" + Math.round(z / 0.05), existing = cells.get(cell);
+      if (existing != null && !selected) continue;
+      const slot = existing ?? b.count++;
+      cells.set(cell, slot);
+      const transform = this.transform;
       this.color.setHex(color2);
       transform.position.copy(m.position);
       transform.rotation.set(0, time * 2, 0);
@@ -46791,7 +46770,7 @@ function installKeelStatus(keel, kind) {
 }
 
 // scripts/three-flight/keel/family-common.js
-function createFamilyInterior(builder, { renderer = null, staticBatching = true } = {}) {
+function createFamilyInterior(builder, { renderer = null, staticBatching = true, baked = null } = {}) {
   const CONFIG = { staticBatching };
   const scene = new Group();
   const interior = new Group();
@@ -47028,13 +47007,14 @@ function createFamilyInterior(builder, { renderer = null, staticBatching = true 
   const { craft, build, light } = builder({ T: three_module_exports, interior, M, finish, grainTexture, group, geometry, mesh, box, shape2, polygon, deckPoly, beam, cylinder, ring, tube, bolt, slotBank, frameShape, chamferRect, makeEnvironment, batchStatic });
   Object.assign(CONFIG, { pilot: [...craft.eye], fov: craft.fov, exposure: craft.exposure, dimensions: craft.dimensions, bounds: craft.bounds });
   interior.name = "KEEL_" + craft.id + "_INTERIOR";
-  build();
+  if (baked) mountBakedInterior(interior, M, baked);
+  else build();
   const original = /* @__PURE__ */ new Set();
   interior.traverse((o) => {
     if (o.geometry) original.add(o.geometry);
   });
-  const stats = staticBatching ? batchStatic(interior) : {};
-  if (staticBatching) {
+  const stats = baked ? baked.stats : staticBatching ? batchStatic(interior) : {};
+  if (staticBatching && !baked) {
     const retained = /* @__PURE__ */ new Set();
     interior.traverse((o) => {
       if (o.geometry) retained.add(o.geometry);
@@ -48962,6 +48942,21 @@ function createKeelWalker(keel) {
 }
 
 // scripts/three-flight/keel/face-culling.js
+function cabinFacePlanes(g) {
+  const position = g.attributes.position, count = g.index?.count ?? position.count, planes = new Float32Array(count / 3 * 4);
+  const a = new Vector3(), b = new Vector3(), c = new Vector3(), at = (i) => g.index ? g.index.getX(i) : i;
+  for (let i = 0, j = 0; i < count; i += 3, j += 4) {
+    a.fromBufferAttribute(position, at(i));
+    b.fromBufferAttribute(position, at(i + 1)).sub(a);
+    c.fromBufferAttribute(position, at(i + 2)).sub(a);
+    b.cross(c).normalize();
+    planes[j] = b.x;
+    planes[j + 1] = b.y;
+    planes[j + 2] = b.z;
+    planes[j + 3] = -b.dot(a);
+  }
+  return planes;
+}
 function createCabinFaceCulling(root) {
   const entries = [], eye = new Vector3(), inverse = new Matrix4();
   const margin = 0.12, refreshDistance = 0.08;
@@ -48970,17 +48965,7 @@ function createCabinFaceCulling(root) {
     const material2 = mesh.material, g = mesh.geometry;
     if (!mesh.isMesh || mesh.isSkinnedMesh || mesh.isInstancedMesh || Array.isArray(material2) || material2.transparent || material2.side !== FrontSide || !g?.attributes.position || g.groups.length || g.drawRange.start !== 0 || g.drawRange.count !== Infinity) return;
     const position = g.attributes.position, count = g.index?.count ?? position.count, source = Uint32Array.from({ length: count }, (_, i) => g.index ? g.index.getX(i) : i), index = new BufferAttribute(source.slice(), 1).setUsage(DynamicDrawUsage);
-    const planes = new Float32Array(count / 3 * 4), a = new Vector3(), b = new Vector3(), c = new Vector3();
-    for (let i = 0, j = 0; i < count; i += 3, j += 4) {
-      a.fromBufferAttribute(position, source[i]);
-      b.fromBufferAttribute(position, source[i + 1]).sub(a);
-      c.fromBufferAttribute(position, source[i + 2]).sub(a);
-      b.cross(c).normalize();
-      planes[j] = b.x;
-      planes[j + 1] = b.y;
-      planes[j + 2] = b.z;
-      planes[j + 3] = -b.dot(a);
-    }
+    const planes = g.userData.cabinPlanes || cabinFacePlanes(g);
     const geometry = new BufferGeometry();
     for (const [key, attribute] of Object.entries(g.attributes)) geometry.setAttribute(key, attribute);
     geometry.setIndex(index);
@@ -49053,7 +49038,7 @@ function createCabinFaceCulling(root) {
 
 // scripts/three-flight/keel/room.js
 var keelRoomKind = (kind, data = {}) => data.meta?.type ? shipCabinFamily(data.meta.type, data.meta.profile || { role: kind === "fighter" ? "fighter" : "line", length: kind === "bastion" ? 50 : 20 }) : kind === "fighter" ? "fighter" : data.console?.carrier || data.meta?.profile?.carrier ? "flagship" : kind;
-function renderKeelPass(renderer, scene, camera, { exposure = 1.12, shadowDirty = false } = {}) {
+function withKeelSettings(renderer, { exposure = 1.12, shadowDirty = false } = {}, draw) {
   const previous = { toneMapping: renderer.toneMapping, toneMappingExposure: renderer.toneMappingExposure, outputColorSpace: renderer.outputColorSpace };
   const shadow = Object.fromEntries(["enabled", "type", "autoUpdate", "needsUpdate"].map((k) => [k, renderer.shadowMap[k]]));
   try {
@@ -49061,16 +49046,21 @@ function renderKeelPass(renderer, scene, camera, { exposure = 1.12, shadowDirty 
     renderer.toneMappingExposure = exposure;
     renderer.outputColorSpace = SRGBColorSpace;
     Object.assign(renderer.shadowMap, { enabled: true, type: PCFShadowMap, autoUpdate: false, needsUpdate: shadowDirty });
-    renderer.clearDepth();
-    renderer.render(scene, camera);
+    return draw();
   } finally {
     Object.assign(renderer, previous);
     Object.assign(renderer.shadowMap, shadow);
   }
 }
-function createKeelRoom(backend, kind = "horizon") {
+function renderKeelPass(renderer, scene, camera, settings) {
+  return withKeelSettings(renderer, settings, () => {
+    renderer.clearDepth();
+    renderer.render(scene, camera);
+  });
+}
+function createKeelRoom(backend, kind = "horizon", baked = null) {
   const factory = { horizon: createKeelInterior, fighter: createFighterInterior, bastion: createBattleshipInterior, flagship: createFlagshipInterior }[kind];
-  const keel = factory({ renderer: backend.three }), scene = new Scene();
+  const keel = factory({ renderer: backend.three, baked }), scene = new Scene();
   keel.root.position.fromArray(cabinPose(kind === "flagship" ? "bastion" : kind).eye).sub(new Vector3(...keel.config.pilot));
   scene.add(keel.root);
   const console2 = kind === "fighter" ? createFighterInstruments(keel) : new BridgeConsole(kind);
@@ -49112,6 +49102,38 @@ function createKeelRoom(backend, kind = "horizon") {
     geometries: [],
     obstacles: [],
     walk: kind === "bastion" || kind === "flagship" ? createKeelWalker(keel) : null,
+    async prepare(camera, texture) {
+      status?.update(null, 0, texture);
+      console2.update(null, 0, camera);
+      if (console2.radar) for (const ally of [false, true]) {
+        const b = console2.radar.batch(ally, 1);
+        for (const o of [b.mesh, b.dot]) {
+          o.count = 1;
+          o.visible = true;
+          o.setColorAt(0, new Color(16777215));
+        }
+        b.stem.visible = true;
+        b.stem.geometry.setDrawRange(0, 2);
+      }
+      sparks.update({ event: 1, hullFlash: 1 }, 0, 0);
+      const culling = /* @__PURE__ */ new Map();
+      scene.traverse((o) => {
+        if (o.isMesh || o.isPoints || o.isLine) {
+          culling.set(o, o.frustumCulled);
+          o.frustumCulled = false;
+        }
+      });
+      try {
+        faceCulling.update(camera);
+        await withKeelSettings(backend.three, { exposure: keel.config.exposure }, () => backend.three.compileAsync(scene, camera));
+        renderKeelPass(backend.three, scene, camera, { exposure: keel.config.exposure, shadowDirty });
+        shadowDirty = false;
+      } finally {
+        faceCulling.restore();
+        for (const [o, value] of culling) o.frustumCulled = value;
+        sparks.update({ event: 0, hullFlash: 0 }, 0, 0);
+      }
+    },
     render(camera, data) {
       const hull = data.console?.hull ?? 100, shield = data.console?.shield ?? 100;
       const fx = data.feedback || { alert: hull < 35 || shield <= 0, event: 0 };
@@ -49153,8 +49175,53 @@ var Cabins = class {
     this.exteriorFeed = new ExteriorFeed();
   }
   room(kind) {
-    if (!this.rooms.has(kind)) this.rooms.set(kind, createKeelRoom(this.backend, kind));
+    if (!this.rooms.has(kind)) this.rooms.set(kind, createKeelRoom(this.backend, kind, this.baked?.[kind]));
     return this.rooms.get(kind);
+  }
+  async prepare(base, signal) {
+    this.baked = await loadBakedCabins(base, signal);
+    const renderer = this.backend.three, texture = new DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+    texture.needsUpdate = true;
+    texture.userData.displayEncoded = this.backend.managed;
+    const camera = this.camera;
+    camera.fov = 60;
+    camera.aspect = this.backend.width / this.backend.height;
+    camera.near = 0.035;
+    camera.far = 180;
+    camera.updateProjectionMatrix();
+    let feedbackPrepared = false;
+    try {
+      for (const kind of Object.keys(this.baked)) {
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        signal?.throwIfAborted();
+        const room = this.room(kind), pose = cabinPose(kind === "flagship" ? "bastion" : kind);
+        camera.position.fromArray(pose.eye);
+        camera.lookAt(camera.position.clone().add(new Vector3(0, 0, -1)));
+        camera.updateMatrixWorld();
+        const target = renderer.getRenderTarget(), viewport = renderer.getViewport(new Vector4()), scissor = renderer.getScissor(new Vector4()), scissorTest = renderer.getScissorTest();
+        try {
+          renderer.setRenderTarget(null);
+          renderer.setViewport(0, 0, 1, 1);
+          renderer.setScissor(0, 0, 1, 1);
+          renderer.setScissorTest(true);
+          await room.prepare(camera, texture);
+          signal?.throwIfAborted();
+          if (!feedbackPrepared) {
+            await this.feedbackOverlay.prepare(renderer);
+            if (this.backend.managed) this.exteriorFeed.captureFramebuffer(renderer, "", -Infinity);
+            feedbackPrepared = true;
+          }
+        } finally {
+          renderer.setRenderTarget(target);
+          renderer.setViewport(viewport);
+          renderer.setScissor(scissor);
+          renderer.setScissorTest(scissorTest);
+        }
+      }
+      this.prepared = true;
+    } finally {
+      texture.dispose();
+    }
   }
   walk(pose, keys, dt) {
     return this.rooms.get(this.last?.roomKey)?.walk?.(pose, keys, dt);
@@ -49963,9 +50030,10 @@ function practiceTargetHit(M, start, end, target, layout, previousPosition = tar
 
 // scripts/three-flight/effect-vertices.js
 var EffectVertices = class {
-  constructor() {
+  constructor(stride = 10) {
     this.array = new Float32Array(1024);
     this.length = 0;
+    this.stride = stride;
   }
   reset() {
     this.length = 0;
@@ -49990,9 +50058,9 @@ var EffectVertices = class {
     a[i + 6] = size;
   }
   vertex(x, y, z, r, g, b, u, v, age, type) {
-    this.reserve(10);
+    this.reserve(this.stride);
     const a = this.array, i = this.length;
-    this.length += 10;
+    this.length += this.stride;
     a[i] = x;
     a[i + 1] = y;
     a[i + 2] = z;
@@ -50002,7 +50070,7 @@ var EffectVertices = class {
     a[i + 6] = u;
     a[i + 7] = v;
     a[i + 8] = age;
-    a[i + 9] = type;
+    if (this.stride === 10) a[i + 9] = type;
   }
   view() {
     return this.array.subarray(0, this.length);
@@ -50281,7 +50349,6 @@ vec4 spaceScene(vec3 d,float kind){
  return vec4(.002,.007,.012,.20);
 }
 
-    ${groundCloudShader}
     ${shieldRippleGLSL}
     ${hullShadingGLSL}
     void main(){
@@ -50290,15 +50357,6 @@ vec4 spaceScene(vec3 d,float kind){
         float energy=shieldRipple(normalize(vLocal),uImpact.xyz,uImpact.w,uShield.y);
         if(energy<.001)discard;
         gl_FragColor=vec4(uTint*energy,uOpacity);return;
-      }
-      if(uMode>11.5&&uMode<12.5){bool inside=all(lessThan(abs(uImpact.xyz),vec3(1.)));if(inside?gl_FrontFacing:!gl_FrontFacing)discard;gl_FragColor=groundCloud(vLocal,uImpact.xyz,uImpact.w,uShield.x,uShield.y);return;}
-      if(uMode>12.5&&uMode<13.5){
-        float radius=length(vLocal.xz),age=uImpact.w;
-        float n=cloudNoise(vec3(vLocal.xz*19.,age*.4));
-        float front=exp(-pow((radius-.82)/(.022+age*.018),2.));
-        float dust=exp(-pow((radius-.70)/(.10+age*.04),2.))*(.5+n*.5);
-        vec3 color=mix(vec3(.48,.40,.30),vec3(2.,1.25,.45),exp(-age*5.));
-        gl_FragColor=vec4(color,(front*.8+dust*.25)*uOpacity);return;
       }
       if(uMode>13.5&&uMode<14.5){
         if(vLocal.y<0.)discard;
@@ -50458,8 +50516,6 @@ vec4 spaceScene(vec3 d,float kind){
           return [part, range.floatCount ? g.upload() : null];
         })));
       }
-      this.cloudVolume = new Geometry().box([2, 2, 2], [0, 0, 0]).upload();
-      this.groundShock = new Geometry().quad([-1, 0, -1], [-1, 0, 1], [1, 0, 1], [1, 0, -1], C2.hull).upload();
       this.bridgeMesh = this.makeBridge().upload();
       let beam = new Geometry();
       beam.cylinder(1, 1, [0.5, 0, 0], C2.blue, 10, 0, 1);
@@ -50725,20 +50781,6 @@ vec4 spaceScene(vec3 d,float kind){
       if (parts.turret) this.drawMesh(parts.turret, turret, opts);
       if (parts.barrels) this.drawMesh(parts.barrels, barrels, opts);
     }
-    drawMushroomClouds(p) {
-      const clouds = [...p.mushroomClouds || []].sort((a, b) => V.length(V.sub(b.pos, this.eye)) - V.length(V.sub(a.pos, this.eye)));
-      this.setBlend(false);
-      this.setDepthWrite(false);
-      for (const c of clouds) {
-        const phase = groundBlastPhase(c.age), { radius: r, height: h, opacity } = phase, at = c.pos;
-        const drift = phase.spread * 1.8, center = [at[0] + drift, at[1] + (h + r * 0.95) * 0.5, at[2] + drift * 0.35];
-        const size = [r * 1.6, (h + r * 0.95) * 0.5, r * 1.6], eye = this.eye.map((v, i) => (v - center[i]) / size[i]);
-        this.drawMesh(this.cloudVolume, M.compose(center, [0, 0, 0], size), { mode: 12, opacity, impact: [...eye, c.age], shield: [h / r, c.seed] });
-        if (phase.shockOpacity > 1e-3) this.drawMesh(this.groundShock, M.compose([at[0], at[1] + 0.8, at[2]], [0, 0, 0], [phase.shockRadius, 1, phase.shockRadius]), { mode: 13, opacity: phase.shockOpacity, impact: [0, 0, 0, c.age] });
-      }
-      this.setDepthWrite(true);
-      this.setBlend(false);
-    }
     segmentModel(a, b, radius = 1) {
       const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], len = Math.hypot(dx, dy, dz) || 1, x = dx / len, y = dy / len, z = dz / len, vertical = Math.abs(y) > 0.97;
       let zx = vertical ? y : -z, zy = vertical ? -x : 0, zz = vertical ? 0 : x;
@@ -50869,7 +50911,11 @@ vec4 spaceScene(vec3 d,float kind){
       this.setDepthWrite(true);
     }
     weaponImpact(p, pos, { visual = {}, color: color2 = [1, 0.45, 0.08], shield = false, destroy = false, muzzle = false, critical = false, areaRadius = 0 } = {}) {
-      const compact = !!visual.compact, type = compact ? 5 : muzzle ? 0 : shield ? 1 : destroy ? 3 : 2;
+      const distance = Math.hypot(pos[0] - this.eye[0], pos[1] - this.eye[1], pos[2] - this.eye[2]), focal = this.height / (2 * Math.tan(this.fov / 2));
+      const envelope = areaRadius || (visual.blastRadius || 2) * (destroy ? 8 : 3);
+      if (!(this.spawnImpactView ??= new BattleViewCulling()).update(this.vp).visible(...pos, Math.max(envelope, distance * 20 / focal))) return;
+      if (areaRadius && (p.weaponImpacts || []).some((e) => e.areaRadius === areaRadius && e.critical === critical && (p.elapsed || 0) - e.born < 0.1 && Math.hypot(...pos.map((v, i) => v - e.pos[i])) < Math.max(1, areaRadius * 0.15))) return;
+      const compact = !!visual.compact || !areaRadius && distance > 350 && envelope * focal / distance < 3, type = compact ? 5 : muzzle ? 0 : shield ? 1 : destroy ? 3 : 2;
       const radius = compact ? muzzle ? 0.2 : (visual.blastRadius || 0.35) * (destroy ? 1.8 : 1) : muzzle ? Math.max(0.7, (visual.radius || 0.15) * 5) : Math.max(1.3, visual.blastRadius || 2) * (destroy ? 3 : 1);
       (p.weaponImpacts ??= []).push({ pos: [...pos], color: shield ? [0.12, 0.6, 1] : critical ? [1, 0.82, 0.3] : color2, type, radius, compact, critical, areaRadius, elite: !!visual.elite, born: p.elapsed || 0, life: areaRadius ? areaBlastPhase(0, areaRadius, critical).life : compact ? destroy ? 0.55 : muzzle ? 0.07 : 0.15 : muzzle ? visual.elite ? 0.45 : 0.24 : destroy ? 2.6 : shield ? 0.65 : visual.elite ? 1.7 : 1.05 });
       if (p.weaponImpacts.length > 180) p.weaponImpacts.splice(0, p.weaponImpacts.length - 180);
@@ -50895,7 +50941,7 @@ vec4 spaceScene(vec3 d,float kind){
         const mid = V.scale(V.add(b.start, b.end), 0.5);
         const pixel = V.length(V.sub(mid, eye)) / focal, w = b.compact ? Math.min(pixel * 2, Math.max(b.width, pixel * 0.65)) : Math.max(b.width * 3, pixel * (b.width >= 2 ? 10 : b.width >= 0.4 ? 6 : 1.5));
         if (!view.visible(...mid, V.length(V.sub(b.end, b.start)) * 0.5 + w)) continue;
-        const alpha = Math.min(1, (1 - b.age / b.life) * 4) * 0.9;
+        const alpha = Math.min(1, b.manual ? (b.life - b.age) / Math.min(0.15, b.life * 0.25) : (1 - b.age / b.life) * 4) * 0.9;
         effectRibbon(data, b.start, b.end, eye, w, b.color[0], b.color[1], b.color[2], alpha);
       }
       for (const e of p.weaponImpacts) {
@@ -50907,8 +50953,10 @@ vec4 spaceScene(vec3 d,float kind){
           effectBillboard(data, e.pos, eye, right, up, core, phase.color, age, 2);
           const segments = ringRadius / pixel > 40 ? 48 : ringRadius / pixel > 12 ? 24 : 12;
           effectRing(data, e.pos, eye, right, up, ringRadius, width, phase.color, phase.opacity, segments);
-          const tilted = up.map((v, j) => v * Math.cos(0.7) + this.cameraForward[j] * Math.sin(0.7));
-          effectRing(data, e.pos, eye, right, tilted, ringRadius, width, phase.color, phase.opacity * 0.25, segments);
+          if (ringRadius / pixel > 40) {
+            const tilted = up.map((v, j) => v * Math.cos(0.7) + this.cameraForward[j] * Math.sin(0.7));
+            effectRing(data, e.pos, eye, right, tilted, ringRadius, width, phase.color, phase.opacity * 0.25, segments);
+          }
           continue;
         }
         const size = Math.max(pixel * (e.compact ? 1 : e.elite ? 18 : 6), Math.min(pixel * (e.compact ? 20 : e.elite ? 260 : 150), e.radius * (0.65 + age * (e.compact ? 0.5 : 1.8))));
@@ -50923,12 +50971,23 @@ vec4 spaceScene(vec3 d,float kind){
     }
     drawCombatEffects(p, time, own = this.ownModel, index = window.GalacticDemo?.state.shipIndex ?? 0) {
       const layout = LAYOUTS[index];
-      if (p.charging) {
+      const missileCharge = p.salvoQueue?.find((q) => q.manual && q.sound && q.delay > 0);
+      if (p.charging || missileCharge) {
+        const progress = missileCharge ? 1 - missileCharge.delay / missileCharge.windup : p.charge;
         const glows = [];
-        for (let m of layout.main) {
+        for (let m of missileCharge ? layout.tubes : layout.main) {
           let x = M.transform(own, m);
-          glows.push(...x, ...p.profile.weaponColor, (p.profile.visual?.muzzle || 22) * (0.35 + p.charge * 0.85));
+          glows.push(...x, ...p.profile.weaponColor, (p.profile.visual?.muzzle || 22) * (0.35 + progress * 0.85));
         }
+        this.setDepthWrite(false);
+        this.setBlend(true);
+        this.dynamicFlat(glows, true, 0.7);
+        this.setBlend(false);
+        this.setDepthWrite(true);
+      }
+      if (p.weaponCharges?.length) {
+        const glows = [];
+        for (const q of p.weaponCharges) for (const pos of q.positions) glows.push(...pos, ...q.color, q.size * (0.25 + 0.8 * q.age / q.life));
         this.setDepthWrite(false);
         this.setBlend(true);
         this.dynamicFlat(glows, true, 0.7);
@@ -50983,7 +51042,10 @@ vec4 spaceScene(vec3 d,float kind){
       this.setDepthWrite(true);
       this.drawSpecial(p, time);
       this.drawWeaponImpacts(p, projectiles);
-      this.drawMushroomClouds(p);
+    }
+    async prepareCabins(options = {}) {
+      this.cabins ??= new Cabins(this);
+      await this.cabins.prepare(options.base || "three-flight-assets/", options.signal);
     }
     drawCabin() {
       if (this.cabinRequest) {
@@ -51556,11 +51618,6 @@ function battleViewEnvironment(environment, planet = {}) {
   if (environment?.kind === "planet") return !environment.planetId && planet.id ? { ...environment, planetId: planet.id } : environment;
   return { ...planetBattleEnvironment(planet), center: [700, -12800, 0] };
 }
-function surfaceHeight(environment, x, z) {
-  if (environment?.kind !== "planet") return -Infinity;
-  const [cx, cy, cz] = environment.center, r = environment.radius;
-  return cy + Math.sqrt(Math.max(0, r * r - (x - cx) ** 2 - (z - cz) ** 2));
-}
 function terrainBlocks(environment, from, to) {
   if (!environment) return false;
   const d = to.map((v, i) => v - from[i]), o = from.map((v, i) => v - environment.center[i]);
@@ -51590,6 +51647,7 @@ function pilotWeaponStatus(environment, meta, row, target, missile = false) {
   const p = meta.profile, primaryMissile = missile && p.missile;
   const result = weaponSolution(environment, ship(row), target ? ship(target) : null, missile && !primaryMissile ? "missile" : false);
   const cooldown = row[missile && !primaryMissile ? 11 : 10] || 0;
+  if ((!missile || primaryMissile) && row[15] > 0) return { ...result, reason: "charging", ready: false, charge: 1 - row[15] / row[16], cooldown: row[15] };
   if (result.ready && cooldown > 0) {
     result.reason = "cooldown";
     result.ready = false;
@@ -51829,10 +51887,52 @@ var manifest_default = {
   }
 };
 
+// game/weapon-timing.mjs
+var weaponCues = Object.freeze({
+  Light_Fighter: { attack: 0.15, body: 0.23, windup: 0.15 },
+  Heavy_Fighter: { attack: 0.17, body: 0.48, windup: 0.22 },
+  Cruiser: { attack: 0.18, body: 1.45, windup: 0.5 },
+  Battleship: { attack: 0.34, body: 1.1, windup: 0.9 },
+  Dreadnought: { attack: 0.17, body: 0.9, windup: 1.1 },
+  Bomber: { attack: 0.95, body: 1.1, windup: 0.95 },
+  Destroyer: { attack: 0.33, body: 1, windup: 1.1 },
+  Interceptor: { attack: 0.62, body: 1.35, windup: 1.6 },
+  Titanenergetic_Frigate: { attack: 0.16, body: 0.4, windup: 0.2 },
+  Devourer_Interceptor: { attack: 0.16, body: 1.65, windup: 1.1 },
+  Iron_Behemoth: { attack: 0.3, body: 1.8, windup: 0 },
+  Reaper: { attack: 0.7, body: 8.65, windup: 2 },
+  Annihilator: { attack: 0.4, body: 1.5, windup: 0 },
+  Cargo_Ship: { attack: 0.22, body: 0.22, windup: 0.25 },
+  Large_Cargo_Ship: { attack: 0.24, body: 0.22, windup: 0.3 },
+  Colony_Ship: { attack: 0.22, body: 0.22, windup: 0.3 },
+  Recycler: { attack: 0.22, body: 0.2, windup: 0.25 },
+  Death_Star: { attack: 0.28, body: 7.7, windup: 2 },
+  Guardian: { attack: 0.6, body: 4.9, windup: 1.6 }
+});
+function manualWeaponTiming(type, cooldown) {
+  const cue = weaponCues[type], windup = cue?.windup || 0, reload = Math.max(cooldown, cue?.body || 0);
+  return { windup, reload, beam: cue?.body || 0.35, damageScale: 1.25 * (windup + reload) / cooldown };
+}
+function activeManualCues(events, tick) {
+  const active = /* @__PURE__ */ new Map();
+  for (const e of events) {
+    if (e.tick > tick) break;
+    if (e.type === "weapon-charge") active.set(e.shipId, e);
+    if (e.type === "fire" && !e.secondary) {
+      if (e.manual && e.beamDuration) active.set(e.shipId, e);
+      else active.delete(e.shipId);
+    }
+    if (e.type === "weapon-stop") active.delete(e.shipId);
+    if (e.type === "destroy") {
+      for (const [id, cue] of active) if (id === e.shipId || cue.target === e.shipId) active.delete(id);
+    }
+  }
+  return [...active.values()].filter((e) => e.tick + (e.windup || e.beamDuration) * 20 > tick).sort((a, b) => a.seq - b.seq).map((e) => ({ ...e, resume: true }));
+}
+
 // client/combat-audio.mjs
 var combatClips = Object.freeze(manifest_default.clips);
 var combatAudioSettingsKey = "galaxy.combat-audio";
-var longShots = /* @__PURE__ */ new Set(["Reaper", "Death_Star", "Guardian", "Iron_Behemoth"]);
 var defenses = {
   Swarm_Fighter: "Light_Fighter",
   Rocket_Launcher: "Bomber",
@@ -51857,8 +51957,8 @@ function hullClip(type, severe = false) {
   return severe ? "stress_medium_tear" : "stress_medium_pressure";
 }
 function createCombatAudio(env = window) {
-  const doc = env.document, buffers = /* @__PURE__ */ new Map(), voices = /* @__PURE__ */ new Set(), pending = /* @__PURE__ */ new Set(), cooldowns = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set(), wanted = /* @__PURE__ */ new Set();
-  let context, master, limiter, unlocked = false, disposed = false, epoch = 0, warned = false;
+  const doc = env.document, buffers = /* @__PURE__ */ new Map(), voices = /* @__PURE__ */ new Set(), pending = /* @__PURE__ */ new Set(), cooldowns = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set(), wanted = /* @__PURE__ */ new Set(), emitterEpoch = /* @__PURE__ */ new Map();
+  let context, master, limiter, unlocked = false, disposed = false, epoch = 0, warned = false, paused = false;
   let settings = { enabled: true, volume: 0.35 };
   const stats = { played: 0, dropped: 0, failed: 0, last: [], peakVoices: 0 };
   try {
@@ -51868,7 +51968,7 @@ function createCombatAudio(env = window) {
   } catch {
   }
   const now = () => env.performance.now();
-  const audible = () => !disposed && unlocked && settings.enabled && settings.volume > 0 && !doc.hidden;
+  const audible = () => !disposed && !paused && unlocked && settings.enabled && settings.volume > 0 && !doc.hidden;
   const warn2 = (error2) => {
     stats.failed++;
     if (!warned) {
@@ -51880,6 +51980,8 @@ function createCombatAudio(env = window) {
     epoch++;
     pending.clear();
     cooldowns.clear();
+    emitterEpoch.clear();
+    paused = false;
     for (const voice of voices) {
       voice.source.stop();
       voice.source.disconnect();
@@ -51887,6 +51989,14 @@ function createCombatAudio(env = window) {
       voice.pan?.disconnect();
     }
     voices.clear();
+  }
+  function stopEmitter(emitter) {
+    emitterEpoch.set(emitter, (emitterEpoch.get(emitter) || 0) + 1);
+    for (const channel of cooldowns.keys()) if (channel.startsWith(emitter + ":")) cooldowns.delete(channel);
+    for (const voice of voices) if (voice.emitter === emitter) {
+      voice.gain.gain.setTargetAtTime(0, context.currentTime, 0.015);
+      voice.source.stop(context.currentTime + 0.06);
+    }
   }
   function load(key) {
     if (!buffers.has(key)) {
@@ -51904,7 +52014,7 @@ function createCombatAudio(env = window) {
   function unlock() {
     if (disposed) return;
     unlocked = true;
-    if (!settings.enabled || settings.volume === 0) return;
+    if (paused || !settings.enabled || settings.volume === 0) return;
     try {
       if (!context) {
         context = new (env.AudioContext || env.webkitAudioContext)();
@@ -51931,7 +52041,7 @@ function createCombatAudio(env = window) {
       if (audible() && context) void load(key).catch(warn2);
     }
   }
-  async function play(key, { emitter = "preview", gain = 0.6, pan = 0, priority = 1, cooldown = 0.18 } = {}) {
+  async function play(key, { emitter = "preview", gain = 0.6, pan = 0, priority = 1, cooldown = 0.18, delay = 0, offset = 0, duration, age = 0 } = {}) {
     if (!combatClips[key] || !audible() || !context) return false;
     const at = now(), channel = emitter + ":" + key;
     if ((cooldowns.get(channel) ?? -Infinity) > at || pending.has(channel)) {
@@ -51940,10 +52050,11 @@ function createCombatAudio(env = window) {
     }
     cooldowns.set(channel, at + cooldown * 1e3);
     pending.add(channel);
-    const ticket = epoch;
+    const ticket = epoch, emitterTicket = emitterEpoch.get(emitter);
     try {
       const buffer = await load(key);
-      if (ticket !== epoch || !audible() || context.state !== "running" || now() - at > 350) {
+      if (context.state === "suspended" && !paused) await context.resume();
+      if (ticket !== epoch || emitterTicket !== emitterEpoch.get(emitter) || !audible() || context.state !== "running" || now() - at > 350) {
         stats.dropped++;
         return false;
       }
@@ -51966,7 +52077,20 @@ function createCombatAudio(env = window) {
         level.connect(panner);
         panner.connect(master);
       } else level.connect(master);
-      const voice = { source, gain: level, pan: panner, key, priority, at };
+      const elapsed = age + (now() - at) / 1e3, start = context.currentTime + Math.max(0, delay - elapsed), skip = offset + Math.max(0, elapsed - delay);
+      const length = Math.min(buffer.duration - skip, (duration ?? buffer.duration) - Math.max(0, elapsed - delay));
+      if (length <= 0) {
+        source.disconnect();
+        level.disconnect();
+        panner?.disconnect();
+        return false;
+      }
+      const fade = Math.min(0.06, length * 0.25), amplitude = level.gain.value;
+      level.gain.setValueAtTime(0, start);
+      level.gain.linearRampToValueAtTime(amplitude, start + Math.min(4e-3, length * 0.1));
+      level.gain.setValueAtTime(amplitude, start + length - fade);
+      level.gain.linearRampToValueAtTime(0, start + length);
+      const voice = { source, gain: level, pan: panner, key, priority, at, emitter };
       voices.add(voice);
       source.onended = () => {
         voices.delete(voice);
@@ -51974,7 +52098,7 @@ function createCombatAudio(env = window) {
         level.disconnect();
         panner?.disconnect();
       };
-      source.start();
+      source.start(start, skip, length);
       stats.played++;
       stats.peakVoices = Math.max(stats.peakVoices, voices.size);
       stats.last.push(key);
@@ -52025,7 +52149,17 @@ function createCombatAudio(env = window) {
     prepare,
     unlock,
     stop,
+    stopEmitter,
     configure,
+    pause() {
+      paused = true;
+      if (context?.state === "running") void context.suspend();
+    },
+    resume() {
+      paused = false;
+      if (unlocked) unlock();
+    },
+    isPlaying: (emitter) => [...voices].some((v) => v.emitter === emitter) || [...pending].some((c) => c.startsWith(emitter + ":")),
     get settings() {
       return { ...settings };
     },
@@ -52054,15 +52188,16 @@ function getCombatAudio(env = window) {
   return env.EmpireCombatAudio ??= createCombatAudio(env);
 }
 function createCombatSoundSession(audio) {
-  let seq = 0, previous = /* @__PURE__ */ new Map(), alerted = /* @__PURE__ */ new Set(), broken = /* @__PURE__ */ new Set(), prepared = "";
+  let seq = 0, previous = /* @__PURE__ */ new Map(), alerted = /* @__PURE__ */ new Set(), broken = /* @__PURE__ */ new Set(), prepared = "", beams = /* @__PURE__ */ new Map();
   function reset() {
     seq = 0;
     previous.clear();
     alerted.clear();
     broken.clear();
+    beams.clear();
     audio.stop();
   }
-  function consume(data, { active = true, owner, focus, listener = [0, 0, 0], namespace = data.id || "battle" } = {}) {
+  function consume(data, { active = true, owner, focus, listener = [0, 0, 0], namespace = data.id || "battle", speed = 1 } = {}) {
     const metadata = new Map((data.metadata || []).map((m) => [m.id, m])), rows = new Map((data.ships || []).map((r) => [r[0], r]));
     if (active) {
       const types = [...new Set([...metadata.values()].map((m) => m.type))].sort(), signature = types.join(",");
@@ -52071,7 +52206,8 @@ function createCombatSoundSession(audio) {
         audio.prepare([...types.map((t) => firingClip(t)), ...types.flatMap((t) => [hullClip(t), hullClip(t, true)]), "shield_hit", "shield_break", "hull_destroyed", "critical_alarm", "charge", "Bomber", "Cargo_Ship", "Light_Fighter"]);
       }
     }
-    const play = (key, e, m, { gain = 1, priority = 1, cooldown = 0.3 } = {}) => {
+    const weaponEmitter = (m) => `${namespace}:${m.id}:weapon`;
+    const play = (key, e, m, { gain = 1, priority = 1, cooldown = 0.3, ...timing } = {}) => {
       if (!key) return;
       const position = e.from || [e.x, e.y, e.z], local = m?.id === focus;
       const distance = position.every(Number.isFinite) ? Math.hypot(...position.map((v, i) => v - listener[i])) : 0;
@@ -52082,31 +52218,55 @@ function createCombatSoundSession(audio) {
         gain: level * gain,
         pan: local ? 0 : Math.max(-0.8, Math.min(0.8, (position[0] - listener[0]) / 800)) || 0,
         priority: priority + (local ? 2 : 0),
-        cooldown
+        cooldown,
+        age: Math.max(0, (data.tick - e.tick) * 0.05 / speed),
+        ...timing
       });
     };
     for (const e of data.events || []) {
-      if (e.seq <= seq) continue;
-      seq = e.seq;
-      if (!active || data.tick - e.tick > 12) continue;
+      if (!e.resume && e.seq <= seq) continue;
+      seq = Math.max(seq, e.seq);
+      if (!active || !e.resume && data.tick - e.tick > 12) continue;
       const m = metadata.get(e.shipId ?? e.source), row = rows.get(m?.id), before = previous.get(m?.id);
       if (!m) continue;
-      if (e.type === "fire") {
-        const key = firingClip(m.type, e);
-        play(key, e, m, { cooldown: longShots.has(key) ? combatClips[key].duration * 0.85 : 0.16, gain: e.secondary ? 0.55 : 1 });
-      } else if (e.type === "antimatter" && !e.harmless) play("Annihilator", e, m, { priority: 3, cooldown: 3 });
+      if (e.type === "weapon-charge") {
+        if (speed !== 1) continue;
+        if (e.resume && audio.isPlaying(weaponEmitter(m))) continue;
+        const key = firingClip(m.type, e), cue = weaponCues[key];
+        play(key, e, m, { emitter: weaponEmitter(m), delay: e.windup - (cue?.attack || 0), priority: 3, cooldown: e.windup, gain: 1 });
+      } else if (e.type === "weapon-stop") {
+        audio.stopEmitter(weaponEmitter(m));
+        beams.delete(m.id);
+      } else if (e.type === "fire") {
+        if (e.manual && /laser|ion|beam|reaper/.test(e.kind)) beams.set(m.id, e.target);
+        if (e.sound === false || e.manual && audio.isPlaying(weaponEmitter(m))) continue;
+        const key = firingClip(m.type, e), cue = weaponCues[key], beam = /laser|ion|beam|reaper/.test(e.kind);
+        play(key, e, m, {
+          emitter: e.manual ? weaponEmitter(m) : `${namespace}:${m.id}`,
+          offset: cue?.attack || 0,
+          duration: beam && (!e.manual || speed !== 1) ? (e.beamDuration || (key === "Reaper" ? 0.95 : small.has(m.type) ? 0.075 : 0.35)) / speed : void 0,
+          cooldown: e.manual ? cue?.body || 0.16 : e.secondary ? 0.16 : Math.min(0.8, cue?.body || 0.16),
+          gain: e.secondary ? 0.55 : 1,
+          priority: e.manual ? 3 : 1
+        });
+      } else if (e.type === "antimatter" && !e.harmless) play("Annihilator", e, m, { priority: 3, cooldown: 3, offset: 0.12 });
       else if (e.type === "antimatter-charge" && m.id === focus) play("charge", e, m, { gain: 0.45, cooldown: 3 });
       else if (e.type === "destroy") {
+        for (const [source, target] of beams) if (source === m.id || target === m.id) {
+          audio.stopEmitter(weaponEmitter({ id: source }));
+          beams.delete(source);
+        }
+        audio.stopEmitter(weaponEmitter(m));
         if (e.kind === "swarm-expire" || e.kind === "antimatter" && e.source === e.shipId) continue;
-        play("hull_destroyed", e, m, { priority: 3, gain: small.has(m.type) ? 0.45 : 1, cooldown: 2 });
+        play("hull_destroyed", e, m, { priority: 3, gain: small.has(m.type) ? 0.45 : 1, cooldown: 2, offset: 0.06 });
       } else if (e.type === "hit") {
         const hp = e.hp ?? row?.[6], shield = e.shieldAfter ?? row?.[7], oldShield = e.shieldBefore ?? before?.[7];
         if (shield > 0) broken.delete(m.id);
         const broke = oldShield > 0 && shield === 0 && !broken.has(m.id) && hp > 0;
         if (broke) {
           broken.add(m.id);
-          play("shield_break", e, m, { priority: 3, cooldown: 1 });
-        } else if (e.shield) play("shield_hit", e, m, { gain: 0.65, cooldown: 0.4 });
+          play("shield_break", e, m, { priority: 3, cooldown: 1, offset: 0.05 });
+        } else if (e.shield) play("shield_hit", e, m, { gain: 0.65, cooldown: 0.4, offset: 0.06 });
         if (!e.shield || (e.hullDamage ?? (before?.[6] ?? hp) - hp) > 0) {
           const severe = !!e.critical || hp <= m.maxHp * 0.35;
           play(hullClip(m.type, severe), e, m, { cooldown: severe ? 1.8 : 0.65, priority: severe ? 2 : 1 });
@@ -52127,22 +52287,14 @@ function createCombatSoundSession(audio) {
 }
 
 // scripts/three-flight/runtime.js
-function startFlightRuntime({ fleet, assets, createController = null }) {
+async function startFlightRuntime({ fleet, assets, createController = null, signal }) {
   window.GalacticDemo?.dispose?.();
   const lifetime = createLifetime(), { listen, later, scheduleFrame } = lifetime;
   const { Renderer, V, M, clamp: clamp3, mix, seeded, LAYOUTS, axes, shipMatrix, turretTransforms, jointTransforms: jointTransforms2 } = createGalaxyRender(fleet, assets);
   const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
   const CONFIG = { transitionMs: 1550, shipSwitchMs: 560, maxSpeed: 214, mainCooldown: 0.34, missileCooldown: 4, constructionSeconds: 5, researchSeconds: 4 };
-  const SHIPS = [
-    { name: "\u9A71\u9010\u8230", en: "DESTROYER", code: "D-06", serial: "06", count: 6, stats: [11e3, 500, 2e3, 5e3, 2e3, 1e3], levels: [6, 4, 8] },
-    { name: "\u5DE1\u6D0B\u8230", en: "CRUISER", code: "C-03", serial: "03", count: 3, stats: [24e3, 1400, 4200, 3600, 4500, 1800], levels: [8, 6, 9] },
-    { name: "\u62A4\u536B\u8230", en: "FRIGATE", code: "F-12", serial: "12", count: 12, stats: [4500, 300, 950, 8200, 800, 450], levels: [4, 3, 6] },
-    { name: "\u91CD\u88C5\u6218\u673A", en: "HEAVY FIGHTER", code: "HF-01", serial: "01", count: 24, stats: [900, 220, 760, 15e3, 24, 96], levels: [6, 4, 2] },
-    { name: "\u91CD\u578B\u6218\u5217\u8230", en: "BATTLESHIP", code: "BB-01", serial: "01", count: 1, stats: [68e3, 9600, 18500, 2200, 14e3, 4800], levels: [10, 9, 10] }
-  ];
-  [{ "name": "\u9A71\u9010\u8230", "count": 0, "stats": [11e3, 500, 2e3, 5e3, 2e3, 1e3], "levels": [0], "weapons": [["\u53CC\u7B49\u79BB\u5B50\u5927\u70AE", "\u7B49\u79BB\u5B50\u79D1\u6280", "PLASMA", 0]] }, { "name": "\u5DE1\u6D0B\u8230", "count": 0, "stats": [2700, 50, 400, 15e3, 800, 300], "levels": [0], "weapons": [["\u79BB\u5B50\u70AE", "\u79BB\u5B50\u79D1\u6280", "ION", 0]] }, { "name": "\u6218\u5217\u8230", "count": 0, "stats": [6e3, 200, 1e3, 1e4, 1500, 250], "levels": [0], "weapons": [["\u91CD\u578B\u8230\u70AE", "\u6B66\u5668\u79D1\u6280", "SHELL", 0]] }, { "name": "\u91CD\u578B\u6218\u673A", "count": 0, "stats": [1e3, 25, 150, 1e4, 100, 75], "levels": [0], "weapons": [["\u91CD\u578B\u6FC0\u5149\u70AE", "\u6FC0\u5149\u79D1\u6280", "LASER", 0]] }, { "name": "\u65E0\u754F\u8230", "count": 0, "stats": [7e3, 400, 700, 1e4, 750, 250], "levels": [0], "weapons": [["\u524D\u7F6E\u53CC\u6FC0\u5149\u70AE", "\u6FC0\u5149\u79D1\u6280", "LASER", 0]] }].forEach((data, i) => Object.assign(SHIPS[i], data));
-  SHIPS.splice(0, SHIPS.length, ...fleet.ships);
-  const STAT_LABELS = ["\u62A4\u7532", "\u62A4\u76FE", "\u653B\u51FB", "\u57FA\u7840\u901F\u5EA6", "\u8D27\u8231\u5BB9\u91CF", "\u71C3\u6599\u6D88\u8017"];
+  const SHIPS = [...fleet.ships];
+  const STAT_LABELS = ["\u57FA\u7840\u8230\u4F53", "\u57FA\u7840\u62A4\u76FE", "\u57FA\u7840\u653B\u51FB", "\u6218\u7565\u57FA\u7840\u822A\u901F", "\u8D27\u8231\u5BB9\u91CF", "\u57FA\u7840\u71C3\u8017"];
   const WEAPONS = [["\u4E3B\u70AE\u8BD5\u5C04", "\u4E3B\u70AE\u6F14\u7EC3", "SPINAL DEMO"], ["\u5BFC\u5F39\u8BD5\u5C04", "\u5BFC\u5F39\u6F14\u7EC3", "MISSILE DEMO"], ["\u70AE\u5854\u8BD5\u5C04", "\u70AE\u5854\u6F14\u7EC3", "TURRET DEMO"]];
   const LOCATIONS = [{ name: "\u6BCD\u661F", coords: "1:16:3", orbit: "\u6BCD\u661F\u8FD1\u5730\u8F68\u9053", en: "HOMEWORLD", description: "\u8230\u961F\u4E3B\u6E2F\u3002\u4E3A\u5F53\u524D\u8230\u8239\u63D0\u4F9B\u7EF4\u62A4\u3001\u8865\u7ED9\u548C\u865A\u62DF\u6218\u62A5\u6F14\u7EC3\u3002" }, { name: "\u524D\u54E8", coords: "1:16:4", orbit: "\u524D\u54E8\u8FD1\u5730\u8F68\u9053", en: "OUTPOST", description: "\u5916\u5C42\u8F68\u9053\u524D\u54E8\u3002\u53EF\u8BBE\u4E3A\u5F53\u524D\u6F14\u7EC3\u533A\u57DF\uFF0C\u8FDB\u884C\u8230\u8239\u7CFB\u7EDF\u6D4B\u8BD5\u3002" }];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -52324,9 +52476,11 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       });
       if (!hit) reason = "aim";
     }
-    const aimed = reason === "ready";
-    if (aimed) reason = p.charging ? "charging" : p.gunCooldown > 0 ? "cooldown" : "ready";
-    return { reason, ready: reason === "ready", aimed, charge: p.charging ? p.charge : void 0, cooldown: p.gunCooldown, range, distance };
+    const aimed = reason === "ready", missileCharge = p.salvoQueue.find((q) => q.manual && q.sound && q.delay > 0);
+    const charging = p.charging || !!missileCharge, cooldown = c.primaryKind === "missile" ? p.missileCooldown : p.gunCooldown;
+    const charge = missileCharge ? 1 - missileCharge.delay / missileCharge.windup : p.charging ? p.charge : void 0;
+    if (aimed) reason = charging ? "charging" : cooldown > 0 ? "cooldown" : "ready";
+    return { reason, ready: reason === "ready", aimed, charge, cooldown, range, distance };
   }
   function practiceSolution(weapon) {
     return { target: "\u8BF7\u9009\u62E9\u5B58\u6D3B\u76EE\u6807", range: "\u76EE\u6807\u8D85\u51FA\u5C04\u7A0B", aim: state.flight.align ? "\u6B63\u5728\u5BF9\u51C6\u63D0\u524D\u91CF" : "\u70AE\u7EBF\u672A\u5BF9\u51C6 \xB7 X \u8F85\u52A9\u7784\u51C6", charging: "\u4E3B\u6B66\u5668\u84C4\u80FD\u4E2D", cooldown: "\u4E3B\u6B66\u5668\u51B7\u5374\u4E2D", unavailable: "\u672A\u88C5\u5907\u4E3B\u6B66\u5668", ready: "\u5C04\u51FB\u89E3\u7B97\u5C31\u7EEA" }[weapon.reason];
@@ -52365,6 +52519,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       assault: null,
       detonated: null,
       reaperCut: null,
+      primaryBeam: null,
       blastHits: 0,
       shieldHits: [],
       shieldRegenDelay: 0,
@@ -52602,6 +52757,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     $("#ship-code").textContent = `${ship.en} / ${ship.serial}`;
     $("#model-class").textContent = `DEEP SPACE / ${ship.code}`;
     $("#ship-stats").innerHTML = STAT_LABELS.map((label, i) => `<div><dt>${label}</dt><dd>${fmt(ship.stats[i])}</dd></div>`).join("");
+    $("#stats-source").textContent = [ship.statsLabel, ship.statsNote, "\u6B64\u8868\u4E3A\u79D1\u6280\u524D\u57FA\u7840\u503C\uFF1B\u9776\u573A\u4F7F\u7528\u72EC\u7ACB\u6F14\u7EC3\u7F29\u653E\uFF0C\u6B63\u5F0F\u6218\u6597\u4F7F\u7528\u5165\u573A\u65F6\u79D1\u6280\u4E0E\u6218\u573A\u89C4\u5219\u3002"].filter(Boolean).join(" ");
     $("#weapon-list").innerHTML = displayWeapons.map(([name, tech, en, level], i) => `<button class="weapon-row" data-weapon="${i + 1}" title="\u67E5\u770B${name}\u5B89\u88C5\u4F4D\u7F6E"><span>${name}</span><span class="weapon-tech">${tech}${level === null ? "" : "<b>Lv." + level + "</b>"}</span></button>`).join("");
     $$(".weapon-row").forEach((b) => {
       let tag = Number(b.dataset.weapon);
@@ -52862,6 +53018,8 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   }
   function setHelp(open) {
     state.helpOpen = open;
+    if (open) combatAudio.pause();
+    else combatAudio.resume();
     keys.clear();
     mouseDown = false;
     const modal = $("#help-modal");
@@ -52881,6 +53039,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       void globalThis.flightController.setAI(enabled);
       return;
     }
+    if (state.flight.charging || state.flight.reaperCut || state.flight.primaryBeam || state.flight.salvoQueue.some((q) => q.manual)) stopWeapon();
     state.flight.ai = enabled;
     const kind = state.flight.cabinKind || cockpitClass({ role: state.flight.profile.capital ? "line" : "fighter", length: LAYOUTS[state.shipIndex].length });
     state.flight.cabinWalk = enabled && kind === "bastion";
@@ -52910,13 +53069,13 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     if (globalThis.flightController) return globalThis.flightController.fire("primary");
     if (state.flight.profile.special) return fireSpecial();
     const p = state.flight, c = p.profile;
-    if (!canFire() || p.gunCooldown > 0 || p.charging) return false;
+    if (!canFire() || p.gunCooldown > 0 || p.charging || p.reaperCut || p.primaryBeam) return false;
     if (!c.primaryKind) {
       if (c.capital && !c.fixedPrimary) {
         fireTurrets();
         return true;
       }
-      dischargeMain();
+      beginWeaponCharge();
       return true;
     }
     if (c.primaryKind === "none") {
@@ -52927,12 +53086,28 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       fireMissile();
       return true;
     }
-    if (c.chargeTime > 0) {
-      p.charging = true;
-      p.charge = 0;
-      tone("charge");
-    } else dischargeMain();
+    beginWeaponCharge();
     return true;
+  }
+  function beginWeaponCharge() {
+    const p = state.flight, c = p.profile, manual = !p.ai && c.special !== "antimatter";
+    p.shotTiming = manual ? { ...manualWeaponTiming(SHIPS[state.shipIndex].id, c.mainCooldown), manual } : { windup: c.chargeTime, reload: c.mainCooldown, beam: c.special === "reaper" ? 1.25 : c.visual.beamLife || 0.35, damageScale: 1, manual };
+    p.charging = true;
+    p.charge = 0;
+    if (manual && c.special !== "antimatter") practiceSound("weapon-charge", { kind: c.primaryKind, windup: p.shotTiming.windup });
+    else if (c.special === "antimatter") tone("charge");
+    if (!p.shotTiming.windup) dischargeMain();
+  }
+  function stopWeapon() {
+    const p = state.flight;
+    p.charging = false;
+    p.charge = 0;
+    p.reaperCut = null;
+    p.primaryBeam = null;
+    p.beams = p.beams.filter((b) => !b.manual);
+    p.missileStock += p.salvoQueue.filter((q) => q.manual).length;
+    p.salvoQueue = p.salvoQueue.filter((q) => !q.manual);
+    practiceSound("weapon-stop");
   }
   function hitSegment(a, b, t) {
     return practiceTargetHit(M, a, b, t, LAYOUTS[t.kind]);
@@ -52943,23 +53118,27 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       return;
     }
     const p = state.flight, c = p.profile, layout = LAYOUTS[state.shipIndex];
+    const timing = p.shotTiming;
     p.charging = false;
     p.charge = 0;
-    p.gunCooldown = c.mainCooldown;
+    p.gunCooldown = timing.reload;
     p.mainShots++;
-    p.shake = Math.min(0.35, c.relativeLength * 5e-3);
+    p.shake = Math.min(0.5, c.relativeLength * (timing.manual ? 8e-3 : 5e-3));
     const rays = mainRays(true);
     if (!rays.length) {
+      stopWeapon();
       p.gunCooldown = 0;
       p.mainShots--;
       notice("\u4E3B\u70AE\u6B63\u5728\u8F6C\u5411\uFF0C\u6216\u8230\u4F53\u906E\u6321\u5C04\u754C");
       return;
     }
+    if (c.beam && timing.manual) p.primaryBeam = { age: 0, life: timing.beam, damagePerSecond: c.mainDamage * timing.damageScale / timing.beam, target: selectedTarget() };
     for (const { start, dir: f } of rays) {
       renderer.weaponImpact(p, start, { visual: c.visual, color: c.weaponColor, muzzle: true });
       burst(start, c.visual.capital ? 22 : 8, c.weaponColor, 0.18, c.visual.capital ? 10 : 4);
       if (c.visual.capital) p.beams.push({ start, end: V.add(start, V.scale(f, c.visual.radius * 5)), age: 0, life: 0.18, width: c.visual.radius * 1.6, color: c.weaponColor });
       if (c.beam) {
+        if (timing.manual) continue;
         let end = V.add(start, V.scale(f, 1800)), best = 1, target = null;
         for (const t of p.targets) {
           const k = hitSegment(start, end, t);
@@ -52970,14 +53149,44 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
         }
         if (target) {
           end = start.map((v, i) => mix(v, end[i], best));
-          weaponHit(target, c.mainDamage / layout.main.length, end);
+          weaponHit(target, c.mainDamage * timing.damageScale / layout.main.length, end);
           burst(end, 14, c.weaponColor, 0.5, 18);
         }
-        p.beams.push({ start, end, age: 0, life: c.primaryKind === "laser" ? 0.65 : 0.12, width: c.visual.capital ? c.visual.radius : c.beamWidth, color: c.weaponColor });
-      } else p.projectiles.push({ pos: start, previous: [...start], velocity: V.scale(f, c.projectileSpeed), age: 0, life: 12, missile: false, damage: c.mainDamage / layout.main.length, color: c.weaponColor, kind: c.primaryKind, width: c.beamWidth, visual: c.visual });
+        p.beams.push({ start, end, age: 0, life: timing.beam, manual: timing.manual, width: (c.visual.capital ? c.visual.radius : c.beamWidth) * (timing.manual ? 1.25 : 1), color: c.weaponColor });
+      } else p.projectiles.push({ pos: start, previous: [...start], velocity: V.scale(f, c.projectileSpeed), age: 0, life: 12, missile: false, damage: c.mainDamage * timing.damageScale / layout.main.length, color: c.weaponColor, kind: c.primaryKind, width: c.beamWidth, visual: c.visual });
     }
-    tone("fire");
+    practiceSound("fire", { kind: c.primaryKind, manual: timing.manual, beamDuration: timing.beam });
     notice(c.primaryName + " \u5DF2\u5F00\u706B");
+  }
+  function updateMainBeam(dt) {
+    const p = state.flight, beam = p.primaryBeam;
+    if (!beam) return;
+    if (beam.age >= beam.life) {
+      p.primaryBeam = null;
+      return;
+    }
+    const rays = mainRays(true);
+    if (!rays.length || beam.target && beam.target.hp <= 0) {
+      stopWeapon();
+      return;
+    }
+    const step = Math.min(dt, beam.life - beam.age);
+    beam.age += step;
+    for (const { start, dir } of rays) {
+      let end = V.add(start, V.scale(dir, 1800)), best = 1, target = null;
+      for (const t of p.targets) {
+        const k = hitSegment(start, end, t);
+        if (k !== null && k < best) {
+          best = k;
+          target = t;
+        }
+      }
+      if (target) {
+        end = start.map((v, i) => mix(v, end[i], best));
+        weaponHit(target, beam.damagePerSecond * step / LAYOUTS[state.shipIndex].main.length, end);
+      }
+      p.beams.push({ start, end, age: 0, life: dt * 1.4 + 0.015, manual: true, width: (p.profile.visual.capital ? p.profile.visual.radius : p.profile.beamWidth) * 1.25, color: p.profile.weaponColor });
+    }
   }
   function updateMissileLock(dt) {
     const p = state.flight, c = p.profile;
@@ -53018,10 +53227,12 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       notice("\u5F39\u8231\u8865\u7ED9\u4E2D");
       return;
     }
+    const manual = !p.ai && c.primaryKind === "missile", timing = manual ? manualWeaponTiming(SHIPS[state.shipIndex].id, c.missileCooldown) : { windup: 0, reload: c.missileCooldown, damageScale: 1 };
     let count = Math.min(c.salvo, p.missileStock);
     p.missileStock -= count;
-    p.missileCooldown = c.missileCooldown;
-    for (let i = 0; i < count; i++) p.salvoQueue.push({ delay: i * 0.16, tube: i % LAYOUTS[state.shipIndex].tubes.length, target });
+    p.missileCooldown = timing.windup + timing.reload;
+    if (manual) practiceSound("weapon-charge", { kind: "missile", windup: timing.windup });
+    for (let i = 0; i < count; i++) p.salvoQueue.push({ delay: timing.windup + i * 0.16, tube: i % LAYOUTS[state.shipIndex].tubes.length, target, manual, sound: i === 0, windup: timing.windup, damageScale: timing.damageScale });
     notice(`${count} \u679A\u5BFC\u5F39\u987A\u5E8F\u53D1\u5C04`);
     updateHUD();
   }
@@ -53029,14 +53240,15 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     const p = state.flight, l = LAYOUTS[state.shipIndex], model = shipMatrix(p, state.shipIndex), a = axes(p);
     if (p.missileLock !== order.target || p.missileLockTime < 0.4 || !missileTargetValid({ target: order.target, defensive: p.profile.defenseOnly }, p)) {
       p.missileStock = Math.min(p.profile.missileCapacity, p.missileStock + 1);
+      if (order.manual) practiceSound("weapon-stop");
       return;
     }
     const start = M.transform(model, l.tubes[order.tube]);
     const local = l.tubeDirections[order.tube], direction = V.norm(V.sub(M.transform(model, local), M.transform(model, [0, 0, 0]))), eject = V.scale(direction, 42);
-    p.projectiles.push({ pos: start, previous: [...start], velocity: eject, ejectDirection: direction, age: 0, life: p.profile.defenseOnly ? 5 : 13, missile: true, defensive: p.profile.defenseOnly, damage: p.profile.missileDamage, target: order.target, visual: p.profile.visual, color: p.profile.weaponColor, trail: [[...start]], trailClock: 0, seed: order.tube });
+    p.projectiles.push({ pos: start, previous: [...start], velocity: eject, ejectDirection: direction, age: 0, life: p.profile.defenseOnly ? 5 : 13, missile: true, defensive: p.profile.defenseOnly, damage: p.profile.missileDamage * order.damageScale, target: order.target, visual: p.profile.visual, color: p.profile.weaponColor, trail: [[...start]], trailClock: 0, seed: order.tube });
     p.missilesFired++;
     burst(start, 12, [0.55, 0.66, 0.69], 1.2, 7);
-    tone("missile");
+    practiceSound("fire", { kind: "missile", manual: order.manual, sound: order.sound });
   }
   function burst(pos, count, color2 = [1, 0.7, 0.36], life = 0.8, speed = 22) {
     const p = state.flight;
@@ -53368,9 +53580,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       return false;
     }
     p.specialTarget = t;
-    p.charging = true;
-    p.charge = 0;
-    tone("charge");
+    beginWeaponCharge();
     return true;
   }
   function dischargeSpecial() {
@@ -53378,10 +53588,11 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     p.charging = false;
     p.charge = 0;
     if (!t || t.hp <= 0 || !p.targets.includes(t)) {
+      stopWeapon();
       notice("\u76EE\u6807\u5931\u6548 \xB7 \u53D6\u6D88\u53D1\u5C04");
       return;
     }
-    p.gunCooldown = p.profile.mainCooldown;
+    p.gunCooldown = p.shotTiming.reload;
     p.mainShots++;
     if (p.profile.special === "antimatter") {
       p.assault = { target: t, age: 0 };
@@ -53392,9 +53603,9 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       p.cameraBlend = 1;
       notice("\u53CD\u7269\u8D28\u81EA\u884C\u5BFC\u5F39 \xB7 \u81EA\u4E3B\u63A5\u8FD1");
     } else {
-      p.reaperCut = { target: t, age: 0 };
+      p.reaperCut = { target: t, age: 0, ...p.shotTiming };
       notice("\u76F8\u4F4D\u6536\u5272 \xB7 \u53CC\u675F\u6C47\u805A");
-      tone("fire");
+      practiceSound("fire", { kind: "reaper", manual: p.shotTiming.manual, beamDuration: p.shotTiming.beam });
     }
   }
   function detonateSpecial(harmless = false) {
@@ -53459,13 +53670,17 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     if (!cut) return;
     cut.age += dt;
     const t = cut.target;
-    if (cut.age > 1.25 || t.hp <= 0 || !p.targets.includes(t) || V.length(V.sub(t.pos, p.pos)) > 2200) {
+    if (cut.age > cut.beam) {
       p.reaperCut = null;
+      return;
+    }
+    if (t.hp <= 0 || !p.targets.includes(t) || V.length(V.sub(t.pos, p.pos)) > 2200) {
+      stopWeapon();
       return;
     }
     const direction = V.norm(V.sub(t.pos, p.pos));
     if (V.dot(direction, forward()) < 0.65) {
-      p.reaperCut = null;
+      stopWeapon();
       notice("\u76EE\u6807\u79BB\u5F00\u524D\u5411\u6536\u5272\u5C04\u754C");
       return;
     }
@@ -53474,7 +53689,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
       const start = M.transform(model, m);
       p.beams.push({ start, end, age: 0, life: dt * 1.4 + 0.015, width: p.profile.visual.radius * (0.65 + 0.08 * Math.sin(cut.age * 40)), color: [0.18, 1, 0.68] });
     }
-    damageTarget(t, p.profile.mainDamage / 1.25 * dt, end);
+    damageTarget(t, p.profile.mainDamage * cut.damageScale / cut.beam * dt, end);
     p.shield = Math.min(100, p.shield + dt * 8);
     if (rnd() < dt * 25) burst(end, 4, [0.3, 1, 0.78], 0.6, 25);
   }
@@ -53497,7 +53712,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     p.shake = mixExp(p.shake, 0, 5, dt);
     p.gunCooldown = Math.max(0, p.gunCooldown - dt);
     p.missileCooldown = Math.max(0, p.missileCooldown - dt);
-    if (p.charging) p.charge = Math.min(1, p.charge + dt / c.chargeTime);
+    if (p.charging) p.charge = Math.min(1, p.charge + dt / p.shotTiming.windup);
     if (p.missileStock === 0 && p.salvoQueue.length === 0) {
       p.restock += dt;
       if (p.restock >= 15) {
@@ -53570,16 +53785,20 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     updateTurrets(dt);
     if (p.charging && p.charge >= 1) {
       if ((p.align || p.ai) && (!t || t.hp <= 0)) {
-        p.charging = false;
-        p.charge = 0;
+        stopWeapon();
         notice("\u76EE\u6807\u5931\u6548 \xB7 \u5DF2\u53D6\u6D88\u84C4\u80FD");
       } else if (c.special || !(p.align || p.ai) || practiceWeaponStatus().aimed) dischargeMain();
+      else if (p.shotTiming.manual) {
+        stopWeapon();
+        notice("\u5C04\u754C\u4E22\u5931 \xB7 \u5DF2\u53D6\u6D88\u84C4\u80FD");
+      }
     }
     if (p.ai && t?.hp > 0) {
       if (p.boresightError < (c.capital ? 0.6 : 1.8)) fireMain();
       if (p.elapsed > 3 && p.missileCooldown <= 0 && t.hp > 35) fireMissile();
     }
     if (!p.ai && (keys.has("Space") || !c.capital && mouseDown)) fireMain();
+    updateMainBeam(dt);
     updateProjectiles(dt);
     p.enemyAttack -= dt;
     if (p.enemyAttack <= 0) {
@@ -54033,6 +54252,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
   scheduleFrame(moveNavIndicator);
   try {
     renderer = new Renderer($("#scene"));
+    await renderer.prepareCabins({ signal });
     const requested = new URLSearchParams(location.search).get("ship"), initial = requested ? SHIPS.findIndex((s) => s.id === requested) : 0;
     if (initial < 0) throw Error("\u672A\u627E\u5230\u8230\u578B\uFF1A" + requested);
     configureFlight(initial, true);
@@ -54040,8 +54260,7 @@ function startFlightRuntime({ fleet, assets, createController = null }) {
     document.documentElement.dataset.ready = "true";
     scheduleFrame(frame2);
   } catch (error2) {
-    lifetime.dispose();
-    renderer?.dispose();
+    dispose();
     throw error2;
   }
   window.GalacticDemo = { state, renderer, dispose, renderShipData, ships: SHIPS, config: CONFIG, enterFlight: () => transitionTo("flight"), returnArchive: () => transitionTo("archive"), selectShip, fireMain, fireMissile, setAI, setHelp, setTab, setView, switchCombatHull, setTurretMode, alignTarget, profiles: COMBAT, selectScene };
@@ -54166,7 +54385,7 @@ var shipWeaponLayouts = {
   Interceptor: { "role": "\u6838\u5B50\u70AE\u8230", "scale": 1, "primary": "\u6838\u5B50\u5927\u70AE", "kind": "nuclear", "muzzles": [[0, -0.36, -5.86]], "caliber": 0.33, "pointDefense": [[-0.56, 1.9483, -3], [0.56, 1.9483, -3], [-0.56, 1.8838, -0.1], [0.56, 1.8838, -0.1], [-0.56, 1.802, 4.7], [0.56, 1.802, 4.7], [-0.48, -2.259, -1.7], [0.48, -2.259, -1.7], [-0.48, -2.3317, 1], [0.48, -2.3317, 1], [-0.48, -2.05, 4.9], [0.48, -2.05, 4.9]] },
   Iron_Behemoth: { role: "\u8D85\u5DE8\u578B\u6307\u6325\u6BCD\u8230", scale: 2.8, primary: "\u65E0\u4E3B\u70AE \xB7 \u8FD1\u9632\u81EA\u536B", kind: null, muzzles: [], caliber: 0, pointDefense: [...pairs(1.65, 1.606, [-4.8]), ...pairs(1.5, 1.271, [-1.2]), ...pairs(1.3, 1.541, [1.1]), ...pairs(0.62, 1.673, [3]), ...pairs(2.2, 0.662, [5.25]), ...pairs(3.53, 0.673, [5.7]), ...pairs(0.5, 2.842, [5.75])] },
   Devourer_Interceptor: { "role": "\u53CC\u4E3B\u70AE\u622A\u51FB\u8230", "scale": 1, "primary": "\u53CC\u91CD\u578B\u4E3B\u70AE", "kind": "heavy", "muzzles": [[-1.67, -1.05, -7.02], [1.67, -1.05, -7.02]], "caliber": 0.3, "pointDefense": [[-1.67, 0.0547, -4.8], [1.67, 0.0547, -4.8], [-1.67, -0.0534, -1.5], [1.67, -0.0534, -1.5], [-2.85, 0.46, 4.65], [2.85, 0.46, 4.65]] },
-  Titanenergetic_Frigate: { "role": "\u5C0F\u578B\u9AD8\u7EA7\u6218\u673A", "scale": 0.4, "primary": "\u4E2D\u592E\u4E3B\u70AE", "kind": "advanced", "muzzles": [[0, -0.4, -7.01]], "caliber": 0.21, "pointDefense": [[-3.32, 0.8055, 0.1], [3.32, 0.8055, 0.1], [-3.32, 0.628, 1.23], [3.32, 0.628, 1.23]] }
+  Titanenergetic_Frigate: { "role": "\u91CD\u88C5\u9635\u7EBF\u62A4\u536B\u8230", "scale": 0.4, "primary": "\u4E2D\u592E\u4E3B\u70AE", "kind": "advanced", "muzzles": [[0, -0.4, -7.01]], "caliber": 0.21, "pointDefense": [[-3.32, 0.8055, 0.1], [3.32, 0.8055, 0.1], [-3.32, 0.628, 1.23], [3.32, 0.628, 1.23]] }
 };
 shipWeaponLayouts.Titanenergetic_Frigate.pointDefense = [];
 shipWeaponLayouts.Titanenergetic_Frigate.primary = "\u4E2D\u592E\u805A\u80FD\u4E3B\u70AE + \u4E24\u4FA7\u5341\u4E8C\u8054\u5BFC\u5F39\u53E3";
@@ -54324,6 +54543,8 @@ function createBattlePresentation({ state, M, V, LAYOUTS, shipMatrix }) {
     constructor() {
       this.impacts = [];
       this.flashes = [];
+      this.ribbons = new EffectVertices(9);
+      this.glows = new EffectVertices();
     }
     event(e, battle) {
       if (e.type === "fire") this.flashes.push({ pos: e.from, color: this.color(e.kind), age: 0, life: 0.22 });
@@ -54355,16 +54576,13 @@ function createBattlePresentation({ state, M, V, LAYOUTS, shipMatrix }) {
       r.setBlend(false, true);
     }
     draw(r, battle, allWeapons) {
-      const data = [], glows = [], focal = r.height / (2 * Math.tan(r.fov / 2)), eye = r.eye;
+      const data = this.ribbons.reset(), glows = this.glows.reset(), focal = r.height / (2 * Math.tan(r.fov / 2)), eye = r.eye;
       const pixelSize = (p) => Math.max(0.015, V.length(V.sub(p, eye)) / focal);
       const ribbon = (a, b, color2, width, alpha = 1) => {
-        const direction = V.sub(b, a), mid = V.scale(V.add(a, b), 0.5), side = V.norm(V.cross(direction, V.sub(eye, mid)));
-        if (!Number.isFinite(side[0])) return;
-        const w = Math.max(width, pixelSize(mid) * 8), offset = V.scale(side, w);
-        const points = [V.sub(a, offset), V.add(a, offset), V.sub(b, offset), V.add(b, offset)];
-        for (const i of [0, 1, 2, 2, 1, 3]) data.push(...V.sub(points[i], eye), ...color2, i < 2 ? 0 : 1, i % 2 ? 1 : -1, alpha);
+        const pixel = Math.hypot((a[0] + b[0]) * 0.5 - eye[0], (a[1] + b[1]) * 0.5 - eye[1], (a[2] + b[2]) * 0.5 - eye[2]) / focal;
+        effectRibbon(data, a, b, eye, Math.max(width, pixel * 8), ...color2, alpha);
       };
-      const glow = (p, c, size, alpha = 1) => glows.push(...p, ...c.map((v) => v * alpha), size);
+      const glow = (p, c, size, alpha = 1) => glows.point(...p, c[0] * alpha, c[1] * alpha, c[2] * alpha, size);
       if (allWeapons) {
         for (const beam of state.flight.beams.slice(-240)) {
           const alpha = Math.max(0, 1 - beam.age / beam.life);
@@ -54414,8 +54632,8 @@ function createBattlePresentation({ state, M, V, LAYOUTS, shipMatrix }) {
         }
       }
       r.setBlend(true, false);
-      if (data.length) r.drawRibbons(new Float32Array(data));
-      if (glows.length) r.dynamicFlat(glows, true, 1);
+      if (data.length) r.drawRibbons(data.view());
+      if (glows.length) r.dynamicFlat(glows.view(), true, 1);
       r.setBlend(false, true);
     }
   }
@@ -54591,6 +54809,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.playTime = 0;
       this.playSpeed = 1;
       this.elapsedFrames = [];
+      this.qualityFrames = 0;
       this.contacts = /* @__PURE__ */ new Map();
       this.vesselVisuals = /* @__PURE__ */ new Map();
       this.projectileVisuals = /* @__PURE__ */ new Map();
@@ -54599,7 +54818,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
     }
     sound(data) {
       if (!this.audioSession) return;
-      this.audioSession.consume({ ...data, id: this.id || this.replayId, metadata: this.metadata, ships: this.rows }, { active: !window.commandSceneActive && !this.paused && state.mode === "flight", owner: this.owner, focus: this.selected, listener: renderer.eye || state.flight.pos });
+      this.audioSession.consume({ ...data, id: this.id || this.replayId, metadata: this.metadata, ships: this.rows }, { active: !window.commandSceneActive && !this.paused && state.mode === "flight", owner: this.owner, focus: this.selected, listener: renderer.eye || state.flight.pos, speed: this.replay ? this.playSpeed : 1 });
     }
     name(type) {
       return type === "Swarm_Fighter" ? "\u8702\u7FA4\u6218\u6597\u673A" : SHIPS[this.indices?.get(type)]?.name || type;
@@ -54679,7 +54898,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       };
       $("#native-leave").onclick = () => this.leave();
       $("#native-pause").onclick = () => this.togglePlayback();
-      $("#native-speed").onchange = (e) => this.playSpeed = Number(e.target.value);
+      $("#native-speed").onchange = (e) => {
+        this.playSpeed = Number(e.target.value);
+        this.audio?.stop();
+        this.sound({ tick: this.playTime * 20, events: activeManualCues(this.replay.events, this.playTime * 20) });
+      };
       $("#native-seek").oninput = (e) => this.seek(Number(e.target.value));
       const canvas = $("#scene");
       listen(canvas, "wheel", (e) => {
@@ -54785,7 +55008,11 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         this.frameBattle(true);
         this.paused = false;
       } else this.paused = !this.paused;
-      if (this.paused) this.audio?.stop();
+      if (this.paused) this.audio?.pause();
+      else {
+        this.audio?.resume();
+        this.sound({ tick: this.playTime * 20, events: activeManualCues(this.replay.events, this.playTime * 20) });
+      }
       this.syncHeader();
     }
     clearVisuals() {
@@ -54797,17 +55024,19 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.visualContacts?.clear();
       this.visualContactsReady = false;
       this.fortressPresentation?.clear();
-      for (const key of ["shieldHits", "beams", "particles", "projectiles", "weaponImpacts", "specialBlasts", "mushroomClouds"]) state.flight[key] = [];
+      for (const key of ["shieldHits", "beams", "particles", "projectiles", "weaponImpacts", "specialBlasts", "weaponCharges"]) state.flight[key] = [];
     }
     seek(seconds) {
       if (!this.replay) return;
       this.playTime = clamp3(seconds, 0, this.report.duration);
       this.replayCursor = replayEventCursor(this.replay.events, this.playTime * 20);
       this.clearVisuals();
-      for (const e of this.replay.events) if (e.tick <= seconds * 20 && e.tick > seconds * 20 - GROUND_BLAST_LIFETIME * 20) this.groundBlast(e, (seconds * 20 - e.tick) * 0.05);
       this.predicted = null;
       this.collisionRows = null;
       this.update(0);
+      const cues = activeManualCues(this.replay.events, this.playTime * 20);
+      for (const e of cues) this.effect(e);
+      this.sound({ events: cues, tick: this.playTime * 20 });
       this.syncHeader();
     }
     receive(data) {
@@ -54870,10 +55099,9 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       this.selected = id;
       this.predicted = null;
       const m = this.metadata[id], index = this.indices.get(m.type);
-      const blasts = state.flight.specialBlasts, clouds = state.flight.mushroomClouds;
+      const blasts = state.flight.specialBlasts;
       configureFlight(index, true);
       state.flight.specialBlasts = blasts || [];
-      state.flight.mushroomClouds = clouds || [];
       state.flight.targets = [];
       state.flight.ai = true;
       this.contacts.clear();
@@ -55230,14 +55458,16 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       return { color: profile.weaponColor || [0.5, 0.8, 1], visual };
     }
     fleetBurst(point, count, color2, life, speed) {
-      const left = Math.max(0, 800 - state.flight.particles.length);
-      if (left && count) burst(point, Math.min(count, left), color2, life, speed);
+      if (this.effectView && !this.effectView.visible(...point, life * speed)) return;
+      const distance = Math.hypot(...point.map((v, i) => v - (renderer.eye || state.flight.pos)[i])), near = distance < 350;
+      const left = Math.max(0, Math.floor(800 * this.quality) - state.flight.particles.length);
+      if (left && count) burst(point, Math.min(Math.ceil(count * (near ? 1 : 0.25 * this.quality)), left), color2, life, speed);
     }
-    muzzle(id, mount = 0, secondary = false) {
+    muzzle(id, mount = 0, secondary = false, missile = false) {
       const row = this.row(id), index = this.indices.get(this.metadata[id]?.type), layout = LAYOUTS[index];
       if (!row || !layout) return null;
       if (this.metadata[id]?.profile.ground) return battleMount({ x: row[1], y: row[2], z: row[3], yaw: row[4], pitch: 0, turretYaw: row[13], turretPitch: row[14], profile: this.metadata[id].profile }, this.metadata[id].profile.hardpoints?.main?.[0]);
-      return M.transform(shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index), (secondary ? layout.joints.filter((j) => j.role === "secondary").map((j) => j.mount) : layout.main)[mount] || [0, 0, 0]);
+      return M.transform(shipMatrix({ pos: row.slice(1, 4), yaw: Math.PI - row[4], pitch: row[5], roll: row[12] || 0 }, index), (missile ? layout.tubes : secondary ? layout.joints.filter((j) => j.role === "secondary").map((j) => j.mount) : layout.main)[mount] || [0, 0, 0]);
     }
     beamEnd(from, id, fallback) {
       const row = this.row(id);
@@ -55245,32 +55475,27 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       const center = row.slice(1, 4), radius = this.metadata[id].profile.radius || 1, k = projectileContact(from, center, center, radius) ?? 1;
       return from.map((v, i) => mix(v, center[i], k));
     }
-    groundBlast(e, age = 0) {
-      const m = this.metadata[e.shipId], source = this.metadata[e.source];
-      if (!m?.profile.ground || source?.type !== "Bomber" || !["hit", "destroy"].includes(e.type) || e.shield && e.type !== "destroy") return;
-      const p = state.flight, clouds = p.mushroomClouds ??= [];
-      if (clouds.some((c) => c.shipId === e.shipId && Math.abs(c.tick - e.tick) < 30)) return;
-      const env = this.snapshot?.environment || this.replay?.environment;
-      if (!env) return;
-      clouds.push({ shipId: e.shipId, tick: e.tick, pos: [e.x, Math.max(surfaceHeight(env, e.x, e.z) + 2, e.y - 4), e.z], age, seed: e.shipId * 1.73 + e.tick * 0.01 });
-      if (clouds.length > 16) clouds.shift();
-    }
     effect(e) {
       if (e.type === "destroy" && e.kind === "antimatter" && e.shipId === e.source) return;
-      this.presentation.event(e, this);
-      this.groundBlast(e);
       const p = state.flight;
       if (e.projectileId !== void 0 && e.type !== "fire") {
         this.projectiles = (this.projectiles || []).filter((q) => q.id !== e.projectileId);
         p.projectiles = (p.projectiles || []).filter((q) => q.id !== e.projectileId);
         this.projectileVisuals.delete(e.projectileId);
       }
-      if (e.type === "fire") {
+      if (e.type === "weapon-charge") {
+        const index = this.indices.get(this.metadata[e.shipId]?.type), profile = COMBAT[index];
+        (p.weaponCharges ??= []).push({ source: e.shipId, index, missile: e.kind === "missile", age: Math.max(0, ((this.replay ? this.playTime * 20 : this.snapshot?.tick ?? e.tick) - e.tick) * 0.05), life: e.windup, color: profile.weaponColor, size: profile.visual.muzzle, positions: (e.kind === "missile" ? LAYOUTS[index].tubes : LAYOUTS[index].main).map((_, i) => this.muzzle(e.shipId, i, false, e.kind === "missile")).filter(Boolean) });
+      } else if (e.type === "weapon-stop") {
+        p.weaponCharges = (p.weaponCharges || []).filter((q) => q.source !== e.shipId);
+        p.beams = p.beams.filter((q) => q.source !== e.shipId || !q.manual);
+      } else if (e.type === "fire") {
+        if (!e.secondary) p.weaponCharges = (p.weaponCharges || []).filter((q) => q.source !== e.shipId);
         const index = this.indices?.get(this.metadata[e.shipId]?.type), profile = COMBAT[index] || p.profile, { visual, color: color2 } = this.weaponStyle(index, e.kind, e.secondary);
         const mounts = /laser|ion|beam|reaper/.test(e.kind) ? Math.max(1, e.secondary ? LAYOUTS[index]?.joints.filter((j) => j.role === "secondary").length || 0 : LAYOUTS[index]?.main.length || 0) : 1;
         for (let mount = 0; mount < mounts; mount++) {
           const from = /laser|ion|beam|reaper/.test(e.kind) ? this.muzzle(e.shipId, mount, e.secondary) || e.from : e.from;
-          if (/laser|ion|beam|reaper/.test(e.kind)) p.beams.push({ source: e.shipId, target: e.target, mount, secondary: e.secondary, start: from, end: this.beamEnd(from, e.target, e.to), age: 0, life: visual.beamLife || 0.35, width: visual.radius || profile.beamWidth || 0.12, color: color2, compact: visual.compact });
+          if (/laser|ion|beam|reaper/.test(e.kind)) p.beams.push({ source: e.shipId, target: e.target, mount, secondary: e.secondary, start: from, end: this.beamEnd(from, e.target, e.to), age: Math.max(0, ((this.replay ? this.playTime * 20 : this.snapshot?.tick ?? e.tick) - e.tick) * 0.05), life: e.beamDuration || (/reaper/.test(e.kind) ? 0.95 : visual.compact ? 0.075 : 0.35), width: (visual.radius || profile.beamWidth || 0.12) * (e.manual ? 1.25 : 1), color: color2, compact: visual.compact, manual: e.manual });
           else if (this.replay) {
             const delta = V.sub(e.to, from), speed = e.speed || (e.kind === "missile" ? 210 : 540);
             p.projectiles.push({ id: e.projectileId, source: e.shipId, side: this.metadata[e.shipId]?.side, target: e.target, pos: [...from], previous: [...from], velocity: e.velocity || V.scale(V.norm(delta), speed), speed, age: 0, life: V.length(delta) / speed + 0.2, missile: e.kind === "missile", trail: [[...from]], color: color2, visual, kind: e.kind });
@@ -55325,18 +55550,22 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
       if (visual && contact) visual.contact = contact;
       return contact?.pos || to;
     }
-    update(dt) {
-      this.presentation.update(dt);
-      const now = performance.now();
-      if (this.frameTime) this.elapsedFrames.push(now - this.frameTime);
+    updateQuality(now = performance.now()) {
+      if (this.frameTime && now - this.frameTime < 500) this.elapsedFrames.push(now - this.frameTime);
       this.frameTime = now;
       if (this.elapsedFrames.length > 600) this.elapsedFrames.shift();
       if (window.battleBenchmark?.fixedQuality !== void 0) {
         this.quality = clamp3(Number(window.battleBenchmark.fixedQuality) || 1, 0.4, 1);
-      } else if (this.elapsedFrames.length % 60 === 0) {
+      } else if (this.elapsedFrames.length >= 60 && ++this.qualityFrames % 60 === 0) {
         const mean = this.elapsedFrames.slice(-60).reduce((a, b) => a + b, 0) / 60;
         this.quality = clamp3(this.quality + (mean > 29 ? -0.12 : mean < 20 ? 0.03 : 0), 0.4, 1);
       }
+    }
+    update(dt) {
+      const visualDt = this.replay ? this.paused ? 0 : dt * this.playSpeed : dt;
+      this.presentation.update(visualDt);
+      const now = performance.now();
+      this.updateQuality(now);
       if (!this.rows.length) return;
       const p = state.flight;
       if (this.replay) {
@@ -55395,7 +55624,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         } else this.frameBattle();
       }
       this.applyOwn();
-      p.elapsed += dt;
+      p.elapsed += visualDt;
       p.boostActive = keys.has("ShiftLeft") || keys.has("ShiftRight") || p.boost;
       updateCamera(dt);
       p.shake *= Math.exp(-dt * 5);
@@ -55420,18 +55649,23 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           joint.aligned = true;
         }
       }
-      this.updateVisuals(dt, now);
+      this.updateVisuals(visualDt, now);
       document.body.classList.toggle("battle-overview", this.overview);
     }
     // Shared by the standalone battlefield and the map; no UI or simulation side effects.
     updateVisuals(dt, now = performance.now()) {
       const p = state.flight;
+      this.effectView = (this.effectView ?? new BattleViewCulling()).update(renderer.vp);
       this.visualContacts ??= new ProjectileVisualContacts();
-      this.visualContacts.update(this.metadata, (id) => this.row(id));
-      this.visualContactsReady = true;
-      p.mushroomClouds = (p.mushroomClouds || []).filter((c) => {
-        c.age += this.replay ? this.paused ? 0 : dt * this.playSpeed : dt;
-        return c.age < GROUND_BLAST_LIFETIME;
+      this.visualContactsReady = false;
+      if ((this.replay ? p.projectiles : this.projectiles)?.length) {
+        this.visualContacts.update(this.metadata, (id) => this.row(id));
+        this.visualContactsReady = true;
+      }
+      p.weaponCharges = (p.weaponCharges || []).filter((q) => {
+        q.age += dt;
+        q.positions = (q.missile ? LAYOUTS[q.index].tubes : LAYOUTS[q.index].main).map((_, i) => this.muzzle(q.source, i, false, q.missile)).filter(Boolean);
+        return q.age < q.life && this.rows[q.source]?.[6] > 0;
       });
       p.beams = p.beams.filter((b) => {
         b.age += dt;
@@ -55439,7 +55673,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
           b.start = this.muzzle(b.source, b.mount, b.secondary) || b.start;
           b.end = this.beamEnd(b.start, b.target, b.end);
         }
-        return b.age < b.life;
+        return b.age < b.life && (!b.manual || this.rows[b.source]?.[6] > 0 && this.rows[b.target]?.[6] > 0);
       });
       p.particles = p.particles.filter((q) => {
         q.age += dt;
@@ -55474,7 +55708,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         for (const id of this.projectileVisuals.keys()) if (!liveIds.has(id)) this.projectileVisuals.delete(id);
       } else p.projectiles = p.projectiles.filter((q) => {
         if (this.paused) return true;
-        const step = dt * this.playSpeed;
+        const step = dt;
         q.age += step;
         const target = this.row(q.target);
         if (q.missile && target && q.age > 0.2) {
@@ -55544,7 +55778,7 @@ var createFlightController = ({ state, renderer, SHIPS, COMBAT, LAYOUTS, keys, $
         r.drawFortress(environment, this.renderNamespace || "", this.metadata, this.rows, this.fortressPresentation, time, this.snapshot?.platformDeaths || this.replay?.events || this.snapshot?.effects || this.snapshot?.events || []);
       }
       const candidates = this.metadata.filter((m) => (showGround || !m.profile.ground) && this.rows[m.id]?.[6] > 0 && this.indices.has(m.type)).map((m) => {
-        const d = Math.max(1, V.length(V.sub(this.rows[m.id].slice(1, 4), r.eye)));
+        const row = this.row(m.id), d = Math.max(1, Math.hypot(row[1] - r.eye[0], row[2] - r.eye[1], row[3] - r.eye[2]));
         return { id: m.id, d, pixels: m.profile.length * focal / d };
       }).sort((a, b) => b.pixels - a.pixels);
       if (this.fullDetail && candidates.every((c) => c.pixels >= 8)) {
@@ -55958,7 +56192,7 @@ try {
     const { fleet, assets } = await loadFleetAssets({ signal: loading2.signal, includeBattleModels: battlefield ? true : "ships" });
     window.FlightFleet = fleet;
     window.BattleFleetAssets = assets;
-    const app = startFlightRuntime({ fleet, assets, createController: battlefield ? createFlightController : null });
+    const app = await startFlightRuntime({ fleet, assets, createController: battlefield ? createFlightController : null, signal: loading2.signal });
     app.loadedMs = performance.now() - started;
     document.documentElement.dataset.renderer = "three";
   }

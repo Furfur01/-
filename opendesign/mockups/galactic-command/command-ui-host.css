@@ -1,9 +1,18 @@
 /* Page shell only. Workspace styles live inside their Shadow DOM. */
+.resources .dark-matter-resource{text-align:left;border-left:1px solid #a6dbc640;padding:0 0 0 18px;color:#a6dbc6;min-height:44px}
+.resources .dark-matter-resource:hover{background:#a6dbc610}
+@media(max-width:800px){.resources .resource:nth-child(4){display:none}.resources .dark-matter-resource:last-child{display:flex;padding-left:9px}.resources .dark-matter-resource span{font-size:10px}.resources .resource{gap:5px}}
 #content-page.command-ui-workspace{inset:0;width:auto;border:0;border-radius:0;background:transparent;backdrop-filter:none;overflow:hidden;pointer-events:none}
 #content-page.command-ui-workspace>.page-heading{display:none}
 #content-page.command-ui-workspace>#page-body{position:absolute;inset:0;padding:0;overflow:hidden;background:transparent;pointer-events:none}
 .command-ui-root{display:block;width:100%;height:100%;min-height:0;pointer-events:auto}
 .command-ui-root[data-page=buildings],.command-ui-root[data-page=defense]{pointer-events:none}
+.command-ui-root[data-page=fleet]{pointer-events:none}
+body.fleet-planning:has(#content-page.active.command-ui-workspace)>.topbar,body.fleet-planning:has(#content-page.active.command-ui-workspace)>.bottom-bar{background:transparent!important;backdrop-filter:none}
+body.fleet-planning #orbit-dock{right:448px}
+body.fleet-planning #galaxy-inspector,body.fleet-planning #black-hole-panel{display:none}
+@media(max-width:1050px){body.fleet-planning #orbit-dock{right:402px}}
+@media(max-width:700px){body.fleet-planning #orbit-dock{left:12px;right:12px;top:130px;bottom:auto;max-height:100px;overflow:auto}body.fleet-planning #orbit-dock .dock-top{display:none}body.fleet-planning #system-orbits{padding:5px}body.fleet-planning #system-orbits button{min-height:70px}body.fleet-planning #system-orbits button img{width:30px;height:30px}}
 body:has(#content-page.command-ui-workspace.active) .aurora-game-controls{display:none}
 #detail-modal{background:#131e21;color:#e2e9e4;border-color:#b4cdc44d}
 #detail-modal .report-body>p:first-child{padding:14px;background:#09101488;border:1px solid #b4cdc425;border-radius:3px}

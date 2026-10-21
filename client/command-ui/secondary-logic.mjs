@@ -1,3 +1,4 @@
+import {darkMatterRules} from '../../game/dark-matter.mjs';
 export const resourceNames = ['金属', '晶体', '气体'];
 export const reportNames = {battle:'战斗',spy:'侦察',fleet:'舰队',explore:'探索',scan:'雷达',missile:'导弹',system:'系统'};
 export const reportName = r => reportNames[r.type] || '其他';
@@ -31,6 +32,6 @@ export function missileReason(api,target,count){
 }
 export function purchaseQuote(balance,resource,size,quantity){
   const valid=Number.isInteger(resource)&&resource>=0&&resource<=2&&[1,10,100].includes(size)&&Number.isInteger(quantity)&&quantity>=1&&quantity<=100;
-  const cost=size*quantity,amount=cost*10000;
+  const cost=size*quantity,amount=cost*darkMatterRules.resourcePerUnit;
   return {cost,amount,reason:!valid?'兑换数量需为 1–100 的整数':cost>balance?'暗物质不足':''};
 }

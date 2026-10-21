@@ -9,16 +9,28 @@ export function systemTypes(seed,system,galaxy=1){
   return types;
 }
 
+// Request-local index: directory/state projections visit hundreds of systems.
+// Rebuild once per projection so colonization and NPC changes are never stale.
+export function planetsBySystem(world){
+  const systems=new Map();
+  for(const p of Object.values(world.planets)){
+    const key=p.position.slice(0,2).join(':');
+    if(!systems.has(key))systems.set(key,[]);
+    systems.get(key).push(p);
+  }
+  return systems;
+}
+
 // Shared by the public directory, system snapshots and actual colonization.
 // Reserve NPC orbits first, then fill missing ordinary planet types using only
 // empty orbits. Existing colonies and in-flight destinations are left alone.
-export function systemBiomes(world,galaxy,system){
+export function systemBiomes(world,galaxy,system,local=Object.values(world.planets).filter(p=>p.position[0]===galaxy&&p.position[1]===system)){
   const types=systemTypes(world.biomeSeed??0,system,galaxy),fixed=new Set(),camps=new Set();
-  for(const p of Object.values(world.planets)){
+  for(const p of local){
     if(p.moon||p.position[0]!==galaxy||p.position[1]!==system)continue;
     const index=p.position[2]-1;fixed.add(index);types[index]=planetType(p).id;if(p.npc)camps.add(index);
   }
-  for(const {slot}of plannedNpcs(world,galaxy,system)){camps.add(slot-1);types[slot-1]='terrestrial';}
+  for(const {slot}of plannedNpcs(world,galaxy,system,local)){camps.add(slot-1);types[slot-1]='terrestrial';}
   for(const m of world.missions||[])if(m.task==='colonize'&&m.phase==='outbound'&&m.position[0]===galaxy&&m.position[1]===system){
     const index=m.position[2]-1;if(fixed.has(index))continue;
     fixed.add(index);if(Object.hasOwn(planetTypes,m.colonyBiome))types[index]=m.colonyBiome;

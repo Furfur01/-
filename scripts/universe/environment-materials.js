@@ -71,19 +71,24 @@ void main(){
 }
 
 export function createBlackHoleMaterial(){
- return new T.ShaderMaterial({vertexShader:vertex,side:T.BackSide,transparent:true,depthWrite:true,uniforms:{uEye:{value:new T.Vector3()},uForward:{value:new T.Vector3()},uTime:{value:0},uRadius:{value:250}},fragmentShader:`
+ return new T.ShaderMaterial({vertexShader:vertex,side:T.BackSide,transparent:true,premultipliedAlpha:true,depthWrite:true,uniforms:{uEye:{value:new T.Vector3()},uForward:{value:new T.Vector3()},uTime:{value:0},uRadius:{value:250}},fragmentShader:`
 varying vec3 vLocal;uniform vec3 uEye,uForward;uniform float uTime,uRadius;uniform mat4 projectionMatrix;
+#ifdef BLACK_HOLE_LAYER
+layout(location=0) out vec4 holeResult;
+layout(location=1) out vec4 lensResult;
+#define gl_FragColor holeResult
+uniform mat3 uViewRotation;
+#endif
 #include <common>
 #include <logdepthbuf_pars_fragment>
 ${blackHoleFunctions}
-${celestialNoise}
 ${rayDepth}
 void main(){
  vec3 dir=normalize(vLocal-uEye),original=dir,pos=uEye;float b=dot(pos,dir),disc=b*b-dot(pos,pos)+324.;
  if(disc<0.||b>0.)discard;float entry=max(0.,-b-sqrt(disc));pos+=dir*entry;
  vec3 crossRay=cross(pos,dir);float h2=dot(crossRay,crossRay),transmission=1.,firstHit=-1.;vec3 emission=vec3(0.);bool captured=false;
  for(int i=0;i<220;i++){
-  float r=length(pos);if(r<1.015){captured=true;break;}if(r>19.)break;
+  float r=length(pos);if(r<1.015){captured=true;if(firstHit<0.)firstHit=length(pos-uEye);break;}if(r>19.)break;
   float stepSize=clamp(r*.065,.045,.85);vec3 previous=pos,acc=bend(pos,h2);
   pos+=dir*stepSize+.5*acc*stepSize*stepSize;dir+=.5*(acc+bend(pos,h2))*stepSize;
   if(previous.y*pos.y<0.){
@@ -92,16 +97,27 @@ void main(){
   }
   if(transmission<.015)break;
  }
- float impact=sqrt(h2),ring=exp(-pow((impact-2.598)/.025,2.)),edge=1.-smoothstep(13.,17.8,impact);
- if(edge<.001)discard;emission+=vec3(1.,.80,.49)*ring*.32;
- vec3 color=emission+(captured?vec3(0.):universeSky(normalize(dir)))*transmission;
- gl_FragColor=vec4(color,edge);rayDepth(firstHit>0.?firstHit:max(.001,-b),original);
+ float impact=sqrt(h2),ring=exp(-pow((impact-2.598)/.025,2.)),opacity=captured?1.:1.-transmission;
+ #ifdef BLACK_HOLE_LAYER
+ // The same traced ray drives background refraction, not a second painted sky.
+ vec3 outgoing=uViewRotation*normalize(dir),incoming=uViewRotation*original;
+ float lens=(1.-smoothstep(10.,17.8,impact))*smoothstep(.05,.2,-outgoing.z);
+ vec4 from=projectionMatrix*vec4(incoming,0.),to=projectionMatrix*vec4(outgoing,0.);
+ vec2 offset=to.xy/max(.05,to.w)*.5-from.xy/from.w*.5;
+ lensResult=vec4(offset*lens,lens,1.);
+ if(opacity<.001&&ring<.001&&lens<.001)discard;
+ #else
+ // Direct scene drawing leaves empty rays transparent; the compositor owns lensing.
+ if(opacity<.001&&ring<.001)discard;
+ #endif
+ emission+=vec3(1.,.80,.49)*ring*.32;
+ gl_FragColor=vec4(emission,opacity);rayDepth(firstHit>0.?firstHit:max(.001,-b),original);
  ${output}
 }`});
 }
 
-export function createSkyMaterial(){return new T.ShaderMaterial({vertexShader:vertex,side:T.BackSide,depthTest:false,depthWrite:false,fragmentShader:`varying vec3 vLocal;${celestialNoise}
-void main(){gl_FragColor=vec4(universeSky(normalize(vLocal)),1.);${output}}`});}
+export function createSkyMaterial(){return new T.ShaderMaterial({uniforms:{uCoreFocus:{value:0}},vertexShader:vertex,side:T.BackSide,depthTest:false,depthWrite:false,fragmentShader:`varying vec3 vLocal;uniform float uCoreFocus;${celestialNoise}
+void main(){gl_FragColor=vec4(universeSky(normalize(vLocal))*mix(1.,.22,uCoreFocus),1.);${output}}`});}
 
 export function createNpcMaterial(){return new T.ShaderMaterial({uniforms:{uLight:{value:new T.Vector3(-.5,.6,1)},uEye:{value:new T.Vector3()}},vertexShader:`
 attribute vec3 emission;varying vec3 p,n,c,e;
@@ -119,17 +135,19 @@ void main(){vec3 N=normalize(n),V=normalize(uEye-p),L=normalize(uLight);float su
 ${output}
 }`,vertexColors:true});}
 
-export function createGalaxyMaterial(){return new T.ShaderMaterial({uniforms:{uOpacity:{value:1},uZoom:{value:1},uDPR:{value:1}},transparent:true,blending:T.AdditiveBlending,depthWrite:false,vertexColors:true,vertexShader:`
-attribute vec2 star;uniform float uZoom,uDPR;varying float brightness,fade;varying vec3 tint;
+export function createGalaxyMaterial(){return new T.ShaderMaterial({uniforms:{uOpacity:{value:1},uZoom:{value:1},uDPR:{value:1},uCoreCut:{value:new T.Vector4(0,1,0,1)},uCoreShape:{value:new T.Vector3(1,1,1)}},transparent:true,blending:T.AdditiveBlending,depthWrite:false,vertexColors:true,vertexShader:`
+attribute vec2 star;uniform float uZoom,uDPR;uniform vec4 uCoreCut;uniform vec3 uCoreShape;varying float brightness,fade,coreFocus;varying vec3 tint;
 #include <common>
 #include <logdepthbuf_pars_vertex>
 void main(){vec4 eye=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*eye;fade=smoothstep(25000.,150000.,length(eye.xyz));brightness=star.y;tint=color;gl_PointSize=max(1.,star.x*uDPR*uZoom);
+float coreRadius=length(position/vec3(1.,uCoreShape.y,1.))/uCoreShape.x;coreFocus=uCoreCut.x*(1.-smoothstep(.85,1.2,coreRadius));
+if(coreRadius<1.&&position.y*uCoreCut.w>=0.&&dot(position.xz,uCoreCut.yz)>length(position.xz)*uCoreShape.z)fade*=1.-uCoreCut.x;
 #include <logdepthbuf_vertex>
 }`,fragmentShader:`
-varying float brightness,fade;varying vec3 tint;uniform float uOpacity;
+varying float brightness,fade,coreFocus;varying vec3 tint;uniform float uOpacity;
 #include <common>
 #include <logdepthbuf_pars_fragment>
-void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;float halo=exp(-r*r*5.),core=1.-smoothstep(.12,.55,r);gl_FragColor=vec4(tint,brightness*(core*.6+halo*.4)*fade*uOpacity);
+void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;float halo=exp(-r*r*5.),core=1.-smoothstep(.12,.55,r);gl_FragColor=vec4(tint,brightness*(core*.6+halo*.4)*fade*mix(uOpacity,.72,coreFocus));
 #include <logdepthbuf_fragment>
 ${output}
 }`});}

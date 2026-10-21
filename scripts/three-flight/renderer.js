@@ -1,5 +1,3 @@
-import {groundCloudShader} from './ground-cloud-shader.js';
-import {groundBlastPhase} from '../../game/ground-blast.mjs';
 import {areaBlastPhase} from './area-blast.js';
 import {fortressConnections,fortressSocket,FORTRESS} from '../../game/fortress-layout.mjs';
 import {createFortressGeometry,createFloatingPlatformGeometry} from './fortress-models.js';
@@ -143,7 +141,6 @@ vec4 spaceScene(vec3 d,float kind){
  return vec4(.002,.007,.012,.20);
 }
 
-    ${groundCloudShader}
     ${shieldRippleGLSL}
     ${hullShadingGLSL}
     void main(){
@@ -152,15 +149,6 @@ vec4 spaceScene(vec3 d,float kind){
         float energy=shieldRipple(normalize(vLocal),uImpact.xyz,uImpact.w,uShield.y);
         if(energy<.001)discard;
         gl_FragColor=vec4(uTint*energy,uOpacity);return;
-      }
-      if(uMode>11.5&&uMode<12.5){bool inside=all(lessThan(abs(uImpact.xyz),vec3(1.)));if(inside?gl_FrontFacing:!gl_FrontFacing)discard;gl_FragColor=groundCloud(vLocal,uImpact.xyz,uImpact.w,uShield.x,uShield.y);return;}
-      if(uMode>12.5&&uMode<13.5){
-        float radius=length(vLocal.xz),age=uImpact.w;
-        float n=cloudNoise(vec3(vLocal.xz*19.,age*.4));
-        float front=exp(-pow((radius-.82)/(.022+age*.018),2.));
-        float dust=exp(-pow((radius-.70)/(.10+age*.04),2.))*(.5+n*.5);
-        vec3 color=mix(vec3(.48,.40,.30),vec3(2.,1.25,.45),exp(-age*5.));
-        gl_FragColor=vec4(color,(front*.8+dust*.25)*uOpacity);return;
       }
       if(uMode>13.5&&uMode<14.5){
         if(vLocal.y<0.)discard;
@@ -266,8 +254,6 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       super(canvas,{vertexSource,fragmentSource,flatVertex,flatFragment,impactVertex,impactFragment},assets,options);
       this.jointMeshes=fleet.parts.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});this.shipMeshes=fleet.ships.map(s=>{const g=new Geometry();g.data=fleet.vertices.subarray(s.offset,s.offset+s.floatCount);return g.upload();});
       this.defenseMeshes=new Map();for(const [index,ship]of fleet.ships.entries()){const parts=assets.ships.find(a=>a.id===ship.id)?.defenseParts;if(parts?.base)this.defenseMeshes.set(index,Object.fromEntries(Object.entries(parts).map(([part,range])=>{const g=new Geometry();g.data=assets.vertices.subarray(range.offset,range.offset+range.floatCount);return [part,range.floatCount?g.upload():null];})));}
-      this.cloudVolume=new Geometry().box([2,2,2],[0,0,0]).upload();
-      this.groundShock=new Geometry().quad([-1,0,-1],[-1,0,1],[1,0,1],[1,0,-1],C.hull).upload();
       this.bridgeMesh=this.makeBridge().upload();
       let beam=new Geometry();beam.cylinder(1,1,[.5,0,0],C.blue,10,0,1);this.beamMesh=beam.upload();let plume=new Geometry();plume.data=plumeMeshData();this.plumeMesh=plume.upload();
       let missile=new Geometry();missile.cylinder(.11,.95,[0,0,0],C.light,8);missile.cylinder(.11,.32,[.63,0,0],C.light,8,0,0,0);this.missileMesh=missile.upload();this.moonMesh=new Geometry().sphere(1,64,36).upload();this.moonTexture=this.texture(makeMoonTexture());
@@ -433,19 +419,6 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       if(parts.turret)this.drawMesh(parts.turret,turret,opts);
       if(parts.barrels)this.drawMesh(parts.barrels,barrels,opts);
     }
-    drawMushroomClouds(p){
-      const clouds=[...(p.mushroomClouds||[])].sort((a,b)=>V.length(V.sub(b.pos,this.eye))-V.length(V.sub(a.pos,this.eye)));
-      this.setBlend(false);this.setDepthWrite(false);
-      for(const c of clouds){
-        const phase=groundBlastPhase(c.age),{radius:r,height:h,opacity}=phase,at=c.pos;
-        // Wind gradually stretches the entire volume; the density field itself rolls.
-        const drift=phase.spread*1.8,center=[at[0]+drift,at[1]+(h+r*.95)*.5,at[2]+drift*.35];
-        const size=[r*1.6,(h+r*.95)*.5,r*1.6],eye=this.eye.map((v,i)=>(v-center[i])/size[i]);
-        this.drawMesh(this.cloudVolume,M.compose(center,[0,0,0],size),{mode:12,opacity,impact:[...eye,c.age],shield:[h/r,c.seed]});
-        if(phase.shockOpacity>.001)this.drawMesh(this.groundShock,M.compose([at[0],at[1]+.8,at[2]],[0,0,0],[phase.shockRadius,1,phase.shockRadius]),{mode:13,opacity:phase.shockOpacity,impact:[0,0,0,c.age]});
-      }
-      this.setDepthWrite(true);this.setBlend(false);
-    }
     segmentModel(a,b,radius=1){
       const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz)||1,x=dx/len,y=dy/len,z=dz/len,vertical=Math.abs(y)>.97;
       let zx=vertical?y:-z,zy=vertical?-x:0,zz=vertical?0:x;const norm=Math.hypot(zx,zy,zz)||1;zx/=norm;zy/=norm;zz/=norm;
@@ -523,7 +496,13 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
         this.setBlend(false);this.setDepthWrite(true);
     }
         weaponImpact(p,pos,{visual={},color=[1,.45,.08],shield=false,destroy=false,muzzle=false,critical=false,areaRadius=0}={}){
-      const compact=!!visual.compact,type=compact?5:muzzle?0:shield?1:destroy?3:2;
+      const distance=Math.hypot(pos[0]-this.eye[0],pos[1]-this.eye[1],pos[2]-this.eye[2]),focal=this.height/(2*Math.tan(this.fov/2));
+      const envelope=areaRadius||(visual.blastRadius||2)*(destroy?8:3);
+      if(!(this.spawnImpactView??=new BattleViewCulling()).update(this.vp).visible(...pos,Math.max(envelope,distance*20/focal)))return;
+      // Co-located splash notifications share one visual shell, not one shell
+      // per damaged ship. Authoritative damage/events are never coalesced.
+      if(areaRadius&&(p.weaponImpacts||[]).some(e=>e.areaRadius===areaRadius&&e.critical===critical&&(p.elapsed||0)-e.born<.1&&Math.hypot(...pos.map((v,i)=>v-e.pos[i]))<Math.max(1,areaRadius*.15)))return;
+      const compact=!!visual.compact||!areaRadius&&distance>350&&envelope*focal/distance<3,type=compact?5:muzzle?0:shield?1:destroy?3:2;
       const radius=compact?(muzzle?.2:(visual.blastRadius||.35)*(destroy?1.8:1)):muzzle?Math.max(.7,(visual.radius||.15)*5):Math.max(1.3,visual.blastRadius||2)*(destroy?3:1);
       (p.weaponImpacts??=[]).push({pos:[...pos],color:shield?[.12,.6,1]:critical?[1,.82,.3]:color,type,radius,compact,critical,areaRadius,elite:!!visual.elite,born:p.elapsed||0,life:areaRadius?areaBlastPhase(0,areaRadius,critical).life:compact?(destroy?.55:muzzle?.07:.15):muzzle?(visual.elite?.45:.24):destroy?2.6:shield?.65:visual.elite?1.7:1.05});
       if(p.weaponImpacts.length>180)p.weaponImpacts.splice(0,p.weaponImpacts.length-180);
@@ -551,7 +530,7 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
         const mid=V.scale(V.add(b.start,b.end),.5);
         const pixel=V.length(V.sub(mid,eye))/focal,w=b.compact?Math.min(pixel*2,Math.max(b.width,pixel*.65)):Math.max(b.width*3,pixel*(b.width>=2?10:b.width>=.4?6:1.5));
         if(!view.visible(...mid,V.length(V.sub(b.end,b.start))*.5+w))continue;
-        const alpha=Math.min(1,(1-b.age/b.life)*4)*.9;
+        const alpha=Math.min(1,b.manual?(b.life-b.age)/Math.min(.15,b.life*.25):(1-b.age/b.life)*4)*.9;
         effectRibbon(data,b.start,b.end,eye,w,b.color[0],b.color[1],b.color[2],alpha);
       }
       for(const e of p.weaponImpacts){
@@ -566,8 +545,7 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
           // Keep the authored 48 segments close up; subpixel arcs need fewer.
           const segments=ringRadius/pixel>40?48:ringRadius/pixel>12?24:12;
           effectRing(data,e.pos,eye,right,up,ringRadius,width,phase.color,phase.opacity,segments);
-          const tilted=up.map((v,j)=>v*Math.cos(.7)+this.cameraForward[j]*Math.sin(.7));
-          effectRing(data,e.pos,eye,right,tilted,ringRadius,width,phase.color,phase.opacity*.25,segments);
+          if(ringRadius/pixel>40){const tilted=up.map((v,j)=>v*Math.cos(.7)+this.cameraForward[j]*Math.sin(.7));effectRing(data,e.pos,eye,right,tilted,ringRadius,width,phase.color,phase.opacity*.25,segments);}
           continue;
         }
         const size=Math.max(pixel*(e.compact?1:e.elite?18:6),Math.min(pixel*(e.compact?20:e.elite?260:150),e.radius*(.65+age*(e.compact?.5:1.8))));
@@ -580,8 +558,14 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
     }
     drawCombatEffects(p,time,own=this.ownModel,index=window.GalacticDemo?.state.shipIndex??0){const layout=LAYOUTS[index];
       // Weapon beams join the shared impact batch for soft cores and halos.
-      if(p.charging){
-        const glows=[];for(let m of layout.main){let x=M.transform(own,m);glows.push(...x,...p.profile.weaponColor,(p.profile.visual?.muzzle||22)*(.35+p.charge*.85))}
+      const missileCharge=p.salvoQueue?.find(q=>q.manual&&q.sound&&q.delay>0);
+      if(p.charging||missileCharge){
+        const progress=missileCharge?1-missileCharge.delay/missileCharge.windup:p.charge;
+        const glows=[];for(let m of missileCharge?layout.tubes:layout.main){let x=M.transform(own,m);glows.push(...x,...p.profile.weaponColor,(p.profile.visual?.muzzle||22)*(.35+progress*.85))}
+        this.setDepthWrite(false);this.setBlend(true);this.dynamicFlat(glows,true,.7);this.setBlend(false);this.setDepthWrite(true);
+      }
+      if(p.weaponCharges?.length){
+        const glows=[];for(const q of p.weaponCharges)for(const pos of q.positions)glows.push(...pos,...q.color,q.size*(.25+.8*q.age/q.life));
         this.setDepthWrite(false);this.setBlend(true);this.dynamicFlat(glows,true,.7);this.setBlend(false);this.setDepthWrite(true);
       }
       const trails=(this.trailVertices??=new EffectVertices()).reset(),heads=(this.headVertices??=new EffectVertices()).reset(),eye=this.eye;
@@ -616,8 +600,9 @@ const impactFragment="precision mediump float;\r\n          varying vec3 color;v
       if(heads.length)this.dynamicFlat(heads.view(),true,1,true);if(particles.length)this.dynamicFlat(particles.view(),true,1,true);
       this.setBlend(false);this.setDepthWrite(true);
       this.drawSpecial(p,time);
-      this.drawWeaponImpacts(p,projectiles);this.drawMushroomClouds(p);
+      this.drawWeaponImpacts(p,projectiles);
     }
+    async prepareCabins(options={}){this.cabins??=new Cabins(this);await this.cabins.prepare(options.base||'three-flight-assets/',options.signal);}
     drawCabin(){if(this.cabinRequest){this.cabins??=new Cabins(this);this.cabins.draw(this.cabinRequest);}}
     endFrame(){const stats=super.endFrame();if(!this.managed)this.drawCabin();return stats;}
     dispose(){this.cabins?.dispose();super.dispose();}

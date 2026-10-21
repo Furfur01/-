@@ -19,7 +19,12 @@ export function battleStorage(saveFile){
     }
     return {...world,battles};
   }
-  function compact(world,manifest){for(const[id,b]of Object.entries(world.battles||{}))if(b.status==='finished'&&b.settled)world.battles[id]=manifest.battles[id];}
+  function compact(world,manifest){for(const[id,b]of Object.entries(world.battles||{})){
+    const saved=manifest.battles[id];
+    // A battle may finish while an older active checkpoint is being written.
+    // Compact only the exact finished generation acknowledged by the worker.
+    if(!b.storage&&b.status==='finished'&&b.settled&&saved?.status==='finished'&&saved.settled&&saved.storage===`${id}-${b.tick}-${b.eventSeq}.json.gz`)world.battles[id]=saved;
+  }}
   function prune(manifest){
     const keep=new Set(Object.values(manifest.battles||{}).map(b=>b.storage));
     // Only files in this save's dedicated directory, never user/model assets.

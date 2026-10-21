@@ -11,7 +11,7 @@ export function mergeFleetAssets(data, vertices, extra, extraVertices, {shipsOnl
   let offset = vertices.length;
   for (const ship of missing) {
     combined.set(extraVertices.subarray(ship.full.offset, ship.full.offset + ship.full.floatCount), offset);
-    fleet.ships.push({id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: 'FLEET', serial: '', count: 0, stats: ship.stats, combatRules:ship.combatRules, statsSource: '实时战斗', levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length});
+    fleet.ships.push({id: ship.id, name: ship.name, en: ship.id.toUpperCase(), code: 'FLEET', serial: '', count: 0, stats: ship.stats, combatRules:ship.combatRules, statsSource:ship.statsSource,statsLabel:ship.statsLabel,statsNote:ship.statsNote,economyLabel:ship.economyLabel, levels: [], weapons: [], offset, floatCount: ship.full.floatCount, relativeLength: ship.length});
     fleet.layouts.push({...ship.layout,bridge:shipCabinSeat(ship.id,ship.layout)});
     fleet.profiles.push({...data.profiles[2], role: ship.name, className: ship.id.toUpperCase(), length:'舰长比例 '+Math.round(ship.length), relativeLength: ship.length, ground:!!ship.profile.ground, capital: ship.profile.role !== 'fighter', maxSpeed: ship.profile.speed * 8, turnRate: ship.profile.turn, primaryName: ship.profile.primaryName||'舰载主武器', primaryKind: ship.profile.kind, beam: ship.profile.beam, projectileSpeed:ship.profile.projectileSpeed, mainCooldown: ship.profile.cooldown, chargeTime:0, salvo: 0, missileCapacity: 0, turretDamage:0, secondary:null, fixedPrimary: ship.profile.fixed, defenseOnly: ship.stats[2] === 0});
     offset += ship.full.floatCount;

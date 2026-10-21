@@ -2,6 +2,7 @@ import * as T from 'three';
 import galaxyLayout from '../../opendesign/mockups/planet-construction-review/galaxy-layout.json' with {type:'json'};
 import {buildLogisticsData,buildPatrolData,auroraAsteroidGeometry,auroraCometPosition,strategyData,territoryGeometry,constellationLinks} from './environment-geometry.js';
 import {createStellarMaterials,createStellarNoise,createBlackHoleMaterial,createSkyMaterial,createNpcMaterial,createGalaxyMaterial,createCometMaterial} from './environment-materials.js';
+import {createCoreAtmosphere} from './core-atmosphere.js';
 
 export {strategyData,territoryGeometry,constellationLinks} from './environment-geometry.js';
 export const WORLD_SCALE=100;
@@ -60,6 +61,7 @@ export function createWorldEnvironment({scene,camera,onError=console.error}={}){
  let territoryData={cells:[],vertices:[],borders:[],regions:[]},links=null;
  const forward=new T.Vector3(),projection=new T.Vector3(),light=new T.Vector3(),eyeLocal=new T.Vector3(),frustum=new T.Frustum(),matrix=new T.Matrix4(),bounds=new T.Sphere();
  const patrolGeometry=own(geometryFromInterleaved(buildPatrolData())),patrolMaterial=own(new T.MeshStandardMaterial({vertexColors:true,metalness:.55,roughness:.48}));
+ const coreAtmosphere=createCoreAtmosphere({root,signal:controller.signal,blackHole:hole});
  // Only local shader lighting is used for NPCs; the host supplies physical lights for facilities.
  const logisticsGeometry=Object.fromEntries(Object.entries(buildLogisticsData()).map(([k,v])=>[k,own(geometryFromInterleaved(v))]));
  const portMaterial=own(new T.MeshStandardMaterial({vertexColors:true,metalness:.55,roughness:.52})),trafficMaterial=portMaterial;
@@ -88,8 +90,8 @@ export function createWorldEnvironment({scene,camera,onError=console.error}={}){
   1,0,0,0,0,1,1,1,1,0,0,0,
   0,1,0,0,0,1,1,1,1,0,0,0
  ]),12));
- // This is a detached object group, not another world or a render pass. The host
- // calls renderer.compileAsync(prewarmRoot, camera, scene) before starting draw.
+ // Resource probes share the real world's materials. The host briefly attaches
+ // them for shader compilation and a one-pixel draw under its loading overlay.
  const prewarmRoot=new T.Group();prewarmRoot.name='environment-prewarm';
  const warm=(name,object)=>{object.name=name;prewarmRoot.add(object);};
  warm('sky',new T.Mesh(unitSphere,sky.material));warm('black-hole',new T.Mesh(blackBound,blackMaterial));
@@ -104,7 +106,7 @@ export function createWorldEnvironment({scene,camera,onError=console.error}={}){
  warm('constellations',new T.LineSegments(lineProbe,linksMaterial));
 
  const report=(label,error)=>{if(!disposed&&error?.name!=='AbortError')onError(new Error(`${label}: ${error?.message||error}`,{cause:error}));};
- const ready=fetch(ASSETS+'galaxy-barred-b.points.bin',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.arrayBuffer();}).then(data=>{
+ const catalogueReady=fetch(ASSETS+'galaxy-barred-b.points.bin',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.arrayBuffer();}).then(data=>{
   if(disposed)return;if(data.byteLength!==galaxyLayout.pointCount*20)throw Error('Galaxy B catalogue length mismatch');
   const source=new Float32Array(data),positions=new Float32Array(galaxyLayout.pointCount*3),points=new Float32Array(galaxyLayout.pointCount*2),colors=new Float32Array(galaxyLayout.pointCount*3).fill(1);
   for(let i=0;i<galaxyLayout.pointCount;i++){for(let j=0;j<3;j++)positions[i*3+j]=source[i*5+j]*WORLD_SCALE;points[i*2]=source[i*5+3];points[i*2+1]=source[i*5+4];}
@@ -173,9 +175,12 @@ export function createWorldEnvironment({scene,camera,onError=console.error}={}){
   pickTargets=[{...blackHole},...state.systems.map(s=>({...s,id:s.id,type:'system',radius:s.radius||starRadius(s.id)})),...state.planets.filter(p=>p.npc&&!p.moon&&npcTypes[p.npcType]).map(p=>({...p,id:p.key,type:'planet'})),...state.logistics.filter(c=>(c.level||c.queue)&&systemsById.has(c.position[1])).map(c=>logisticsPose(c,systemsById.get(c.position[1])))];
  }
 
+ const ready=Promise.all([catalogueReady,coreAtmosphere.ready.catch(error=>report('银心星云加载失败',error))]);
  function update({time=0,eye=[0,0,0],origin=[0,0,0],distance:cameraDistance=1,width=1,height=1}={}){
   if(disposed)return;frame++;eye=vec(eye);origin=vec(origin);camera.updateMatrixWorld();matrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);frustum.setFromProjectionMatrix(matrix);camera.getWorldDirection(forward);
   const appearance=galaxyPresentation(cameraDistance,width/Math.max(1,height)),dpr=Math.min(globalThis.devicePixelRatio||1,2);
+  coreAtmosphere.update({time,eye,origin,camera});
+  sky.material.uniforms.uCoreFocus.value=1-smooth(320000,1300000,Math.hypot(...eye));
   sky.position.copy(camera.position);sky.scale.setScalar(Math.min(camera.far*.8,Math.max(100000,cameraDistance*4)));relative(galaxy,[0,0,0],origin);relative(markers,[0,0,0],origin);relative(territoryRoot,[0,0,0],origin);if(links){relative(links,[0,0,0],origin);links.material.opacity=appearance.links*.4;links.visible=links.material.opacity>.001;}
   for(const [m,alpha]of [[galaxyMaterial,appearance.background],[markersMaterial,1]]){m.uniforms.uOpacity.value=alpha;m.uniforms.uDPR.value=dpr;m.uniforms.uZoom.value=clamp(Math.sqrt(100000*WORLD_SCALE/Math.max(cameraDistance,1000*WORLD_SCALE)),.7,1.6);}
   territoryRoot.visible=territoriesVisible&&cameraDistance>1600*WORLD_SCALE;for(const child of territoryRoot.children)child.material.opacity=clamp((cameraDistance/WORLD_SCALE-1600)/2200)*(child.isMesh?.13:.76);
@@ -203,6 +208,6 @@ export function createWorldEnvironment({scene,camera,onError=console.error}={}){
   for(const [map,limit]of [[stars,40],[scenery,8],[npcs,24],[ports,12]])if(map.size>limit)for(const [id]of [...map].filter(([,e])=>!e.group.visible).sort((a,b)=>a[1].last-b[1].last).slice(0,map.size-limit))removeEntry(map,id);
   info.npcs.loaded=[...npcGeometry.keys()];info.npcs.pending=[...npcPending.keys()];info.npcs.failed=[...npcFailed];
  }
- function dispose(){if(disposed)return;disposed=true;controller.abort();for(const map of [stars,scenery,npcs,ports])for(const id of [...map.keys()])removeEntry(map,id);for(const o of [...territoryRoot.children])disposeObject(o);if(links)disposeObject(links);markers.geometry.dispose();for(const resource of resources)resource.dispose();resources.clear();npcGeometry.clear();root.removeFromParent();root.clear();prewarmRoot.removeFromParent();prewarmRoot.clear();}
- return {root,prewarmRoot,ready,setState,update,dispose,cancelLoading(){controller.abort();},toggleTerritories(){territoriesVisible=!territoriesVisible;territoryRoot.visible=territoriesVisible;return territoriesVisible;},bodyObject(key){return key==='gargantua'?hole:npcs.get(key)?.group||stars.get(key)?.group||ports.get(key)?.group;},get pickTargets(){return pickTargets;},get stats(){return {...info,strategy:{...info.territories,constellations:info.constellations||[]},cache:{stars:stars.size,scenery:scenery.size,npcs:npcs.size,ports:ports.size},territoriesVisible};},get territoryData(){return territoryData;}};
+ function dispose(){if(disposed)return;disposed=true;controller.abort();coreAtmosphere.dispose();for(const map of [stars,scenery,npcs,ports])for(const id of [...map.keys()])removeEntry(map,id);for(const o of [...territoryRoot.children])disposeObject(o);if(links)disposeObject(links);markers.geometry.dispose();for(const resource of resources)resource.dispose();resources.clear();npcGeometry.clear();root.removeFromParent();root.clear();prewarmRoot.removeFromParent();prewarmRoot.clear();}
+ return {root,prewarmRoot,ready,setState,update,dispose,render:coreAtmosphere.render,setCoreCut({open,angle,hemisphere,radius,flat,half}){coreAtmosphere.setCoreCut({open,angle,hemisphere,radius,flat,half});galaxyMaterial.uniforms.uCoreShape.value.set(radius,flat,Math.cos(half));galaxyMaterial.uniforms.uCoreCut.value.set(open,Math.cos(angle),Math.sin(angle),hemisphere);},cancelLoading(){controller.abort();},toggleTerritories(){territoriesVisible=!territoriesVisible;territoryRoot.visible=territoriesVisible;return territoriesVisible;},bodyObject(key){return key==='gargantua'?hole:npcs.get(key)?.group||stars.get(key)?.group||ports.get(key)?.group;},get pickTargets(){return pickTargets;},get stats(){return {...info,strategy:{...info.territories,constellations:info.constellations||[]},cache:{stars:stars.size,scenery:scenery.size,npcs:npcs.size,ports:ports.size},territoriesVisible};},get territoryData(){return territoryData;}};
 }

@@ -1,10 +1,11 @@
 import * as T from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {mountBakedInterior} from './baked-interior.js';
 
 // Shared physical materials and construction tools from the user-provided KEEL family.
 // No viewer controls, DOM, independent renderer or simulation.
-export function createFamilyInterior(builder,{renderer=null,staticBatching=true}={}){
+export function createFamilyInterior(builder,{renderer=null,staticBatching=true,baked=null}={}){
 const CONFIG = {staticBatching};
 const scene = new T.Group();
 const interior = new T.Group(); interior.name='KEEL_FAMILY_INTERIOR'; scene.add(interior);
@@ -114,10 +115,10 @@ function batchStatic(root){
 
  const {craft,build,light}=builder({T,interior,M,finish,grainTexture,group,geometry,mesh,box,shape2,polygon,deckPoly,beam,cylinder,ring,tube,bolt,slotBank,frameShape,chamferRect,makeEnvironment,batchStatic});
  Object.assign(CONFIG,{pilot:[...craft.eye],fov:craft.fov,exposure:craft.exposure,dimensions:craft.dimensions,bounds:craft.bounds});
- interior.name='KEEL_'+craft.id+'_INTERIOR';build();
+ interior.name='KEEL_'+craft.id+'_INTERIOR';if(baked)mountBakedInterior(interior,M,baked);else build();
  const original=new Set();interior.traverse(o=>{if(o.geometry)original.add(o.geometry);});
- const stats=staticBatching?batchStatic(interior):{};
- if(staticBatching){const retained=new Set();interior.traverse(o=>{if(o.geometry)retained.add(o.geometry);});for(const g of original)if(!retained.has(g))g.dispose();CACHE.clear();}
+ const stats=baked?baked.stats:staticBatching?batchStatic(interior):{};
+ if(staticBatching&&!baked){const retained=new Set();interior.traverse(o=>{if(o.geometry)retained.add(o.geometry);});for(const g of original)if(!retained.has(g))g.dispose();CACHE.clear();}
  const lights=new T.Group();lights.name='KEEL_LIGHTS';scene.add(lights);light(lights);
  const environment=renderer?makeEnvironment(renderer):null,baseline=new Map();lights.traverse(l=>{if(l.isLight)baseline.set(l,l.intensity);});
  const alarm=new T.PointLight(0xf14b29,0,craft.id==='FIGHTER'?4:16,1.8);alarm.position.fromArray(craft.eye).add(new T.Vector3(0,.7,-1));lights.add(alarm);

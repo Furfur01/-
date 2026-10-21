@@ -1,5 +1,14 @@
 import * as THREE from 'three';
 
+export function cabinFacePlanes(g){
+ const position=g.attributes.position,count=g.index?.count??position.count,planes=new Float32Array(count/3*4);
+ const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),at=i=>g.index?g.index.getX(i):i;
+ for(let i=0,j=0;i<count;i+=3,j+=4){
+  a.fromBufferAttribute(position,at(i));b.fromBufferAttribute(position,at(i+1)).sub(a);c.fromBufferAttribute(position,at(i+2)).sub(a);
+  b.cross(c).normalize();planes[j]=b.x;planes[j+1]=b.y;planes[j+2]=b.z;planes[j+3]=-b.dot(a);
+ }return planes;
+}
+
 // GPU back-face culling already rejects opaque cabin pixels. Also omit those
 // triangles from the colour draw, avoiding their vertex work. Keep a complete
 // index permutation for shadows and raycasts; authored vertices never change.
@@ -11,11 +20,7 @@ export function createCabinFaceCulling(root){
   const material=mesh.material,g=mesh.geometry;
   if(!mesh.isMesh||mesh.isSkinnedMesh||mesh.isInstancedMesh||Array.isArray(material)||material.transparent||material.side!==THREE.FrontSide||!g?.attributes.position||g.groups.length||g.drawRange.start!==0||g.drawRange.count!==Infinity)return;
   const position=g.attributes.position,count=g.index?.count??position.count,source=Uint32Array.from({length:count},(_,i)=>g.index?g.index.getX(i):i),index=new THREE.BufferAttribute(source.slice(),1).setUsage(THREE.DynamicDrawUsage);
-  const planes=new Float32Array(count/3*4),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
-  for(let i=0,j=0;i<count;i+=3,j+=4){
-   a.fromBufferAttribute(position,source[i]);b.fromBufferAttribute(position,source[i+1]).sub(a);c.fromBufferAttribute(position,source[i+2]).sub(a);
-   b.cross(c).normalize();planes[j]=b.x;planes[j+1]=b.y;planes[j+2]=b.z;planes[j+3]=-b.dot(a);
-  }
+  const planes=g.userData.cabinPlanes||cabinFacePlanes(g);
   // Clone only the geometry container, sharing its immutable vertex attributes.
   // The source remains available for disposal and diagnostics, without copying
   // all positions/normals/UVs or changing collision coordinates.

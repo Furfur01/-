@@ -5,6 +5,7 @@ import {pilotHandling} from './pilot-controls.mjs';
 import {combatManeuver,committedPass} from './combat-maneuvers.mjs';
 import {steerPilot} from './pilot-motion.mjs';
 import {weaponSolution} from './weapon-solution.mjs';
+import {manualWeaponTiming} from './weapon-timing.mjs';
 import {placePlanetUnit,keepAboveSurface,terrainBlocks,surfaceHeight,battleViewEnvironment} from './battle-terrain.mjs';
 import {STEP_MS,MAX_BATTLE_MS,SPATIAL_VERSION,combatProfile} from './spatial-profiles.mjs';
 import {absorbDefenseShield} from './planet-defense.mjs';
@@ -195,15 +196,16 @@ function launchRound(b,s,t,order){
   const direction=missile?battleMount(s,h?.directions?.[barrel]||[-1,0,0],true):null;
   // Every missile is a real projectile. Spread damage across the equipped launchers.
   b.projectiles.push({id,source:s.id,target:t.id,side:s.side,kind,secondary,barrel,missile,damage,splashRadius:s.profile.splashRadius||0,splashMultipliers:{...s.splashMultipliers},x:from[0],y:from[1],z:from[2],dx:aim[0],dy:aim[1],dz:aim[2],speed,ttl:range/speed+2,age:0,...(direction?{vx:direction[0]*38,vy:direction[1]*38,vz:direction[2]*38}:{})});
-  if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary,barrel,from,to:aim,projectileId:id,speed,...(direction?{velocity:direction.map(v=>v*38)}:{})});
+  if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary,barrel,from,to:aim,projectileId:id,speed,manual:!!order.manual,sound:!order.manual||order.sound,...(direction?{velocity:direction.map(v=>v*38)}:{})});
 }
-function fire(b,s,t,secondary=false,grid){
+function fire(b,s,t,secondary=false,grid,manual=false){
   if(!secondary&&s.profile.defenseOnly)return false;
   const p=s.profile,auxMissile=secondary==='missile',turret=secondary===true,range=turret?Math.min(800,p.range):auxMissile?p.missileRange??Math.max(1100,p.range):p.range,d=distance(s,t);
   if(s.attack<=0||!weaponSolution(b.environment,s,t,secondary).ready)return false;
-  const period=turret?1.4:auxMissile?p.missileCooldown:p.cooldown;
+  const timing=manual?manualWeaponTiming(s.type,p.cooldown):null;
+  const period=turret?1.4:auxMissile?p.missileCooldown:timing?.reload??p.cooldown;
   const missileShare=p.missileShare??.18,secondaryShare=p.secondaryShare??.12,share=turret?secondaryShare:auxMissile?missileShare:1-(p.secondary?secondaryShare:0)-(p.secondaryMissile?missileShare:0);
-  const damage=s.attack*commandMultiplier(b,s)*share*(turret?1.4:auxMissile?p.missileCooldown:p.cooldown)/6;
+  const damage=s.attack*commandMultiplier(b,s)*share*(turret?1.4:auxMissile?p.missileCooldown:p.cooldown)/6*(timing?.damageScale||1);
   if(turret)s.secondaryCooldown=period;else if(auxMissile)s.missileCooldown=period;else s.cooldown=period;
   const kind=turret?p.secondaryKind||'shell':auxMissile?'missile':p.kind,beam=turret?kind==='laser':!secondary&&p.beam;
   const speed=auxMissile?210:p.projectileSpeed,flight=d/speed;
@@ -211,7 +213,8 @@ function fire(b,s,t,secondary=false,grid){
   const from=battleMount(s,p.hardpoints?.main?.[0]),center=[t.x,t.y,t.z],fraction=projectileContact(from,center,center,t.profile.radius+.4)??1;
   const point=from.map((v,i)=>v+(center[i]-v)*fraction);
   if(beam){
-    if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary:!!secondary,from,to:point,speed});
+    if(b.controls[s.owner]?.shipId===s.id||(s.id+b.tick)%Math.max(1,Math.ceil(b.ships.length/180))===0)emit(b,'fire',{shipId:s.id,target:t.id,kind,secondary:!!secondary,from,to:point,speed,manual,beamDuration:timing?.beam||(/reaper/.test(kind)?.95:p.role==='fighter'?.075:.35)});
+    if(manual){s.weaponBeam={target:t.id,end:b.tick+Math.ceil(timing.beam*20),damagePerSecond:damage/timing.beam,kind};return true;}
     const directDamage=areaImpact(b,s,t,damage,point,{kind,radius:p.splashRadius},grid);
     if(kind==='reaper')s.shield=Math.min(s.maxShield,s.shield+Math.min(directDamage*.08,s.maxShield*.08));return true;
   }
@@ -219,11 +222,40 @@ function fire(b,s,t,secondary=false,grid){
   const ports=p.hardpoints?.tubes.length||count,rotate=missile&&count<ports;
   for(let i=0;i<count;i++){
     const barrel=rotate?((s.missileCursor||0)+i*Math.ceil(ports/count))%ports:i;
-    const order={source:s.id,target:t.id,kind,secondary:!!secondary,barrel,damage:damage/count,range,speed,missile,tick:b.tick+i*(missile?3:1)};
+    const order={source:s.id,target:t.id,kind,secondary:!!secondary,barrel,damage:damage/count,range,speed,missile,manual,sound:i===0,tick:b.tick+i*(missile?3:1)};
     if(!i)launchRound(b,s,t,order);else (b.salvos??=[]).push(order);
   }
   if(rotate)s.missileCursor=((s.missileCursor||0)+1)%ports;
   return true;
+}
+function stopManualWeapon(b,s){
+  if(s.weaponCharge||s.weaponBeam)emit(b,'weapon-stop',{shipId:s.id});
+  s.weaponCharge=null;s.weaponBeam=null;
+}
+function manualPrimary(b,s,t,input,grid){
+  if(!input){stopManualWeapon(b,s);return;}
+  if(s.weaponBeam){
+    const beam=s.weaponBeam,target=b.ships[beam.target];
+    if(b.tick>beam.end){s.weaponBeam=null;return;}
+    if(!weaponSolution(b.environment,s,target).ready){stopManualWeapon(b,s);return;}
+    const hit=areaImpact(b,s,target,beam.damagePerSecond*STEP_MS/1000,[target.x,target.y,target.z],{kind:beam.kind,radius:s.profile.splashRadius},grid);
+    if(beam.kind==='reaper')s.shield=Math.min(s.maxShield,s.shield+hit*.08);
+    return;
+  }
+  if(s.weaponCharge){
+    const charge=s.weaponCharge,target=b.ships[charge.target];
+    if(!target||target.hp<=0){stopManualWeapon(b,s);return;}
+    if(b.tick>=charge.ready){
+      if(!fire(b,s,target,false,grid,true))stopManualWeapon(b,s);
+      s.weaponCharge=null;
+    }
+    return;
+  }
+  const p=s.profile;
+  if(s.cooldown>0||!(p.missile?input.missile||input.fire:input.fire)||!weaponSolution(b.environment,s,t).ready)return;
+  const {windup}=manualWeaponTiming(s.type,p.cooldown);
+  s.weaponCharge={target:t.id,started:b.tick,ready:b.tick+Math.ceil(windup*20),windup};
+  emit(b,'weapon-charge',{shipId:s.id,target:t.id,kind:p.kind,windup,from:battleMount(s,p.hardpoints?.main?.[0])});
 }
 export function stepSpatialBattle(b){
   if(b.status!=='active')return;
@@ -247,7 +279,7 @@ export function stepSpatialBattle(b){
   const fronts=fleetFronts(grid.alive.map(ships=>ships.filter(s=>!s.temporary)));
   const guards=b.ships.filter(s=>s.temporary&&s.hp>0&&b.ships[s.carrierId]?.carrier?.mode==='guard');
   for(const s of b.ships){
-    if(s.hp<=0)continue;
+    if(s.hp<=0){stopManualWeapon(b,s);continue;}
     const p=s.profile,input=manual.get(s.id);
     s.cooldown=Math.max(0,s.cooldown-dt);s.secondaryCooldown=Math.max(0,s.secondaryCooldown-dt);s.pdCooldown=Math.max(0,s.pdCooldown-dt);s.missileCooldown=Math.max(0,(s.missileCooldown||0)-dt);
     if(!b.ships[s.target]||b.ships[s.target].hp<=0)s.target=acquire(b,s,grid);
@@ -322,8 +354,9 @@ export function stepSpatialBattle(b){
       }
     }
     const edge=b.boundary;if(!p.ground&&(Math.abs(s.x)>edge||Math.abs(s.z)>edge||Math.abs(s.y)>700)){s.x=clamp(s.x,-edge,edge);s.z=clamp(s.z,-edge,edge);s.y=clamp(s.y,-700,700);s.speed=0;steer(s,Math.atan2(-s.x,-s.z),0,dt);}
+    if(input||s.weaponCharge||s.weaponBeam)manualPrimary(b,s,t,input,grid);
     if(t){
-      if(s.cooldown<=0&&(!input||(!p.fixed&&!p.missile)||(p.missile?input.missile||input.fire:input.fire)))fire(b,s,t,false,grid);
+      if(!input&&s.cooldown<=0)fire(b,s,t,false,grid);
       if(p.secondary&&s.secondaryCooldown<=0)fire(b,s,t,true,grid);
       if(p.secondaryMissile&&s.missileCooldown<=0&&(!input||input.missile))fire(b,s,t,'missile',grid);
     }
@@ -371,7 +404,7 @@ export function stepSpatialBattle(b){
   else if(b.tick%40===0||b.swarmChangedTick===b.tick)recordFrame(b);
 }
 export function advanceSpatialBattle(b,to){const tick=Math.min(MAX_BATTLE_MS/STEP_MS,Math.floor((to-b.start)/STEP_MS));while(b.status==='active'&&b.tick<tick)stepSpatialBattle(b);return b;}
-export function packedShips(b){return b.ships.map(s=>[s.id,Math.round(s.x*10)/10,Math.round(s.y*10)/10,Math.round(s.z*10)/10,Math.round(s.yaw*1000)/1000,Math.round(s.pitch*1000)/1000,Math.round(s.hp*100)/100,Math.round(s.shield*100)/100,s.target,Math.round(s.speed*10)/10,Math.round(s.cooldown*100)/100,Math.round((s.missileCooldown||0)*100)/100,Math.round((s.roll||0)*1000)/1000,...(s.profile.ground?[s.turretYaw??s.yaw,s.turretPitch??0]:[])].map(v=>v===0?0:v));}
+export function packedShips(b){return b.ships.map(s=>[s.id,Math.round(s.x*10)/10,Math.round(s.y*10)/10,Math.round(s.z*10)/10,Math.round(s.yaw*1000)/1000,Math.round(s.pitch*1000)/1000,Math.round(s.hp*100)/100,Math.round(s.shield*100)/100,s.target,Math.round(s.speed*10)/10,Math.round(s.cooldown*100)/100,Math.round((s.missileCooldown||0)*100)/100,Math.round((s.roll||0)*1000)/1000,...(s.profile.ground||s.weaponCharge?[s.turretYaw??s.yaw,s.turretPitch??0]:[]),...(s.weaponCharge?[Math.max(0,s.weaponCharge.ready-b.tick)*.05,s.weaponCharge.windup]:[])].map(v=>v===0?0:v));}
 export function recordFrame(b){const frame={tick:b.tick,ships:packedShips(b),carriers:carrierSnapshot(b)};if(b.frames.at(-1)?.tick===b.tick)b.frames[b.frames.length-1]=frame;else b.frames.push(frame);}
 export function spatialMetadata(b){return b.ships.map(s=>({id:s.id,type:s.type,side:s.side,owner:s.owner,batch:s.batch,formation:s.formation,maxHp:s.maxHp,maxShield:s.maxShield,profile:s.profile,...(s.temporary?{temporary:true,carrierId:s.carrierId,bornTick:s.bornTick}:{}),...(s.fortressSlot?{fortressSlot:s.fortressSlot}:{})}));}
 export function spatialSnapshot(b,{since=0,metadata=true,planet={}}={}){return {...battleSummary(b,planet),tick:b.tick,boundary:b.boundary,ships:packedShips(b),carriers:carrierSnapshot(b),...(metadata?{metadata:spatialMetadata(b)}:{}),projectiles:b.projectiles.filter((q,i)=>i%Math.max(1,Math.ceil(b.projectiles.length/600))===0),specialBlasts:(b.specialBlasts||[]).map(({source,x,y,z,tick,radius,harmless})=>({source,x,y,z,tick,radius,harmless})),controls:b.controls,eventSeq:b.eventSeq,events:b.events.slice(Math.max(0,b.events.length-2000)).filter(e=>e.seq>since&&e.tick>=b.tick-40&&e.type!=='input')};}

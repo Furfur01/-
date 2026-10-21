@@ -1,4 +1,4 @@
-// Classification follows flight role first: the elite frigate remains a fighter.
+// Cockpit controls follow the saved battle role, including older active battles.
 export function cockpitClass(profile={}) {
  if(profile.role==='fighter'||(!profile.role&&!(profile.length>=10)))return 'fighter';
  return profile.length>=50?'bastion':'horizon';

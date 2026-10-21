@@ -1,3 +1,4 @@
+import {expeditionZones,expeditionRounds,expeditionSeconds,miningHourSeconds} from './expedition-rules.mjs';
 import fs from 'node:fs';
 import {planetTypes} from './planet-types.mjs';
 import {shipArchive} from './ship-archive.mjs';
@@ -55,6 +56,18 @@ units.Guardian={id:'Guardian',name:'守护者',type:'combat',cost:[1500000,15000
 units.Death_Star.req.push(['Graviton_Tech',1]);
 // Temporarily outside the playable fleet; retain definitions for existing saves and replays.
 for(const id of ['Death_Star','Guardian'])units[id].fleetAvailable=false;
+// Screenshot conflicts were re-read on 2026-10-21; retain this project's screenshot baseline.
+const screenshotDifferences={
+ Cargo_Ship:'燃耗采用截图 10；Wiki 为 20。',
+ Recycler:'战略基础航速采用截图 2,000；Wiki 为 7,500。',
+ Solar_Satellite:'攻击 / 护盾采用截图 0 / 0；Wiki 为 1 / 1。',
+ Battleship:'燃耗采用截图 250；Wiki 为 500。'
+};
+for(const u of Object.values(units))if(u.type!=='defense'&&!advancedShips[u.id]){
+ u.statsSource='research/截图参数校准.md';u.statsLabel='基础六维：用户截图';
+ u.economyLabel='制造成本与前置：当前单机目录';
+ if(screenshotDifferences[u.id])u.statsNote=screenshotDifferences[u.id];
+}
 units.Interceptor_Missile={id:'Interceptor_Missile',name:'拦截导弹',type:'defense',missile:true,cost:[8000,0,2000],strength:1,shield:0,attack:0,speed:0,cargo:0,fuel:0,req:[['Missile_Silo',2]],atlas:13};
 units.Interplanetary_Missile={id:'Interplanetary_Missile',name:'星际导弹',type:'defense',missile:true,cost:[12500,2500,10000],strength:1,shield:0,attack:12000,speed:0,cargo:0,fuel:0,req:[['Missile_Silo',4],['Impulse_Drive',1]],atlas:13};
 for(const u of Object.values(units))if(u.type==='defense'){
@@ -102,5 +115,5 @@ Object.assign(armaments,{
 for(const unit of Object.values(units)){unit.weapons=armaments[unit.id]||[weapon('none','无',null)];Object.assign(unit,areaWeaponRules(unit),{criticalChances:criticalChances(unit)});}
 export const missionNames={attack:'攻击',spy:'侦察',recycle:'回收',transport:'运输',deploy:'驻扎',colonize:'殖民',explore:'银心黑洞探险',mine:'小行星采矿',destroyMoon:'摧毁月球'};
 export const capacities=[10000,20000,40000,75000,140000,255000,470000,865000,1590000,2920000,5350000,9810000,18000000,33000000,60500000];
-export const rules={economySpeed:30,fusionFuelSpeed:6,baseProduction:[20,10,0],moonStep:100000,moonCap:0.2,debrisRate:0.3,explorationHourSeconds:60,explorationSeconds:1800,explorationSlot:16,explorationResourceMin:10000,explorationCargoCap:2000000,explorationStrengthCap:10000000,explorationShipRewardCap:500000,recharge:false,researchSpeed:60,constructionSpeed:90};
-export const publicCatalog={buildings,tech,units,missionNames,rules,planetTypes,surfaceLayout,shipArchive:shipArchive(units)};
+export const rules={economySpeed:30,fusionFuelSpeed:6,baseProduction:[20,10,0],moonStep:100000,moonCap:0.2,debrisRate:0.3,explorationHourSeconds:miningHourSeconds,explorationSeconds:expeditionSeconds,explorationSlot:16,recharge:false,researchSpeed:60,constructionSpeed:90};
+export const publicCatalog={buildings,tech,units,missionNames,rules,expeditionZones,expeditionRounds,planetTypes,surfaceLayout,shipArchive:shipArchive(units)};

@@ -40,7 +40,7 @@ export function buildNativeBattleAssets(dir){
   }});
   // Guardian is a legacy concept without an identified drive; retain its generic color.
   const propulsion=engines.length&&u.id!=='Guardian'?shipPropulsion(publicCatalog.shipArchive.find(s=>s.id===u.id)):{name:'舰载推进',color:[.3,.6,1],core:[.8,.9,1],pulse:4};
-  ships.push({id:u.id,name:u.name,low:lowInfo,full:fullInfo,stats:[u.strength,u.shield,u.attack,u.speed,u.cargo,u.fuel],profile,length,defenseParts,defensePivot:model.userData.defensePivot??3,
+  ships.push({id:u.id,name:u.name,statsSource:u.statsSource,statsLabel:u.statsLabel,statsNote:u.statsNote,economyLabel:u.economyLabel,low:lowInfo,full:fullInfo,stats:[u.strength,u.shield,u.attack,u.speed,u.cargo,u.fuel],profile,length,defenseParts,defensePivot:model.userData.defensePivot??3,
    layout:{id:u.id,length,scale:1,bridge:[0,bounds.max.y+length*.025,center.z+length*.2],chase:[length*.6,length*.55,length*1.5],focus:[0,0,-length*.25],main:u.attack>0?[[bounds.min.z,center.y,-center.x]]:[],tubes:[],tubeDirections:[],joints:[],mounts:[],pdMuzzles:[],engines,propulsion,turretScale:1,bounds:{center:[center.z,center.y,-center.x],half:[size.z/2,size.y/2,size.x/2]},archiveDistance:length*2.6}});
   disposeShip(model);
  }

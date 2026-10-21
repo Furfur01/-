@@ -1,6 +1,8 @@
 import {WorldRuntime} from '../../../scripts/universe/world.js';
+import {installChartControls} from '../../../scripts/universe/chart-controls.js';
 import {MapCombat} from './map-combat.js';
 import galaxyLayout from '../planet-construction-review/galaxy-layout.json';
+installChartControls();
 // One persistent frame/context for the complete map, every biome and moons.
 class PlanetScene {
  constructor(container,{onBuilding,onApproach,onNavigation}={}){
@@ -20,13 +22,21 @@ class PlanetScene {
  get snapshot(){return this.renderer?.snapshot;}
  // Historical server coordinates stay intact. Holdings and live routes take priority.
  // Display anchors are resolved stars from the selected image, shared with the point cloud.
- get chartSystems(){if(!this.map)return [];const required=new Set([this.system?.[1],...(this.universe?.battles||[]).map(b=>b.position?.[1]),...(this.universe?.planets||[]).filter(p=>p.position[0]===1).map(p=>p.position[1]),...(this.universe?.missions||[]).flatMap(m=>[m.position,m.fromPosition]).filter(p=>p?.[0]===1).map(p=>p[1])].filter(Number.isInteger));const stars=this.map.systems;for(const s of stars)if(s.systemOwner||s.expansionZone)required.add(s.id);for(const s of stars){if(required.size>=256)break;required.add(s.id);}return stars.filter(s=>required.has(s.id)).map(s=>({...s,...((this.universe?.map||[]).find(p=>p.position[0]===1&&p.position[1]===s.id&&p.systemOwner)?(({systemOwner,systemOwnerName,systemColor})=>({systemOwner,systemOwnerName,systemColor}))((this.universe.map).find(p=>p.position[0]===1&&p.position[1]===s.id&&p.systemOwner)):{}),position:galaxyLayout.systems[s.id-1].position.slice(),galaxyStar:{size:galaxyLayout.systems[s.id-1].size,brightness:galaxyLayout.systems[s.id-1].brightness}}));}
+ get chartSystems(){
+  if(!this.map)return [];
+  const required=new Set([this.system?.[1],...(this.universe?.battles||[]).map(b=>b.position?.[1]),...(this.universe?.planets||[]).filter(p=>p.position[0]===1).map(p=>p.position[1]),...(this.universe?.missions||[]).flatMap(m=>[m.position,m.fromPosition]).filter(p=>p?.[0]===1).map(p=>p[1])].filter(Number.isInteger));
+  const stars=this.map.systems,territories=new Map();
+  for(const p of this.universe?.map||[])if(p.position[0]===1&&p.systemOwner&&!territories.has(p.position[1])){const {systemOwner,systemOwnerName,systemColor}=p;territories.set(p.position[1],{systemOwner,systemOwnerName,systemColor});}
+  for(const s of stars)if(s.systemOwner||s.expansionZone)required.add(s.id);
+  for(const s of stars){if(required.size>=256)break;required.add(s.id);}
+  return stars.filter(s=>required.has(s.id)).map(s=>({...s,...territories.get(s.id),position:galaxyLayout.systems[s.id-1].position.slice(),galaxyStar:{size:galaxyLayout.systems[s.id-1].size,brightness:galaxyLayout.systems[s.id-1].brightness}}));
+ }
 
  isOwnedSelection(){const p=this.targets.find(p=>p.key===this.mapSelectedId||p.id===this.mapSelectedId);return !!this.universe?.planets.some(q=>q.id===p?.id);}
  get targets(){if(!this.map)return [];const records=new Map(this.map.planets.map(p=>[p.key,p]));for(const p of [...(this.universe?.map||[]),...(this.universe?.planets||[])]){if(p.position[0]!==1)continue;const key=p.moon?`moon:${p.id}`:p.position.join(':');const previous=records.get(key);records.set(key,{...previous,...p,biome:p.moon?'moon':p.biome,key,name:p.id?p.name:previous?.catalogName||p.name,catalogName:previous?.catalogName,ownerName:p.owner&&p.owner===this.universe?.player?.id?this.universe.player.name:p.ownerName||previous?.ownerName});}return [...records.values()];}
- sync(){const r=this.renderer;if(!r?.ready||!this.planet||!this.map)return;r.applyPlanet(this.planet,this.catalog,window.EmpireAPI?.now||Date.now());r.setNavigationState({logistics:this.universe?.logistics||[],battles:this.universe?.battles||[],systems:this.chartSystems,planets:this.targets,ownedPlanets:this.universe?.planets.filter(p=>p.position[0]===1)||[],missions:(this.universe?.missions||[]).filter(m=>['outbound','return','holding','waiting','engaged'].includes(m.phase)).map(m=>({...m,fromPosition:m.fromPosition||this.universe?.planets.find(p=>p.id===m.from)?.position,count:Object.values(m.ships||{}).reduce((a,b)=>a+b,0)})),activePlanetId:this.planet.id,playerId:this.universe?.player?.id,homePlanetId:this.universe?.player?.home});}
+ sync(){const r=this.renderer;if(!r?.ready||!this.planet||!this.map)return;r.applyPlanet(this.planet,this.catalog,window.EmpireAPI?.now||Date.now());r.setNavigationState({astrophysics:this.universe?.player?.tech?.Astrophysics_Tech||0,logistics:this.universe?.logistics||[],battles:this.universe?.battles||[],systems:this.chartSystems,planets:this.targets,ownedPlanets:this.universe?.planets.filter(p=>p.position[0]===1)||[],missions:(this.universe?.missions||[]).filter(m=>['outbound','return','holding','waiting','engaged'].includes(m.phase)).map(m=>({...m,fromPosition:m.fromPosition||this.universe?.planets.find(p=>p.id===m.from)?.position,count:Object.values(m.ships||{}).reduce((a,b)=>a+b,0)})),activePlanetId:this.planet.id,playerId:this.universe?.player?.id,homePlanetId:this.universe?.player?.home});}
  updateNavigation(state,system){if(this.map&&Date.now()-(this.mapUpdatedAt||0)>15000&&!this.mapRefreshing){this.mapRefreshing=true;this.loadMap().finally(()=>{this.mapRefreshing=false;});}this.universe=state;if(!this.system&&system)this.system=system.slice();this.sync();this.combat.sync();}
- updatePlanet(planet,catalog){if(!planet)return;this.planet=planet;this.catalog=catalog;this.capitalButton.hidden=!!planet.moon;for(const button of this.elevatorViewButtons)button.hidden=!!planet.moon;this.appearance=planet.moon?'moon':planet.biome;this.sync();}
+ updatePlanet(planet,catalog,{sync=true}={}){if(!planet)return;this.planet=planet;this.catalog=catalog;this.capitalButton.hidden=!!planet.moon;for(const button of this.elevatorViewButtons)button.hidden=!!planet.moon;this.appearance=planet.moon?'moon':planet.biome;if(sync)this.sync();}
  navigate(fn){if(this.renderer?.ready&&this.map)fn();else this.pendingView=fn;}
  locateColony(id=this.universe?.player?.home){this.navigate(()=>this.renderer.locateColony(id));}
  fitColonies(){this.navigate(()=>this.renderer.fitColonies());}

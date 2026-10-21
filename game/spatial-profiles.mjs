@@ -6,11 +6,11 @@ import {DEVOURER} from './devourer-command.mjs';
 import {areaWeaponRules} from './damage-amplification.mjs';
 export const SPATIAL_VERSION=5, STEP_MS=50, MAX_BATTLE_MS=600000;
 export function combatProfile(unit){
-  const id=unit.id,layout=shipWeaponLayouts[id],defenseOnly=id==='Iron_Behemoth',fighter=/^(Light|Heavy)_Fighter$/.test(id)||id==='Titanenergetic_Frigate';
+  const id=unit.id,layout=shipWeaponLayouts[id],defenseOnly=id==='Iron_Behemoth',fighter=/^(Light|Heavy)_Fighter$/.test(id);
   const stationary=unit.type==='defense'||id==='Solar_Satellite';
   const role=defenseOnly?'support':id==='Annihilator'?'ordnance':stationary?'station':fighter?'fighter':id==='Bomber'?'artillery':id==='Cruiser'?'screen':unit.type==='civilian'?'support':'line';
   const settings={ordnance:[250,2.2,2200,8],fighter:[110,2.2,230,.8],screen:[62,1.1,450,1.8],line:[30,.45,720,3.5],artillery:[24,.4,1100,5],support:[35,.65,180,2],station:[0,1,850,3]}[role];
-  const eliteSettings={Interceptor:[32,.5,1200,4.5],Devourer_Interceptor:[36,.6,1100,3],Titanenergetic_Frigate:[130,2.5,420,.65],Reaper:[32,.5,1450,4.2]}[id];
+  const eliteSettings={Interceptor:[32,.5,1200,4.5],Devourer_Interceptor:[36,.6,1100,3],Titanenergetic_Frigate:[30,.45,720,3.5],Reaper:[32,.5,1450,4.2]}[id];
   if(eliteSettings)settings.splice(0,4,...eliteSettings);
   if(defenseOnly)settings.splice(0,4,16,.16,350,3.5);
   const kind=defenseOnly?'shell':layout?.kind||unit.weapons?.[0]?.kind||'shell';

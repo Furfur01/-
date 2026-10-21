@@ -66,7 +66,7 @@
     setText('object-category',state.planet===15?'深空目标 / DEEP SPACE':target?.moon?'月球 / MOON':'行星档案 / PLANET');
     setText('object-number',pad(state.planet+1));setText('object-title',p.name);setText('object-subtitle',p.en);setText('object-status',snapshot?p.status:'等待指挥中心连接');setText('object-description',p.desc);
     let rows;
-    if(state.planet===15)rows=[['目标类型','小行星带'],['轨道','16'],['采矿停留','1–4 小时'],['任务结果','以实际报告为准']];
+    if(state.planet===15)rows=[['目标类型','小行星带'],['轨道','16'],['采矿停留','30–120 分钟'],['任务结果','以实际报告为准']];
     else if(own(target)){const type=catalog?.planetTypes?.[target.biome];rows=[['天体',target.moon?'月球':type?.name||'行星'],['本地矿产',target.moon?'无':type?.specialty==null?'金属 / 晶体 / 气体':['金属','晶体','气体'][type.specialty]+' ×3'],['已用方圆',pretty(target.usedFields)+' / '+pretty(target.fields)],['资源库存',(target.resources||[]).map(pretty).join(' / ')]];}
     else rows=[['类型',p.type],['归属',occupied(target)?target.ownerName||'守备舰队':target?'无人占领':'未同步'],['驻守舰队 / 防御',occupied(target)?'未侦察':'—'],['残骸',target?.debris?target.debris.map(pretty).join(' / '):'—']];
     stats(rows.map(row=>row.map(esc)));

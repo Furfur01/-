@@ -1,38 +1,33 @@
-.court-systems{display:grid;gap:24px;min-width:0}
-.court-systems-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:10px 2px 20px;border-bottom:1px solid var(--line)}
-.court-systems-heading h2{font-size:26px;font-weight:500;margin:10px 0}
-.court-systems-heading p{color:var(--muted);font-size:13px;line-height:1.8}
-.court-system-count{color:var(--muted);font-size:13px;white-space:nowrap}
-.court-system-count b{color:var(--ink);font-size:36px;font-weight:400;margin-right:8px;font-variant-numeric:tabular-nums}
-.court-systems-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px}
-.court-systems-toolbar .search{width:280px;max-width:100%}
-.court-systems-toolbar .search input{font-size:13px}
-.court-system-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:20px}
-.court-system-card{padding:24px;display:flex;flex-direction:column;min-width:0;transition:border-color .18s ease;background:#101b20}
-.court-system-card:hover{border-color:var(--line-strong)}
-.court-system-card>header{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
-.court-system-orbit{color:var(--mint);display:grid;place-items:center;width:44px;height:44px;flex-shrink:0}
-.court-system-card h3{font-size:21px;font-weight:500;margin:0 0 7px}
-.court-system-card header p{font-size:12px;color:var(--muted)}
-.court-system-card header .pill{margin-left:auto;font-size:11px}
-.court-system-members{display:flex;flex-wrap:wrap;gap:9px 14px;margin:22px 0;min-height:54px;align-content:flex-start}
-.court-system-members>span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
-.court-system-members img{width:24px;height:24px}
-.court-system-resource-heading{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:12px}
-.court-system-resources{display:grid;gap:13px;margin:16px 0 20px;font-variant-numeric:tabular-nums}
-.court-system-resources>div{display:grid;grid-template-columns:42px 1fr 1fr;gap:8px;align-items:center}
-.court-system-resources dt{font-size:12px;color:var(--muted)}
-.court-system-resources dd{margin:0;text-align:right;font-size:16px}
-.court-system-resources dd:last-child{font-size:13px}
-.court-system-progress{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:15px 0;border-block:1px solid var(--line);font-size:12px;color:var(--muted)}
-.court-system-progress b{color:var(--ink);font-size:16px;font-weight:500;margin-right:3px}
-.court-system-logistics{display:flex;align-items:center;gap:8px;margin-top:auto;min-height:62px;font-size:12px;color:var(--muted)}
-.court-system-logistics .text-button{margin-left:auto;font-size:12px;white-space:nowrap}
-.court-system-card>.primary{justify-content:space-between;min-height:44px;font-size:13px;margin-top:18px}
-.court-system-navigation{display:flex;align-items:center;gap:24px;padding-bottom:17px;border-bottom:1px solid var(--line)}
-.court-system-navigation>.text-button{font-size:13px;white-space:nowrap}
-.court-system-navigation>.field-label{display:flex;align-items:center;gap:12px;font-size:12px}
-.court-system-navigation select{font-size:13px;min-width:230px}
-.court-system-navigation>span{margin-left:auto;font-size:12px;color:var(--muted)}
-@media(max-width:900px){.court-system-navigation{flex-wrap:wrap;gap:12px}.court-system-navigation>span{width:100%;margin-left:0}}
-@media(max-width:650px){.court-systems{gap:17px}.court-systems-heading{align-items:flex-start;gap:12px;padding-bottom:15px}.court-systems-heading h2{font-size:23px}.court-systems-heading p{font-size:12px}.court-system-count{font-size:11px}.court-system-count b{font-size:28px;margin-right:3px}.court-systems-toolbar{flex-wrap:wrap;gap:9px}.court-systems-toolbar .search{width:100%}.court-systems-toolbar .court-filters{display:flex}.court-systems-toolbar .court-filters button{font-size:12px;padding-inline:12px}.court-system-grid{gap:15px}.court-system-card{padding:18px}.court-system-card h3{font-size:20px}.court-system-members{min-height:0;margin:19px 0}.court-system-card header .pill{font-size:10px}.court-system-orbit{width:30px}.court-system-progress{gap:10px;font-size:11px}.court-system-navigation>.field-label{width:100%;display:grid;gap:7px}.court-system-navigation select{width:100%;min-width:0}.court-system-navigation>span{font-size:11px}}
+.court-systems{display:grid;gap:18px;min-width:0;max-width:1600px;margin:auto;font-variant-numeric:tabular-nums}
+.court-systems-heading{display:flex;flex-wrap:wrap;gap:12px}
+.court-stat{display:flex;align-items:center;gap:10px;padding:12px 18px;border:1px solid var(--line);border-radius:6px;background:#0b1418d9;backdrop-filter:blur(14px);color:var(--mint);min-width:120px}
+.court-stat b{font-size:28px;font-weight:300;color:var(--ink)}.court-stat span{font-size:11px;color:var(--muted);letter-spacing:1px}
+.court-stat.warn{color:var(--amber);border-color:#dfb97866}.court-stat.warn b{color:var(--amber)}
+.court-systems-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.court-system-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+.court-system-card{display:grid;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s;background:radial-gradient(circle at 80px 50%,#dfb97812,transparent 170px),#0b1418d9}
+.court-system-card:hover{transform:translateY(-2px);border-color:#a6dbc666;box-shadow:0 0 18px #a6dbc622}
+.court-system-card.attention{border-top:2px solid #dfb978aa}
+.court-system-hit{display:grid;grid-template-columns:150px minmax(0,1fr) 20px;gap:14px;align-items:center;padding:14px 16px 10px;text-align:left}
+.court-system-hit:hover{background:transparent}
+.court-system-go{color:var(--dim);transition:transform .15s,color .15s}.court-system-card:hover .court-system-go{color:var(--mint);transform:translateX(3px)}
+.court-system-info{display:grid;gap:10px;min-width:0}
+.court-system-info header{display:flex;align-items:center}.court-system-info h3{font-size:22px;font-weight:400;letter-spacing:2px}
+.court-badges{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}.court-badges span{display:inline-flex;align-items:center;gap:4px}
+.court-orbit{width:150px;height:150px;display:block}
+.court-orbit-ring{fill:none;stroke:#b4cdc426;stroke-width:.8;stroke-dasharray:2 3}
+.court-res-bars{display:grid;gap:6px}
+.court-res-bars>div{display:grid;grid-template-columns:14px minmax(40px,1fr) 52px 54px;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+.court-res-bars i{height:5px;border-radius:3px;background:#b4cdc414;overflow:hidden}
+.court-res-bars i b{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#5f8f80,var(--mint))}
+.court-res-bars .full i b{background:linear-gradient(90deg,#a7834b,var(--amber))}.court-res-bars .full svg{color:var(--amber)}
+.court-res-bars span{text-align:right;color:var(--ink)}.court-res-bars small{text-align:right;color:var(--mint);font-size:10px}
+.court-system-logistics{display:flex;align-items:center;gap:8px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.court-system-logistics>.text-button{margin-left:auto;display:inline-flex;align-items:center;gap:4px;color:var(--mint);font-size:11px}
+.court-system-navigation{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.court-system-chips{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.court-system-chips>button{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:5px 11px;border:1px solid var(--line);border-radius:20px;font-size:12px;color:var(--muted);background:#0b1418b3}
+.court-system-chips>button.active{color:var(--mint);border-color:#a6dbc6aa;box-shadow:0 0 14px #a6dbc622}
+.court-system-chips .dot{width:6px;height:6px;border-radius:50%;background:var(--amber)}
+.court-nav-counts{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:12px}
+@media(max-width:800px){.court-system-grid{grid-template-columns:1fr}.court-system-hit{grid-template-columns:96px minmax(0,1fr) 16px;gap:10px;padding:12px}.court-system-hit .court-orbit{width:96px;height:96px}.court-stat{flex:1;min-width:90px;padding:10px 12px}.court-stat b{font-size:22px}.court-system-chips>button{min-height:44px}.court-system-logistics>.text-button{min-height:44px}}

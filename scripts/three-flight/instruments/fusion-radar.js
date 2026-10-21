@@ -16,25 +16,37 @@ export class FusionRadar {
  }
  batch(ally,count){
   let b=this.batches.get(ally);if(b&&b.capacity>=count)return b;
-  if(b){for(const o of [b.mesh,b.dot,b.stem]){o.removeFromParent();o.dispose?.();o.geometry.dispose();o.material.dispose();}}
+  // Growing contact buffers must not dispose the already-warmed programs.
+  // The marker shapes and materials remain identical at every capacity.
+  if(b){for(const o of [b.mesh,b.dot,b.stem]){o.removeFromParent();o.dispose?.();}b.stem.geometry.dispose();}
   const capacity=2**Math.ceil(Math.log2(Math.max(1,count))),material=opacity=>new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
-  const mesh=new THREE.InstancedMesh(new THREE.OctahedronGeometry(.022),material(ally?.55:1),capacity),dot=new THREE.InstancedMesh(new THREE.RingGeometry(.008,.014,12).rotateX(-Math.PI/2),material(ally?.25:.6),capacity);
+  const mesh=new THREE.InstancedMesh(b?.mesh.geometry||new THREE.OctahedronGeometry(.022),b?.mesh.material||material(ally?.55:1),capacity),dot=new THREE.InstancedMesh(b?.dot.geometry||new THREE.RingGeometry(.008,.014,12).rotateX(-Math.PI/2),b?.dot.material||material(ally?.25:.6),capacity);
+  // Solid contact symbols retain their faction colour when they overlap;
+  // the floor dots, stems and sweep keep the original additive glow.
+  mesh.material.blending=THREE.NormalBlending;
   const geometry=new THREE.BufferGeometry();for(const name of ['position','color'])geometry.setAttribute(name,new THREE.BufferAttribute(new Float32Array(capacity*6),3).setUsage(THREE.DynamicDrawUsage));
-  const stem=new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:ally?.2:.5,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false}));
+  const stem=new THREE.LineSegments(geometry,b?.stem.material||new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:ally?.2:.5,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false}));
   for(const o of [mesh,dot]){o.instanceMatrix.setUsage(THREE.DynamicDrawUsage);o.boundingSphere=new THREE.Sphere(new THREE.Vector3(),1);}
   geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(),1);this.group.add(mesh,dot,stem);
   b={mesh,dot,stem,capacity,count:0};this.batches.set(ally,b);return b;
  }
  update(s,time,camera){
   this.sweep.rotation.y=-time*1.8;this.disk.material.opacity=.13+.03*Math.sin(time*7);this.lockRing.visible=false;
+  const key=(s?.vesselId??s?.name)+':'+s?.target+':'+s?.locked;
+  if(this.lastTime!=null&&time>=this.lastTime&&time-this.lastTime<.05&&key===this.lastKey){this.lockRing.visible=this.markers.has(s?.target);if(camera)this.lockRing.quaternion.copy(camera.quaternion);return;}
+  this.lastTime=time;this.lastKey=key;
   const contacts=s?.contacts||[],counts=[0,0];for(const c of contacts)counts[+!c.enemy]++;
   for(const ally of [false,true]){const count=counts[+ally],b=count?this.batch(ally,count):this.batches.get(ally);if(b){b.count=0;for(const o of [b.mesh,b.dot,b.stem])o.visible=count>0;}}
-  const seen=new Set();for(const c of contacts){seen.add(c.id);let m=this.markers.get(c.id);
+  // Keep every contact available for selection, but draw one marker per small
+  // radar-space cell and side. Dense fleets must not add up to a white blob.
+  const seen=new Set(),cells=new Map();for(const c of contacts){seen.add(c.id);let m=this.markers.get(c.id);
    if(!m){m={position:new THREE.Vector3()};this.markers.set(c.id,m);}
    const dx=c.pos[0]-s.pos[0],dz=c.pos[2]-s.pos[2],right=-dx*Math.cos(s.heading)+dz*Math.sin(s.heading),front=dx*Math.sin(s.heading)+dz*Math.cos(s.heading),range=Math.max(s.scanRange||1000,Math.hypot(right,front)),x=right/range*.60,z=-front/range*.60,y=Math.max(.014,Math.min(.24,(c.pos[1]-s.pos[1])/range+.06)),color=c.enemy?0xff4a3a:c.drone?0xffc46b:0x5fe6ff;
    const selected=c.id===s.target,ally=!c.enemy;
    m.position.set(x,y,z);m.scale=selected?1.5:ally?.65:1;m.action=c.enemy&&!s.replay?{action:'select',value:String(c.id)}:null;
-   const b=this.batches.get(ally),slot=b.count++,transform=this.transform;this.color.setHex(color);
+   const b=this.batches.get(ally),cell=+ally+':'+Math.round(x/.05)+':'+Math.round(y/.05)+':'+Math.round(z/.05),existing=cells.get(cell);
+   if(existing!=null&&!selected)continue;
+   const slot=existing??b.count++;cells.set(cell,slot);const transform=this.transform;this.color.setHex(color);
    transform.position.copy(m.position);transform.rotation.set(0,time*2,0);transform.scale.setScalar(m.scale);transform.updateMatrix();b.mesh.setMatrixAt(slot,transform.matrix);b.mesh.setColorAt(slot,this.color);
    transform.position.set(x,.002,z);transform.rotation.set(0,0,0);transform.scale.setScalar(ally?.65:1);transform.updateMatrix();b.dot.setMatrixAt(slot,transform.matrix);b.dot.setColorAt(slot,this.color);
    const a=b.stem.geometry.attributes;a.position.setXYZ(slot*2,x,0,z);a.position.setXYZ(slot*2+1,x,y,z);for(const i of [slot*2,slot*2+1])a.color.setXYZ(i,this.color.r,this.color.g,this.color.b);
