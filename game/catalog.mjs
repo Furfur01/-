@@ -4,6 +4,8 @@ import {planetTypes} from './planet-types.mjs';
 import {shipArchive} from './ship-archive.mjs';
 import {surfaceLayout} from './surface-layout.mjs';
 import {advancedTechnologies,advancedShips,flagshipCenter} from './advanced-fleet.mjs';
+import {arsenalTechnologies} from './arsenal-rules.mjs';
+import {megastructureTechnologies,retiredMegastructureTechnologies} from './megastructure-technologies.mjs';
 import technologyLore from './technology-lore.json' with {type:'json'};
 import {technologyQuotes} from './technology-quotes.mjs';
 import {defenseQuotes} from './defense-quotes.mjs';
@@ -39,7 +41,22 @@ tech.Intergalactic_Network={id:'Intergalactic_Network',name:'星际研究网络'
 tech.Graviton_Tech={id:'Graviton_Tech',name:'引力子科技',cost:[0,0,0],factor:3,energy:300000,req:[['Research_Lab',12]],atlas:15,description:'研究需要300000能源，解锁死星。'};
 buildings.Flagship_Center=flagshipCenter;
 for(const [id,t]of Object.entries(advancedTechnologies))tech[id]={id,...t,factor:2,atlas:15,icon:`technology-generated/${id}.png`};
-tech.Energy_Tech.description='作为能源装备、引擎和高级研究的前置技术。';
+for(const [id,t]of Object.entries({...retiredMegastructureTechnologies,...megastructureTechnologies}))tech[id]={id,...t,factor:2};
+for(const [id,t]of Object.entries(arsenalTechnologies))tech[id]={id,...t,factor:2,icon:'technology-generated/'+({Stellar_Energy_Mastery:'Phase_Energy',Stellar_Antimatter_Synthesis:'Antimatter_Containment',Stellar_Coherent_Optics:'Quantum_Command',Relativistic_Ballistics:'Advanced_Ship_Engineering',Extreme_Beam_Containment:'Metamaterial_Tech'}[id])+'.png'};
+tech.Energy_Tech.description='作为能源装备、引擎和高级研究的前置技术；支持戴森云、恒星提取、工业、居住和船坞设施，12级支持星门。';
+tech.Hyperspace_Tech.description='研究空间通道，支持超空间引擎及高级舰科研；6级支持二级监听阵列，10级支持星门和三级监听阵列。';
+tech.Computer_Tech.description+=' 6级开放自动化控制研究；8/10/12级支持一至三级监听阵列，10级支持星门。';
+tech.Astrophysics_Tech.description+=' 4级开放生态工程；6/8/10级支持白矮星提取，8/10/12级支持磁星提取。';
+for(const [id,text]of Object.entries({
+ Laser_Tech:'10/12/14级支持一至三级小行星工业带。',
+ Strength_Tech:'8/10/12级支持一至三级小行星工业带。',
+ Shielding_Tech:'支持居住带与恒星提取防护；磁星提取需要12/14/16级。',
+ Plasma_Tech:'6/8/10级支持一至三级恒星资源提取器。',
+ Espionage_Tech:'8/10/12级支持一至三级深空监听阵列。',
+ Advanced_Ship_Engineering:'1/3/5级支持一至三级巨构船坞；单舰仍需满足自己的研究条件。',
+ Metamaterial_Tech:'同时支撑戴森云、居住带、船坞以及白矮星和磁星提取设施。',
+ Quantum_Command:'1级支持二级深空监听阵列，3级支持全银河监听。'
+}))tech[id].description+=' '+text;
 tech.Graviton_Tech.description='研究需要300000能源；关联月球改造与死星计划，当前尚未开放死星制造。';
 for(const t of Object.values(tech)){t.lore=technologyLore[t.id]?.text||t.description;t.loreSource=technologyLore[t.id]?.source;t.quote=technologyQuotes[t.id];}
 const unitOrder=['Light_Fighter','Heavy_Fighter','Cruiser','Battleship','Dreadnought','Bomber','Destroyer','Cargo_Ship','Large_Cargo_Ship','Colony_Ship','Recycler','Probe','Solar_Satellite','Rocket_Launcher','Light_Laser','Plasma_Cannon'];

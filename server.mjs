@@ -1,3 +1,6 @@
+import {EQUITY_VERSION} from './game/exchange-equity.mjs';
+import {FACTION_WARS_VERSION} from './game/faction-wars.mjs';
+import {factionWarReplay} from './game/faction-war-replay.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,6 +16,12 @@ import {starMap} from './game/star-map.mjs';
 import {battleVisible,controlBattle,spatialSnapshot,spatialMetadata} from './game/spatial-battle.mjs';
 import {battleStorage} from './game/battle-storage.mjs';
 import {createSaveWriter} from './game/save-writer.mjs';
+import {MARKET_VERSION} from './game/market.mjs';
+import {GRAND_POWERS_VERSION} from './game/grand-powers.mjs';
+import {MINOR_NATIONS_VERSION} from './game/minor-nations.mjs';
+import {DIPLOMACY_VERSION} from './game/diplomacy.mjs';
+import {MEGASTRUCTURES_VERSION} from './game/megastructure-rules.mjs';
+import {GRAND_POWER_MEGASTRUCTURES_VERSION} from './game/grand-power-megastructures.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url)),saveFile=process.env.EMPIRE_SAVE_FILE||path.join(root,'data','universe.json');
 const isolated=path.resolve(saveFile).toLowerCase()!==path.join(root,'data','universe.json').toLowerCase();
@@ -28,6 +37,16 @@ for(const method of ['log','warn','error']){
 }
 fs.mkdirSync(path.dirname(saveFile),{recursive:true});
 let world=fs.existsSync(saveFile)?JSON.parse(fs.readFileSync(saveFile,'utf8')):createWorld();
+if(fs.existsSync(saveFile)&&(!(world.strategic?.version>=DIPLOMACY_VERSION)||!(world.market?.version>=MARKET_VERSION)||!(world.grandPowers?.version>=GRAND_POWERS_VERSION)||!(world.galacticEconomy?.version>=EQUITY_VERSION)||!(world.factionWars?.version>=FACTION_WARS_VERSION)||!(world.minorNations?.version>=MINOR_NATIONS_VERSION)||!(world.megastructures?.version>=MEGASTRUCTURES_VERSION)||!(world.grandPowerMegastructures?.version>=GRAND_POWER_MEGASTRUCTURES_VERSION))){
+  const humans=Object.values(world.players).filter(p=>!p.bot);
+  for(const p of humans)if(world.planets[p.home]?.owner!==p.id)throw Error('账号母星归属异常，已停止更新，请检查原存档');
+  const update=!(world.strategic?.version>=DIPLOMACY_VERSION)?'strategic-trade':!(world.market?.version>=MARKET_VERSION)?'galactic-market':!(world.grandPowers?.version>=GRAND_POWERS_VERSION)?'grand-powers':!(world.galacticEconomy?.version>=EQUITY_VERSION)||!(world.factionWars?.version>=FACTION_WARS_VERSION)?'exchange-and-wars':!(world.minorNations?.version>=MINOR_NATIONS_VERSION)?'starbay-republic':!(world.megastructures?.version>=MEGASTRUCTURES_VERSION)?'megastructures':'grand-power-megastructures';
+  const backup=saveFile+'.before-'+update+'-'+Date.now()+'.bak';
+  fs.copyFileSync(saveFile,backup,fs.constants.COPYFILE_EXCL);
+  if(fs.existsSync(localSessionFile))fs.copyFileSync(localSessionFile,backup+'.session',fs.constants.COPYFILE_EXCL);
+  if(fs.existsSync(saveFile+'.battles')){fs.mkdirSync(backup+'.battles');for(const name of fs.readdirSync(saveFile+'.battles'))fs.copyFileSync(path.join(saveFile+'.battles',name),path.join(backup+'.battles',name),fs.constants.COPYFILE_EXCL);}
+  console.log('经济系统更新前已核实 %d 个原账号并备份：%s',humans.length,backup);
+}
 if(fs.existsSync(saveFile)&&!(world.npcDefenseRepairVersion>=1)){
   const backup=saveFile+'.before-npc-defense-repair-'+Date.now()+'.bak';
   fs.copyFileSync(saveFile,backup,fs.constants.COPYFILE_EXCL);
@@ -133,6 +152,8 @@ const server=http.createServer(async(req,res)=>{
       const player=getPlayer(req);
       if(!player){json(res,{error:'请刷新游戏主页，重新连接账号'},401);return;}
       advance(world);revision++;
+      const publicWar=/^\/api\/faction-wars\/([a-f0-9-]+)$/.exec(url.pathname);
+      if(publicWar&&req.method==='GET'){const b=world.factionWars?.battles.find(b=>b.id===publicWar[1]);if(!b||b.status==='cancelled'){json(res,{error:'会战记录不存在或已撤军'},404);return;}json(res,factionWarReplay(world,b));return;}
       const combat=/^\/api\/battles\/([a-f0-9-]+)(?:\/(events|control))?$/.exec(url.pathname);
       if(combat){
         const current=()=>world.battles?.[combat[1]],b=current();

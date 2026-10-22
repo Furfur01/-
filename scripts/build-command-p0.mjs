@@ -8,18 +8,25 @@ import {exportModels} from '../client/command-p0/export-models.mjs';
 import {writeBuildFile} from './write-build-file.mjs';
 
 const root=path.resolve(import.meta.dirname,'..'),dir=path.join(root,'opendesign/mockups/galactic-command');
-// Source-only UI changes do not need to rewrite the retained GLB exports.
-if(!process.argv.includes('--ui-only')){
 const assetDir=path.join(dir,'assets/p0'),legacy=path.join(root,'opendesign/mockups/galaxy-empire/assets');
 const art=JSON.parse(await fs.readFile(path.join(root,'game/original-assets.json'),'utf8'));
 const archive=publicCatalog.shipArchive;
 const sources=[];
-for(const folder of ['tech','ships','models'])await fs.mkdir(path.join(assetDir,folder),{recursive:true});
+await fs.mkdir(path.join(assetDir,'tech'),{recursive:true});
+await fs.mkdir(path.join(legacy,'technologies-v2'),{recursive:true});
 for(const t of Object.values(tech)){
  const source=t.icon?path.join(root,'assets',t.icon):path.join(legacy,art.technology[t.id]||`technologies-v2/${t.id}.png`);
- await fs.copyFile(source,path.join(assetDir,'tech',t.id+'.png'));
+ const bytes=await fs.readFile(source);
+ writeBuildFile(path.join(assetDir,'tech',t.id+'.png'),bytes);
+ if(t.icon)writeBuildFile(path.join(legacy,'technologies-v2',t.id+'.png'),bytes);
  sources.push({id:t.id,source:path.relative(root,source),kind:t.icon?'Imagegen original-style technology icon':art.technology[t.id]?'Original APK technology icon':'Project supplementary technology icon'});
 }
+// UI builds include technology art; retained ship geometry needs no re-export.
+if(process.argv.includes('--ui-only')){
+ const previous=JSON.parse(await fs.readFile(path.join(assetDir,'sources.json'),'utf8'));
+ writeBuildFile(path.join(assetDir,'sources.json'),JSON.stringify([...previous.filter(s=>!tech[s.id]||s.kind?.includes('model')), ...sources],null,2));
+}else{
+for(const folder of ['ships','models'])await fs.mkdir(path.join(assetDir,folder),{recursive:true});
 const modelShips=[];
 for(const item of Object.values(units).filter(u=>u.fleetAvailable!==false)){
  const entry=archive.find(s=>s.id===item.id),source=entry?.referenceHash?path.join(root,'models/reference/original-atlas-v1',entry.reference):path.join(legacy,art.units[item.id]||`civilian/${item.id}.png`);

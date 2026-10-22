@@ -1,0 +1,143 @@
+{
+  "source": "models\\recovered\\tripo-originals-20261013\\Iron_Behemoth.glb",
+  "method": "Adaptive collapse topology reduction preserving original UV, PBR and normal maps; independent emissive prow geometry.",
+  "runtimeBase": "/assets/megastructures/",
+  "lods": [
+    {
+      "file": "devourer-near.glb",
+      "bytes": 8112944,
+      "vertices": 87812,
+      "triangles": 121376,
+      "sourceVertices": 1017302,
+      "sourceTriangles": 1943586,
+      "textures": [
+        {
+          "name": "Color_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ]
+        },
+        {
+          "name": "NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ]
+        },
+        {
+          "name": "ORM_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            2048,
+            2048
+          ]
+        }
+      ],
+      "blenderBounds": [
+        [
+          -4.142209053039551,
+          -7.105493545532227,
+          -3.3461554050445557
+        ],
+        [
+          4.141390323638916,
+          7.0003557205200195,
+          3.346405267715454
+        ]
+      ],
+      "gltfAxes": {
+        "up": "+Y",
+        "forward": "+Z",
+        "lengthAxis": "Z"
+      },
+      "length": 14,
+      "emissiveMeshes": [
+        "Prow_Triangle_Emission_1",
+        "Prow_Triangle_Emission_2",
+        "Prow_Triangle_Emission_3"
+      ],
+      "renderVertices": 90814,
+      "drawCalls": 8
+    },
+    {
+      "file": "devourer-mid.glb",
+      "bytes": 2160368,
+      "vertices": 21374,
+      "triangles": 25376,
+      "sourceVertices": 1017302,
+      "sourceTriangles": 1943586,
+      "textures": [
+        {
+          "name": "Color_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "name": "NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "name": "ORM_c7483231-2085-489b-bada-7b4c7aed50bc",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "size": [
+            1024,
+            1024
+          ]
+        }
+      ],
+      "blenderBounds": [
+        [
+          -4.124751567840576,
+          -7.105493545532227,
+          -3.346513032913208
+        ],
+        [
+          4.130068302154541,
+          7.006241321563721,
+          3.340466022491455
+        ]
+      ],
+      "gltfAxes": {
+        "up": "+Y",
+        "forward": "+Z",
+        "lengthAxis": "Z"
+      },
+      "length": 14,
+      "emissiveMeshes": [
+        "Prow_Triangle_Emission_1",
+        "Prow_Triangle_Emission_2",
+        "Prow_Triangle_Emission_3"
+      ],
+      "renderVertices": 23571,
+      "drawCalls": 8
+    }
+  ]
+}

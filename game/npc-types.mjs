@@ -44,6 +44,9 @@ export function plannedNpcs(world,galaxy,system,local){
   const existing=local.filter(p=>p.npc&&!p.moon);
   const fresh=!marker&&!existing.length,types=fresh?npcTypes:npcTypes.filter(t=>t.index===5&&!existing.some(p=>npcType(p)?.id===t.id));
   const occupied=new Set(local.map(p=>p.position[2]));
+  // Fixed strategic deposits remain colonizable even when another new colony
+  // displaces an uninitialized camp from its preferred orbit.
+  for(const d of world.strategic?.deposits||[])if(d.position[0]===galaxy&&d.position[1]===system)occupied.add(d.position[2]);
   for(const m of world.missions||[])if(m.task==='colonize'&&m.phase==='outbound'&&m.position[0]===galaxy&&m.position[1]===system)occupied.add(m.position[2]);
   const result=[];for(const type of types){const slot=[type.slot,...Array.from({length:15},(_,i)=>i+1)].find(n=>!occupied.has(n));if(slot===undefined)break;occupied.add(slot);result.push({type,slot,id:`npc:${galaxy}:${system}:${type.index}`});}return result;
 }

@@ -1,5 +1,9 @@
-import {systemTerritory,polity} from './sovereignty.mjs';
+import {systemTerritory,polity,systemPolities,attackRestriction} from './sovereignty.mjs';
+import {resourceLocation} from './diplomacy.mjs';
 import {systemCoordinates} from './star-positions.mjs';
+import {stellarType} from './stellar-types.mjs';
+import {publicMegastructures} from './megastructures.mjs';
+import {publicLogistics} from './system-logistics.mjs';
 import {systemBiomes,planetsBySystem} from './system-biomes.mjs';
 export {systemTypes} from './system-biomes.mjs';
 import {plannedNpcs,npcPublic} from './npc-types.mjs';
@@ -17,21 +21,21 @@ export function planetName(system,slot,biome){
 }
 export const systemName=id=>prefixes[(id-1)%32]+cores[Math.floor((id-1)/32)]+'座';
 export const bodyKey=p=>p.moon?`moon:${p.id}`:`1:${p.position[1]}:${p.position[2]}`;
-export const systemPositions=()=>systemCoordinates().map(s=>({...s,name:systemName(s.id)}));
+export const systemPositions=()=>systemCoordinates().map(s=>({...s,name:systemName(s.id),starType:stellarType(s.id)}));
 export function starMap(world){
   const existing=new Map();for(const p of Object.values(world.planets||{}))if(p.position[0]===1&&!p.moon)existing.set(p.position.join(':'),p);
-  const planets=[],systems=planetsBySystem(world);
+  const planets=[],systems=planetsBySystem(world),territories=systemPolities(world);
   for(let system=1;system<=SYSTEM_COUNT;system++){
     const local=systems.get(`1:${system}`)||[],types=systemBiomes(world,1,system,local),planned=new Map();
     // Public projection uses the same planner as initialization, without mutation.
     for(const {type,slot,id}of plannedNpcs(world,1,system,local))planned.set(slot,{npc:true,npcType:type.id,name:type.name,biome:'terrestrial'});
     for(let slot=1;slot<=15;slot++){
       const position=[1,system,slot],key=position.join(':'),p=existing.get(key)||planned.get(slot),biome=p?.biome||types[slot-1],catalogName=planetName(system,slot,biome);
-      planets.push({key,id:p?.id??null,position,biome,catalogName,name:p?.name||catalogName,owner:p?.owner??null,ownerName:world.players?.[p?.owner]?.name||'',npc:!!p?.npc,npcSkin:p?.npcSkin??null,...npcPublic(p),moon:false,known:true});
+      planets.push({key,id:p?.id??null,position,biome,catalogName,name:p?.name||catalogName,owner:p?.owner??null,ownerName:world.players?.[p?.owner]?.name||'',npc:!!p?.npc,npcSkin:p?.npcSkin??null,...npcPublic(p),moon:false,known:true,devastation:p?.devastation||null});
     }
     planets.push({key:`1:${system}:16`,id:null,position:[1,system,16],name:systemName(system)+'小行星带',kind:'belt',owner:null});
   }
-  for(const p of Object.values(world.planets||{}))if(p.position[0]===1&&p.moon)planets.push({key:bodyKey(p),id:p.id,position:[...p.position],name:p.name,catalogName:planetName(p.position[1],p.position[2],existing.get(p.position.join(':'))?.biome)+'卫星',biome:'moon',moon:true,parent:p.parent,owner:p.owner,ownerName:world.players?.[p.owner]?.name||''});
-  for(const p of planets){Object.assign(p,systemTerritory(world,p.position));if(p.owner)p.polity=polity(world,p.owner);}
-  return {version:STAR_MAP_VERSION,galaxy:1,systems:systemPositions().map(s=>({...s,...systemTerritory(world,[1,s.id]),expansionZone:world.sovereignty?.safeSystems.includes(s.id)||false})),planets};
+  for(const p of Object.values(world.planets||{}))if(p.position[0]===1&&p.moon)planets.push({key:bodyKey(p),id:p.id,position:[...p.position],name:p.name,catalogName:planetName(p.position[1],p.position[2],existing.get(p.position.join(':'))?.biome)+'卫星',biome:'moon',devastation:p.devastation||null,moon:true,parent:p.parent,owner:p.owner,ownerName:world.players?.[p.owner]?.name||''});
+  for(const p of planets){p.attackBlocked=attackRestriction(world,p,territories);Object.assign(p,systemTerritory(world,p.position,territories),!p.moon?resourceLocation(world,p.position):{});if(p.owner)p.polity=polity(world,p.owner);}
+  return {version:STAR_MAP_VERSION,galaxy:1,strategicStrikes:(world.arsenal?.strikes||[]).map(s=>({id:s.id,kind:s.kind,owner:s.owner,fromPosition:s.fromPosition,position:s.position,target:s.target,status:s.status,start:s.start,end:s.end})), logistics:publicLogistics(world,planets),megastructures:publicMegastructures(world),systems:systemPositions().map(s=>({...s,...systemTerritory(world,[1,s.id],territories),...resourceLocation(world,[1,s.id]),expansionZone:world.sovereignty?.safeSystems.includes(s.id)||false,playerReserve:world.grandPowers?.reserve.includes(s.id)||false})),planets};
 }

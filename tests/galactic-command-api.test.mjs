@@ -15,6 +15,28 @@ import {createSpatialBattle,addSpatialFleet,recordFrame} from '../game/spatial-b
 import {units,tech} from '../game/catalog.mjs';
 import {chartRoute,routePoint} from '../scripts/universe/chart-routes.js';
 import {fleetColors,fleetMapChoice} from '../client/command-ui/fleet-map.mjs';
+import {territoryLabels,footprint,PUBLIC_CORE_RADIUS} from '../scripts/universe/territory-labels.js';
+import {strategyData,territoryGeometry} from '../scripts/universe/environment-geometry.js';
+import {OUTER_ASTEROID_BELT} from '../scripts/universe/asteroid-layout.js';
+import * as THREE from 'three';
+import {createMegastructures} from '../scripts/universe/megastructures.js';
+import {starRadius,bodyRecords} from '../scripts/universe/spatial.js';
+import {logisticsKey,publicLogistics} from '../game/system-logistics.mjs';
+import {logisticsPose,logisticsGatePose} from '../scripts/universe/logistics-layout.js';
+import {logisticsMembers,createLogisticsVisual} from '../scripts/universe/logistics-visual.js';
+
+test('territory badges use real polity names and owned anchors outside the public core without mutating geography',()=>{
+ const world=createWorld(),player=createPlayer(world,'测试_星图标识'),map=starMap(world);
+ const layout=JSON.parse(fs.readFileSync(new URL('../opendesign/mockups/planet-construction-review/galaxy-layout.json',import.meta.url)));
+ const stars=map.systems.map(s=>({...s,position:layout.systems.find(p=>p.id===s.id).position.map(v=>v*100)}));
+ const records=strategyData(stars,map.planets,player.id),data=territoryGeometry(stars,records),before=structuredClone(data),labels=territoryLabels(data,player.id);
+ for(const id of ['faction:iron','faction:dawn','faction:zenith','faction:obsidian','realm:starbay'])assert(labels.some(l=>l.id===id));
+ assert.equal(new Set(labels.map(l=>l.id)).size,labels.length);
+ for(const l of labels){assert(l.name);assert(data.cells.find(c=>c.id===l.system).owners.some(o=>o.id===l.id));for(const p of footprint(l.position,l.width))assert(Math.hypot(p[0],p[2])>PUBLIC_CORE_RADIUS);}
+ assert(!labels.some(l=>l.id==='reserved-expansion'||l.id===player.id));assert(!records.some(r=>r.territoryClass==='reserved-expansion'));
+ assert.deepEqual(world.grandPowers.reserve,map.systems.filter(s=>s.playerReserve).map(s=>s.id));
+ assert.deepEqual(data,before);
+});
 
 test('local bridge resumes Local progress without returning its cookie and retains legacy APIs',async()=>{
   const world=createWorld(),local=createPlayer(world,'Local test progress'),browser=createPlayer(world,'Browser test progress');
@@ -142,6 +164,52 @@ test('indexed state projections preserve current colony, reserved orbit and rese
   assert.equal(nextMap.planets.find(p=>p.id===local.id).name,local.name,'Projection indexes must not outlive a request');
 });
 
+test('public logistics shows existing foreign hubs and only their real public members without leaking management data',()=>{
+ const world=createWorld(),player=createPlayer(world,'测试_公开物流'),home=world.planets[player.home],foreign=world.players[world.grandPowers.regions[0].leader];
+ const free=Array.from({length:15},(_,i)=>i+1).filter(slot=>!Object.values(world.planets).some(p=>!p.moon&&p.position.join(':')===`${home.position[0]}:${home.position[1]}:${slot}`));
+ const colony={...structuredClone(home),id:'test-logistics-colony',name:'测试_接入殖民地',position:[1,home.position[1],free[0]]};
+ const moon={...structuredClone(home),id:'test-logistics-moon',name:'测试_公开卫星',moon:true,parent:home.id};
+ const rival={...structuredClone(home),id:'test-logistics-rival',name:'测试_同系外国殖民地',owner:foreign.id,position:[1,home.position[1],free[1]]};
+ world.planets[colony.id]=colony;world.planets[moon.id]=moon;world.planets[rival.id]=rival;
+ const key=logisticsKey(home),otherKey=logisticsKey(rival),secret='test-private-logistics-invoice';
+ world.logisticsCenters[key]={owner:player.id,position:home.position.slice(0,2),level:1,resources:[123456,789012,345678],queue:{planet:home.id,start:world.at,end:world.at+60000,cost:[1,2,3],id:secret}};
+ world.logisticsCenters[otherKey]={owner:foreign.id,position:rival.position.slice(0,2),level:1};
+ const privateBefore=structuredClone(worldSnapshot(world,player).logistics),before=structuredClone(world),map=starMap(world),own=map.logistics.find(c=>c.key===key),other=map.logistics.find(c=>c.key===otherKey);
+ assert.deepEqual(world,before);assert.deepEqual(worldSnapshot(world,player).logistics,privateBefore,'own management projection retains balances, queues and moon membership');
+ assert.deepEqual(Object.keys(own).sort(),['host','key','level','members','owner','ownerName','position']);
+ assert.deepEqual(own.members,[home.id,colony.id,moon.id].sort((a,b)=>a.localeCompare(b)));assert.equal(own.owner,player.id);assert(own.members.includes(own.host));assert(!world.planets[own.host].moon);
+ assert.deepEqual(other.members,[rival.id]);assert.equal(other.owner,foreign.id);assert(other.ownerName);
+ for(const center of map.logistics){
+  assert(world.logisticsCenters[center.key].level>0);assert(center.members.every(id=>map.planets.some(p=>p.id===id&&p.owner===center.owner&&p.position.slice(0,2).join(':')===center.position.join(':'))));
+  for(const field of ['resources','capacity','rate','queue','cost','seconds'])assert.equal(field in center,false);
+ }
+ for(const region of world.grandPowerMegastructures.regions)for(const system of region.systems)assert(map.logistics.some(c=>c.key===`${region.leader}:1:${system}`),'preset gates have a corresponding visible hub');
+ assert.equal(JSON.stringify(map.logistics).includes(secret),false);
+ const withoutMoon=publicLogistics(world,map.planets.filter(p=>p.id!==moon.id)).find(c=>c.key===key);assert(!withoutMoon.members.includes(moon.id),'membership cannot disclose a body absent from the public map');
+ const star={id:home.position[1],position:[10000,0,20000],radius:starRadius(home.position[1])},centers=[own,other],bodies=bodyRecords(map.planets,[star]);
+ const poses=centers.map(center=>logisticsPose(center,star,centers));assert.notDeepEqual(poses[0].position,poses[1].position,'two civilizations in one system have separate hubs');
+ const renderer=createMegastructures({scene:new THREE.Scene(),camera:new THREE.PerspectiveCamera()});
+ try{
+  renderer.setState({systems:[star],planets:bodies,logistics:centers,megastructures:{systems:centers.map(center=>({...center,structures:{gate:{level:1}}})),habitats:[]}});
+  for(const [i,center]of centers.entries()){
+   const pose=poses[i],gate=logisticsGatePose(star,center,centers),record=renderer.focus({system:center.position,id:'gate',owner:center.owner,key:center.key});
+   assert.deepEqual(gate.position.map((n,k)=>n-pose.position[k]),[0,1500,-240]);assert.equal(gate.scale,20);assert.deepEqual(record.position,gate.position);assert.equal(record.scale,gate.scale);
+   const connected=logisticsMembers(center,bodies);assert.deepEqual(connected.map(p=>p.id).sort(),[...center.members].sort());assert(connected.every(p=>p.owner===center.owner&&p.coordinates[1]===star.id));
+   const visual=createLogisticsVisual({detailed:false});
+   try{
+    visual.setConnections(center,pose,bodies);assert.deepEqual([...visual.members].sort(),[...center.members].sort());assert.equal(visual.routeCount,center.members.length,'published moons retain their parent-planet branch');
+    if(center===own){
+     const routes=visual.group.getObjectByName('logistics-moon-routes');assert(routes?.isLineSegments2);
+     const {instanceStart,instanceEnd}=routes.geometry.attributes;assert(instanceStart.count>0&&instanceEnd.count===instanceStart.count);
+     const parent=bodies.find(p=>p.id===home.id),start=new THREE.Vector3().fromBufferAttribute(instanceStart,0).add(new THREE.Vector3(...pose.position)),distance=start.distanceTo(new THREE.Vector3(...parent.position));
+     assert(distance>parent.radius&&distance<parent.radius*1.2,'the moon route starts just outside its parent, not at the hub');
+    }
+   }finally{visual.dispose();}
+  }
+ }finally{renderer.dispose();}
+ world.logisticsCenters[key].level=0;assert(!starMap(world).logistics.some(c=>c.key===key),'unfinished private projects are not public facilities');
+});
+
 test('browser adapter ignores stale polls, blocks duplicate actions and exposes failures without rejected promises',async()=>{
   let poll,act,mode='init';const calls=[];
   const {api}=client(async(url,options)=>{
@@ -223,4 +291,105 @@ test('fleet map selection keeps arrival separate from the owned departure and cl
   assert.deepEqual(fleetMapChoice(api,home,{...draft,task:'explore'},'to',{kind:'core',zone:'inner'}).patch.position,[1,2,16]);
   assert.equal(new Set(Object.values(fleetColors)).size,Object.keys(fleetColors).length);
   assert.deepEqual({api,draft},before);
+});
+
+test('stellar extractors meet their actual star surface and stay selectable across model, silhouette and marker views',()=>{
+ // Real renderer objects, with no WebGL context, server, save or asset loading.
+ // These are broad viewing scales, not exact pixel-threshold specifications.
+ for(const id of [5,2,3,37]){
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(55,1.5,1,1e14),origin=[1200000,1500,-2300000],radius=starRadius(id),errors=[];
+  const key=`test-observer:1:${id}`,system={key,owner:'test-observer',ownerName:'测试_提取器观景',position:[1,id],host:`test-host-${id}`,structures:{extractor:{level:1}}};
+  const state={playerId:'test-observer',systems:[{id,position:[...origin],radius}],planets:[],megastructures:{systems:[system],habitats:[]}};
+  const unchanged=structuredClone(state),runtime=createMegastructures({scene,camera,onError:error=>errors.push(error)});
+  let disposed=false;
+  try{
+   runtime.setState(state);
+   const record=runtime.focus({system:[1,id],id:'extractor'});assert(record);
+   runtime.focus({system:[1,id],id:'listener'}); // Clear selection for ordinary LODs.
+   const view=(distance,dt=.1)=>{
+    const target=new THREE.Vector3(...record.position).sub(new THREE.Vector3(...origin));
+    camera.position.copy(target).add(new THREE.Vector3(0,distance*.3,distance));camera.lookAt(target);camera.updateMatrixWorld(true);
+    runtime.update({time:1,origin,eye:camera.position.toArray().map((n,i)=>n+origin[i]),height:800,distance,dt});scene.updateMatrixWorld(true);
+   };
+   view(record.radius*3);
+   assert(runtime.stats.detailed>0);assert(runtime.pickTargets.some(r=>r.id===record.id));
+   const model=scene.getObjectByName(record.id);assert(model?.visible);
+   const star=new THREE.Vector3(),outward=model.getWorldPosition(new THREE.Vector3()).sub(star).normalize();
+   const inlet=new THREE.Vector3(-1,0,0).transformDirection(model.matrixWorld);
+   assert(inlet.dot(outward)<-.999,'the inlet points toward the actual star, not an unrotated offset');
+   let clearance=Infinity,vertices=0;
+   model.traverse(object=>{
+    if(!object.isMesh||!object.geometry?.attributes.position)return;
+    for(let parent=object;parent&&parent!==model;parent=parent.parent)if(parent.userData.effect)return;
+    const positions=object.geometry.attributes.position,point=new THREE.Vector3();
+    for(let i=0;i<positions.count;i++){point.fromBufferAttribute(positions,i).applyMatrix4(object.matrixWorld);clearance=Math.min(clearance,point.sub(star).dot(outward)-radius);vertices++;}
+   });
+   assert(vertices>0);assert(clearance>0,`system ${id} machinery must stay outside its photosphere`);
+   const field=model.getObjectByName('stellar-extraction-field'),hotspot=model.getObjectByName('stellar-surface-hotspot'),flow=model.getObjectByName('stellar-matter-inflow');
+   assert(field&&hotspot&&flow?.isLineSegments2&&flow.material.isLineMaterial,'extraction uses a surface contact and visible-width open flowing filaments');
+   const fieldCenter=field.localToWorld(new THREE.Vector3(-field.userData.starDistance,0,0));
+   assert(fieldCenter.distanceTo(star)<radius*.001,'the field and rendered star share a center');
+   const contact=new THREE.Vector3().fromBufferAttribute(hotspot.geometry.attributes.position,0).applyMatrix4(hotspot.matrixWorld);
+   assert(Math.abs(contact.distanceTo(star)-radius)<radius*.01,'contact geometry follows the real stellar radius');
+   const flowVertices=()=>{
+    const {instanceStart:start,instanceEnd:end}=flow.geometry.attributes;
+    return Array.from({length:flow.geometry.instanceCount},(_,i)=>[start.getX(i),start.getY(i),start.getZ(i),end.getX(i),end.getY(i),end.getZ(i)]).flat();
+   };
+   const flowBefore=flowVertices();assert(flowBefore.length>0&&flowBefore.every(Number.isFinite));view(record.radius*3,.5);
+   const flowAfter=flowVertices();assert(flowAfter.every(Number.isFinite));assert.notDeepEqual(flowAfter,flowBefore,'matter moves instead of remaining a fixed luminous tube');
+   view(record.radius*60);assert.equal(runtime.stats.detailed,0);assert(runtime.pickTargets.some(r=>r.id===record.id));assert(scene.getObjectByName(record.id)?.visible);
+   view(record.radius*4000);assert(runtime.stats.markers>0);assert(runtime.pickTargets.some(r=>r.key===key&&(r.cluster||r.id===record.id)));assert.equal(runtime.stats.detailed,0);
+   runtime.focus({system:[1,id],id:'extractor'});view(record.radius*1e7);
+   assert(runtime.pickTargets.some(r=>r.id===record.id));assert(runtime.stats.markers>0);assert.equal(runtime.stats.detailed,0,'selection at galaxy distance must not force the detailed factory');
+   assert.deepEqual(state,unchanged);assert.deepEqual(errors,[]);
+   const markerGeometry=scene.getObjectByName('megastructure-distant-markers').geometry;let released=false;markerGeometry.addEventListener('dispose',()=>{released=true;});
+   runtime.dispose();disposed=true;assert(released);assert.equal(scene.getObjectByName('stellar-megastructures'),undefined);assert.equal(runtime.stats.cached,0);
+  }finally{if(!disposed)runtime.dispose();}
+ }
+});
+
+test('asteroid collectors remain visible and tracked off the belt centre, with phased construction and continuous LOD motion',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(55,1.5,1,1e14),origin=[1200000,1500,-2300000];
+ const system={key:'test-miner:1:5',owner:'test-miner',position:[1,5],host:'test-miner-home',structures:{industry:{level:1}}};
+ const state={playerId:'test-miner',systems:[{id:5,position:origin,radius:900}],planets:[],megastructures:{systems:[system],habitats:[]}},before=structuredClone(state);
+ const runtime=createMegastructures({scene,camera});
+ try{
+  runtime.setState(state);const record=runtime.focus({system:[1,5],id:'industry'});
+  assert.deepEqual(record.position,state.systems[0].position,'the complete belt is centred on its star, not the old platform offset');
+  const view=(distance,dt,renderOrigin=origin)=>{
+   const target=new THREE.Vector3(...runtime.followPosition(record.id)).sub(new THREE.Vector3(...renderOrigin));
+   camera.position.copy(target).add(new THREE.Vector3(.37,.53,.76).multiplyScalar(distance));camera.lookAt(target);camera.updateMatrixWorld(true);
+   runtime.update({time:1,origin:renderOrigin,eye:camera.position.toArray().map((v,i)=>v+renderOrigin[i]),height:800,distance,dt});scene.updateMatrixWorld(true);
+  };
+  view(record.focusRadius*3,.1);
+  assert.equal(runtime.stats.detailed,1);assert(scene.getObjectByName(record.id)?.visible);
+  const collector=scene.getObjectByName('leviathan-collector');assert(collector);
+  const actual=collector.localToWorld(new THREE.Vector3(0,0,3)).add(new THREE.Vector3(...origin));
+  assert(actual.distanceTo(new THREE.Vector3(...runtime.followPosition(record.id)))<1e-6,'camera follows the actual moving collector');
+  const centre=collector.getWorldPosition(new THREE.Vector3());
+  assert(Math.abs(Math.hypot(centre.x,centre.z)-OUTER_ASTEROID_BELT.radius*100)<1e-6,'the miner patrols the existing outer asteroid belt');
+  const matrix=new THREE.Matrix4(),point=new THREE.Vector3();let rocks=0;
+  scene.traverse(object=>{
+   if(!object.name.startsWith('sparse-asteroids-'))return;
+   for(let i=0;i<object.count;i++){
+    object.getMatrixAt(i,matrix);point.setFromMatrixPosition(matrix).applyMatrix4(object.matrixWorld);
+    assert(Math.abs(Math.hypot(point.x,point.z)-OUTER_ASTEROID_BELT.radius*100)<=OUTER_ASTEROID_BELT.halfWidth*100,'detailed rocks share the scenery belt radius');rocks++;
+   }
+  });assert.equal(rocks,576);
+  const rebased=runtime.followPosition(record.id);view(record.focusRadius*3,0,rebased);
+  assert(collector.localToWorld(new THREE.Vector3(0,0,3)).length()<1e-6,'floating-origin camera movement cannot displace the collector');
+  assert.deepEqual(runtime.followPosition(record.id),rebased);
+  const start=runtime.followPosition(record.id);view(record.focusRadius*3,1);assert.notDeepEqual(runtime.followPosition(record.id),start);
+  const position=runtime.followPosition(record.id);view(record.focusRadius*80,0);assert.equal(runtime.stats.detailed,0);assert.deepEqual(runtime.followPosition(record.id),position);
+  const distant=scene.getObjectByName('asteroid-industry-distant'),farCollector=distant.getObjectByName('leviathan-collector');
+  assert(farCollector.localToWorld(new THREE.Vector3(0,0,3)).add(new THREE.Vector3(...origin)).distanceTo(new THREE.Vector3(...position))<1e-6,'LOD keeps the same world-space orbit');
+  distant.traverse(object=>{if(!object.isPoints)return;const points=object.geometry.attributes.position;for(let i=0;i<points.count;i++){point.fromBufferAttribute(points,i).applyMatrix4(object.matrixWorld);assert(Math.abs(Math.hypot(point.x,point.z)-OUTER_ASTEROID_BELT.radius*100)<=OUTER_ASTEROID_BELT.halfWidth*100+.01);}});
+  view(record.focusRadius*3,0);assert.equal(runtime.stats.detailed,1);assert.deepEqual(runtime.followPosition(record.id),position);
+  const factory=scene.getObjectByName('asteroid_belt');assert(factory);
+  // Construction uses actual assemblies, not a flattened finished model.
+  const queued=structuredClone(state);queued.megastructures.systems[0].structures.industry={level:0,queue:{start:Date.now(),end:Date.now()+600000}};runtime.setState(queued);view(record.focusRadius*3,0);
+  assert(scene.getObjectByName('megastructure-blueprint'));assert.equal(scene.getObjectByName('asteroid_belt').scale.y,1);assert.equal(scene.getObjectByName('collector-flow').visible,false);
+  assert.deepEqual(state,before);
+ }finally{runtime.dispose();}
+ assert.equal(scene.getObjectByName('stellar-megastructures'),undefined);
 });

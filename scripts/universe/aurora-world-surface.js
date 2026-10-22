@@ -1,3 +1,4 @@
+import {createDesolationVisual} from './desolation-visual.js';
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {createWorldField} from './aurora-worlds/field.js';
@@ -110,7 +111,8 @@ export function createAuroraWorldSurface(body,{catalog={},workerURL=true,quality
  }
  const root=new THREE.Group(),content=new THREE.Group();root.name='planet/'+(body.key??body.id);content.name='aurora-imported-world';content.scale.setScalar(scale);root.add(content);
  const planetInverse={value:new THREE.Matrix4()};
- const proxy=makeProxy(field);prepareTerrainShaders(proxy,planetInverse);content.add(proxy);
+ const desolation=body.devastation?createDesolationVisual(body.devastation.kind):null;
+ const proxy=makeProxy(field);desolation?.apply(proxy);prepareTerrainShaders(proxy,planetInverse);content.add(proxy);
  const ids=type==='moon'?AURORA_MOON_IDS:AURORA_PLANET_IDS;
  const definitions=ids.map(id=>({id,instanceKey:id,name:catalog.buildings?.[id]?.name||FACILITIES.find(f=>f.id===id)?.name||id}));
  const sites=new Map(),fine=new Map(),overviews=new Map(),targets=new Map();
@@ -144,7 +146,7 @@ export function createAuroraWorldSurface(body,{catalog={},workerURL=true,quality
   const generation=++terrainGeneration;stats.terrain.pending=1;
   const task=createWorldTerrain(field,{quality:sourceQuality(currentQuality),worker:!!workerURL,exclusions,signal}).then(next=>{
    if(disposed||generation!==terrainGeneration){next.dispose();return;}
-   prepareTerrainShaders(next.root,planetInverse);
+   prepareTerrainShaders(next.root,planetInverse);desolation?.apply(next.root);
    terrain?.root.removeFromParent();terrain?.dispose();terrain=next;terrain.root.name='aurora-world-terrain';content.add(terrain.root);proxy.visible=false;
    stats.terrain={...next.stats,globalReady:true,pending:0};
   }).catch(error=>{if(signal.aborted)return;if(!disposed&&generation===terrainGeneration){stats.terrain.pending=0;stats.terrain.error=String(error.message||error);}throw error;});
@@ -227,6 +229,7 @@ export function createAuroraWorldSurface(body,{catalog={},workerURL=true,quality
  }
  const surface={root,stats,field,buildingTarget:target,
   get defenseDisplay(){return defenseDisplay;},
+  desolation,
   setDefensePreview(id){defensePreviewId=id;syncDefenseDisplay(defenseDisplayUnit(lastPlanet,id,lastCatalog.units),true);return !!defenseDisplay;},
   heightAt(direction){point.fromArray(tuple(direction)).normalize();return field.sample(point.x,point.y,point.z).height*scale;},
   normalAt(direction){return tuple(direction).map((n,i,a)=>n/(Math.hypot(...a)||1));},
@@ -236,7 +239,7 @@ export function createAuroraWorldSurface(body,{catalog={},workerURL=true,quality
   async ready(){if(lastPlanet)ensureLayout();await (pending||buildTerrain());},
   update({time=0,weatherTime=time,eye,origin=[0,0,0],camera,planet,catalog:nextCatalog=lastCatalog,selectedBuilding,light=body.sunDirection||[-.55,.42,-.72],now=Date.now(),viewportHeight=900,detailEnabled=true}={}){
    if(disposed||!visible)return;
-   serial++;lastPlanet=planet||null;lastCatalog=nextCatalog||{};selected=selectedBuilding?alias(typeof selectedBuilding==='string'?selectedBuilding:selectedBuilding.id):null;
+   serial++;if(body.devastation)planet=null;lastPlanet=planet||null;lastCatalog=nextCatalog||{};selected=selectedBuilding?alias(typeof selectedBuilding==='string'?selectedBuilding:selectedBuilding.id):null;
    const dt=clock===null?0:Math.min(.1,Math.max(0,time-clock));clock=time;
    root.updateWorldMatrix(true,true);inverse.copy(root.matrixWorld).invert();planetInverse.value.copy(content.matrixWorld).invert();
    if(eye)eyeLocal.fromArray(tuple(eye)).sub(point.fromArray(tuple(origin)));else eyeLocal.copy(camera?.position||point.set(0,0,body.radius*4));

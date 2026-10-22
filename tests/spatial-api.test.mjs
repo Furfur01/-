@@ -10,11 +10,68 @@ import {manualWeaponTiming,activeManualCues} from '../game/weapon-timing.mjs';
 import {units} from '../game/catalog.mjs';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
-import {createWorld,createPlayer,act} from '../game/engine.mjs';
+import {createWorld,createPlayer,act,ensureSystemNpcs} from '../game/engine.mjs';
 import {createSaveWriter} from '../game/save-writer.mjs';
 import {battleStorage} from '../game/battle-storage.mjs';
 import {battleStats} from '../game/battle-stats.mjs';
 import {shipCabinClass} from '../game/ship-cabins.mjs';
+import {devastateWorld} from '../game/desolation.mjs';
+import {Vector3,Raycaster} from 'three';
+import {createArsenalModel} from '../scripts/universe/arsenal-models.js';
+import {createReferenceImpact} from '../scripts/universe/arsenal-original.js';
+import {createLaunchVessel} from '../scripts/universe/arsenal-v3.js';
+import {arsenalTimings,arsenalShotTime,missileFlight,missileFlightTime,electronThroughFlight} from '../scripts/universe/arsenal-motion.js';
+
+test('arsenal replay keeps muzzle velocity, shows transit and continues the electron beam past impact',()=>{
+ const distance=100000,eps=1e-5,exit=missileFlight(6,distance);
+ assert(Math.abs(exit.trackX-213)<1e-8);assert.equal(exit.distance,0);
+ const before=(exit.trackX-missileFlight(6-eps,distance).trackX)/eps;
+ const after=missileFlight(6+eps,distance).distance/eps;
+ assert(Math.abs(before-exit.speed)<.01);assert(Math.abs(after-exit.speed)<.1);
+ let speed=0;for(let t=3.7;t<=12.8;t+=.025){const sample=missileFlight(t,distance);assert(sample.speed>=speed);speed=sample.speed;}
+ assert(Math.abs(missileFlight(12.8,distance).distance-distance)<1e-7);
+ // A same-system shot must not overshoot and fly backwards to fill the replay.
+ const near=1000,nearArrival=6+missileFlightTime(near);let nearSpeed=0;
+ for(let t=3.7;t<=nearArrival;t+=.025){const sample=missileFlight(t,near);assert(sample.speed>=nearSpeed);assert(sample.distance<=near);nearSpeed=sample.speed;}
+ assert(Math.abs(missileFlight(nearArrival,near).distance-near)<1e-7);
+ const vessel=createLaunchVessel({target:new Vector3(1e6,400,8e5)});
+ try{for(const t of [0,3.7,5.99,6,6.01,7,10,12.8]){vessel.update({shotTime:t,time:t});vessel.group.updateMatrixWorld(true);const actual=vessel.group.getObjectByName('Tiny segmented penetrator').getWorldPosition(new Vector3());assert(actual.distanceTo(vessel.getProjectileSample(t).position)<1e-6);}}finally{vessel.dispose();}
+ for(const [kind,t]of Object.entries(arsenalTimings)){
+  assert(t.release>=14);assert(t.arrival-t.release>=12);assert.equal(arsenalShotTime(kind,t.release),t.rawRelease);assert.equal(arsenalShotTime(kind,t.arrival),t.rawImpact);
+ }
+ const early=electronThroughFlight(.5,100,10000),late=electronThroughFlight(9,100,10000);
+ assert.equal(early.head,5000);assert.equal(late.head,90000);assert(late.tail>early.tail);assert(late.head>late.tail);
+});
+
+test('electron extraction clears the circulating ring and emits along the extended magnetic bore',()=>{
+ const target=new Vector3(6000,40,1800),model=createArsenalModel('accelerator',{target});
+ try{
+  model.updateShot(6,6);model.group.updateMatrixWorld(true);
+  const {extraction,muzzle}=model.raw,barrel=model.group.getObjectByName('superconducting-magnetic-confinement');
+  assert(barrel);assert(barrel.localToWorld(new Vector3(0,0,79)).distanceTo(muzzle)<1e-8);
+  assert(extraction.axis.dot(target.clone().sub(muzzle).normalize())>1-1e-10);
+  const junction=extraction.group.position,radial=new Vector3(junction.x,0,junction.z).normalize();
+  assert(Math.abs(radial.dot(extraction.axis))<1e-10,'Extraction must be tangent, not radial');
+  assert(muzzle.clone().sub(junction).normalize().dot(extraction.axis)>1-1e-10,'The whole extraction path must stay straight');
+  const bore=new Raycaster(junction,extraction.axis,.01,junction.distanceTo(muzzle));
+  assert.deepEqual(bore.intersectObject(model.group,true).filter(hit=>hit.object.material?.isMeshStandardMaterial),[],'The shared septum and barrel must leave the tangent bore open');
+  assert(Math.hypot(muzzle.x,muzzle.z)>220,'The outlet must clear the ring and its service hardware');
+  const beam=new Raycaster(muzzle,extraction.axis,.01,muzzle.distanceTo(target));
+  assert.deepEqual(beam.intersectObject(model.group,true).filter(hit=>hit.object.material?.isMeshStandardMaterial),[],'No solid machinery may cross the outgoing beam');
+  const fields=[];barrel.traverse(object=>{if(object.name==='magnetic-return-field')fields.push(object);});
+  assert.equal(fields.length,10);assert(fields.every(field=>field.material.opacity>.3));
+ }finally{model.dispose();}
+});
+
+test('missile radiation expands as three complete spherical shells',()=>{
+ const impact=createReferenceImpact({center:new Vector3(),radius:17});
+ try{
+  impact.update({kind:'missile',time:2,direction:new Vector3(0,1,0),quality:'balanced'});
+  assert.equal(impact.radiationShells.length,3);
+  for(const shell of impact.radiationShells){assert.equal(shell.geometry.parameters.thetaLength,Math.PI);assert.equal(shell.scale.x,shell.scale.y);assert.equal(shell.scale.y,shell.scale.z);assert(shell.material.uniforms.alpha.value>0);}
+  const sizes=impact.radiationShells.map(shell=>shell.scale.x);assert(sizes[0]>sizes[1]&&sizes[1]>sizes[2]);
+ }finally{impact.dispose();}
+});
 
 test('new ships use catalog and technology while saved battle hulls keep their entry-time values',()=>{
  const b=createSpatialBattle({id:'wiki-test',attacker:'test',defender:'enemy',start:0});
@@ -55,6 +112,20 @@ test('background saves retain immutable generations, rollback on disk failure an
  }finally{await writer.close();assert(path.resolve(dir).startsWith(path.resolve(os.tmpdir())+path.sep));fs.rmSync(dir,{recursive:true,force:true});}
 });
 
+test('stellar destruction writes a new finished battle checkpoint even at the same combat tick',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'empire-stellar-checkpoint-')),store=battleStorage(path.join(dir,'universe.json'));
+ try{
+  const world=createWorld(),player=createPlayer(world,'测试_恒星毁伤检查点'),target=Object.values(world.planets).find(p=>p.npc&&!p.moon);
+  const b=createSpatialBattle({id:randomUUID(),target:target.id,attacker:player.id,defender:null,start:world.at});
+  addSpatialFleet(b,{fleet:{Battleship:1},owner:player.id,side:'attacker'},units);world.battles={[b.id]:b};
+  const before=store.checkpoint(world),tick=b.tick;
+  devastateWorld(world,target,{id:'test-checkpoint-hit',kind:'missile',owner:player.id,end:world.at});
+  const after=store.checkpoint(world);assert.equal(b.tick,tick);assert.notEqual(before.battles[b.id].storage,after.battles[b.id].storage);
+  const saved=store.read(after.battles[b.id].storage);assert.equal(saved.status,'finished');assert.equal(saved.termination,'stellar-strike');assert.equal(saved.ships[0].hp,0);
+  assert.equal(store.read(before.battles[b.id].storage).status,'active');store.compact(world,after);assert.equal(world.battles[b.id].storage,after.battles[b.id].storage);
+ }finally{assert(path.resolve(dir).startsWith(path.resolve(os.tmpdir())+path.sep));fs.rmSync(dir,{recursive:true,force:true});}
+});
+
 test('manual fire waits for its sound cue, compensates its cycle, and cancels charging on release',()=>{
  const battle=(type='Destroyer')=>{const b=createSpatialBattle({id:'cue',attacker:'pilot',defender:'enemy',start:0});
   addSpatialFleet(b,{fleet:{[type]:1},side:'attacker',owner:'pilot'},units);
@@ -91,7 +162,7 @@ test('manual fire waits for its sound cue, compensates its cycle, and cancels ch
 });
 
 test('live API enforces ownership, streams authoritative state, releases timed-out control and reloads checkpoints',async()=>{
- const now=Date.now(),world=createWorld(now),a=createPlayer(world,'Test A',now,()=>.1),d=createPlayer(world,'Test D',now,()=>.2),x=createPlayer(world,'Test X',now,()=>.3),home=world.planets[a.home],target=world.planets[d.home];home.ships={Battleship:4};home.resources=[1e8,1e8,1e8];target.ships={Battleship:4};target.defense={};act(world,a,{type:'dispatch',planet:home.id,target:target.id,position:target.position,task:'attack',ships:home.ships},now);world.missions[0].end=now;
+ const now=Date.now(),world=createWorld(now),a=createPlayer(world,'Test A',now,()=>.1),d=createPlayer(world,'Test D',now,()=>.2),x=createPlayer(world,'Test X',now,()=>.3),home=world.planets[a.home],target=structuredClone(world.planets[d.home]);const system=world.planets[world.factionWars.outposts[0]].position[1];ensureSystemNpcs(world,1,system);target.id='test-border-target';target.position=[1,system,Array.from({length:15},(_,i)=>i+1).find(slot=>!Object.values(world.planets).some(p=>!p.moon&&p.position.join(':')===`1:${system}:${slot}`))];world.planets[target.id]=target;home.ships={Battleship:4};home.resources=[1e8,1e8,1e8];target.ships={Battleship:4};target.defense={};act(world,a,{type:'dispatch',planet:home.id,target:target.id,position:target.position,task:'attack',ships:home.ships},now);world.missions[0].end=now;
  const second=createSpatialBattle({id:randomUUID(),target:x.home,attacker:a.id,defender:x.id,start:now});for(const side of ['attacker','defender'])addSpatialFleet(second,{fleet:{Battleship:1},owner:side==='attacker'?a.id:x.id,side},units);world.battles[second.id]=second;
  home.buildings.Missile_Silo=Math.max(1,home.buildings.Missile_Silo||0);
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'spatial-api-')),file=path.join(dir,'universe.json');fs.writeFileSync(file,JSON.stringify(world));

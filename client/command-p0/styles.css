@@ -72,3 +72,10 @@
 .ship-damage{margin:14px 0}.ship-damage>div:not(.section-label){display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:13px;color:var(--muted)}.ship-damage b{color:var(--ink);font-weight:500}
 
 .ship-performance{margin:14px 0;border-block:1px solid #ffffff16;padding:12px 0;font-size:13px;line-height:1.65}.ship-performance summary{cursor:pointer;color:#dfe9ed}.ship-performance table{width:100%;border-collapse:collapse;margin:10px 0;font-variant-numeric:tabular-nums}.ship-performance th,.ship-performance td{text-align:right;padding:5px 0;font-weight:400}.ship-performance th:first-child{text-align:left}.ship-performance thead{color:#9aadb9}.ship-performance p{color:#a9bac5;margin:10px 0}.ship-performance a{color:#8ee4e8}
+
+.ship-strategic{padding:12px 0;border-block:1px solid var(--line,#a6dbc633);margin:12px 0;color:#a6dbc6;font-size:13px}.ship-strategic p{color:#9aada5;margin:8px 0;line-height:1.5}.ship-strategic button{min-height:44px;color:#a6dbc6;text-align:left}
+
+/* Paid pre-megastructure orders keep their original facility and deadline. */
+.mega-tech-unlocks{display:grid;gap:10px}.mega-tech-unlocks>button{padding:12px;text-align:left;background:#a6dbc608;border:1px solid #a6dbc625;border-radius:4px}.mega-tech-unlocks>button:hover{border-color:#a6dbc67a}.mega-unlock-title{display:flex;align-items:center;gap:8px;font-size:13px;color:#d6e8df}.mega-unlock-title b{flex:1;font-weight:500}.mega-unlock-levels{display:flex;gap:12px;margin-top:10px}.mega-unlock-levels>span{display:grid;gap:4px;flex:1;color:#a5b5b0}.mega-unlock-levels small{font-size:12px}.mega-unlock-levels strong{font-size:14px;font-weight:500}.mega-unlock-levels .met strong{color:#a6dbc6}
+.shipyard-screen.has-legacy-orders{grid-template-rows:minmax(300px,1fr) 146px 128px;overflow:auto}.legacy-flagship-queue{grid-column:2/4}.legacy-flagship-queue .queue-heading h3{font-size:14px}.legacy-flagship-queue .queue-heading>span{font-size:11px}
+@media(max-width:1100px){.shipyard-screen.has-legacy-orders{grid-template-rows:auto}.legacy-flagship-queue{grid-column:auto}}

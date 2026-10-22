@@ -4,6 +4,8 @@ export const factions=[
   {id:'frontier',name:'边境联邦',region:'外缘星区',galaxies:[1,3],color:'#6faeb8'},
   {id:'iron',name:'赤铁联邦',region:'赤铁星区',galaxies:[4,6],color:'#cb926a'},
   {id:'dawn',name:'曙光联邦',region:'曙光星区',galaxies:[7,9],color:'#ad91d4'},
+  {id:'zenith',name:'天穹合众国',region:'天穹星区',galaxies:[1],color:'#689dce'},
+  {id:'obsidian',name:'玄冕帝国',region:'玄冕星区',galaxies:[1],color:'#cc6f88'},
 ];
 
 // ponytail: authored garrisons stay defeated; add replenishment only with a later NPC economy.

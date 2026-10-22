@@ -1,110 +1,5 @@
 [
   {
-    "id": "Energy_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Energy_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Laser_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Laser_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Ion_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Ion_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Hyperspace_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Hyperspace_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Plasma_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Plasma_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Espionage_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Espionage_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Computer_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Computer_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Astrophysics_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Astrophysics_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Combustion_Drive",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Combustion_Drive.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Impulse_Drive",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Impulse_Drive.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Hyperspace_Drive",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Hyperspace_Drive.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Weapons_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Weapons_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Shielding_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Shielding_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Strength_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Strength_Tech.png",
-    "kind": "Original APK technology icon"
-  },
-  {
-    "id": "Intergalactic_Network",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\technologies-v2\\Intergalactic_Network.png",
-    "kind": "Project supplementary technology icon"
-  },
-  {
-    "id": "Graviton_Tech",
-    "source": "opendesign\\mockups\\galaxy-empire\\assets\\technologies-v2\\Graviton_Tech.png",
-    "kind": "Project supplementary technology icon"
-  },
-  {
-    "id": "Advanced_Ship_Engineering",
-    "source": "assets\\technology-generated\\Advanced_Ship_Engineering.png",
-    "kind": "Imagegen original-style technology icon"
-  },
-  {
-    "id": "Quantum_Command",
-    "source": "assets\\technology-generated\\Quantum_Command.png",
-    "kind": "Imagegen original-style technology icon"
-  },
-  {
-    "id": "Metamaterial_Tech",
-    "source": "assets\\technology-generated\\Metamaterial_Tech.png",
-    "kind": "Imagegen original-style technology icon"
-  },
-  {
-    "id": "Phase_Energy",
-    "source": "assets\\technology-generated\\Phase_Energy.png",
-    "kind": "Imagegen original-style technology icon"
-  },
-  {
-    "id": "Antimatter_Containment",
-    "source": "assets\\technology-generated\\Antimatter_Containment.png",
-    "kind": "Imagegen original-style technology icon"
-  },
-  {
     "id": "Cargo_Ship",
     "source": "models\\reference\\original-atlas-v1\\icons\\fleet_09_Cargo_Ship.png",
     "sha256": "4a78f4eb34dd2bca9c1b8257bf7f0a371466e84b43aa15b89a8fb580cdbffb9b",
@@ -512,5 +407,165 @@
     "target": "assets/p0/models/Annihilator.glb",
     "revision": "armored-antimatter-02",
     "sha256": "4d1a9b57cbefefbe9685902afe6e5e5c397ef672d1497cc35b6222a3231ed602"
+  },
+  {
+    "id": "Energy_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Energy_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Laser_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Laser_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Ion_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Ion_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Hyperspace_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Hyperspace_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Plasma_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Plasma_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Espionage_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Espionage_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Computer_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Computer_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Astrophysics_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Astrophysics_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Combustion_Drive",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Combustion_Drive.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Impulse_Drive",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Impulse_Drive.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Hyperspace_Drive",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Hyperspace_Drive.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Weapons_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Weapons_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Shielding_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Shielding_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Strength_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\original\\technology\\Strength_Tech.png",
+    "kind": "Original APK technology icon"
+  },
+  {
+    "id": "Intergalactic_Network",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\technologies-v2\\Intergalactic_Network.png",
+    "kind": "Project supplementary technology icon"
+  },
+  {
+    "id": "Graviton_Tech",
+    "source": "opendesign\\mockups\\galaxy-empire\\assets\\technologies-v2\\Graviton_Tech.png",
+    "kind": "Project supplementary technology icon"
+  },
+  {
+    "id": "Advanced_Ship_Engineering",
+    "source": "assets\\technology-generated\\Advanced_Ship_Engineering.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Quantum_Command",
+    "source": "assets\\technology-generated\\Quantum_Command.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Metamaterial_Tech",
+    "source": "assets\\technology-generated\\Metamaterial_Tech.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Phase_Energy",
+    "source": "assets\\technology-generated\\Phase_Energy.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Antimatter_Containment",
+    "source": "assets\\technology-generated\\Antimatter_Containment.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Megastructure_Engineering",
+    "source": "assets\\technology-generated\\Advanced_Ship_Engineering.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Macro_Materials",
+    "source": "assets\\technology-generated\\Metamaterial_Tech.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Stellar_Physics",
+    "source": "assets\\technology-generated\\Phase_Energy.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Spacetime_Engineering",
+    "source": "assets\\technology-generated\\Quantum_Command.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Automation_Control",
+    "source": "assets\\technology-generated\\Automation_Control.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Ecological_Engineering",
+    "source": "assets\\technology-generated\\Ecological_Engineering.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Stellar_Energy_Mastery",
+    "source": "assets\\technology-generated\\Phase_Energy.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Stellar_Antimatter_Synthesis",
+    "source": "assets\\technology-generated\\Antimatter_Containment.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Stellar_Coherent_Optics",
+    "source": "assets\\technology-generated\\Quantum_Command.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Relativistic_Ballistics",
+    "source": "assets\\technology-generated\\Advanced_Ship_Engineering.png",
+    "kind": "Imagegen original-style technology icon"
+  },
+  {
+    "id": "Extreme_Beam_Containment",
+    "source": "assets\\technology-generated\\Metamaterial_Tech.png",
+    "kind": "Imagegen original-style technology icon"
   }
 ]

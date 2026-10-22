@@ -1,4 +1,17 @@
+import {arsenalAction,arsenalEvents,finishArsenalEvent,arsenalSnapshot} from './arsenal.mjs';
+import {handleDeadMission} from './desolation.mjs';
+import {finishMegastructure} from './megastructures.mjs';
+import {migrateEquity} from './exchange-equity.mjs';
+import {migrateFactionWars,startFactionWar,finishFactionWar,activeFactionWar,factionWarSnapshot} from './faction-wars.mjs';
 import {navigationQuote} from './fleet-navigation.mjs';
+import {dysonSupply,habitatDemand,habitatFields,isMegaShip,megaShipSeconds,megaLevel} from './megastructure-rules.mjs';
+import {migrateMegastructures,megastructureAction,megastructureEvents,integrateMegamaterials,finishMegaShip,queueMegaShip,megaProductionState,megastructureSnapshot,stargateAction} from './megastructures.mjs';
+import {migrateGrandPowerMegastructures} from './grand-power-megastructures.mjs';
+import {migrateDiplomacy,integrateStrategic,npcIndustry,buildStrategicMine,tradeAction,diplomacySnapshot,resourceLocation,recordHostility} from './diplomacy.mjs';
+import {migrateMarket,advanceMarket,marketAction,marketSnapshot,settleWarOrders} from './market.mjs';
+import {migrateGrandPowers,grandPowerSnapshot} from './grand-powers.mjs';
+import {migrateMinorNations} from './minor-nations.mjs';
+import {strategicKeys} from './strategic-resources.mjs';
 import {civicAction,civicState,civicEffects} from './civics.mjs';
 import {availableResources,storageEconomy,integrateStorage,spendResources,depositResources,logisticsAction,logisticsSnapshot} from './system-logistics.mjs';
 import {planetIntel} from './planet-intel.mjs';
@@ -23,7 +36,7 @@ import {planetTypes,planetType} from './planet-types.mjs';
 import {NPC_SYSTEM_VERSION,npcType,npcPublic,plannedNpcs,restoreSystemCamps} from './npc-types.mjs';
 import {systemBiomes,planetsBySystem} from './system-biomes.mjs';
 import {npcDay,npcDayStart,refreshNpcCamp,refreshNpcCamps,migrateNpcDaily,migrateNpcDefenseRepairs} from './npc-daily.mjs';
-import {colonyLimit,polity,systemTerritory,canColonizeSystem,claimSystem,migrateSovereignty} from './sovereignty.mjs';
+import {colonyLimit,polity,systemTerritory,canColonizeSystem,claimSystem,migrateSovereignty,systemPolities,attackRestriction} from './sovereignty.mjs';
 import {RESOURCE_COMPLEX_VERSION,isLegacyStorage,migrateResourceComplexes,planetCapacities,resourceComplexes,usedBuildingFields} from './resource-complexes.mjs';
 import {SURFACE_LAYOUT_VERSION,surfaceLayout,migrateSurfaceLayout,validateSurfaceSlot} from './surface-layout.mjs';
 
@@ -58,19 +71,19 @@ export function economy(p,world=null){
   const b=p.buildings,L=id=>b[id]||0,multipliers=planetType(p).multipliers;
   const solar=Math.floor(20*L('Solar_Plant')*1.1**L('Solar_Plant'));
   const fusion=L('Fusion_Reactor')>0&&(world?availableResources(world,p)[2]:p.resources[2])>0?Math.floor(30*L('Fusion_Reactor')*1.15**L('Fusion_Reactor')):0;
-  const supply=solar+fusion+(p.ships.Solar_Satellite||0)*Math.max(1,Math.floor((p.temperature+160)/6));
-  const demand=Math.ceil(mineIds.reduce((sum,id,i)=>sum+Math.min(1,multipliers[i])*(i===2?20:10)*L(id)*1.1**L(id),0)+((L('Radar_Facility')>1)?2*1.52**L('Radar_Facility'):0));
+  const supply=solar+fusion+(p.ships.Solar_Satellite||0)*Math.max(1,Math.floor((p.temperature+160)/6))+dysonSupply(world,p);
+  const demand=Math.ceil(mineIds.reduce((sum,id,i)=>sum+Math.min(1,multipliers[i])*(i===2?20:10)*L(id)*1.1**L(id),0)+((L('Radar_Facility')>1)?2*1.52**L('Radar_Facility'):0))+habitatDemand(p);
   const ratio=demand?Math.min(1,supply/demand):1;
   const rate=[(20+30*L('Metal_Mine')*1.1**L('Metal_Mine')*ratio)*multipliers[0]*rules.economySpeed,(10+20*L('Crystal_Mine')*1.1**L('Crystal_Mine')*ratio)*multipliers[1]*rules.economySpeed,10*L('Gas_Mine')*1.1**L('Gas_Mine')*Math.max(.1,1.44-.004*p.temperature)*ratio*multipliers[2]*rules.economySpeed-(fusion?10*L('Fusion_Reactor')*1.1**L('Fusion_Reactor')*rules.fusionFuelSpeed:0)];
   const effects=civicEffects(world?.players?.[p.owner]);
   const fuel=fusion?10*L('Fusion_Reactor')*1.1**L('Fusion_Reactor')*rules.fusionFuelSpeed:0;
   for(let i=0;i<3;i++)rate[i]=(rate[i]+(i===2?fuel:0))*(1+effects.production[i])-(i===2?fuel:0);
-  return {supply,demand,ratio,rate,capacity:getCapacity(p)};
+  return {supply,demand,ratio,rate,capacity:getCapacity(p),megastructureSupply:dysonSupply(world,p),megastructureDemand:habitatDemand(p)};
 }
 export function prerequisites(item,p,player){return item.req.map(([id,level])=>({id,name:(buildings[id]||tech[id])?.name||id,level,current:tech[id]?(player.tech[id]||0):(p.buildings[id]||0)}));}
 export function duration(item,kind,p,level=1,world=null,player=null){
   const cost=kind==='ship'?item.cost:costAt(item,level),material=cost[0]+cost[1];
-  if(kind==='ship')return shipBuildSeconds(item,p,rules.constructionSpeed);
+  if(kind==='ship')return isMegaShip(item)&&world?megaShipSeconds(item,megaLevel(world,p,'shipyard')||1):shipBuildSeconds(item,p,rules.constructionSpeed);
   if(kind==='tech'){
     let labs=p.buildings.Research_Lab||0;
     if(world&&player&&(player.tech.Intergalactic_Network||0)>0){const needed=item.req.find(([id])=>id==='Research_Lab')?.[1]||1;labs+=Object.values(world.planets).filter(x=>x.owner===player.id&&!x.moon&&x.id!==p.id&&(x.buildings.Research_Lab||0)>=needed).map(x=>x.buildings.Research_Lab).sort((a,b)=>b-a).slice(0,player.tech.Intergalactic_Network).reduce((a,b)=>a+b,0);}
@@ -78,7 +91,7 @@ export function duration(item,kind,p,level=1,world=null,player=null){
   }
   return Math.max(12,Math.ceil(material*1.44/(((p.buildings.Robotics_Facility||0)+1)*2**(p.buildings.Nanite_Factory||0)*rules.constructionSpeed)));
 }
-export const fieldsAvailable=p=>p.moon?1+3*(p.buildings.Moon_Base||0):p.fields+5*(p.buildings.Terraformer||0);
+export const fieldsAvailable=p=>p.moon?1+3*(p.buildings.Moon_Base||0):p.fields+5*(p.buildings.Terraformer||0)+habitatFields(p);
 export function planetEnvironment(slot,rng=Math.random){
   const temperature=Math.round(130-(slot-1)*16+rng()*30);
   const ranges=slot<=3?[55,140]:slot<=6?[170,280]:slot<=9?[140,230]:slot<=12?[100,190]:[60,160];
@@ -130,7 +143,12 @@ export function createWorld(now=Date.now()){
   restoreSystemCamps(world);
   migrateNpcDaily(world);
   migrateNpcDefenseRepairs(world);
-  return world;
+  migrateDiplomacy(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}));
+  migrateMarket(world);
+  migrateGrandPowers(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}));
+  migrateEquity(world);migrateFactionWars(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}));
+  migrateMinorNations(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}));
+  migrateMegastructures(world,units);migrateGrandPowerMegastructures(world);return world;
 }
 function sendReport(player,report){player.reports.unshift({id:uid(),at:Date.now(),read:false,...report});player.reports=player.reports.slice(0,100);}
 export function createPlayer(world,name='指挥官',now=Date.now(),rng=Math.random){
@@ -139,7 +157,7 @@ export function createPlayer(world,name='指挥官',now=Date.now(),rng=Math.rand
   const safe=open.filter(s=>world.sovereignty?.safeSystems.includes(s)),pool=safe.length?safe:open;
   let position;for(const s of [...pool.slice(Math.floor(rng()*pool.length)),...pool]){for(let slot=4;slot<=12;slot++)if(!occupied.has(`1:${s}:${slot}`)){position=[1,s,slot];break;}if(position)break;}
   requireThat(position,'宇宙没有空闲母星');
-  const player={id,name,tech:{},researchQueue:null,reports:[],alliance:null,darkMatter:0,parts:0};
+  const player={id,name,tech:{},researchQueue:null,reports:[],alliance:null,darkMatter:0,parts:0,strategicResources:Object.fromEntries(strategicKeys.map(k=>[k,0]))};
   const home=makePlanet(id,'母星',position,{...planetEnvironment(position[2],rng),biome:'terrestrial',fields:163,diameter:12767,resources:[500,500,0],buildings:{Command_Center:1},ships:{},defense:{}});
   world.planets[home.id]=home;player.home=home.id;world.players[id]=player;claimSystem(world,player,position,now);return player;
 }
@@ -166,18 +184,25 @@ export function migrateWorld(world){
   migrateSovereignty(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}));
   migrateNpcDaily(world);
   migrateNpcDefenseRepairs(world);
-  world.version=3;return world;
+  migrateDiplomacy(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}),Math.max(world.at,Date.now()));
+  migrateMarket(world,Math.max(world.at,Date.now()));
+  migrateGrandPowers(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}),Math.max(world.at,Date.now()));
+  migrateEquity(world);migrateFactionWars(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}),Math.max(world.at,Date.now()));
+  migrateMinorNations(world,(owner,name,position,extra)=>makePlanet(owner,name,position,{...extra,biome:biomeAt(world,position)}),Math.max(world.at,Date.now()));
+  migrateMegastructures(world,units);migrateGrandPowerMegastructures(world,Math.max(world.at,Date.now()));world.version=3;return world;
 }
-function integrate(world,to){integrateStorage(world,to,economy);}
+function integrate(world,to){integrateStrategic(world,to);integrateMegamaterials(world,to);integrateStorage(world,to,economy);}
 export function advance(world,to=Date.now()){
   world.battles??={};
   migrateNpcDaily(world);
   let guard=0;
   while(guard++<100000){
-    const events=advancePlans(world,startBuilding,economy);
+    const events=[...advancePlans(world,startBuilding,economy),...megastructureEvents(world),...arsenalEvents(world)];
+    if(world.factionWars){events.push({at:world.factionWars.next,kind:"factionWarStart"});for(const b of world.factionWars.battles)if(b.status==="active")events.push({at:b.end,kind:"factionWarEnd",b});}
+    if(world.strategic)events.push({at:world.strategic.nextIndustry,kind:'strategicIndustry'});
     for(const center of Object.values(world.logisticsCenters||{}))if(center.queue)events.push({at:center.queue.end,kind:'logistics',center});
     const fuelGroups=new Set();
-    for(const p of Object.values(world.planets))if(p.buildings.Fusion_Reactor){const e=storageEconomy(world,p,economy),key=e.shared?p.owner+':'+p.position.slice(0,2).join(':'):p.id;if(!fuelGroups.has(key)&&e.resources[2]>0&&e.rate[2]<0){events.push({at:world.at+Math.max(1,Math.ceil(e.resources[2]/-e.rate[2]*3600000)),kind:'fuel'});fuelGroups.add(key);}}
+    for(const p of Object.values(world.planets))if(p.buildings.Fusion_Reactor){const e=storageEconomy(world,p,economy),key=e.networked?p.owner+':stargates':e.shared?p.owner+':'+p.position.slice(0,2).join(':'):p.id;if(!fuelGroups.has(key)&&e.resources[2]>0&&e.rate[2]<0){events.push({at:world.at+Math.max(1,Math.ceil(e.resources[2]/-e.rate[2]*3600000)),kind:'fuel'});fuelGroups.add(key);}}
     for(const p of Object.values(world.planets)){
       if(p.buildQueue)events.push({at:p.buildQueue.end,kind:'build',p});
       for(const queueKey of ['shipQueue','flagshipQueue','defenseQueue'])if(p[queueKey]?.length)events.push({at:p[queueKey][0].end,kind:'ship',p,queueKey});
@@ -189,7 +214,7 @@ export function advance(world,to=Date.now()){
     // the latest reset. Coalesce them; resources and fleets never accumulate.
     const deadline=events.reduce((end,e)=>Math.min(end,e.at),to),day=npcDay(deadline);
     if(day>world.npcDailyDay)events.unshift({at:npcDayStart(day),kind:'npcDaily'});
-    events.sort((a,b)=>a.at-b.at);const e=events[0];if(!e||e.at>to)break;
+    events.sort((a,b)=>a.at-b.at||(a.kind==='arsenalStrike'?-1:b.kind==='arsenalStrike'?1:0));const e=events[0];if(!e||e.at>to)break;
     if(e.kind==='battle'){
       const nextOther=events.find(x=>x!==e);
       const limit=Math.min(to,e.at+950,nextOther?nextOther.at-(nextOther.kind==='battle'?0:1):Infinity);
@@ -198,15 +223,22 @@ export function advance(world,to=Date.now()){
       continue;
     }
     integrate(world,e.at);
+    if(e.kind==='factionWarStart')startFactionWar(world,e.at);
+    if(e.kind==='factionWarEnd')finishFactionWar(world,e.b);
     if(e.kind==='npcDaily')refreshNpcCamps(world,e.at);
+    if(e.kind==='strategicIndustry')npcIndustry(world,units,productionQueueKey,(item,p)=>duration(item,'ship',p),{state:megaProductionState,queue:queueMegaShip});
     if(e.kind==='logistics'){e.center.level=1;e.center.queue=null;}
+    if(e.kind==='megastructure')finishMegastructure(e.structure,e.at);
+    if(e.kind.startsWith('arsenal'))finishArsenalEvent(world,e);
+    if(e.kind==='megaShip')joinDefenders(world,finishMegaShip(world,e.system));
     if(e.kind==='build'){const q=e.p.buildQueue;e.p.buildings[q.id]=q.level;e.p.buildQueue=null;}
     if(e.kind==='ship')finishProduction(world,e.p,e.queueKey);
-    if(e.kind==='research'){const q=e.player.researchQueue;e.player.tech[q.id]=q.level;e.player.researchQueue=null;}
+    if(e.kind==='research'){const q=e.player.researchQueue;e.player.tech[q.id]=Math.max(e.player.tech[q.id]||0,q.level);e.player.researchQueue=null;}
     if(e.kind==='mission')resolveMission(world,e.m,e.at);
   }
   integrate(world,to);
   advancePlans(world,startBuilding,economy);
+  advanceMarket(world,to);
 }
 function finishProduction(world,p,queueKey,count=1){
   const queue=p[queueKey],q=queue[0],target=units[q.id].type==='defense'?p.defense:p.ships;
@@ -271,6 +303,7 @@ function finishEngagement(world,b){
   if(target.npc)report.npcRefreshDay=target.npcRefreshDay;
   sendReport(attacker,report);if(defender)sendReport(defender,{...structuredClone(report),defending:true});
   b.settled=true;b.reportId=attacker.reports[0].id;
+  settleWarOrders(world,b,losses,now);
   refreshNpcCamp(world,target,now);
   // A surviving destroy-moon expedition operates once, after the shared battle has settled.
   const demolition=missions.find(m=>m.task==='destroyMoon'&&m.phase==='return'&&(m.ships.Death_Star||0)>0);
@@ -285,6 +318,7 @@ function finishEngagement(world,b){
 function addDebris(p,values){p.debris=p.debris.map((n,i)=>n+values[i]);}
 function spatialHash(b){let h=2166136261;for(const s of b.ships)for(const n of [s.id,s.hp,s.shield,s.x,s.y,s.z]){h^=Math.round(n*1000);h=Math.imul(h,16777619);}return h>>>0;}
 function resolveMission(world,m,now){
+  if(handleDeadMission(world,m,now))return;
   const player=world.players[m.owner],home=world.planets[m.from],target=world.planets[m.target];
   const remove=()=>{world.missions=world.missions.filter(x=>x.id!==m.id);};
   if(m.phase==='return'){
@@ -309,7 +343,9 @@ function resolveMission(world,m,now){
   }
   if(['explore','mine'].includes(m.task)&&m.phase==='outbound'){m.phase='holding';m.start=now;m.end=now+(m.task==='explore'?(m.workSeconds??rules.explorationSeconds):(m.workSeconds??(m.holdHours||1)*60))*1000;return;}
   let stay=false;
-  if(['attack','destroyMoon'].includes(m.task)&&target&&target.owner!==m.owner&&(m.task!=='destroyMoon'||target.moon)){beginEngagement(world,m,target,now);return;}
+  const factionWar=target&&activeFactionWar(world,target.id);
+  if(factionWar&&["attack","destroyMoon"].includes(m.task)){m.end=factionWar.end+1;return;}
+  if(['attack','destroyMoon'].includes(m.task)&&target&&target.owner!==m.owner&&(m.task!=='destroyMoon'||target.moon)){const blocked=attackRestriction(world,target);if(!blocked){beginEngagement(world,m,target,now);return;}sendReport(player,{type:'fleet',at:now,title:'攻击已取消，舰队返航',body:blocked});}
   if(m.task==='spy'&&target){
     const enemy=world.players[target.owner];sendReport(player,{type:'spy',at:now,...(target.npc?{npcRefreshDay:target.npcRefreshDay}:{}),title:`侦察报告 [${target.position.join(':')}]`,targetName:target.name,position:target.position,resources:target.resources.map(Math.floor),ships:{...target.ships},defense:{...target.defense},buildings:{...target.buildings},technology:enemy?.tech||{}});
   }
@@ -325,8 +361,8 @@ function resolveMission(world,m,now){
     if(!occupied&&permitted&&colonies<colonyLimit(player)){
       const biome=Object.hasOwn(planetTypes,m.colonyBiome)?m.colonyBiome:biomeAt(world,m.position);
       const p=makePlanet(player.id,planetName(m.position[1],m.position[2],biome),m.position,{...planetEnvironment(m.position[2],seeded(m.seed)),biome,resources:[500+m.cargo[0],500+m.cargo[1],m.cargo[2]],buildings:{},ships:{},defense:{}});
-      claimSystem(world,player,m.position,now);m.ships.Colony_Ship--;if(!m.ships.Colony_Ship)delete m.ships.Colony_Ship;merge(p.ships,m.ships);world.planets[p.id]=p;stay=true;sendReport(player,{type:'fleet',at:now,title:'殖民成功',body:`新的殖民地已建立 [${m.position.join(':')}]，本恒星系归属我方。`});
-    }else sendReport(player,{type:'fleet',at:now,title:'殖民失败',body:!permitted?'其他势力已先抵达并殖民该恒星系，舰队携全部殖民船和物资返航。':occupied?'目标星球已被占领，舰队携殖民船和物资返航。':'殖民地数量已达上限。'});
+      claimSystem(world,player,m.position,now);m.ships.Colony_Ship--;if(!m.ships.Colony_Ship)delete m.ships.Colony_Ship;merge(p.ships,m.ships);world.planets[p.id]=p;stay=true;sendReport(player,{type:'fleet',at:now,title:'殖民成功',body:`新的殖民地已建立 [${m.position.join(':')}]，新殖民地归属我方；多势力共处的恒星系为交战区。`});
+    }else sendReport(player,{type:'fleet',at:now,title:'殖民失败',body:!permitted?'目标不再符合边境殖民规定，舰队携全部殖民船和物资返航。':occupied?'目标星球已被占领，舰队携殖民船和物资返航。':'殖民地数量已达上限。'});
   }
   if(m.task==='mine'){
     // Already paid legacy trips retain their original short-trip yield.
@@ -345,12 +381,13 @@ function resolveMission(world,m,now){
   }
   if(stay){remove();return;}m.phase='return';m.start=now;m.end=now+Math.ceil(m.travel*(m.returnFactor||1));m.originPosition=m.position;
 }
-export function fleetQuote(player,p,ships,position,speed=100){
-  return navigationQuote(units,player.tech,p.position,ships,position,speed);
+export function fleetQuote(player,p,ships,position,speed=100,task=''){
+  return navigationQuote(units,player.tech,p.position,ships,position,speed,task);
 }
 function startBuilding(world,player,p,id,now,slotId,dryRun=false){
   const item=Object.hasOwn(buildings,id)?buildings[id]:null;
   requireThat(item,'目标不存在');
+  requireThat(!item.retired,'旗舰中心已退役，请建设恒星系巨构船坞');
   requireThat(!item.moon||p.moon,'只能在月球建造');
   requireThat(!p.moon||['Moon_Base','Wormhole_Generator','The_EU_X_Radar','Robotics_Facility','Shipyard','Flagship_Center','Missile_Silo','Metal_Storage','Crystal_Storage','Gas_Storage'].includes(id),'无法在月球建造');
   requireThat(p.moon||!isLegacyStorage(id),'仓库已并入对应开采综合体，请升级综合体');
@@ -378,13 +415,15 @@ function dispatchFleet(world,player,p,action,now){
     ensureSystemNpcs(world,position[0],position[1]);
     const target=action.target?world.planets[action.target]:Object.values(world.planets).find(t=>!t.moon&&t.position.join(':')===position.join(':'));
     requireThat(!target||target.position.join(':')===position.join(':'),'目标坐标不一致');requireThat(target?.id!==p.id,'不能向当前星球派遣');
+    requireThat(!target?.devastation,'目标已成为死寂行星，不能殖民、驻扎或开展作业');
     const task=action.task;requireThat(missionNames[task],'任务无效');
     requireThat(!['attack','spy','recycle','transport','deploy','destroyMoon'].includes(task)||!!target,'目标不存在');
     requireThat(!['attack','spy','destroyMoon'].includes(task)||target.owner!==player.id,'不能攻击自己的星球');
+    if(['attack','destroyMoon'].includes(task)){const blocked=attackRestriction(world,target);requireThat(!blocked,blocked);}
     requireThat(task!=='deploy'||target.owner===player.id,'只能驻扎自己的星球');
     requireThat(task!=='transport'||!target.npc,'野怪据点不接收运输资源，库存仅由每日刷新和掠夺改变');
     requireThat(task!=='spy'||ships.Probe>0,'需要探测器');requireThat(task!=='recycle'||ships.Recycler>0,'需要回收船');
-    if(task==='colonize'){requireThat(canColonizeSystem(world,player,position),'该恒星系已属于其他势力，不能殖民');requireThat(!target&&position[2]<=15&&ships.Colony_Ship>0,'需要殖民船和空闲星球');const reserved=world.missions.filter(m=>m.owner===player.id&&m.task==='colonize'&&m.phase==='outbound').length;requireThat(Object.values(world.planets).filter(t=>t.owner===player.id&&!t.moon).length+reserved<colonyLimit(player),'殖民名额已满');}
+    if(task==='colonize'){requireThat(canColonizeSystem(world,player,position),'只能在本方星域、无主星域或相邻边境殖民；母星与玩家自留区受保护');requireThat(!target&&position[2]<=15&&ships.Colony_Ship>0,'需要殖民船和空闲星球');const reserved=world.missions.filter(m=>m.owner===player.id&&m.task==='colonize'&&m.phase==='outbound').length;requireThat(Object.values(world.planets).filter(t=>t.owner===player.id&&!t.moon).length+reserved<colonyLimit(player),'殖民名额已满');}
     requireThat(!['explore','mine'].includes(task)||position[2]===rules.explorationSlot,'请选择银河系中心或小行星带');
     requireThat(['explore','mine'].includes(task)||position[2]<=15,'此区域只能探索或采矿');
     requireThat(task!=='mine'||ships.Recycler>0,'小行星采矿需要回收舰');
@@ -399,19 +438,26 @@ function dispatchFleet(world,player,p,action,now){
     if(task==='explore'){const level=player.tech.Astrophysics_Tech||0;requireThat(level>0,'银心探险需要天体物理科技1级');requireThat(world.missions.filter(m=>m.owner===player.id&&m.task==='explore').length<Math.floor(Math.sqrt(level)),'探索舰队名额已满');}
     if(task==='mine'){holdHours=Number(action.holdHours??1);requireThat(Number.isInteger(holdHours)&&holdHours>=1&&holdHours<=4,'采矿时长为 30、60、90 或 120 分钟');}
     requireThat(task!=='destroyMoon'||(target.moon&&(ships.Death_Star||0)>0),'摧毁月球需要死星');
-    const speed=Number(action.speed||100);requireThat([10,25,50,75,100].includes(speed),'速度无效');const quote=fleetQuote(player,p,ships,position,speed);
+    const speed=Number(action.speed||100);requireThat([10,25,50,75,100].includes(speed),'速度无效');const quote=fleetQuote(player,p,ships,position,speed,task);
     const cargo=(action.cargo||zeros()).map(Number);requireThat(cargo.length===3&&cargo.every(n=>Number.isInteger(n)&&n>=0)&&cargo.reduce((a,b)=>a+b,0)<=quote.capacity,'货舱不足');
     requireThat(['transport','deploy','colonize'].includes(task)||cargo.every(n=>n===0),'此任务不能装载资源');
     pay(world,p,cargo.map((n,i)=>n+(i===2?quote.fuel:0)));for(const[id,n]of Object.entries(ships))p.ships[id]-=n;p.flightsUsed=(p.flightsUsed||0)+1;
+    if(['attack','destroyMoon'].includes(task))recordHostility(world,player,target,now);
     world.missions.push({id:uid(),owner:player.id,from:p.id,target:target?.id||null,position,task,...(task==='colonize'?{colonyBiome:biomeAt(world,position)}:{}),ships,cargo,holdHours,...(task==='mine'?{workSeconds:holdHours*rules.explorationHourSeconds}:{}),...(task==='explore'?{zone,workSeconds:expeditionZones[zone].seconds,rewardPool:rewardShipPool(ships,player,p),repeat:{total:rounds,round:1,template:{...ships},speed,position:[...position],zone}}:{}),phase:'outbound',start:now,end:now+quote.seconds*1000,travel:quote.seconds*1000,seed:Math.floor(Math.random()*4294967295)});
 
 }
 export function act(world,player,action,now=Date.now()){
   if(action.type==='dispatch')requireThat(action.position?.[0]===1,'仅开放第 1 银河');
   if(['jump','missile','scan'].includes(action.type)&&action.target)requireThat(world.planets[action.target]?.position[0]===1,'仅开放第 1 银河');
-  advance(world,now);const p=world.planets[action.planet];if(p)migrateLayout(p);
-  requireThat(['civic','logistics','plan','applyTemplate','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','recall','stopExpedition','read','readAll','rename','alliance','chat','purchase','accelerate','missile','place'].includes(action.type),'操作不存在');
-  if(['logistics','plan','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','purchase','accelerate','missile','place'].includes(action.type))requireThat(p?.owner===player.id,'无法操作此星球');
+  advance(world,now);const p=world.planets[action.planet||(action.type==='stargate'?action.from:null)];if(p)migrateLayout(p);
+  requireThat(['arsenal','megastructure','stargate','market','trade','strategicMine','civic','logistics','plan','applyTemplate','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','recall','stopExpedition','read','readAll','rename','alliance','chat','purchase','accelerate','missile','place'].includes(action.type),'操作不存在');
+  if(['arsenal','megastructure','stargate','market','trade','strategicMine','logistics','plan','build','downgrade','research','ship','dispatch','saveExpeditionPreset','renamePlanet','cancel','scan','jump','purchase','accelerate','missile','place'].includes(action.type))requireThat(p?.owner===player.id,'无法操作此星球');
+  if(action.type==='arsenal')arsenalAction(world,player,p,action,now);
+  if(action.type==='megastructure')megastructureAction(world,player,p,action,now);
+  if(action.type==='stargate')joinDefenders(world,stargateAction(world,player,p,action,units));
+  if(action.type==='market')marketAction(world,player,p,action);
+  if(action.type==='trade')tradeAction(world,player,p,action);
+  if(action.type==='strategicMine')buildStrategicMine(world,player,p);
   if(action.type==='civic'){
     requireThat(p?.owner===player.id,'无法操作此星球');
     civicAction(player,action,now,cost=>pay(world,p,cost));
@@ -441,7 +487,7 @@ export function act(world,player,action,now=Date.now()){
     requireThat((player.darkMatter||0)>=quote.cost,'暗物质不足');
     player.darkMatter-=quote.cost;
     if(action.kind==='build'){p.buildings[quote.id]=quote.level;p.buildQueue=null;advancePlans(world,startBuilding,economy);}
-    else if(action.kind==='research'){player.tech[quote.id]=quote.level;player.researchQueue=null;}
+    else if(action.kind==='research'){player.tech[quote.id]=Math.max(player.tech[quote.id]||0,quote.level);player.researchQueue=null;}
     else{
       const key=accelerationQueueKey[action.kind];
       finishProduction(world,p,key,quote.count);
@@ -454,6 +500,8 @@ export function act(world,player,action,now=Date.now()){
   if(action.type==='build')startBuilding(world,player,p,action.id,now,action.slotId);
   if(action.type==='research'){
     const isTech=action.type==='research',item=(isTech?tech:buildings)[action.id];requireThat(item,'目标不存在');
+    requireThat(!item.playerOnly||!player.bot,'该科技仅向玩家开放');
+    requireThat(!item.retired,'该科技已停止新增研究；已付款研究仍可完成或取消');
     requireThat(!isTech||!p.moon,'月球上不能研究科技');requireThat(isTech||!item.moon||p.moon,'只能在月球建造');
     requireThat(isTech||!p.moon||['Moon_Base','Wormhole_Generator','The_EU_X_Radar','Robotics_Facility','Shipyard','Missile_Silo','Metal_Storage','Crystal_Storage','Gas_Storage'].includes(item.id),'无法在月球建造');
     requireThat(isTech||p.moon||!isLegacyStorage(item.id),'仓库已并入对应开采综合体，请升级综合体');
@@ -485,12 +533,17 @@ export function act(world,player,action,now=Date.now()){
   }
   if(action.type==='ship'){
     const item=units[action.id],count=Number(action.count);requireThat(item&&Number.isInteger(count)&&count>0&&count<=10000,'数量无效');
-    requireThat(item.fleetAvailable!==false,'该舰型暂时移出舰队');requireThat(!item.moonOnly||p.moon,'该舰船只能在月球旗舰中心制造');requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');requireThat(productionQueue(p,item).length<8,'建造队列已满');
+    requireThat(item.fleetAvailable!==false,'该舰型暂时移出舰队');requireThat(!item.moonOnly||p.moon,'该舰船只能在月球旗舰中心制造');requireThat(prerequisites(item,p,player).every(r=>r.current>=r.level),'尚未满足前置条件');requireThat(!isMegaShip(item)||megaLevel(world,p,'shipyard')>0,'需要本恒星系巨构船坞');requireThat((isMegaShip(item)?megaProductionState(world,p,units).queue:productionQueue(p,item)).length<8,'建造队列已满');
     if(item.id.endsWith('Shield_Dome'))requireThat(count===1&&!p.defense[item.id]&&!Object.values(world.battles||{}).some(b=>b.status==='active'&&b.target===p.id&&b.ships.some(s=>s.type===item.id&&s.hp>0))&&!productionQueue(p,item).some(q=>q.id===item.id),'每种护盾罩只能建造一个');
     if(item.missile)requireThat(missileStorage(p)+count*(item.id==='Interplanetary_Missile'?2:1)<=(p.buildings.Missile_Silo||0)*10,'导弹储位不足');
     if(item.parts)requireThat((player.parts||0)>=item.parts*count,'外星部件不足');
-    pay(world,p,item.cost.map(v=>v*count));if(item.parts)player.parts-=item.parts*count;
-    const queue=p[productionQueueKey(item)]??=[],each=duration(item,'ship',p),last=queue.at(-1);const start=last?last.end+(last.remaining-1)*last.each*1000:now;queue.push({queueId:uid(),id:item.id,count,remaining:count,each,start,end:start+each*1000});
+    if(item.strategic)requireThat((player.strategicResources?.[item.strategic.id]||0)>=item.strategic.amount*count,item.strategic.name+'不足，请开采或与文明交易');
+    if(isMegaShip(item))queueMegaShip(world,player,p,item,count,now);
+    else{
+      pay(world,p,item.cost.map(v=>v*count));if(item.parts)player.parts-=item.parts*count;
+      if(item.strategic)player.strategicResources[item.strategic.id]-=item.strategic.amount*count;
+      const queue=p[productionQueueKey(item)]??=[],each=duration(item,'ship',p),last=queue.at(-1);const start=last?last.end+(last.remaining-1)*last.each*1000:now;queue.push({queueId:uid(),id:item.id,count,remaining:count,each,start,end:start+each*1000});
+    }
   }
   if(action.type==='dispatch')dispatchFleet(world,player,p,action,now);
   if(action.type==='recall'){const m=world.missions.find(m=>m.id===action.id&&m.owner===player.id);requireThat(m&&['outbound','holding','waiting'].includes(m.phase),'舰队无法召回');if(m.phase==='outbound')m.recalledElapsed=now-m.start;m.end=now+(['holding','waiting'].includes(m.phase)?m.travel:now-m.start);m.phase='return';m.start=now;if(m.repeat)m.repeat.stopReason='已手动召回';}
@@ -507,13 +560,14 @@ export function act(world,player,action,now=Date.now()){
   if(action.type==='readAll')for(const r of player.reports)r.read=true;
   if(action.type==='place'){requireThat(buildings[action.id],'建筑不存在');const error=validatePlacement(p,action.id,action.x,action.y);requireThat(!error,error);p.layout??={};p.layout[action.id]=[action.x,action.y];}
   if(action.type==='missile'){
+    requireThat(!activeFactionWar(world,action.target),'目标正在进行势力会战，请在会战结束后发射');
     const target=world.planets[action.target],count=Number(action.count),range=5*(player.tech.Impulse_Drive||0)-1;
-    requireThat(target&&!target.moon&&target.owner!==player.id,'目标无效');requireThat(target.position[0]===p.position[0]&&Math.abs(target.position[1]-p.position[1])<=range,'目标超出导弹射程');
+    requireThat(target&&!target.moon&&target.owner!==player.id,'目标无效');const blocked=attackRestriction(world,target);requireThat(!blocked,blocked);requireThat(target.position[0]===p.position[0]&&Math.abs(target.position[1]-p.position[1])<=range,'目标超出导弹射程');
     requireThat(Number.isInteger(count)&&count>0&&count<=(p.defense.Interplanetary_Missile||0),'导弹数量无效');
     const activeBattle=targetBattle(world,target),reserved=activeBattle?activeBattle.ships.filter(s=>s.side==='defender'&&s.hp>0&&units[s.type].type==='defense').map(s=>s.type):[];
     const targetIds=[...new Set([...Object.keys(target.defense).filter(id=>units[id]&&!units[id].missile),...reserved])],priority=action.priority;
     requireThat(!priority||targetIds.includes(priority),'优先目标无效');if(priority)targetIds.sort((a,b)=>a===priority?-1:b===priority?1:0);
-    p.defense.Interplanetary_Missile-=count;const intercepted=Math.min(count,target.defense.Interceptor_Missile||0);target.defense.Interceptor_Missile=(target.defense.Interceptor_Missile||0)-intercepted;
+    recordHostility(world,player,target,now);p.defense.Interplanetary_Missile-=count;const intercepted=Math.min(count,target.defense.Interceptor_Missile||0);target.defense.Interceptor_Missile=(target.defense.Interceptor_Missile||0)-intercepted;
     let damage=(count-intercepted)*12000*(1+(player.tech.Weapons_Tech||0)*.1);const armor=1+(world.players[target.owner]?.tech.Strength_Tech||0)*.1,losses={};
     if(activeBattle){const strike=strikeBattleDefenses(activeBattle,damage,targetIds);Object.assign(losses,strike.losses);damage=strike.remaining;}
     for(const id of targetIds){const lost=Math.min(target.defense[id]||0,Math.floor(damage/(units[id].strength*armor)));if(lost){losses[id]=lost;target.defense[id]-=lost;damage-=lost*units[id].strength*armor;}}
@@ -537,14 +591,14 @@ export function snapshot(world,player,system=null){
   for(const p of Object.values(world.planets))if(p.owner===player.id)ensureSystemNpcs(world,p.position[0],p.position[1]);
   const mine=Object.values(world.planets).filter(p=>p.owner===player.id).map(p=>{
     const complexes=resourceComplexes(p),storage=storageEconomy(world,p,economy);
-    return {...p,storage,availableResources:storage.resources,imperialCourt:p.id===player.home,constructionPlan:planOf(p),planStatus:planStatus(world,p,startBuilding,economy),biome:p.moon?null:planetType(p).id,layout:getLayout(p),layoutVersion:LAYOUT_VERSION,surfaceLayout:p.moon?null:surfaceLayout,surfaceLayoutVersion:p.moon?null:SURFACE_LAYOUT_VERSION,resourceComplexVersion:p.moon?null:RESOURCE_COMPLEX_VERSION,resourceComplexes:complexes,economy:economy(p,world),fields:fieldsAvailable(p),usedFields:usedBuildingFields(p),
+    return {...p,...(!p.moon?resourceLocation(world,p.position):{}),megaShipyard:megaProductionState(world,p,units),storage,availableResources:storage.resources,imperialCourt:p.id===player.home,constructionPlan:planOf(p),planStatus:planStatus(world,p,startBuilding,economy),biome:p.moon?null:planetType(p).id,layout:getLayout(p),layoutVersion:LAYOUT_VERSION,surfaceLayout:p.moon?null:surfaceLayout,surfaceLayoutVersion:p.moon?null:SURFACE_LAYOUT_VERSION,resourceComplexVersion:p.moon?null:RESOURCE_COMPLEX_VERSION,resourceComplexes:complexes,economy:economy(p,world),fields:fieldsAvailable(p),usedFields:usedBuildingFields(p),
       buildOptions:Object.fromEntries(Object.values(buildings).map(item=>{
         const level=p.buildings[item.id]||0,complex=complexes[item.id];
-        return [item.id,{cost:costAt(item,level+1),seconds:duration(item,'build',p,level+1),downgradeCost:level?costAt(item,level):null,downgradeSeconds:level?duration(item,'build',p,level):0,energy:item.energy?item.energy*item.factor**level:0,...(complex?{native:complex.native,capacity:complex.capacity,nextCapacity:complex.nextCapacity}:{}),...(!p.moon&&isLegacyStorage(item.id)?{mergedInto:item.mergedInto,disabled:true}:{})}];
+        return [item.id,{cost:costAt(item,level+1),seconds:duration(item,'build',p,level+1),downgradeCost:level?costAt(item,level):null,downgradeSeconds:level?duration(item,'build',p,level):0,energy:item.energy?item.energy*item.factor**level:0,...(complex?{native:complex.native,capacity:complex.capacity,nextCapacity:complex.nextCapacity}:{}),...(item.retired?{disabled:true,reason:'已由恒星系巨构船坞取代'}:{}),...(!p.moon&&isLegacyStorage(item.id)?{mergedInto:item.mergedInto,disabled:true}:{})}];
       })),
       researchOptions:Object.fromEntries(Object.values(tech).map(item=>{const level=player.tech[item.id]||0;return[item.id,{cost:costAt(item,level+1),seconds:duration(item,'tech',p,level+1,world,player),energy:item.energy?item.energy*item.factor**level:0}];}))};
   });
-  const map=Object.values(world.planets).map(p=>({id:p.id,name:p.name,position:p.position,biome:p.moon?null:planetType(p).id,owner:p.owner,ownerName:world.players[p.owner]?.name||'守备舰队',moon:p.moon,parent:p.parent,npc:!!p.npc,npcSkin:p.npc&&!p.moon?p.npcSkin:null,...npcPublic(p),commander:commanderInfo(world,p),debris:p.debris,intel:planetIntel(world,player,p)}));
+  const map=Object.values(world.planets).map(p=>({id:p.id,name:p.name,position:p.position,biome:p.moon?null:planetType(p).id,owner:p.owner,devastation:p.devastation||null,ownerName:world.players[p.owner]?.name||'守备舰队',moon:p.moon,parent:p.parent,npc:!!p.npc,npcSkin:p.npc&&!p.moon?p.npcSkin:null,...npcPublic(p),commander:commanderInfo(world,p),debris:p.debris,intel:planetIntel(world,player,p)}));
   const occupied=new Set(map.filter(p=>!p.moon).map(p=>p.position.join(':'))),systems=planetsBySystem(world);
   for(const key of Object.keys(world.npcSystems||{})){
     const [galaxy,system]=key.split(':').map(Number),types=systemBiomes(world,galaxy,system,systems.get(key)||[]);
@@ -554,12 +608,13 @@ export function snapshot(world,player,system=null){
     }
   }
   const inbound=world.missions.filter(m=>m.owner!==player.id&&world.planets[m.target]?.owner===player.id).map(m=>({id:m.id,task:m.task,phase:m.phase,position:m.position,end:m.end,start:m.start,battleId:m.battleId,fromPosition:world.planets[m.from]?.position,inbound:true}));
-  for(const p of map){Object.assign(p,systemTerritory(world,p.position));p.canColonize=!p.id&&!p.moon&&p.position[2]<=15&&canColonizeSystem(world,player,p.position);}
+  const territories=systemPolities(world);
+  for(const p of map){p.attackBlocked=attackRestriction(world,p,territories);Object.assign(p,systemTerritory(world,p.position,territories),!p.moon?resourceLocation(world,p.position):{});p.canColonize=!p.id&&!p.moon&&p.position[2]<=15&&canColonizeSystem(world,player,p.position);}
   const alliances=world.alliances.map(a=>({...a,members:Object.values(world.players).filter(p=>p.alliance===a.id).map(p=>p.name)}));
   const rankings=Object.values(world.players).map(p=>{
     const planets=Object.values(world.planets).filter(x=>x.owner===p.id);
     const points=Object.values(p.tech).reduce((a,b)=>a+b*100,0)+planets.reduce((n,x)=>n+Object.values(x.buildings).reduce((a,b)=>a+b*25,0)+Object.values(x.ships).reduce((a,b)=>a+b*5,0),0);
     return {name:p.name,planets:planets.filter(x=>!x.moon).length,points,alliance:world.alliances.find(a=>a.id===p.alliance)?.name};
   }).sort((a,b)=>b.points-a.points);
-  return {now:world.at,logistics:logisticsSnapshot(world,player,economy),developmentTemplates,planGrowthModes:['fixed','incremental'],battles:Object.values(world.battles||{}).filter(b=>b.status==='active'&&battleVisible(b,player.id)).map(b=>({...battleSummary(b,world.planets[b.target]||(b.trial?world.planets[player.home]:null)||{}),position:world.planets[b.trial?(b.environment?.planetId||player.home):b.target]?.position})),factions,player:{id:player.id,name:player.name,home:player.home,polityId:polity(world,player.id).id,civics:civicState(player),colonyLimit:colonyLimit(player),colonyCount:mine.filter(p=>!p.moon).length,colonyReserved:world.missions.filter(m=>m.owner===player.id&&m.task==='colonize'&&m.phase==='outbound').length,tech:player.tech,researchQueue:player.researchQueue,alliance:player.alliance,darkMatter:player.darkMatter||0,parts:player.parts||0},planets:mine,map,missions:[...world.missions.filter(m=>m.owner===player.id),...inbound],reports:player.reports,alliances,chat:world.chat.filter(c=>!c.alliance||c.alliance===player.alliance),rankings};
+  return {now:world.at,arsenal:arsenalSnapshot(world,player),megastructures:megastructureSnapshot(world,player,economy,units),colonizationSystems:Array.from({length:499},(_,i)=>i+1).filter(id=>canColonizeSystem(world,player,[1,id])),factionWars:factionWarSnapshot(world),grandPowers:grandPowerSnapshot(world,player),market:marketSnapshot(world,player),diplomacy:diplomacySnapshot(world,player),logistics:logisticsSnapshot(world,player,economy),developmentTemplates,planGrowthModes:['fixed','incremental'],battles:Object.values(world.battles||{}).filter(b=>b.status==='active'&&battleVisible(b,player.id)).map(b=>({...battleSummary(b,world.planets[b.target]||(b.trial?world.planets[player.home]:null)||{}),position:world.planets[b.trial?(b.environment?.planetId||player.home):b.target]?.position})),factions,player:{id:player.id,name:player.name,home:player.home,polityId:polity(world,player.id).id,civics:civicState(player),colonyLimit:colonyLimit(player),colonyCount:mine.filter(p=>!p.moon).length,colonyReserved:world.missions.filter(m=>m.owner===player.id&&m.task==='colonize'&&m.phase==='outbound').length,tech:player.tech,researchQueue:player.researchQueue,alliance:player.alliance,darkMatter:player.darkMatter||0,parts:player.parts||0,strategicResources:player.strategicResources||{}},planets:mine,map,missions:[...world.missions.filter(m=>m.owner===player.id),...inbound],reports:player.reports,alliances,chat:world.chat.filter(c=>!c.alliance||c.alliance===player.alliance),rankings};
 }

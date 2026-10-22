@@ -1,5 +1,6 @@
 // Preserved CPU mesh generators from the approved AURORA models.
 // This module owns no renderer, GPU context, DOM, frame loop or gameplay state.
+import {OUTER_ASTEROID_BELT} from './asteroid-layout.js';
 const PI=Math.PI,TAU=PI*2;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), mix=(a,b,t)=>a+(b-a)*t, smooth=(a,b,t)=>{t=clamp((t-a)/(b-a),0,1);return t*t*(3-2*t)}, add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s], dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]], len=a=>Math.hypot(...a), norm=a=>mul(a,1/(len(a)||1)), vlerp=(a,b,t)=>a.map((v,i)=>mix(v,b[i],t));
 
@@ -109,7 +110,7 @@ export function auroraAsteroidGeometry(){
  const vertices=[];let seed=7183;
  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
  for(let i=0;i<2200;i++){
-  const outer=i<1650,angle=random()*TAU,radius=(outer?162:82)+(random()+random()-1)*(outer?4.5:2.0),size=.04+Math.pow(random(),2)*.13;
+  const outer=i<1650,angle=random()*TAU,radius=(outer?OUTER_ASTEROID_BELT.radius:82)+(random()+random()-1)*(outer?OUTER_ASTEROID_BELT.halfWidth:2.0),size=.04+Math.pow(random(),2)*.13;
   const center=[Math.cos(angle)*radius,(random()-.5)*(outer?.55:.23),Math.sin(angle)*radius];
   const tips=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(v=>mul(v,size*(.65+random()*.7)));
   for(const face of [[0,2,4],[4,2,1],[1,2,5],[5,2,0],[0,4,3],[4,1,3],[1,5,3],[5,0,3]]){
@@ -152,7 +153,7 @@ function auroraStrategyData(systems,planets,playerId){
  const records=new Map(),palette=['#cc92dc','#82abef','#e5a771','#b6cb79','#db91a8'];
  const color=id=>{if(id===playerId)return '#67d9c3';let hash=0;for(const c of String(id))hash=(Math.imul(hash,31)+c.charCodeAt(0))>>>0;return palette[hash%palette.length];};
  for(const p of planets){if(!p.owner||p.npc||p.moon||p.kind==='belt')continue;const id=(p.coordinates||p.position)[1];if(!records.has(id))records.set(id,{owners:new Map(),worlds:[]});const r=records.get(id);r.owners.set(p.owner,{id:p.owner,name:p.ownerName||String(p.owner),color:color(p.owner)});r.worlds.push(p);}
- for(const s of systems)if(s.systemOwner){const r=records.get(s.id)||{worlds:[]};r.territoryClass='sovereign:'+s.systemOwner;r.owners=new Map([[s.systemOwner,{id:s.systemOwner,name:s.systemOwnerName,color:s.systemOwner===playerId?'#67d9c3':s.systemColor||color(s.systemOwner)}]]);records.set(s.id,r);}
+ for(const s of systems)if(s.warZone){const r=records.get(s.id)||{worlds:[]};r.territoryClass='war-zone:'+s.systemPolities.map(p=>p.id).sort().join('|');r.owners=new Map(s.systemPolities.map(p=>[p.id,{...p,name:p.name+' · 交战区'}]));records.set(s.id,r);}else if(s.systemOwner){const r=records.get(s.id)||{worlds:[]};r.territoryClass='sovereign:'+s.systemOwner;r.owners=new Map([[s.systemOwner,{id:s.systemOwner,name:s.systemOwnerName,color:s.systemOwner===playerId?'#67d9c3':s.systemColor||color(s.systemOwner)}]]);records.set(s.id,r);}
  return systems.filter(s=>records.has(s.id)).map(s=>({id:s.id,position:s.position.slice(),name:s.name,territoryClass:records.get(s.id).territoryClass,owners:[...records.get(s.id).owners.values()].sort((a,b)=>String(a.id).localeCompare(String(b.id))),worlds:records.get(s.id).worlds}));
 }
 // Short, separate constellations join selectable systems only; these are visual guides.

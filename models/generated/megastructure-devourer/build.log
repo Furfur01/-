@@ -1,0 +1,78 @@
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:12:10 | INFO: Data are loaded, start creating Blender stuff
+01:12:10 | INFO: Blender create Mesh node tripo_mesh_c7483231-2085-489b-bada-7b4c7aed50bc
+01:12:12 | INFO: glTF import finished in 2.19s
+D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\build-devourer.py:191: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  if not mat.use_nodes:continue
+D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\build-devourer.py:31: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes = True
+INFO Draco is available, use library at D:\SteamLibrary\steamapps\common\Blender\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at D:\SteamLibrary\steamapps\common\Blender\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+01:12:34 | INFO: Starting glTF 2.0 export
+01:12:34 | INFO: Extracting primitive: tripo_mesh_c7483231-2085-489b-bada-7b4c7aed50bc
+01:12:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Prow triangular armor geometry
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube.001
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube.005
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube.009
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube.004
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Extracting primitive: Cube.008
+01:12:34 | INFO: Primitives created: 1
+01:12:34 | INFO: Finished glTF 2.0 export in 0.1171720027923584 s
+D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\build-devourer.py:116: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+00:26.187  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\near-quarter.png'
+00:28.281  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\near-front.png'
+00:29.984  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\near-top.png'
+
+Extensions: writing cache failed ([WinError 5] 拒绝访问。: 'C:\\Users\\Administrator\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions').
+01:12:39 | INFO: Data are loaded, start creating Blender stuff
+01:12:39 | INFO: Blender create Mesh node tripo_mesh_c7483231-2085-489b-bada-7b4c7aed50bc
+01:12:42 | INFO: glTF import finished in 2.29s
+01:13:04 | INFO: Starting glTF 2.0 export
+01:13:04 | INFO: Extracting primitive: tripo_mesh_c7483231-2085-489b-bada-7b4c7aed50bc
+01:13:04 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Prow triangular armor geometry
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube.001
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube.005
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube.009
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube.004
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Extracting primitive: Cube.008
+01:13:04 | INFO: Primitives created: 1
+01:13:04 | INFO: Finished glTF 2.0 export in 0.047974586486816406 s
+00:56.187  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\mid-quarter.png'
+00:58.203  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\mid-front.png'
+00:59.890  render           | Saved: 'D:\Desktop\data\银河帝国\models\generated\megastructure-devourer\mid-top.png'
+
+{"finished": true, "lods": [{"file": "devourer-near.glb", "bytes": 8112944, "vertices": 87812, "triangles": 121376, "sourceVertices": 1017302, "sourceTriangles": 1943586, "textures": [{"name": "Color_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [2048, 2048]}, {"name": "NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [2048, 2048]}, {"name": "ORM_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [2048, 2048]}], "blenderBounds": [[-4.142209053039551, -7.105493545532227, -3.3461554050445557], [4.141390323638916, 7.0003557205200195, 3.346405267715454]], "gltfAxes": {"up": "+Y", "forward": "+Z", "lengthAxis": "Z"}, "length": 14.0, "emissiveMeshes": ["Prow_Triangle_Emission_1", "Prow_Triangle_Emission_2", "Prow_Triangle_Emission_3"]}, {"file": "devourer-mid.glb", "bytes": 2160368, "vertices": 21374, "triangles": 25376, "sourceVertices": 1017302, "sourceTriangles": 1943586, "textures": [{"name": "Color_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [1024, 1024]}, {"name": "NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [1024, 1024]}, {"name": "ORM_c7483231-2085-489b-bada-7b4c7aed50bc", "sourceSize": [4096, 4096], "size": [1024, 1024]}], "blenderBounds": [[-4.124751567840576, -7.105493545532227, -3.346513032913208], [4.130068302154541, 7.006241321563721, 3.340466022491455]], "gltfAxes": {"up": "+Y", "forward": "+Z", "lengthAxis": "Z"}, "length": 14.0, "emissiveMeshes": ["Prow_Triangle_Emission_1", "Prow_Triangle_Emission_2", "Prow_Triangle_Emission_3"]}]}
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+Color_c7483231-2085-489b-bada-7b4c7aed50bc
+Color_c7483231-2085-489b-bada-7b4c7aed50bc.jpg
+NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc
+NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc.png
+ORM_c7483231-2085-489b-bada-7b4c7aed50bc
+ORM_c7483231-2085-489b-bada-7b4c7aed50bc.jpg
+Color_c7483231-2085-489b-bada-7b4c7aed50bc
+Color_c7483231-2085-489b-bada-7b4c7aed50bc.jpg
+NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc
+NormalGL_c7483231-2085-489b-bada-7b4c7aed50bc.png
+ORM_c7483231-2085-489b-bada-7b4c7aed50bc
+ORM_c7483231-2085-489b-bada-7b4c7aed50bc.jpg
+
+Blender quit

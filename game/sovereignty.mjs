@@ -1,5 +1,6 @@
 import {systemCoordinates} from './star-positions.mjs';
 import {factions} from './factions.mjs';
+import territoryPlan from './galactic-territory-plan.json' with {type:'json'};
 
 export const SOVEREIGNTY_VERSION=1;
 export const colonyLimit=player=>1+10*Math.max(0,Math.floor(player.tech.Astrophysics_Tech||0));
@@ -10,20 +11,43 @@ export function polity(world,owner){
   const player=world.players[owner];if(!player)return null;
   const faction=player.bot&&factions.find(f=>f.id===player.commander?.factionId);
   return faction?{id:'faction:'+faction.id,name:faction.name,color:faction.color}:
-    player.realm?{...player.realm}:{id:player.id,name:player.name,color:player.bot?'#b6bea1':'#67d9c3'};
+    player.realm?{...player.realm}:{id:player.id,name:player.cityState?.name||player.name,color:player.bot?'#b6bea1':'#67d9c3'};
 }
-export function systemTerritory(world,position){
-  const claim=world.sovereignty?.claims[systemKey(position)];
-  const owner=claim&&polity(world,claim.founder);
-  return {systemOwner:claim?.owner||null,systemOwnerName:owner?.name||'',systemColor:owner?.color||null};
+export function systemPolities(world){
+  const result=new Map();
+  for(const p of Object.values(world.planets))if(p.owner&&!p.npc&&!p.moon){const key=systemKey(p.position),owner=polity(world,p.owner);if(!result.has(key))result.set(key,new Map());result.get(key).set(owner.id,owner);}
+  return result;
+}
+export function systemTerritory(world,position,territories=systemPolities(world)){
+  const claim=world.sovereignty?.claims[systemKey(position)],members=[...(territories.get(systemKey(position))?.values()||[])];
+  const owner=members[0]||(claim&&polity(world,claim.founder)),warZone=members.length>1;
+  return {systemOwner:warZone?null:owner?.id||null,systemOwnerName:warZone?'交战区 · '+members.map(p=>p.name).join(' / '):owner?.name||'',systemColor:warZone?'#e5a771':owner?.color||null,systemPolities:members,warZone};
 }
 export function canColonizeSystem(world,player,position){
-  const owner=world.sovereignty?.claims[systemKey(position)]?.owner;
-  return !owner||owner===polity(world,player.id)?.id;
+  const reserved=position[0]===1&&world.grandPowers?.reserve.includes(position[1]);
+  if(player.bot&&reserved)return false;
+  const owner=world.sovereignty?.claims[systemKey(position)]?.owner,own=polity(world,player.id)?.id;
+  if(!owner||owner===own)return true;
+  if(reserved||position[0]!==1)return false;
+  // The original territorial frontier stays fixed: an outpost cannot leapfrog
+  // through a rival's interior by opening another successive border.
+  if(!(territoryPlan.neighbors[position[1]]||[]).some(s=>world.sovereignty.claims['1:'+s]?.owner===own))return false;
+  const local=Object.values(world.planets).filter(p=>!p.moon&&p.owner&&systemKey(p.position)===systemKey(position));
+  if(local.some(p=>world.players[p.owner]?.home===p.id))return false;
+  if(player.bot&&local.some(p=>!world.players[p.owner]?.bot))return false;
+  return true;
+}
+export function attackRestriction(world,target,territories){
+  if(target?.devastation)return "死寂行星永久不可殖民或攻击";
+  if(!target?.owner||target.npc)return '';
+  const home=world.players[target.owner]?.home;
+  if(target.id===home||target.parent===home)return '母星及其卫星受保护，暂不允许斩首';
+  if(target.position[0]===1&&world.grandPowers?.reserve.includes(target.position[1]))return '玩家自留星区禁止帝国战争';
+  return systemTerritory(world,target.position,territories).warZone?'':'暂时只能攻击多势力共处的交战区星球';
 }
 export function claimSystem(world,player,position,at=world.at){
   world.sovereignty??={version:SOVEREIGNTY_VERSION,claims:{},safeSystems:[]};
-  if(!canColonizeSystem(world,player,position))throw Error('该恒星系已属于其他势力，不能殖民');
+  if(!canColonizeSystem(world,player,position))throw Error('只能在本方星域、无主星域或相邻边境殖民；母星与玩家自留区受保护');
   world.sovereignty.claims[systemKey(position)]??={owner:polity(world,player.id).id,founder:player.id,at};
 }
 export function nearestSystems(position,count=40){

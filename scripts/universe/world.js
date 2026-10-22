@@ -1,3 +1,4 @@
+import {createArsenalCinema} from './arsenal-cinema.js';
 import * as THREE from 'three';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {createWorldEnvironment} from './environment.js';
@@ -7,6 +8,7 @@ import {qualityName} from './planet-profile.js';
 import {AURORA_WORLD_VERSION} from './aurora-world-surface.js';
 import {createWorldCombat} from './combat.js';
 import {createChartOverlay} from './chart-overlay.js';
+import {createTerritoryLabels} from './territory-labels.js';
 import {ShipModelCache} from '../three-flight/shared-models.js';
 import {WORLD_SCALE,add,sub,mul,length,norm,dot,cross,clamp,mix,lerp,copyCamera,starRadius,bodyRecords,rotate,spin} from './spatial.js';
 
@@ -29,8 +31,10 @@ export class WorldRuntime {
   this.chartOverlay=createChartOverlay(this);
   this.errorElement=document.createElement('div');this.errorElement.className='universe-error';this.errorElement.hidden=true;host.append(this.errorElement);
   this.loadingElement=document.createElement('div');this.loadingElement.className='universe-loading';this.loadingElement.setAttribute('role','status');this.loadingElement.textContent='正在准备星际空间…';host.append(this.loadingElement);
-  this.environment=createWorldEnvironment({scene:this.scene,camera:this.camera,onError:e=>this.fail(e)});
+  this.environment=createWorldEnvironment({scene:this.scene,camera:this.camera,shipEnvironment:()=>this.shipEnvironment(),onError:e=>this.fail(e)});
+  this.arsenalCinema=createArsenalCinema(this);
   this.coreExplorer=createCoreExplorer(this);
+  this.territoryLabels=createTerritoryLabels(this);
   this.planetPrewarm=createPlanetPrewarm();
   this.combat=createWorldCombat(this);this.navigation.resources.battles=this.combat;
   this.previewCache=new ShipModelCache();this.previewRoot=new THREE.Group();this.previewRoot.name='shipyard-inspection';this.scene.add(this.previewRoot);
@@ -71,16 +75,17 @@ export class WorldRuntime {
  surface(p){
   if(!p||p.npc||p.kind==='belt')return null;
   let entry=this.surfaces.get(p.key);
-  const capital=!p.moon&&this.owned.has(p.id),signature=`${AURORA_WORLD_VERSION}/${p.biome}/${p.radius}/${!!p.moon}`;
+  const capital=!p.moon&&this.owned.has(p.id),signature=`${AURORA_WORLD_VERSION}/${p.biome}/${p.radius}/${!!p.moon}/${p.devastation?.kind||'alive'}`;
   if(entry&&entry.signature!==signature){this.scene.remove(entry.object.root);entry.object.dispose();this.surfaces.delete(p.key);entry=null;}
   if(!entry){const object=createPlanetSurface(p,{catalog:this.catalog,workerURL:'/opendesign/mockups/galactic-command/terrain-worker.js',quality:this.planetQuality,capital});this.scene.add(object.root);entry={object,used:this.frameCount,body:p,signature};this.surfaces.set(p.key,entry);}
   entry.used=this.frameCount;entry.body=p;return entry.object;
  }
  setPlanetQuality(value){this.planetQuality=qualityName(value);for(const entry of this.surfaces.values())entry.object.setQuality(this.planetQuality);try{localStorage.setItem('empire.planetQuality',this.planetQuality);}catch{}return this.planetQuality;}
  interrupt(){const n=this.navigation;n.goal=copyCamera(n.camera);this.buildingFlight=null;n.flight=false;}
- clearFollow({notify=true}={}){const n=this.navigation,hadFleet=!!(n.combatCamera||n.missionFollow||n.pilotActive);n.pilotActive=false;n.battleFocus=null;n.combatCamera=null;n.departureFocus=null;n.missionFollow=null;n.surfaceFollow=null;n.bridgeUp=null;n.bridgeNear=null;this.buildingFlight=null;if(hadFleet&&notify)this.emit("fleet-exit",{reason:"navigation"});}
- toGalaxy(){const n=this.navigation;this.clearFollow();n.zoomTarget=null;n.goal={center:[90000,0,54000],dist:10170000*Math.max(1,1.08*this.height/this.width),yaw:0,pitch:1.3};n.flight=true;this.emit('system');}
- focusSystem(id){const n=this.navigation,s=n.systems.find(s=>s.id===Number(id));if(!s)return false;this.clearFollow();n.system=[1,s.id];n.zoomTarget={type:'system',id:s.id};n.goal={center:s.position.slice(),dist:44000*Math.max(1,this.height/this.width),pitch:.51,yaw:0};n.flight=true;this.emit('system');return true;}
+ playArsenal(strike){return this.arsenalCinema.start(strike);}
+ clearFollow({notify=true,keepMegastructurePreview=false}={}){this.arsenalCinema?.stop();if(!keepMegastructurePreview){this.clearMegastructurePreview();this.environment.megastructures.hideRange();}const n=this.navigation,hadFleet=!!(n.combatCamera||n.missionFollow||n.pilotActive);n.pilotActive=false;n.battleFocus=null;n.combatCamera=null;n.departureFocus=null;n.missionFollow=null;n.surfaceFollow=null;n.bridgeUp=null;n.bridgeNear=null;this.buildingFlight=null;if(hadFleet&&notify)this.emit("fleet-exit",{reason:"navigation"});}
+ toGalaxy(){const n=this.navigation;this.environment.megastructures.hideRange();this.clearFollow();n.zoomTarget=null;n.goal={center:[90000,0,54000],dist:10170000*Math.max(1,1.08*this.height/this.width),yaw:0,pitch:1.3};n.flight=true;this.emit('system');}
+ focusSystem(id){this.environment.megastructures.hideRange();const n=this.navigation,s=n.systems.find(s=>s.id===Number(id));if(!s)return false;this.clearFollow();n.system=[1,s.id];n.zoomTarget={type:'system',id:s.id};n.goal={center:s.position.slice(),dist:44000*Math.max(1,this.height/this.width),pitch:.51,yaw:0};n.flight=true;this.emit('system');return true;}
  selectNavigationSystem(id){const n=this.navigation,s=n.systems.find(s=>s.id===Number(id));if(!s)return false;this.clearFollow();n.system=[1,s.id];n.zoomTarget={type:'system',id:s.id};n.goal.center=s.position.slice();n.flight=true;this.emit('system');return true;}
  toSystem(){return this.focusSystem(this.navigation.system[1]);}
  selectNavigationPlanet(id,{focus=false,internal=false}={}){const n=this.navigation,p=this.body(id);if(!p)return false;this.clearFollow({notify:!internal});n.selectedPlanetId=p.key;n.system=p.coordinates.slice(0,2);n.zoomTarget={type:'planet',id:p.key};if(focus){n.goal.center=p.position.slice();n.flight=true;}this.emit('select',{target:{...p,position:p.coordinates},internal});return true;}
@@ -89,7 +94,15 @@ export class WorldRuntime {
  fitColonies(){const n=this.navigation,ids=new Set([...this.owned.values()].map(p=>p.position[1])),stars=n.systems.filter(s=>ids.has(s.id));if(!stars.length)return false;this.clearFollow();const min=[0,1,2].map(i=>Math.min(...stars.map(s=>s.position[i]))),max=[0,1,2].map(i=>Math.max(...stars.map(s=>s.position[i])));n.goal={center:lerp(min,max,.5),dist:Math.max(44000,length(sub(max,min))*1.35)*Math.max(1,this.height/this.width),pitch:1.25,yaw:0};n.zoomTarget=null;n.flight=true;return true;}
  toBlackHole({close=false}={}){this.clearFollow();const n=this.navigation;n.zoomTarget={type:'blackHole',id:'gargantua'};n.explorationZone??='outer';n.goal={center:[0,0,0],dist:(close?4500:300000)*Math.max(1,this.height/this.width),pitch:.52,yaw:.2};n.flight=true;}
  selectExplorationZone(zone){this.clearFollow();const n=this.navigation;n.explorationZone=zone;n.zoomTarget={type:'blackHole',id:'gargantua'};n.goal.center=[0,0,0];n.flight=true;this.emit('explorationZone',{zone});}
- focusLogistics(key){const item=this.environment.pickTargets?.find(p=>p.type==='logistics'&&p.id===key);if(!item)return false;this.clearFollow();const n=this.navigation;n.system=[1,item.system];n.zoomTarget={type:'logistics',id:key};n.goal={center:item.position.slice(),dist:item.radius*6*Math.max(1,this.height/this.width),pitch:.58,yaw:.28};n.flight=true;return true;}
+ focusLogistics(key){const item=this.environment.pickTargets?.find(p=>p.type==='logistics'&&p.id===key);if(!item)return false;this.clearFollow();const n=this.navigation;n.system=[1,item.system];n.zoomTarget={type:'logistics',id:key,system:item.system};n.goal={center:(item.focusPosition||item.position).slice(),dist:(item.focusRadius||item.radius)*3.4*Math.max(1,this.height/this.width),pitch:.45,yaw:.4};n.flight=true;return true;}
+ focusMegastructure(detail){
+  const contributor=this.environment.megastructures,item=contributor.focus(detail);if(!item)return false;
+  this.clearFollow({keepMegastructurePreview:true});this.hideShip();const n=this.navigation;n.system=[item.galaxy,item.system];n.zoomTarget={type:'megastructure',id:item.id,system:item.system};
+  const listener=detail.showRange&&item.kind==='listener'&&item.owner===n.playerId&&contributor.listener?.level?contributor.listener:null;
+  n.goal=listener?{center:listener.center.map(v=>v*WORLD_SCALE),dist:listener.radius*WORLD_SCALE*2.8*Math.max(1,this.height/this.width),pitch:1.48,yaw:0}:{center:(item.focusPosition||item.position).slice(),dist:(item.focusRadius||item.radius)*(item.kind==='dyson'?3.4:3.1)*Math.max(1,this.height/this.width),pitch:.56,yaw:item.kind==='extractor'?1.2:.45};n.flight=true;return true;
+ }
+ previewMegastructure(detail){const item=this.environment.megastructures.preview(detail);return !!item&&this.focusMegastructure({system:[item.galaxy,item.system],id:item.kind,planet:item.planet,key:item.key,owner:item.owner});}
+ clearMegastructurePreview(){const previous=this.environment.megastructures.clearPreview(),n=this.navigation;if(previous&&n.zoomTarget?.type==='megastructure'&&n.zoomTarget.id===previous.id)n.zoomTarget=null;if(previous)this.emit('megastructure-preview-end');return !!previous;}
  planetFlightStart(p){const n=this.navigation,eye=n.eye||add(n.camera.center,this.eyeOffset(n.camera));return {body:p.key,elapsed:0,duration:2.8,start:norm(sub(eye,p.position)),startRadius:length(sub(eye,p.position)),startTarget:sub(n.camera.center,p.position),startUp:this.camera.up.toArray(),startTime:n.time,rotatingStart:n.surfaceFollow?.body===p.key};}
  selectBuilding(id){
   const n=this.navigation,p=this.body(n.activePlanetId);if(!p)return false;const departure=this.planetFlightStart(p);this.clearFollow();n.selectedPlanetId=p.key;n.system=p.coordinates.slice(0,2);n.zoomTarget={type:'planet',id:p.key};
@@ -99,7 +112,7 @@ export class WorldRuntime {
   n.surfaceFollow={body:p.key,id,spin:spin(p,n.time)};this.selectedBuilding=id;n.flight=true;this.emit('select',{target:{...p,position:p.coordinates},buildingId:id});return true;
  }
  focusElevator(view='full'){this.selectBuilding('Shipyard');if(this.buildingFlight){this.buildingFlight.station=view==='station';this.buildingFlight.shipyard=view==='shipyard';this.buildingFlight.elevatorOverview=view==='full';}}
- focusConstruction(facility='Shipyard'){this.hideShip();this.selectBuilding(facility);if(this.buildingFlight)this.buildingFlight.construction=true;}
+ focusConstruction(facility='Shipyard'){if(facility==='Megastructure_Shipyard')return this.focusMegastructure({system:this.planet.position.slice(0,2),planet:this.planet.id,id:'shipyard',owner:this.navigation.playerId});this.hideShip();this.selectBuilding(facility);if(this.buildingFlight)this.buildingFlight.construction=true;}
  setViewport(sidebar){this.sidebar=!!sidebar;}
  setActive(active){this.active=active;}
  eyeOffset(c){return [Math.sin(c.yaw)*Math.cos(c.pitch)*c.dist,Math.sin(c.pitch)*c.dist,Math.cos(c.yaw)*Math.cos(c.pitch)*c.dist];}
@@ -137,6 +150,7 @@ export class WorldRuntime {
    n.camera=this.setViewFromEye(eye,target);n.goal=copyCamera(n.camera);if(n.surfaceFollow)n.surfaceFollow.spin=a;
    if(progress===1){this.buildingFlight=null;n.flight=false;}
   }else{
+   if(n.zoomTarget?.type==='megastructure'&&!n.combatCamera&&!n.missionFollow){const center=this.environment.megastructures.followPosition(n.zoomTarget.id);if(center)n.goal.center=center;}
    if(n.surfaceFollow){const p=this.body(n.surfaceFollow.body);if(p){const a=spin(p,n.time),delta=a-n.surfaceFollow.spin,anchor=n.surfaceFollow.preview&&(this.surface(p)?.buildingTarget('Shipyard')?.preview||this.previewAnchor?.local);for(const c of [n.camera,n.goal]){c.center=anchor?add(p.position,rotate(anchor,a)):add(p.position,rotate(sub(c.center,p.position),delta));c.yaw+=delta;}n.surfaceFollow.spin=a;}}
    const k=1-Math.exp(-dt*(n.flight?5:16));n.camera.yaw+=Math.atan2(Math.sin(n.goal.yaw-n.camera.yaw),Math.cos(n.goal.yaw-n.camera.yaw))*k;n.camera.pitch=mix(n.camera.pitch,n.goal.pitch,k);n.camera.dist=Math.exp(mix(Math.log(Math.max(.0001,n.camera.dist)),Math.log(Math.max(.0001,n.goal.dist)),k));n.camera.center=lerp(n.camera.center,n.goal.center,k);
    if(n.combatCamera?.mode==='bridge'){n.camera=copyCamera(n.goal);}else if(n.combatCamera?.mode==='follow'){n.camera.center=n.goal.center.slice();}
@@ -152,7 +166,7 @@ export class WorldRuntime {
   const n=this.navigation,previousSystem=n.system.join(':'),level=n.surfaceFollow||n.combatCamera||closest.distance<14?'planet':n.zoomTarget?.type==='blackHole'?'galaxy':nearest.distance<160000?'system':'galaxy',changedLevel=level!==n.level;n.level=level;
   // Portrait framing puts the eye farther out. A nearby star must not replace
   // the system the player is actually looking at or its orbit/action list.
-  const target=n.zoomTarget,focusedSystem=target?.type==='system'?Number(target.id):target?.type==='planet'?this.body(target.id)?.coordinates[1]:target?.type==='logistics'?this.environment.pickTargets?.find(p=>p.type==='logistics'&&p.id===target.id)?.system:null;
+  const target=n.zoomTarget,focusedSystem=target?.type==='system'?Number(target.id):target?.type==='planet'?this.body(target.id)?.coordinates[1]:['logistics','megastructure'].includes(target?.type)?target.system??this.environment.pickTargets?.find(p=>p.type===target.type&&p.id===target.id)?.system:null;
   if(focusedSystem)n.system=[1,focusedSystem];
   else if(closest.p&&level==='planet')n.system=closest.p.coordinates.slice(0,2);
   else if(nearest.s&&level==='system')n.system=[1,nearest.s.id];
@@ -160,7 +174,7 @@ export class WorldRuntime {
  }
  render(t){
   const n=this.navigation,dt=Math.min(.1,Math.max(0,(t-(this.last??t))/1000));this.last=t;this.frameCount++;n.frames++;n.time+=dt;n.dt=dt;n.sampleTime=t;
-  if(!n.enabled||!this.prepared)return;for(const callback of this.frameListeners)callback(t);this.updateCamera(dt);n.screen=[];
+  if(!n.enabled||!this.prepared)return;for(const callback of this.frameListeners)callback(t);this.arsenalCinema.update(dt);this.updateCamera(dt);n.screen=[];
   const closest=n.planets.reduce((best,p)=>{const d=length(sub(n.eye,p.position))/p.radius;return d<best.distance?{p,distance:d}:best;},{distance:Infinity}),nearest=n.systems.reduce((best,s)=>{const d=length(sub(n.eye,s.position));return d<best.distance?{s,distance:d}:best;},{distance:Infinity});
   this.updateNavigationContext(closest,nearest);
   // Keep AURORA's sky/ground fill at every zoom, including coarse planet LODs.
@@ -168,18 +182,20 @@ export class WorldRuntime {
   // sun still shapes the terminator; system-view exposure/sky stay unchanged.
   const auroraView=closest.distance<10;this.ambient.intensity=auroraView?0:.3;this.sun.intensity=auroraView?2.65:2;
   this.sun.color.setHex(auroraView?16774362:0xffe6c0);this.three.toneMapping=auroraView?THREE.NeutralToneMapping:THREE.ACESFilmicToneMapping;this.three.toneMappingExposure=auroraView?1:.92;
-  const origin=n.camera.center;this.environment.update({time:n.time,eye:n.eye,origin,distance:n.camera.dist,width:this.width,height:this.height});
+  const origin=n.camera.center;this.environment.update({time:n.time,dt,eye:n.eye,origin,distance:n.camera.dist,width:this.width,height:this.height});
   this.coreExplorer.update();
   const bodies=n.planets.filter(p=>!p.npc&&p.kind!=='belt').map(p=>({p,q:this.project(p.position,p.radius)})).filter(({p,q})=>(q.visible||n.surfaceFollow?.body===p.key||length(sub(n.eye,p.position))<p.radius*1.4)&&q.radius>1.5).sort((a,b)=>b.q.radius-a.q.radius).slice(0,16);
   const visibleKeys=new Set(bodies.map(({p})=>p.key));
-  for(const [key,entry]of this.surfaces){const visible=visibleKeys.has(key);entry.object.setVisible?.(visible);entry.object.root.visible=visible;}
+  // The replay warms its target during the launch sequence. Keep that one
+  // terrain job alive offscreen, without drawing it before the approach.
+  for(const [key,entry]of this.surfaces){const visible=visibleKeys.has(key),replayTarget=this.arsenalCinema.active?.target.key===key;if(replayTarget)entry.used=this.frameCount;entry.object.setVisible?.(visible||replayTarget);entry.object.root.visible=visible;}
   n.visibleDetails=[];
   for(const [index,{p,q}]of bodies.entries()){const object=this.surface(p),star=n.systems.find(s=>s.id===p.coordinates[1]),light=norm(sub(star?.position||[0,1000,0],p.position));object.setVisible?.(true);object.root.visible=true;object.root.position.fromArray(sub(p.position,origin));object.root.rotation.y=spin(p,n.time);object.root.updateMatrixWorld(true);object.update({time:n.time,now:Date.now()+this.nowOffset,eye:n.eye,origin,camera:this.camera,planet:this.owned.get(p.id)||null,catalog:this.catalog,selectedBuilding:n.surfaceFollow?.body===p.key?this.selectedBuilding:null,light,viewportHeight:this.height,detailEnabled:index<4});n.visibleDetails.push({key:p.key,biome:p.biome,weight:1,...object.stats});n.screen.push({id:p.key,type:'planet',name:p.name,position:p.position,...q});}
   if(this.surfaces.size>16){for(const [key,e]of [...this.surfaces].sort((a,b)=>a[1].used-b[1].used)){if(this.surfaces.size<=16)break;if(e.used===this.frameCount)continue;e.object.root.removeFromParent();e.object.dispose();this.surfaces.delete(key);}}
   this.updateNavigationTargets();
   const light=closest.p?norm(sub(n.systems.find(s=>s.id===closest.p.coordinates[1])?.position||[0,10000,0],closest.p.position)):[-.55,.42,-.72];this.sun.position.fromArray(mul(light,1000));this.sun.target.position.set(0,0,0);
-  this.updateShipPreview();this.three.info.reset();this.three.setClearColor(0x01040a,1);this.three.clear(true,true,true);
-  this.combat.draw();this.environment.render(this.three,this.scene,this.camera,{core:n.level==='galaxy'&&!n.combatCamera&&!n.missionFollow});this.combat.drawCabin();this.chartOverlay.update();this.updateLabels();
+  this.arsenalCinema.draw();this.updateShipPreview();this.three.info.reset();this.three.setClearColor(0x01040a,1);this.three.clear(true,true,true);
+  this.territoryLabels.update();this.combat.draw();this.environment.render(this.three,this.scene,this.camera,{core:n.level==='galaxy'&&!n.combatCamera&&!n.missionFollow});this.combat.drawCabin();this.chartOverlay.update();this.updateLabels();
   if(dt>0){n.frameTimes.push(dt*1000);if(n.frameTimes.length>600)n.frameTimes.shift();}
  }
  updateNavigationTargets(){
@@ -188,6 +204,8 @@ export class WorldRuntime {
    const q=this.project(item.position,item.radius||1);if(!q.visible)continue;
    // Local objects must be visible before they can cover a distant star's hit area.
    if(item.type==='logistics'&&(n.level==='galaxy'||q.radius<2))continue;
+   // Megastructure targets come from the same LOD/marker pass that drew them.
+   if(item.type==='megastructure'&&!item.cluster&&q.radius<2&&n.zoomTarget?.id!==item.id)continue;
    if(item.type==='planet'&&q.radius<1.5)continue;
    n.screen.push({...item,...q,radius:Math.max(item.type==='system'?7:10,q.radius)});
   }
@@ -201,8 +219,8 @@ export class WorldRuntime {
   if(marker){marker.home=true;marker.homeName=home.name;}
  }
  updateLabels(){
-  const n=this.navigation,selected=p=>n.zoomTarget?.type===p.type&&n.zoomTarget.id===p.id;
-  const show=n.screen.filter(p=>!(p.type==='blackHole'&&this.coreExplorer.visible)).filter(p=>p.home||selected(p)||(['battle','mission','logistics'].includes(p.type)&&!p.chartRoute)||[n.hover,n.labelHover,document.activeElement?.hidden?null:document.activeElement?.target].some(hit=>hit?.type===p.type&&hit.id===p.id)).sort((a,b)=>Number(b.home)-Number(a.home)||Number(selected(b))-Number(selected(a))).slice(0,12);
+  const n=this.navigation,placed=[],selected=p=>n.zoomTarget?.type===p.type&&n.zoomTarget.id===p.id;
+  const show=n.screen.filter(p=>!(p.type==='blackHole'&&this.coreExplorer.visible)).filter(p=>p.home||selected(p)||(['battle','mission','logistics','megastructure'].includes(p.type)&&!p.chartRoute&&!p.cluster)||[n.hover,n.labelHover,document.activeElement?.hidden?null:document.activeElement?.target].some(hit=>hit?.type===p.type&&hit.id===p.id)).sort((a,b)=>Number(b.home)-Number(a.home)||Number(selected(b))-Number(selected(a))).slice(0,12);
   show.forEach((p,i)=>{
    let element=this.labelPool[i];if(!element){element=document.createElement('button');element.addEventListener('click',e=>{const r=this.canvas.getBoundingClientRect();if(e.detail===0)this.activateTarget(element.target);else this.activateClick(element.target,e.clientX-r.left,e.clientY-r.top);});element.addEventListener('pointerenter',()=>{n.labelHover=element.target;});element.addEventListener('pointerleave',()=>{n.labelHover=null;});this.labels.append(element);this.labelPool.push(element);}
    element.className=`universe-label${p.home?' is-home':''}${selected(p)?' is-selected':''}`;element.target=p;element.textContent=p.home?'◆ '+p.homeName:p.name||p.type;element.title=p.home?'':p.name||p.type;element.setAttribute('aria-pressed',String(selected(p)));element.hidden=false;
@@ -210,16 +228,19 @@ export class WorldRuntime {
    if(p.home){
     element.setAttribute('aria-describedby','universe-home-tip');
     const w=element.offsetWidth,h=element.offsetHeight;
-    // Keep the home button clear of nearby route arrows, so both remain clickable.
+    // Keep the home button clear of country names and clickable route arrows.
     const choices=[[p.x+18,p.y-18],[p.x+18,p.y+16],[p.x-w-18,p.y-18],[p.x-w-18,p.y+16]].map(([x,y])=>[clamp(x,8,this.width-w-8),clamp(y,8,this.height-h-8)]);
-    [labelX,labelY]=choices.find(([x,y])=>!n.screen.some(hit=>hit.chartRoute&&hit.x>x-13&&hit.x<x+w+13&&hit.y>y-13&&hit.y<y+h+13))||choices[0];
+    [labelX,labelY]=choices.find(([x,y])=>!this.territoryLabels.overlapsName(x,y,w,h)&&!n.screen.some(hit=>hit.chartRoute&&hit.x>x-13&&hit.x<x+w+13&&hit.y>y-13&&hit.y<y+h+13))||choices[0];
    }else element.removeAttribute('aria-describedby');
+   const w=element.offsetWidth,h=element.offsetHeight;
+   if(!p.home){const choices=[[labelX,labelY],[p.x+12,p.y-h-26],[p.x+12,p.y+16],[p.x-w-12,p.y-h]].map(([x,y])=>[clamp(x,8,this.width-w-8),clamp(y,8,this.height-h-48)]);[labelX,labelY]=choices.find(([x,y])=>!placed.some(r=>x<r.x+r.w+5&&x+w+5>r.x&&y<r.y+r.h+5&&y+h+5>r.y))||choices[0];}
+   placed.push({x:labelX,y:labelY,w,h});
    element.style.transform=`translate(${labelX}px,${labelY}px)`;
   });
   for(let i=show.length;i<this.labelPool.length;i++)this.labelPool[i].hidden=true;
  }
- pick(x,y){const n=this.navigation;this.raycaster.setFromCamera(new THREE.Vector2(x/this.width*2-1,1-y/this.height*2),this.camera);const zone=this.coreExplorer.pick(this.raycaster);if(zone)return zone;if(n.level==='planet'&&n.surfaceFollow){this.raycaster.setFromCamera(new THREE.Vector2(x/this.width*2-1,1-y/this.height*2),this.camera);const surface=this.surfaces.get(n.surfaceFollow.body)?.object,hit=surface?.pick(this.raycaster);if(hit)return {type:'building',id:hit.gameId||hit.id||hit.building?.gameId};}const hits=n.screen.filter(p=>Math.hypot(p.x-x,p.y-y)<Math.max(12,p.radius));return hits.sort(n.level==='galaxy'?(a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y)||Number(!!b.chartRoute)-Number(!!a.chartRoute):(a,b)=>a.depth-b.depth)[0];}
- activateTarget(hit,double=false){if(!hit){this.emit('deselect');return;}if(hit.type==='building'){this.selectBuilding(hit.id);this.onBuilding?.(hit.id);}else if(hit.type==='vessel')this.emit('vessel',{battleId:hit.battleId,shipId:hit.id,double});else if(hit.type==='battle'){this.combat.focus(hit.id);this.emit('battle',{battleId:hit.id});}else if(hit.type==='mission')this.combat.mission(hit.id);else if(hit.type==='system'){double?this.focusSystem(hit.id):this.selectNavigationSystem(hit.id);this.emit('inspect');}else if(hit.type==='explorationZone'){this.selectExplorationZone(hit.id);}else if(hit.type==='blackHole'){this.toBlackHole({close:double});this.emit('explorationZone',{zone:this.navigation.explorationZone});}else if(hit.type==='logistics'){this.focusLogistics(hit.id);this.emit('logistics');}else double?this.toPlanet(hit.id):this.selectNavigationPlanet(hit.id,{focus:true});}
+ pick(x,y){const n=this.navigation;this.raycaster.setFromCamera(new THREE.Vector2(x/this.width*2-1,1-y/this.height*2),this.camera);const zone=this.coreExplorer.pick(this.raycaster);if(zone)return zone;if(n.level==='planet'&&n.surfaceFollow){this.raycaster.setFromCamera(new THREE.Vector2(x/this.width*2-1,1-y/this.height*2),this.camera);const surface=this.surfaces.get(n.surfaceFollow.body)?.object,hit=surface?.pick(this.raycaster);if(hit)return {type:'building',id:hit.gameId||hit.id||hit.building?.gameId};}const hits=n.screen.filter(p=>Math.hypot(p.x-x,p.y-y)<Math.max(12,p.radius));return hits.sort(n.level==='galaxy'?(a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y)||Number(!!b.chartRoute)-Number(!!a.chartRoute)||Number(!!b.cluster)-Number(!!a.cluster):(a,b)=>a.depth-b.depth)[0];}
+ activateTarget(hit,double=false){if(!hit){this.emit('deselect');return;}if(hit.type==='building'){this.selectBuilding(hit.id);this.onBuilding?.(hit.id);}else if(hit.type==='vessel')this.emit('vessel',{battleId:hit.battleId,shipId:hit.id,double});else if(hit.type==='battle'){this.combat.focus(hit.id);this.emit('battle',{battleId:hit.id});}else if(hit.type==='mission')this.combat.mission(hit.id);else if(hit.type==='system'){double?this.focusSystem(hit.id):this.selectNavigationSystem(hit.id);this.emit('inspect');}else if(hit.type==='explorationZone'){this.selectExplorationZone(hit.id);}else if(hit.type==='blackHole'){this.toBlackHole({close:double});this.emit('explorationZone',{zone:this.navigation.explorationZone});}else if(hit.type==='megastructure'&&hit.cluster){this.focusSystem(hit.system);this.emit('inspect');}else if(hit.type==='megastructure'){this.focusMegastructure({system:[hit.galaxy,hit.system],id:hit.kind,planet:hit.planet,key:hit.key,owner:hit.owner});this.emit('megastructure',{kind:hit.kind,planetId:hit.planet,key:hit.key,owner:hit.owner,preview:!!hit.preview});}else if(hit.type==='logistics'){this.focusLogistics(hit.id);this.emit('logistics',{key:hit.key,owner:hit.owner});}else double?this.toPlanet(hit.id):this.selectNavigationPlanet(hit.id,{focus:true});}
  // Selection starts a camera flight immediately. Keep the first click's target
  // for a second click at the same screen position, even after the object moves.
  activateClick(hit,x,y,now=performance.now()){
@@ -235,7 +256,7 @@ export class WorldRuntime {
   const center=n.zoomTarget&&!n.surfaceFollow&&!n.combatCamera&&!n.missionFollow&&!this.buildingFlight?n.goal.center.slice():null;
   this.interrupt();
   if(center){n.goal.center=center;n.flight=true;}
-  else if(!n.zoomTarget&&!n.surfaceFollow&&!n.combatCamera){const hit=this.pick(x,y);if(hit?.position){n.goal.center=hit.position.slice();n.flight=true;n.zoomTarget={type:hit.type,id:hit.id};}}
+  else if(!n.zoomTarget&&!n.surfaceFollow&&!n.combatCamera){const hit=this.pick(x,y);if(hit?.position){n.goal.center=hit.position.slice();n.flight=true;n.zoomTarget=hit.cluster?{type:'system',id:hit.system}:{type:hit.type,id:hit.id,system:hit.system};}}
   n.goal.dist=clamp(n.goal.dist*Math.exp(delta*.0028),.05,40000000);return true;
  }
  surfaceUp(){const n=this.navigation;if(!n.surfaceFollow||n.surfaceFollow.preview)return null;const p=this.body(n.surfaceFollow.body);if(!p)return null;const radial=sub(n.camera.center,p.position);return length(radial)>1e-6?norm(radial):null;}
@@ -260,14 +281,14 @@ export class WorldRuntime {
   listen(this.canvas,'wheel',e=>{e.preventDefault();this.lastTargetClick=null;this.zoomNavigation(e.deltaY,...point(e));},{passive:false});
   listen(this.canvas,'webglcontextlost',e=>{e.preventDefault();this.active=false;this.fail(new Error('三维画面已暂停，图形上下文丢失。请刷新恢复。'));});
  }
+ shipEnvironment(){if(!this.previewEnvironment){const room=new RoomEnvironment(),pmrem=new THREE.PMREMGenerator(this.three);this.previewEnvironment=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();}return this.previewEnvironment.texture;}
  showShip(id){
   if(this.previewId===id)return;this.hideShip();const p=this.body(this.navigation.activePlanetId);if(!p)return;
   this.previewId=id;this.preview=this.previewCache.acquire(id);
   if(this.preview.userData.revision==='october-user-models-01'){
    // These supplied PBR materials need the same soft reflections as their source
    // viewers. Apply only to the leased inspection copy, never the universe or cache.
-   if(!this.previewEnvironment){const room=new RoomEnvironment(),pmrem=new THREE.PMREMGenerator(this.three);this.previewEnvironment=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();}
-   this.preview.traverse(o=>{for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[]){m.envMap=this.previewEnvironment.texture;m.envMapIntensity=.8;}});
+   const reflection=this.shipEnvironment();this.preview.traverse(o=>{for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[]){m.envMap=reflection;m.envMapIntensity=.8;}});
   }
   // Fit in the hull's own frame before attaching to the rotating port. Preserve
   // the factory's scale, which already normalizes different authored hull sizes.
@@ -311,5 +332,5 @@ export class WorldRuntime {
  getMapBridgeConsole(){return this.combat.bridgeConsoleLayout();}
  pickMapFighterConsole(...args){return this.combat.pickFighterConsole(...args);}
  getMapFighterConsole(){return this.combat.fighterConsoleLayout();}
- dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.raf);this.abort.abort();this.environment.cancelLoading?.();this.resizeObserver.disconnect();this.cleanups.forEach(f=>f());this.frameListeners.clear();this.chartOverlay.dispose();this.canvas.remove();this.labels.remove();this.coreExplorer.dispose();this.errorElement.remove();this.loadingElement.remove();const release=()=>{this.combat.dispose();this.environment.dispose();this.planetPrewarm.dispose();for(const e of this.surfaces.values())e.object.dispose();this.surfaces.clear();this.previewCache.dispose();this.previewEnvironment?.dispose();this.three.dispose();};Promise.allSettled([this.preparation,this.combat.ready]).then(release);}
+ dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.raf);this.abort.abort();this.environment.cancelLoading?.();this.resizeObserver.disconnect();this.cleanups.forEach(f=>f());this.frameListeners.clear();this.chartOverlay.dispose();this.territoryLabels.dispose();this.canvas.remove();this.labels.remove();this.coreExplorer.dispose();this.errorElement.remove();this.loadingElement.remove();const release=()=>{this.arsenalCinema.dispose();this.combat.dispose();this.environment.dispose();this.planetPrewarm.dispose();for(const e of this.surfaces.values())e.object.dispose();this.surfaces.clear();this.previewCache.dispose();this.previewEnvironment?.dispose();this.three.dispose();};Promise.allSettled([this.preparation,this.combat.ready]).then(release);}
 }

@@ -1,13 +1,14 @@
 // Local single-player progression, approved 2026-10-18. Costs use ordinary resources.
 import {communityShipStats,communityShipSource} from './ship-community-stats.mjs';
+import {strategicRecipe} from './strategic-resources.mjs';
 export const advancedTechnologies={
  Advanced_Ship_Engineering:{name:'先进舰船工程',cost:[100000,150000,50000],maxLevel:5,req:[['Research_Lab',10],['Strength_Tech',10],['Hyperspace_Tech',6]],description:'逐步解锁高级战斗舰、指挥母舰与战略武器。'},
- Quantum_Command:{name:'量子指挥',cost:[50000,200000,100000],maxLevel:3,req:[['Research_Lab',10],['Computer_Tech',10],['Espionage_Tech',6]],description:'1级支持裂变者火控；3级支持旗舰中心和深空吞噬者的蜂群协同。'},
+ Quantum_Command:{name:'量子指挥',cost:[50000,200000,100000],maxLevel:3,req:[['Research_Lab',10],['Computer_Tech',10],['Espionage_Tech',6]],description:'1级支持裂变者火控；3级支持深空吞噬者的蜂群协同。高级舰在恒星系巨构船坞生产。'},
  Metamaterial_Tech:{name:'超构材料',cost:[180000,120000,40000],maxLevel:4,req:[['Research_Lab',10],['Strength_Tech',10],['Energy_Tech',8]],description:'2级支持钛能守卫者和深空吞噬者；4级支持收割者舰体。'},
  Phase_Energy:{name:'相位能量学',cost:[100000,240000,160000],maxLevel:3,req:[['Research_Lab',11],['Hyperspace_Tech',7],['Ion_Tech',7]],description:'2级支持噬能截击者；3级开放反物质约束研究。'},
  Antimatter_Containment:{name:'反物质约束',cost:[400000,600000,300000],maxLevel:3,req:[['Research_Lab',12],['Energy_Tech',12],['Plasma_Tech',8],['Phase_Energy',3]],description:'1级支持收割者抗湮灭结构；3级支持湮灭之星。'}
 };
-export const flagshipCenter={id:'Flagship_Center',name:'旗舰中心',cost:[2000000,1500000,500000],factor:2,req:[['Moon_Base',4],['Advanced_Ship_Engineering',3],['Quantum_Command',3]],atlas:8,moon:true,description:'月球专属旗舰船坞，独立生产深空吞噬者。每升一级，旗舰制造速度提高25%（以1级为基准）。'};
+export const flagshipCenter={id:'Flagship_Center',name:'旗舰中心（已退役）',cost:[2000000,1500000,500000],factor:2,req:[['Moon_Base',4],['Advanced_Ship_Engineering',3],['Quantum_Command',3]],atlas:8,moon:true,retired:true,description:'高级舰制造已转移至恒星系巨构船坞。旧设施与已付款的旗舰订单保留，旧订单按原工期完成。'};
 const hull=(id,name,cost,stats,req,description,extra={})=>({id,name,type:'combat',cost,...stats,req:[['Hyperspace_Tech',5],['Hyperspace_Drive',6],...req],description,splashMultipliers:{},atlas:0,...extra});
 // Wiki base attributes; production and spatial weapon behavior remain single-player rules.
 export const advancedShips={
@@ -19,6 +20,10 @@ export const advancedShips={
  Annihilator:hull('Annihilator','湮灭之星',[1200000,1800000,600000],communityShipStats.Annihilator,[['Shipyard',14],['Advanced_Ship_Engineering',5],['Antimatter_Containment',3]],'一次性反物质战略武器，以自毁释放范围冲击。收割者免疫其爆炸；发射前务必考虑舰队配合和制造成本。')
 };
 for(const ship of Object.values(advancedShips)){
+ ship.req=ship.req.filter(([id])=>!['Shipyard','Flagship_Center'].includes(id));
+ ship.productionFacility='Megastructure_Shipyard';delete ship.moonOnly;
+ ship.description=ship.description.replace('在月球旗舰中心组装','在恒星系巨构船坞组装');
+ const [id,resource]=strategicRecipe(ship.id);ship.strategic={id,name:resource.name,amount:resource.amount};
  ship.statsSource=communityShipStats[ship.id]?communityShipSource.url:'game/advanced-fleet.mjs';
  ship.statsLabel=communityShipStats[ship.id]?'基础六维：Galaxy Empire Wiki':'基础六维：单机设计（Wiki 缺值）';
  ship.economyLabel='制造成本与前置：单机适配';

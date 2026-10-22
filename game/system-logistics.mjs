@@ -1,4 +1,6 @@
 import {planetCapacities} from './resource-complexes.mjs';
+import {megaLevel,systemMegaRate} from './megastructure-rules.mjs';
+import {polity} from './sovereignty.mjs';
 
 export const logisticsBuilding={name:'恒星系物流中心',cost:[5000,3000,1000],seconds:60};
 export const logisticsKey=p=>`${p.owner}:${p.position[0]}:${p.position[1]}`;
@@ -7,7 +9,10 @@ export function systemMembers(world,p){
   if(!p.owner)return [p];
   return Object.values(world.planets).filter(x=>x.owner===p.owner&&x.position[0]===p.position[0]&&x.position[1]===p.position[1]).sort((a,b)=>a.id.localeCompare(b.id));
 }
-export function storageMembers(world,p){return logisticsCenter(world,p)?.level===1?systemMembers(world,p):[p];}
+export function storageMembers(world,p){
+  if(megaLevel(world,p,'gate')===1)return Object.values(world.planets).filter(x=>x.owner===p.owner&&megaLevel(world,x,'gate')===1).sort((a,b)=>a.id.localeCompare(b.id));
+  return logisticsCenter(world,p)?.level===1?systemMembers(world,p):[p];
+}
 const sum=(members,read)=>members.reduce((a,p)=>read(p).map((n,i)=>a[i]+n),[0,0,0]);
 export const availableResources=(world,p)=>sum(storageMembers(world,p),p=>p.resources);
 export const availableCapacity=(world,p)=>sum(storageMembers(world,p),planetCapacities);
@@ -32,13 +37,15 @@ export function depositResources(world,p,values){
 }
 export function storageEconomy(world,p,economy){
   const members=storageMembers(world,p);
-  return {resources:sum(members,p=>p.resources),capacity:sum(members,planetCapacities),rate:sum(members,p=>economy(p,world).rate),shared:logisticsCenter(world,p)?.level===1};
+  const rate=sum(members,p=>economy(p,world).rate),systems=new Set();
+  for(const member of members){const key=logisticsKey(member);if(systems.has(key))continue;systems.add(key);systemMegaRate(world,member).forEach((n,i)=>rate[i]+=n);}
+  return {resources:sum(members,p=>p.resources),capacity:sum(members,planetCapacities),rate,shared:logisticsCenter(world,p)?.level===1||megaLevel(world,p,'gate')===1,networked:megaLevel(world,p,'gate')===1};
 }
 export function integrateStorage(world,to,economy){
   const hours=(to-world.at)/3600000;if(hours<=0)return;
   const seen=new Set();
   for(const p of Object.values(world.planets)){
-    if(p.npc||seen.has(p.id))continue;
+    if(p.npc||p.devastation||seen.has(p.id))continue;
     const members=storageMembers(world,p);members.forEach(x=>seen.add(x.id));
     const e=storageEconomy(world,p,economy);
     const delta=e.rate.map((rate,i)=>rate>0?Math.max(0,Math.min(e.capacity[i]-e.resources[i],rate*hours)):-Math.min(e.resources[i],-rate*hours));
@@ -70,4 +77,23 @@ export function logisticsSnapshot(world,player,economy){
     const host=planets.find(x=>x.id===player.home)||planets.reduce((best,x)=>Math.min(...x.resources.map((n,i)=>n/logisticsBuilding.cost[i]))>Math.min(...best.resources.map((n,i)=>n/logisticsBuilding.cost[i]))?x:best,planets[0]);
     return {key,position:p.position.slice(0,2),level:center?.level||0,queue:center?.queue||null,host:host.id,members:members.map(x=>x.id),resources:sum(members,x=>x.resources),capacity:sum(members,planetCapacities),rate:sum(members,x=>economy(x,world).rate),cost:[...logisticsBuilding.cost],seconds:logisticsBuilding.seconds};
   });
+}
+
+// Sightseeing only: membership may name only bodies already present in this
+// public star-map response. Private balances and construction jobs stay in the
+// owner's logisticsSnapshot, never in this projection.
+export function publicLogistics(world,publicPlanets){
+  const visible=new Set(publicPlanets.filter(p=>p.id).map(p=>p.id)),groups=new Map();
+  for(const p of Object.values(world.planets))if(p.owner&&visible.has(p.id)){
+    const key=logisticsKey(p);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(p);
+  }
+  const centers=[];
+  for(const [key,center]of Object.entries(world.logisticsCenters||{})){
+    if(!center.level||center.position[0]!==1)continue;
+    const members=(groups.get(key)||[]).sort((a,b)=>a.id.localeCompare(b.id)),planets=members.filter(p=>!p.moon);
+    if(!planets.length)continue;
+    const host=planets.find(p=>p.id===center.host)||planets.find(p=>p.id===world.megastructures?.systems[key]?.host)||planets.find(p=>p.id===world.players[center.owner].home)||planets[0];
+    centers.push({key,owner:center.owner,ownerName:polity(world,center.owner).name,position:[...center.position],host:host.id,level:center.level,members:members.map(p=>p.id)});
+  }
+  return centers;
 }

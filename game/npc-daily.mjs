@@ -8,7 +8,7 @@ export const nextNpcRefresh=at=>npcDayStart(npcDay(at)+1);
 
 export function refreshNpcCamp(world,p,at){
   const type=npcType(p),day=npcDay(at);
-  if(!type||p.owner||(p.npcRefreshDay??-Infinity)>=day)return false;
+  if(p.devastation||!type||p.owner||(p.npcRefreshDay??-Infinity)>=day)return false;
   p.npcRefreshDay??=day-1;p.npcRefreshedAt??=0;
   // A battle owns its defenders until settlement. Never add a second fleet or
   // replace the loot pool halfway through combat.

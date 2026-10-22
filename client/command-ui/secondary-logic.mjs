@@ -1,6 +1,6 @@
 import {darkMatterRules} from '../../game/dark-matter.mjs';
 export const resourceNames = ['金属', '晶体', '气体'];
-export const reportNames = {battle:'战斗',spy:'侦察',fleet:'舰队',explore:'探索',scan:'雷达',missile:'导弹',system:'系统'};
+export const reportNames = {battle:'战斗',spy:'侦察',fleet:'舰队',explore:'探索',scan:'雷达',missile:'导弹',arsenal:'恒星武库',system:'系统'};
 export const reportName = r => reportNames[r.type] || '其他';
 export const total = values => Object.values(values || {}).reduce((sum,n)=>sum+(Number(n)||0),0);
 export const coordinates = p => (p?.position || []).join(' : ');

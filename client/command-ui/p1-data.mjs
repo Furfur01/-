@@ -10,7 +10,7 @@ export function buildingItems(api,p){return Object.values(api.catalog.buildings)
 export function requirements(api,item,p=api.planet){return (item.req||[]).map(([id,level])=>({id,name:api.catalog.buildings[id]?.name||api.catalog.tech[id]?.name||id,level,current:api.catalog.tech[id]?(api.state.player.tech[id]||0):(p.buildings[id]||0)}));}
 export function buildingReason(api,item,p=api.planet){
  const option=p.buildOptions?.[item.id],level=p.buildings[item.id]||0;
- if(api.busy)return '提交中';if(!option||option.disabled||!buildingItems(api,p).some(b=>b.id===item.id))return '此处无法建设';
+ if(api.busy)return '提交中';if(!option||!buildingItems(api,p).some(b=>b.id===item.id))return '此处无法建设';if(option.disabled)return option.reason||'此设施已停止新建';
  if(p.buildQueue)return '当前施工尚未完成';if(item.one&&level)return '已达到最高等级';
  if(requirements(api,item,p).some(r=>r.current<r.level))return '前置条件未满足';
  const fieldChange=!p.moon&&item.integratedStorage&&level<(p.buildings[item.integratedStorage]||0)?0:1;
@@ -34,17 +34,15 @@ export function projectedEconomy(api,p,id){
  if(p.moon)return p.economy;
  const b={...p.buildings,[id]:(p.buildings[id]||0)+1},L=id=>b[id]||0,m=api.catalog.planetTypes[p.biome]?.multipliers||[1,1,1];
  const solar=Math.floor(20*L('Solar_Plant')*1.1**L('Solar_Plant')),fusion=L('Fusion_Reactor')>0&&available(p)[2]>0?Math.floor(30*L('Fusion_Reactor')*1.15**L('Fusion_Reactor')):0;
- const supply=solar+fusion+(p.ships.Solar_Satellite||0)*Math.max(1,Math.floor((p.temperature+160)/6));
- const demand=Math.ceil(mineIds.reduce((n,id,i)=>n+Math.min(1,m[i])*(i===2?20:10)*L(id)*1.1**L(id),0)+(L('Radar_Facility')>1?2*1.52**L('Radar_Facility'):0));
+ const supply=solar+fusion+(p.ships.Solar_Satellite||0)*Math.max(1,Math.floor((p.temperature+160)/6))+(p.economy.megastructureSupply||0);
+ const demand=Math.ceil(mineIds.reduce((n,id,i)=>n+Math.min(1,m[i])*(i===2?20:10)*L(id)*1.1**L(id),0)+(L('Radar_Facility')>1?2*1.52**L('Radar_Facility'):0))+(p.economy.megastructureDemand||0);
  const ratio=demand?Math.min(1,supply/demand):1,speed=api.catalog.rules.economySpeed;
  return {supply,demand,ratio,rate:[(20+30*L('Metal_Mine')*1.1**L('Metal_Mine')*ratio)*m[0]*speed,(10+20*L('Crystal_Mine')*1.1**L('Crystal_Mine')*ratio)*m[1]*speed,10*L('Gas_Mine')*1.1**L('Gas_Mine')*Math.max(.1,1.44-.004*p.temperature)*ratio*m[2]*speed-(fusion?10*L('Fusion_Reactor')*1.1**L('Fusion_Reactor')*api.catalog.rules.fusionFuelSpeed:0)]};
 }
 export function quoteFleet(api,p,draft){
  const entries=Object.entries(draft.ships||{}).filter(([id,n])=>n>0&&api.catalog.units[id]);
  if(!entries.length)return {seconds:0,fuel:0,capacity:0,count:0};
- const pos=draft.position,tech=api.state.player.tech,d=pos[0]!==p.position[0]?100:pos[1]!==p.position[1]?Math.min(80,Math.abs(pos[1]-p.position[1])*.3+12):Math.abs(pos[2]-p.position[2]);
- const slow=Math.min(...entries.map(([id])=>{const u=api.catalog.units[id],hyper=u.drive==='Hyperspace_Drive'||['Battleship','Dreadnought','Destroyer','Death_Star','Guardian'].includes(id)||(id==='Bomber'&&(tech.Hyperspace_Drive||0)>=8),impulse=['Heavy_Fighter','Cruiser','Colony_Ship','Bomber'].includes(id),drive=hyper?'Hyperspace_Drive':impulse?'Impulse_Drive':'Combustion_Drive';return u.speed*(1+(tech[drive]||0)*(hyper?.3:impulse?.2:.1));}));
- return {seconds:Math.max(20,Math.ceil((22+d*2.5)*Math.sqrt(10000/Math.max(100,slow))*100/draft.speed)),fuel:Math.max(1,Math.ceil(entries.reduce((n,[id,v])=>n+api.catalog.units[id].fuel*v,0)*.08*(1+d/30)*(draft.speed/100)**2)),capacity:entries.reduce((n,[id,v])=>n+api.catalog.units[id].cargo*v,0),count:entries.reduce((n,[,v])=>n+v,0)};
+ return {...navigationQuote(api.catalog.units,api.state.player.tech,p.position,draft.ships,draft.position,draft.speed,draft.task),count:entries.reduce((n,[,v])=>n+v,0)};
 }
 export function dispatchTarget(api,draft){return draft.target?api.state.map.find(p=>p.id===draft.target):api.state.map.find(p=>!p.moon&&p.position.join(':')===draft.position.join(':'));}
 export function fleetIssues(api,p,draft,quote=quoteFleet(api,p,draft)){
@@ -53,13 +51,14 @@ export function fleetIssues(api,p,draft,quote=quoteFleet(api,p,draft)){
  if(!Array.isArray(pos)||pos.length!==3||pos.some((n,i)=>!Number.isInteger(n)||n<1||n>[1,499,16][i]))issues.push('坐标无效：银河 1，恒星系 1–499，轨道 1–16');
  if(!api.catalog.missionNames[task])issues.push('任务无效');
  if(target?.id===p.id)issues.push('不能向当前星球派遣');
+ if(target?.attackBlocked&&['attack','destroyMoon'].includes(task))issues.push(target.attackBlocked);
  if(target&&['attack','spy','destroyMoon'].includes(task)&&target.owner===player.id)issues.push('不能攻击自己的星球');
  if(['attack','spy','recycle','transport','deploy','destroyMoon'].includes(task)&&target?.unoccupied)issues.push('目标轨道没有可执行任务的星球');
  if(task==='deploy'&&target&&target.owner!==player.id)issues.push('只能驻扎自己的星球');
  if(task==='transport'&&target?.npc)issues.push('野怪据点不接收运输物资');
  if(task==='colonize'){
   if(target?.id||pos[2]>15)issues.push('殖民需要空闲行星轨道');
-  if(target?.canColonize===false&&!target?.id)issues.push('此恒星系不能殖民');
+  if(target?.canColonize===false&&!target?.id||api.state.colonizationSystems&&!api.state.colonizationSystems.includes(pos[1]))issues.push('此恒星系不符合边境殖民规定');
   if((player.colonyCount||0)+(player.colonyReserved||0)>=player.colonyLimit)issues.push('殖民名额已满');
  }
  if(['mine','explore'].includes(task)?pos[2]!==api.catalog.rules.explorationSlot:pos[2]>15)issues.push(['mine','explore'].includes(task)?'探索与采矿需要轨道 16':'轨道 16 仅支持探索与采矿');

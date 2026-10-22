@@ -1,6 +1,7 @@
 // Browser/server shared production semantics. Only the explicit migration mutates.
-export const productionQueueKey=item=>item.type==='defense'?'defenseQueue':item.productionFacility==='Flagship_Center'?'flagshipQueue':'shipQueue';
-export const productionQueue=(planet,item)=>planet[productionQueueKey(item)]||[];
+import {isMegaShip,megaShipSeconds} from './megastructure-rules.mjs';
+export const productionQueueKey=item=>item.type==='defense'?'defenseQueue':isMegaShip(item)?'megaShipQueue':item.productionFacility==='Flagship_Center'?'flagshipQueue':'shipQueue';
+export const productionQueue=(planet,item)=>isMegaShip(item)?planet.megaShipyard?.queue||[]:planet[productionQueueKey(item)]||[];
 export const defenseQueue=planet=>planet.defenseQueue||[];
 export const missileStorage=planet=>(planet.defense.Interceptor_Missile||0)+2*(planet.defense.Interplanetary_Missile||0)+defenseQueue(planet).reduce((n,q)=>n+(q.id==='Interceptor_Missile'?q.remaining:q.id==='Interplanetary_Missile'?q.remaining*2:0),0);
 // Split paid legacy orders without changing quantities, per-unit work or due dates.
@@ -14,6 +15,7 @@ export function migrateDefenseProduction(planet,units){
  planet.defenseQueue.sort((a,b)=>a.start-b.start);
 }
 export function shipBuildSeconds(item,planet,constructionSpeed){
+ if(isMegaShip(item))return megaShipSeconds(item,planet.megaShipyard?.level||1);
  const speed=item.productionFacility==='Flagship_Center'
   ? 10*(1+.25*Math.max(0,(planet.buildings.Flagship_Center||1)-1))
   : ((planet.buildings[item.type==='defense'?'Missile_Silo':'Shipyard']||0)+1)*2**(planet.buildings.Nanite_Factory||0);

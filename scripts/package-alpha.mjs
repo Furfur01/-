@@ -43,6 +43,7 @@ try{
   copy('opendesign/mockups/galactic-command');
   copy('opendesign/mockups/galaxy-empire');
   copy('opendesign/mockups/planet-construction-review/assets');
+  copy('opendesign/mockups/planet-construction-review/galaxy-layout.json');
   copy('opendesign/shared');
   copy('opendesign/shared/assets/SPACE-SKY-CREDITS.md','licenses/SPACE-SKY-CREDITS.md');
   copy('docs/releases/PLAYER-README.md','开始游戏.md');

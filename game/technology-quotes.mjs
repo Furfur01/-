@@ -4,6 +4,8 @@ const sunzi='https://zh.wikisource.org/zh-hant/孫子';
 const laozi='https://zh.wikisource.org/zh-hans/道德經_(王弼本)';
 const xunzi='https://zh.wikisource.org/wiki/劝学';
 export const technologyQuotes={
+ Automation_Control:q('君子生非异也，善假于物也。','荀子','《荀子·劝学》','https://zh.wikisource.org/wiki/荀子/勸學篇'),
+ Ecological_Engineering:q('万物并作，吾以观复。','老子','《道德经》·第十六章',laozi),
  Energy_Tech:q('有一个量，我们称它为能量；自然界历经种种变化，它却保持不变。','理查德·费曼','《费曼物理学讲义》第一卷·第四章','https://www.feynmanlectures.caltech.edu/I_04.html','a certain quantity, which we call energy, that does not change in the manifold changes which nature undergoes.'),
  Laser_Tech:q('物体与光，难道不能相互转化吗？','艾萨克·牛顿','《光学》·疑问30','https://inters.org/newton-opticks-queries','Are not gross Bodies and Light convertible into one another'),
  Ion_Tech:q('只要符合自然规律，再奇妙的事也可能是真的。','迈克尔·法拉第','实验日记，1849年3月19日','https://calteches.library.caltech.edu/619/2/Thomas.pdf','Nothing is too wonderful to be true, if it be consistent with the laws of nature.'),

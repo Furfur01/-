@@ -98,6 +98,7 @@ function auroraBattleFocus(id){
  const extent=Math.max(p.radius*.15,Math.max(b.ships?.length?0:1800,...(b.ships||[]).filter(r=>r[6]>0).map(r=>Math.hypot(r[1],r[2],r[3])))*auroraBattleScale(p,b));
  n.goal.center=auroraBattleAnchor(p,b);n.goal.dist=Math.max(p.radius*.2,extent*1.4)*Math.max(1,H/W);n.goal.pitch=.32;n.goal.yaw=.35;
  const own=(b.metadata||[]).filter(m=>m.owner===n.playerId&&b.ships?.find(r=>r[0]===m.id)?.[6]>0),ship=own.find(m=>m.type==='Battleship')||own.find(m=>m.profile.piloted)||own[0]||(b.metadata||[]).find(m=>b.ships?.find(r=>r[0]===m.id)?.[6]>0);
+ if(b.tactical){n.combatCamera={id,shipId:null,mode:'free'};n.goal.pitch=.7;n.goal.dist=extent*1.9*Math.max(1,H/W);return true;}
  if(ship){n.combatCamera={id,shipId:ship.id,mode:'follow'};auroraUpdateCombatCamera();}return true;
 }
 function auroraMissionAnchor(p){return add(p.position,[p.radius*1.8,p.radius*.8,0]);}

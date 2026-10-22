@@ -1,3 +1,4 @@
+import {stellarType} from '../../game/stellar-types.mjs';
 export const WORLD_SCALE=100;
 export const add=(a,b)=>a.map((v,i)=>v+b[i]);
 export const sub=(a,b)=>a.map((v,i)=>v-b[i]);
@@ -11,7 +12,7 @@ export const mix=(a,b,t)=>a+(b-a)*t;
 export const lerp=(a,b,t)=>a.map((v,i)=>mix(v,b[i],t));
 export const copyCamera=c=>({...c,center:c.center.slice()});
 export function bodyRadius(p){return WORLD_SCALE*(p.moon?.28:p.npc?1.25:({gas:2.24,mercury:1.4,mars:1.54,terrestrial:1.75})[p.biome]||1.54);}
-export const starRadius=id=>WORLD_SCALE*[7,10,12,1.4,7][id%5];
+export const starRadius=id=>WORLD_SCALE*({main:7,blue:10,red:12,white:1.4,magnetar:.7})[stellarType(id).id];
 export function orbitSlot(slot,system=[1,1],moon=false,parentRadius=175){
   const orbit=WORLD_SCALE*(18+slot*8.5),phase=slot*2.399963229728653+system[0]*.117+system[1]*.043;
   const position=[Math.cos(phase)*orbit,Math.sin(slot*1.73)*7,Math.sin(phase)*orbit];
